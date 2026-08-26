@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "type": "registry:ui",
+  "title": "Button",
+  "description": "Button built on Base UI, styled with StyleX. Variants: primary, secondary, outline, ghost, destructive.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "https://example.com/r/theme.json"
+  ],
+  "files": [
+    {
+      "path": "ui/button.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Button as BaseButton } from '@base-ui/react/button';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\nexport type ButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'outline'\n  | 'ghost'\n  | 'destructive';\n\nexport type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';\n\nexport interface ButtonProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseButton>,\n    'className' | 'style'\n  > {\n  variant?: ButtonVariant;\n  size?: ButtonSize;\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Button({\n  variant = 'primary',\n  size = 'md',\n  style,\n  ...props\n}: ButtonProps) {\n  return (\n    <BaseButton\n      {...props}\n      {...stylex.props(styles.root, variants[variant], sizes[size], style)}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    borderRadius: radius.md,\n    borderStyle: 'none',\n    cursor: { default: 'pointer', ':disabled': 'not-allowed' },\n    display: 'inline-flex',\n    fontFamily: font.sans,\n    fontSize: '0.875rem',\n    fontWeight: 500,\n    gap: '0.5rem',\n    justifyContent: 'center',\n    lineHeight: 1,\n    opacity: { default: 1, ':disabled': 0.5 },\n    outline: {\n      default: 'none',\n      ':focus-visible': `2px solid ${colors.ring}`,\n    },\n    outlineOffset: '2px',\n    transitionDuration: '150ms',\n    transitionProperty: 'background-color, border-color, color, opacity',\n    userSelect: 'none',\n    whiteSpace: 'nowrap',\n  },\n});\n\nconst variants = stylex.create({\n  primary: {\n    backgroundColor: {\n      default: colors.primary,\n      ':hover:not(:disabled)': `color-mix(in srgb, ${colors.primary} 90%, transparent)`,\n    },\n    color: colors.primaryForeground,\n  },\n  secondary: {\n    backgroundColor: {\n      default: colors.secondary,\n      ':hover:not(:disabled)': `color-mix(in srgb, ${colors.secondary} 80%, ${colors.foreground} 4%)`,\n    },\n    color: colors.secondaryForeground,\n  },\n  outline: {\n    backgroundColor: {\n      default: colors.background,\n      ':hover:not(:disabled)': colors.accent,\n    },\n    borderColor: colors.border,\n    borderStyle: 'solid',\n    borderWidth: '1px',\n    color: {\n      default: colors.foreground,\n      ':hover:not(:disabled)': colors.accentForeground,\n    },\n  },\n  ghost: {\n    backgroundColor: {\n      default: 'transparent',\n      ':hover:not(:disabled)': colors.accent,\n    },\n    color: {\n      default: colors.foreground,\n      ':hover:not(:disabled)': colors.accentForeground,\n    },\n  },\n  destructive: {\n    backgroundColor: {\n      default: colors.destructive,\n      ':hover:not(:disabled)': `color-mix(in srgb, ${colors.destructive} 90%, transparent)`,\n    },\n    color: colors.destructiveForeground,\n  },\n});\n\nconst sizes = stylex.create({\n  sm: {\n    height: '2rem',\n    paddingInline: '0.75rem',\n  },\n  md: {\n    height: '2.25rem',\n    paddingInline: '1rem',\n  },\n  lg: {\n    fontSize: '1rem',\n    height: '2.5rem',\n    paddingInline: '1.5rem',\n  },\n  icon: {\n    height: '2.25rem',\n    paddingInline: 0,\n    width: '2.25rem',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/button.tsx"
+    }
+  ]
+}

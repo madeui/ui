@@ -1,0 +1,10 @@
+{
+  "name": "ui-lib-monorepo",
+  "private": true,
+  "scripts": {
+    "build:registry": "node packages/registry/scripts/build-registry.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

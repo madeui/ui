@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme",
+  "type": "registry:lib",
+  "title": "Design tokens",
+  "description": "StyleX design tokens (defineVars) and the dark theme (createTheme). Edit lib/tokens.stylex.ts to retheme your app.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "files": [
+    {
+      "path": "lib/tokens.stylex.ts",
+      "content": "import * as stylex from '@stylexjs/stylex';\n\n// Design tokens — the single file users edit to retheme their app.\n// Familiar semantic names.\n// Values are the light theme; `themes.ts` overrides them per theme.\n\nexport const colors = stylex.defineVars({\n  background: '#ffffff',\n  foreground: '#0a0a0a',\n  card: '#ffffff',\n  cardForeground: '#0a0a0a',\n  popover: '#ffffff',\n  popoverForeground: '#0a0a0a',\n  primary: '#171717',\n  primaryForeground: '#fafafa',\n  secondary: '#f5f5f5',\n  secondaryForeground: '#171717',\n  muted: '#f5f5f5',\n  mutedForeground: '#737373',\n  accent: '#f5f5f5',\n  accentForeground: '#171717',\n  destructive: '#e7000b',\n  destructiveForeground: '#fafafa',\n  border: '#e5e5e5',\n  input: '#e5e5e5',\n  ring: '#a1a1a1',\n  overlay: 'rgba(0, 0, 0, 0.5)',\n});\n\nexport const radius = stylex.defineVars({\n  sm: '0.375rem',\n  md: '0.5rem',\n  lg: '0.625rem',\n  xl: '0.75rem',\n  full: '9999px',\n});\n\nexport const font = stylex.defineVars({\n  sans: \"ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif\",\n  mono: \"ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace\",\n});\n\nexport const shadow = stylex.defineVars({\n  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',\n  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',\n  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',\n});\n",
+      "type": "registry:lib",
+      "target": "lib/tokens.stylex.ts"
+    },
+    {
+      "path": "lib/themes.ts",
+      "content": "import * as stylex from '@stylexjs/stylex';\n\nimport { colors } from './tokens.stylex';\n\n// Apply to any subtree: <html {...stylex.props(darkTheme)}> or a wrapper div.\nexport const darkTheme = stylex.createTheme(colors, {\n  background: '#0a0a0a',\n  foreground: '#fafafa',\n  card: '#171717',\n  cardForeground: '#fafafa',\n  popover: '#171717',\n  popoverForeground: '#fafafa',\n  primary: '#fafafa',\n  primaryForeground: '#171717',\n  secondary: '#262626',\n  secondaryForeground: '#fafafa',\n  muted: '#262626',\n  mutedForeground: '#a1a1a1',\n  accent: '#262626',\n  accentForeground: '#fafafa',\n  destructive: '#ff6467',\n  destructiveForeground: '#171717',\n  border: '#262626',\n  input: '#333333',\n  ring: '#737373',\n  overlay: 'rgba(0, 0, 0, 0.7)',\n});\n",
+      "type": "registry:lib",
+      "target": "lib/themes.ts"
+    }
+  ]
+}
