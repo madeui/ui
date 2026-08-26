@@ -62,6 +62,17 @@ Built on [Base UI Select](https://base-ui.com/react/components/select). The tabl
 | `onValueChange` | `(value: any) => void` | — |  |
 | `disabled` | `boolean` | `false` |  |
 
+### SelectContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `alignItemWithTrigger` | `boolean` | `true` | Overlay the popup on the trigger with the selected item's text aligned to it (macOS-style, with scroll arrows). Set `false` for a plain anchored dropdown below the trigger. |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` | Anchored mode only. |
+| `sideOffset` | `number` | `4` | Distance from the trigger, in px. |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` | Anchored mode only. |
+| `alignOffset` | `number` | `0` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
 ### SelectItem
 
 | Prop | Type | Default | Description |
@@ -72,6 +83,6 @@ Built on [Base UI Select](https://base-ui.com/react/components/select). The tabl
 
 ### Styling
 
-`SelectTrigger`, `SelectContent` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`SelectTrigger` accepts `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
 `SelectValue` and `SelectGroup` are Base UI parts re-exported unstyled.

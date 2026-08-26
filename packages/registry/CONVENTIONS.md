@@ -44,6 +44,19 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
   (popups unmount on close).
 - Focus ring: `outline: 2px solid colors.ring; outlineOffset: 2px` (or inset
   where offset clips).
+- **Even metrics only.** Component metrics (heights, paddings, line boxes) land
+  on the 4px grid — never a value that produces odd pixel sizes. Single-line
+  control text uses `lineHeight.control` (20px, pairs with `fontSize.sm`);
+  ratio line-heights (`normal` = 1.5 → 21px) are for prose, not controls.
+- **Popup edges are shadow rings, not borders.** Base UI's
+  align-item-with-trigger math ignores popup borders (a border shifts aligned
+  text by its width). Use the recipes from `@/lib/stylex-utils` — StyleX
+  dynamic styles, called like Tailwind shorthands:
+  `stylex.props(styles.popup, ring({ shadow: shadow.md }))`,
+  `ring({ width: stroke.focus, color: colors.ring })`.
+  Raw multi-zero values (`'0 0 0 1px'`) must be template literals — the shadcn
+  CLI transformer mangles zero runs in plain strings but leaves template
+  literals intact.
 
 ## Token values (shadcn CLI transformer constraint)
 

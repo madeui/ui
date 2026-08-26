@@ -5,8 +5,8 @@ import * as React from 'react';
 import { Select as BaseSelect } from '@base-ui/react/select';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
-import { space, fontSize, z, duration, stroke, container } from '@/lib/constants.stylex';
+import { ring, stateProps } from '@/lib/stylex-utils';
+import { space, fontSize, lineHeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -44,22 +44,86 @@ export function SelectTrigger({
   );
 }
 
+function ScrollArrow({ direction }: { direction: 'up' | 'down' }) {
+  const Arrow =
+    direction === 'up' ? BaseSelect.ScrollUpArrow : BaseSelect.ScrollDownArrow;
+  return (
+    <Arrow
+      {...stylex.props(
+        styles.scrollArrow,
+        direction === 'up' ? styles.scrollArrowUp : styles.scrollArrowDown
+      )}
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox={`0 0 12 12`}
+        fill="currentColor"
+        aria-hidden
+      >
+        {direction === 'up' ? (
+          <path d={`M9 7.5H3L6 4z`} />
+        ) : (
+          <path d={`M9 4.5H3L6 8z`} />
+        )}
+      </svg>
+    </Arrow>
+  );
+}
+
+export interface SelectContentProps
+  extends Omit<
+      React.ComponentPropsWithoutRef<typeof BaseSelect.Popup>,
+      'className' | 'style'
+    >,
+    Pick<
+      React.ComponentPropsWithoutRef<typeof BaseSelect.Positioner>,
+      'align' | 'alignOffset' | 'side' | 'sideOffset' | 'alignItemWithTrigger'
+    >,
+    StyleProp {}
+
+// alignItemWithTrigger defaults on (the popup
+// overlays the trigger with the selected item aligned to it; the popup itself
+// scrolls, with scroll arrows). Pass alignItemWithTrigger={false} for a
+// plain anchored dropdown.
 export function SelectContent({
   style,
   children,
+  side = 'bottom',
+  sideOffset = 4,
+  align = 'center',
+  alignOffset = 0,
+  alignItemWithTrigger = true,
   ...props
-}: Omit<
-  React.ComponentPropsWithoutRef<typeof BaseSelect.Popup>,
-  'className' | 'style'
-> &
-  StyleProp) {
+}: SelectContentProps) {
   return (
     <BaseSelect.Portal>
-      <BaseSelect.Positioner sideOffset={4} {...stylex.props(styles.positioner)}>
-        <BaseSelect.Popup {...props} {...stylex.props(styles.popup, style)}>
+      <BaseSelect.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        alignItemWithTrigger={alignItemWithTrigger}
+        side={side}
+        sideOffset={sideOffset}
+        {...stylex.props(styles.positioner)}
+      >
+        <BaseSelect.Popup
+          {...props}
+          {...stylex.props(
+            styles.popup,
+            // Edge as a ring, not a border: Base UI's align-item-with-trigger
+            // math ignores borders and would shift the aligned text.
+            ring({ shadow: shadow.md }),
+            // The align-with-trigger overlay repositions on open; a scale-in
+            // animation fights that, so it only runs in anchored mode.
+            !alignItemWithTrigger && styles.popupAnimated,
+            style
+          )}
+        >
+          <ScrollArrow direction="up" />
           <BaseSelect.List {...stylex.props(styles.list)}>
             {children}
           </BaseSelect.List>
+          <ScrollArrow direction="down" />
         </BaseSelect.Popup>
       </BaseSelect.Positioner>
     </BaseSelect.Portal>
@@ -85,6 +149,9 @@ export function SelectItem({
         style,
       ])}
     >
+      <BaseSelect.ItemText {...stylex.props(styles.itemText)}>
+        {children}
+      </BaseSelect.ItemText>
       <BaseSelect.ItemIndicator {...stylex.props(styles.itemIndicator)}>
         <svg
           width="12"
@@ -100,9 +167,6 @@ export function SelectItem({
           <path d={`M2 6.5 4.5 9 10 3`} />
         </svg>
       </BaseSelect.ItemIndicator>
-      <BaseSelect.ItemText {...stylex.props(styles.itemText)}>
-        {children}
-      </BaseSelect.ItemText>
     </BaseSelect.Item>
   );
 }
@@ -128,6 +192,7 @@ const styles = stylex.create({
     gap: space.s2,
     height: space.s9,
     justifyContent: 'space-between',
+    lineHeight: lineHeight.control,
     minWidth: container.xs,
     opacity: { default: 1, ':disabled': 0.5 },
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
@@ -145,25 +210,44 @@ const styles = stylex.create({
     zIndex: z.popup,
   },
   popup: {
+    backgroundColor: colors.popover,
+    borderRadius: radius.md,
+    color: colors.popoverForeground,
+    fontFamily: font.sans,
+    lineHeight: lineHeight.control,
+    maxHeight: 'var(--available-height)',
+    width: 'var(--anchor-width)',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    position: 'relative',
+    transformOrigin: 'var(--transform-origin)',
+  },
+  popupAnimated: {
     animationDuration: duration.fast,
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
-    backgroundColor: colors.popover,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    borderStyle: 'solid',
-    borderWidth: stroke.border,
-    boxShadow: shadow.md,
-    color: colors.popoverForeground,
-    fontFamily: font.sans,
-    minWidth: 'var(--anchor-width)',
-    outline: 'none',
+    maxHeight: `min(${container.sm}, var(--available-height))`,
   },
   list: {
-    maxHeight: 'var(--available-height)',
-    overflowY: 'auto',
     paddingBlock: space.s1,
-    position: 'relative',
+  },
+  scrollArrow: {
+    alignItems: 'center',
+    backgroundColor: colors.popover,
+    color: colors.mutedForeground,
+    cursor: 'default',
+    display: 'flex',
+    height: space.s4,
+    justifyContent: 'center',
+    position: 'sticky',
+    width: '100%',
+    zIndex: 1,
+  },
+  scrollArrowUp: {
+    top: 0,
+  },
+  scrollArrowDown: {
+    bottom: 0,
   },
   item: {
     alignItems: 'center',
@@ -172,7 +256,7 @@ const styles = stylex.create({
     display: 'grid',
     fontSize: fontSize.sm,
     gap: space.s2,
-    gridTemplateColumns: `${space.s4} 1fr`,
+    gridTemplateColumns: `1fr ${space.s4}`,
     marginInline: space.s1,
     outline: 'none',
     paddingBlock: space.s15,
@@ -190,10 +274,10 @@ const styles = stylex.create({
   itemIndicator: {
     alignItems: 'center',
     display: 'flex',
-    gridColumnStart: 1,
+    gridColumnStart: 2,
     justifyContent: 'center',
   },
   itemText: {
-    gridColumnStart: 2,
+    gridColumnStart: 1,
   },
 });
