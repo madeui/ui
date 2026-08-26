@@ -21,9 +21,7 @@ function DemoButton() {
 export default function ToastDemo() {
   return (
     <ToastProvider>
-      <div style={{ padding: 16 }}>
-        <DemoButton />
-      </div>
+      <DemoButton />
       <Toaster />
     </ToastProvider>
   );

@@ -14,19 +14,17 @@ const plans = [
 
 export default function SelectDisabled() {
   return (
-    <div style={{ padding: 16 }}>
-      <Select items={plans} defaultValue="pro">
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {plans.map(({ label, value, disabled }) => (
-            <SelectItem key={value} value={value} disabled={disabled}>
-              {label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <Select items={plans} defaultValue="pro">
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {plans.map(({ label, value, disabled }) => (
+          <SelectItem key={value} value={value} disabled={disabled}>
+            {label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

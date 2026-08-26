@@ -1,18 +1,24 @@
+import * as stylex from '@stylexjs/stylex';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function TabsDemo() {
   return (
-    <div style={{ maxWidth: 400, padding: 16 }}>
-      <Tabs defaultValue="account">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
-        </TabsList>
-        <TabsContent value="account">
-          Make changes to your account here.
-        </TabsContent>
-        <TabsContent value="password">Change your password here.</TabsContent>
-      </Tabs>
-    </div>
+    <Tabs defaultValue="account" style={styles.tabs}>
+      <TabsList>
+        <TabsTrigger value="account">Account</TabsTrigger>
+        <TabsTrigger value="password">Password</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">
+        Make changes to your account here.
+      </TabsContent>
+      <TabsContent value="password">Change your password here.</TabsContent>
+    </Tabs>
   );
 }
+
+const styles = stylex.create({
+  tabs: {
+    width: '24rem',
+  },
+});

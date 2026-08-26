@@ -1,3 +1,5 @@
+import * as stylex from '@stylexjs/stylex';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,20 +13,24 @@ import { Input } from '@/components/ui/input';
 
 export default function CardDemo() {
   return (
-    <div style={{ maxWidth: 360, padding: 16 }}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Create project</CardTitle>
-          <CardDescription>Deploy your new project in one click.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Input placeholder="Project name" />
-        </CardContent>
-        <CardFooter>
-          <Button>Deploy</Button>
-          <Button variant="ghost">Cancel</Button>
-        </CardFooter>
-      </Card>
-    </div>
+    <Card style={styles.card}>
+      <CardHeader>
+        <CardTitle>Create project</CardTitle>
+        <CardDescription>Deploy your new project in one click.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="Project name" />
+      </CardContent>
+      <CardFooter>
+        <Button>Deploy</Button>
+        <Button variant="ghost">Cancel</Button>
+      </CardFooter>
+    </Card>
   );
 }
+
+const styles = stylex.create({
+  card: {
+    width: '22rem',
+  },
+});

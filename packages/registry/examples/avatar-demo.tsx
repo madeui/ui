@@ -1,8 +1,10 @@
+import * as stylex from '@stylexjs/stylex';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function AvatarDemo() {
   return (
-    <div style={{ alignItems: 'center', display: 'flex', gap: 12, padding: 16 }}>
+    <div {...stylex.props(styles.row)}>
       <Avatar size="sm">
         <AvatarFallback>SM</AvatarFallback>
       </Avatar>
@@ -16,3 +18,11 @@ export default function AvatarDemo() {
     </div>
   );
 }
+
+const styles = stylex.create({
+  row: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.75rem',
+  },
+});

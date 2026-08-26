@@ -1,8 +1,10 @@
+import * as stylex from '@stylexjs/stylex';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function AlertDemo() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 480, padding: 16 }}>
+    <div {...stylex.props(styles.col)}>
       <Alert>
         <AlertTitle>Heads up!</AlertTitle>
         <AlertDescription>
@@ -16,3 +18,12 @@ export default function AlertDemo() {
     </div>
   );
 }
+
+const styles = stylex.create({
+  col: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    width: '28rem',
+  },
+});
