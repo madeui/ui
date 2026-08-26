@@ -26,21 +26,29 @@ export function Checkbox({ style, ...props }: CheckboxProps) {
         style,
       ])}
     >
-      <BaseCheckbox.Indicator {...stylex.props(styles.indicator)}>
-        <svg
-          width="12"
-          height="12"
-          viewBox={`0 0 12 12`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d={`M2 6.5 4.5 9 10 3`} />
-        </svg>
-      </BaseCheckbox.Indicator>
+      <BaseCheckbox.Indicator
+        render={(indicatorProps, state) => (
+          <span {...indicatorProps} {...stylex.props(styles.indicator)}>
+            <svg
+              width="12"
+              height="12"
+              viewBox={`0 0 12 12`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              {state.indeterminate ? (
+                <path d={`M2.5 6h7`} />
+              ) : (
+                <path d={`M2 6.5 4.5 9 10 3`} />
+              )}
+            </svg>
+          </span>
+        )}
+      />
     </BaseCheckbox.Root>
   );
 }

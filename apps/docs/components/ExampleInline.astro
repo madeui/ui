@@ -34,7 +34,12 @@ const codeHtml = entry
     <Tabs hash={false} sync={false}>
       <Tab class="not-prose p-0!" title="Preview">
         <ThemeSync client:load />
-        <div class="ui-lib-preview">
+        {/* Inline styles: Blume compiles this override outside the normal
+            Astro page pipeline, so <style> blocks here are dropped. */}
+        <div
+          class="ui-lib-preview"
+          style="align-items:center;display:flex;justify-content:center;min-height:10rem;padding:2.5rem 1.5rem;width:100%"
+        >
           <Example />
         </div>
       </Tab>
@@ -49,13 +54,3 @@ const codeHtml = entry
     </div>
   )
 }
-
-<style>
-  .ui-lib-preview {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    min-height: 10rem;
-    width: 100%;
-  }
-</style>
