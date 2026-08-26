@@ -27,10 +27,88 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "StyleX utilities",
+      "description": "stateProps: adapter mapping Base UI state to conditional StyleX styles.",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "files": [
+        {
+          "path": "lib/stylex-utils.ts",
+          "type": "registry:lib",
+          "target": "lib/stylex-utils.ts"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Callout for user attention. Variants: default, destructive.",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/alert.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "Avatar built on Base UI with image and fallback. Sizes: sm, md, lg.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/avatar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/avatar.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Small status descriptor. Variants: primary, secondary, outline, destructive.",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/badge.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "Button built on Base UI, styled with StyleX. Variants: primary, secondary, outline, ghost, destructive.",
+      "description": "Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: sm, md, lg, icon.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
@@ -48,10 +126,52 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Content container with header, content, and footer sections.",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Checkbox built on Base UI with checked/indeterminate states.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/checkbox.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "description": "Modal dialog built on Base UI Dialog, styled with StyleX.",
+      "description": "Modal dialog built on Base UI Dialog.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
@@ -64,6 +184,220 @@
           "path": "ui/dialog.tsx",
           "type": "registry:ui",
           "target": "components/ui/dialog.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Menu of actions built on Base UI Menu: items, groups, labels, separators.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/dropdown-menu.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Text input built on Base UI Input.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Floating panel anchored to a trigger, built on Base UI Popover.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/popover.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/popover.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Radio group built on Base UI Radio/RadioGroup.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/radio-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Select built on Base UI Select with popup list and indicators.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/select.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Toggle switch built on Base UI Switch.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/switch.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/switch.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Tabbed panels built on Base UI Tabs.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/tabs.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tabs.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi-line text input.",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/textarea.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Notifications built on Base UI Toast: ToastProvider + Toaster + useToast().",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/toast.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/toast.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Text label on hover/focus, built on Base UI Tooltip.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/tooltip.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tooltip.tsx"
         }
       ]
     }

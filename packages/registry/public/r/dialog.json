@@ -3,7 +3,7 @@
   "name": "dialog",
   "type": "registry:ui",
   "title": "Dialog",
-  "description": "Modal dialog built on Base UI Dialog, styled with StyleX.",
+  "description": "Modal dialog built on Base UI Dialog.",
   "dependencies": [
     "@base-ui/react",
     "@stylexjs/stylex"

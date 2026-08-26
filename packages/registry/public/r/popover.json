@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "popover",
+  "type": "registry:ui",
+  "title": "Popover",
+  "description": "Floating panel anchored to a trigger, built on Base UI Popover.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/popover.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Popover as BasePopover } from '@base-ui/react/popover';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { colors, font, radius, shadow } from '@/lib/tokens.stylex';\n\nexport const Popover = BasePopover.Root;\nexport const PopoverTrigger = BasePopover.Trigger;\nexport const PopoverClose = BasePopover.Close;\n\nexport interface PopoverContentProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BasePopover.Popup>,\n    'className' | 'style'\n  > {\n  style?: stylex.StyleXStyles;\n  sideOffset?: number;\n  side?: React.ComponentPropsWithoutRef<\n    typeof BasePopover.Positioner\n  >['side'];\n  align?: React.ComponentPropsWithoutRef<\n    typeof BasePopover.Positioner\n  >['align'];\n}\n\nexport function PopoverContent({\n  style,\n  side = 'bottom',\n  align = 'center',\n  sideOffset = 6,\n  ...props\n}: PopoverContentProps) {\n  return (\n    <BasePopover.Portal>\n      <BasePopover.Positioner side={side} align={align} sideOffset={sideOffset}>\n        <BasePopover.Popup {...props} {...stylex.props(styles.popup, style)} />\n      </BasePopover.Positioner>\n    </BasePopover.Portal>\n  );\n}\n\nconst popupIn = stylex.keyframes({\n  from: { opacity: 0, transform: 'scale(0.97)' },\n  to: { opacity: 1, transform: 'scale(1)' },\n});\n\nconst styles = stylex.create({\n  popup: {\n    animationDuration: '120ms',\n    animationName: popupIn,\n    animationTimingFunction: 'ease-out',\n    backgroundColor: colors.popover,\n    borderColor: colors.border,\n    borderRadius: radius.md,\n    borderStyle: 'solid',\n    borderWidth: '1px',\n    boxShadow: shadow.md,\n    color: colors.popoverForeground,\n    fontFamily: font.sans,\n    fontSize: '0.875rem',\n    lineHeight: 1.5,\n    outline: 'none',\n    padding: '1rem',\n    width: '18rem',\n    zIndex: 50,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/popover.tsx"
+    }
+  ]
+}

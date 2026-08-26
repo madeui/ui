@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "type": "registry:ui",
+  "title": "Checkbox",
+  "description": "Checkbox built on Base UI with checked/indeterminate states.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/utils"
+  ],
+  "files": [
+    {
+      "path": "ui/checkbox.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { stateProps } from '@/lib/stylex-utils';\nimport { colors, radius } from '@/lib/tokens.stylex';\n\nexport interface CheckboxProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseCheckbox.Root>,\n    'className' | 'style'\n  > {\n  style?: stylex.StyleXStyles;\n}\n\nexport function Checkbox({ style, ...props }: CheckboxProps) {\n  return (\n    <BaseCheckbox.Root\n      {...props}\n      {...stateProps((s: { checked: boolean; indeterminate: boolean }) => [\n        styles.root,\n        (s.checked || s.indeterminate) && styles.rootChecked,\n        style,\n      ])}\n    >\n      <BaseCheckbox.Indicator {...stylex.props(styles.indicator)}>\n        <svg\n          width=\"12\"\n          height=\"12\"\n          viewBox={`0 0 12 12`}\n          fill=\"none\"\n          stroke=\"currentColor\"\n          strokeWidth=\"2\"\n          strokeLinecap=\"round\"\n          strokeLinejoin=\"round\"\n          aria-hidden\n        >\n          <path d={`M2 6.5 4.5 9 10 3`} />\n        </svg>\n      </BaseCheckbox.Indicator>\n    </BaseCheckbox.Root>\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    backgroundColor: colors.background,\n    borderColor: colors.input,\n    borderRadius: radius.sm,\n    borderStyle: 'solid',\n    borderWidth: '1px',\n    cursor: { default: 'pointer', ':disabled': 'not-allowed' },\n    display: 'inline-flex',\n    flexShrink: 0,\n    height: '1rem',\n    justifyContent: 'center',\n    opacity: { default: 1, ':disabled': 0.5 },\n    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },\n    outlineOffset: '2px',\n    padding: 0,\n    transitionDuration: '150ms',\n    transitionProperty: 'background-color, border-color',\n    width: '1rem',\n  },\n  rootChecked: {\n    backgroundColor: colors.primary,\n    borderColor: colors.primary,\n  },\n  indicator: {\n    alignItems: 'center',\n    color: colors.primaryForeground,\n    display: 'flex',\n    justifyContent: 'center',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/checkbox.tsx"
+    }
+  ]
+}

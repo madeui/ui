@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "utils",
+  "type": "registry:lib",
+  "title": "StyleX utilities",
+  "description": "stateProps: adapter mapping Base UI state to conditional StyleX styles.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "files": [
+    {
+      "path": "lib/stylex-utils.ts",
+      "content": "import * as stylex from '@stylexjs/stylex';\n\n/** Re-exported so component files only import from one place. */\nexport type StyleXStyles = stylex.StyleXStyles;\n\n/**\n * Adapter between StyleX and Base UI's state-driven styling.\n *\n * Base UI parts accept `className`/`style` as functions of the part's state\n * (checked, open, highlighted, ...). StyleX has no attribute selectors, so\n * state variants are expressed as conditional styles resolved per state:\n *\n *   <Switch.Root\n *     {...stateProps((s) => [styles.root, s.checked && styles.checked, style])}\n *   />\n */\nexport function stateProps<State>(\n  resolve: (state: State) => ReadonlyArray<stylex.StyleXStyles | false | null | undefined>\n) {\n  return {\n    className: (state: State) => stylex.props(...(resolve(state) as any)).className ?? '',\n    style: (state: State) => stylex.props(...(resolve(state) as any)).style ?? {},\n  };\n}\n",
+      "type": "registry:lib",
+      "target": "lib/stylex-utils.ts"
+    }
+  ]
+}

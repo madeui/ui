@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dropdown-menu",
+  "type": "registry:ui",
+  "title": "Dropdown Menu",
+  "description": "Menu of actions built on Base UI Menu: items, groups, labels, separators.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/utils"
+  ],
+  "files": [
+    {
+      "path": "ui/dropdown-menu.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Menu as BaseMenu } from '@base-ui/react/menu';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { stateProps } from '@/lib/stylex-utils';\nimport { colors, font, radius, shadow } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  style?: stylex.StyleXStyles;\n}\n\nexport const DropdownMenu = BaseMenu.Root;\nexport const DropdownMenuTrigger = BaseMenu.Trigger;\nexport const DropdownMenuGroup = BaseMenu.Group;\n\nexport function DropdownMenuContent({\n  style,\n  sideOffset = 4,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseMenu.Popup>,\n  'className' | 'style'\n> &\n  StyleProp & { sideOffset?: number }) {\n  return (\n    <BaseMenu.Portal>\n      <BaseMenu.Positioner\n        sideOffset={sideOffset}\n        {...stylex.props(styles.positioner)}\n      >\n        <BaseMenu.Popup {...props} {...stylex.props(styles.popup, style)} />\n      </BaseMenu.Positioner>\n    </BaseMenu.Portal>\n  );\n}\n\nexport function DropdownMenuItem({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseMenu.Item>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseMenu.Item\n      {...props}\n      {...stateProps((s: { highlighted: boolean }) => [\n        styles.item,\n        s.highlighted && styles.itemHighlighted,\n        style,\n      ])}\n    />\n  );\n}\n\nexport function DropdownMenuSeparator({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseMenu.Separator>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseMenu.Separator {...props} {...stylex.props(styles.separator, style)} />\n  );\n}\n\nexport function DropdownMenuLabel({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseMenu.GroupLabel>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseMenu.GroupLabel {...props} {...stylex.props(styles.label, style)} />\n  );\n}\n\nconst popupIn = stylex.keyframes({\n  from: { opacity: 0, transform: 'scale(0.97)' },\n  to: { opacity: 1, transform: 'scale(1)' },\n});\n\nconst styles = stylex.create({\n  positioner: {\n    outline: 'none',\n    zIndex: 50,\n  },\n  popup: {\n    animationDuration: '120ms',\n    animationName: popupIn,\n    animationTimingFunction: 'ease-out',\n    backgroundColor: colors.popover,\n    borderColor: colors.border,\n    borderRadius: radius.md,\n    borderStyle: 'solid',\n    borderWidth: '1px',\n    boxShadow: shadow.md,\n    color: colors.popoverForeground,\n    fontFamily: font.sans,\n    minWidth: '10rem',\n    outline: 'none',\n    paddingBlock: '0.25rem',\n  },\n  item: {\n    alignItems: 'center',\n    borderRadius: radius.sm,\n    cursor: 'default',\n    display: 'flex',\n    fontSize: '0.875rem',\n    gap: '0.5rem',\n    marginInline: '0.25rem',\n    outline: 'none',\n    paddingBlock: '0.375rem',\n    paddingInline: '0.5rem',\n    userSelect: 'none',\n  },\n  itemHighlighted: {\n    backgroundColor: colors.accent,\n    color: colors.accentForeground,\n  },\n  separator: {\n    backgroundColor: colors.border,\n    height: '1px',\n    marginBlock: '0.25rem',\n  },\n  label: {\n    color: colors.mutedForeground,\n    fontSize: '0.75rem',\n    fontWeight: 500,\n    paddingBlock: '0.375rem',\n    paddingInline: '0.75rem',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/dropdown-menu.tsx"
+    }
+  ]
+}

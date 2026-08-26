@@ -3,7 +3,7 @@
   "name": "button",
   "type": "registry:ui",
   "title": "Button",
-  "description": "Button built on Base UI, styled with StyleX. Variants: primary, secondary, outline, ghost, destructive.",
+  "description": "Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: sm, md, lg, icon.",
   "dependencies": [
     "@base-ui/react",
     "@stylexjs/stylex"

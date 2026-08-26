@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tabs",
+  "type": "registry:ui",
+  "title": "Tabs",
+  "description": "Tabbed panels built on Base UI Tabs.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/utils"
+  ],
+  "files": [
+    {
+      "path": "ui/tabs.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Tabs as BaseTabs } from '@base-ui/react/tabs';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { stateProps } from '@/lib/stylex-utils';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  style?: stylex.StyleXStyles;\n}\n\nexport function Tabs({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseTabs.Root>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return <BaseTabs.Root {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport function TabsList({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseTabs.List>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return <BaseTabs.List {...props} {...stylex.props(styles.list, style)} />;\n}\n\nexport function TabsTrigger({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseTabs.Tab>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseTabs.Tab\n      {...props}\n      {...stateProps((s: { active: boolean }) => [\n        styles.trigger,\n        s.active && styles.triggerSelected,\n        style,\n      ])}\n    />\n  );\n}\n\nexport function TabsContent({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseTabs.Panel>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return <BaseTabs.Panel {...props} {...stylex.props(styles.content, style)} />;\n}\n\nconst styles = stylex.create({\n  root: {\n    display: 'flex',\n    flexDirection: 'column',\n    fontFamily: font.sans,\n    gap: '0.5rem',\n  },\n  list: {\n    alignItems: 'center',\n    backgroundColor: colors.muted,\n    borderRadius: radius.md,\n    display: 'inline-flex',\n    gap: '0.25rem',\n    padding: '0.25rem',\n    width: 'fit-content',\n  },\n  trigger: {\n    alignItems: 'center',\n    backgroundColor: 'transparent',\n    borderRadius: radius.sm,\n    borderStyle: 'none',\n    color: colors.mutedForeground,\n    cursor: { default: 'pointer', ':disabled': 'not-allowed' },\n    display: 'inline-flex',\n    fontFamily: font.sans,\n    fontSize: '0.875rem',\n    fontWeight: 500,\n    height: '1.75rem',\n    justifyContent: 'center',\n    lineHeight: 1,\n    opacity: { default: 1, ':disabled': 0.5 },\n    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },\n    outlineOffset: '-2px',\n    paddingInline: '0.75rem',\n    transitionDuration: '150ms',\n    transitionProperty: 'background-color, color',\n    userSelect: 'none',\n    whiteSpace: 'nowrap',\n  },\n  triggerSelected: {\n    backgroundColor: colors.background,\n    color: colors.foreground,\n  },\n  content: {\n    color: colors.foreground,\n    fontSize: '0.875rem',\n    lineHeight: 1.5,\n    outline: 'none',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/tabs.tsx"
+    }
+  ]
+}
