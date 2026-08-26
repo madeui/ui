@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { radius } from '@/lib/tokens.stylex';
+
 import { Button } from '@/components/ui/button';
 
 // The style prop merges last — StyleX guarantees it wins over the
@@ -10,6 +12,6 @@ export default function ButtonRounded() {
 
 const styles = stylex.create({
   rounded: {
-    borderRadius: '9999px',
+    borderRadius: radius.full,
   },
 });

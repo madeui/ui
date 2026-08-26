@@ -1,6 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
 import { Input } from '@/components/ui/input';
+import { space, fontSize, fontWeight, container } from '@/lib/constants.stylex';
 import { colors, font } from '@/lib/tokens.stylex';
 
 export default function InputWithLabel() {
@@ -18,13 +19,13 @@ const styles = stylex.create({
   field: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.375rem',
-    width: '20rem',
+    gap: space.s15,
+    width: container.md,
   },
   label: {
     color: colors.foreground,
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    fontWeight: 500,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
   },
 });

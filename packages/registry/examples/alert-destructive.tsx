@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function AlertDestructive() {
@@ -13,6 +15,6 @@ export default function AlertDestructive() {
 
 const styles = stylex.create({
   alert: {
-    width: '28rem',
+    width: container.xl,
   },
 });

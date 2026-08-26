@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Textarea } from '@/components/ui/textarea';
 
 export default function TextareaDisabled() {
@@ -12,6 +14,6 @@ export default function TextareaDisabled() {
 
 const styles = stylex.create({
   wrap: {
-    width: '24rem',
+    width: container.lg,
   },
 });

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export type AlertVariant = 'default' | 'destructive';
@@ -50,25 +51,25 @@ const styles = stylex.create({
     borderColor: colors.border,
     borderRadius: radius.lg,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     color: colors.cardForeground,
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: '0.25rem',
-    padding: '1rem',
+    gap: space.s1,
+    padding: space.s4,
     width: '100%',
   },
   title: {
-    fontSize: '0.875rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.tight,
     margin: 0,
   },
   description: {
     color: colors.mutedForeground,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
   },
 });
 

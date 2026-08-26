@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -25,10 +27,10 @@ const styles = stylex.create({
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: space.s2,
   },
   heading: {
-    fontSize: '0.875rem',
-    fontWeight: 600,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
   },
 });

@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { space } from '@/lib/constants.stylex';
+
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -32,6 +34,6 @@ const styles = stylex.create({
     alignItems: 'center',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '0.5rem',
+    gap: space.s2,
   },
 });

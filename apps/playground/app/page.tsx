@@ -61,6 +61,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { darkTheme } from '@/lib/themes';
+import { space, fontSize, fontWeight, container } from '@/lib/constants.stylex';
 import { colors, font } from '@/lib/tokens.stylex';
 
 const fruits = [
@@ -259,9 +260,9 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: '2rem',
+    gap: space.s8,
     minHeight: '100vh',
-    padding: '3rem',
+    padding: space.s12,
   },
   headerRow: {
     alignItems: 'center',
@@ -269,29 +270,29 @@ const styles = stylex.create({
     justifyContent: 'space-between',
   },
   heading: {
-    fontSize: '1.5rem',
-    fontWeight: 700,
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
     margin: 0,
   },
   row: {
     alignItems: 'flex-start',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '0.75rem',
+    gap: space.s3,
   },
   col: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.75rem',
-    minWidth: '16rem',
+    gap: space.s3,
+    minWidth: container.sm,
   },
   label: {
     alignItems: 'center',
     display: 'flex',
-    fontSize: '0.875rem',
-    gap: '0.5rem',
+    fontSize: fontSize.sm,
+    gap: space.s2,
   },
   card: {
-    maxWidth: '20rem',
+    maxWidth: container.md,
   },
 });

@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export type ButtonVariant =
@@ -49,19 +50,19 @@ const styles = stylex.create({
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    fontWeight: 500,
-    gap: '0.5rem',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    gap: space.s2,
     justifyContent: 'center',
-    lineHeight: 1,
+    lineHeight: lineHeight.none,
     opacity: { default: 1, ':disabled': 0.5 },
     textDecoration: 'none',
     outline: {
       default: 'none',
-      ':focus-visible': `2px solid ${colors.ring}`,
+      ':focus-visible': `${stroke.focus} solid ${colors.ring}`,
     },
-    outlineOffset: '2px',
-    transitionDuration: '150ms',
+    outlineOffset: stroke.focus,
+    transitionDuration: duration.fast,
     transitionProperty: 'background-color, border-color, color, opacity',
     userSelect: 'none',
     whiteSpace: 'nowrap',
@@ -90,7 +91,7 @@ const variants = stylex.create({
     },
     borderColor: colors.border,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     color: {
       default: colors.foreground,
       ':hover:not(:disabled)': colors.accentForeground,
@@ -117,21 +118,21 @@ const variants = stylex.create({
 
 const sizes = stylex.create({
   sm: {
-    height: '2rem',
-    paddingInline: '0.75rem',
+    height: space.s8,
+    paddingInline: space.s3,
   },
   md: {
-    height: '2.25rem',
-    paddingInline: '1rem',
+    height: space.s9,
+    paddingInline: space.s4,
   },
   lg: {
-    fontSize: '1rem',
-    height: '2.5rem',
-    paddingInline: '1.5rem',
+    fontSize: fontSize.base,
+    height: space.s10,
+    paddingInline: space.s6,
   },
   icon: {
-    height: '2.25rem',
+    height: space.s9,
     paddingInline: 0,
-    width: '2.25rem',
+    width: space.s9,
   },
 });

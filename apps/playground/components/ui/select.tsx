@@ -6,6 +6,7 @@ import { Select as BaseSelect } from '@base-ui/react/select';
 import * as stylex from '@stylexjs/stylex';
 
 import { stateProps } from '@/lib/stylex-utils';
+import { space, fontSize, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -118,20 +119,20 @@ const styles = stylex.create({
     borderColor: colors.input,
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     color: colors.foreground,
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    gap: '0.5rem',
-    height: '2.25rem',
+    fontSize: fontSize.sm,
+    gap: space.s2,
+    height: space.s9,
     justifyContent: 'space-between',
-    minWidth: '10rem',
+    minWidth: container.xs,
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
-    outlineOffset: '-1px',
-    paddingInline: '0.75rem',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: `calc(-1 * ${stroke.border})`,
+    paddingInline: space.s3,
     userSelect: 'none',
     whiteSpace: 'nowrap',
   },
@@ -141,17 +142,17 @@ const styles = stylex.create({
   },
   positioner: {
     outline: 'none',
-    zIndex: 50,
+    zIndex: z.popup,
   },
   popup: {
-    animationDuration: '120ms',
+    animationDuration: duration.fast,
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
@@ -161,7 +162,7 @@ const styles = stylex.create({
   list: {
     maxHeight: 'var(--available-height)',
     overflowY: 'auto',
-    paddingBlock: '0.25rem',
+    paddingBlock: space.s1,
     position: 'relative',
   },
   item: {
@@ -169,13 +170,13 @@ const styles = stylex.create({
     borderRadius: radius.sm,
     cursor: 'default',
     display: 'grid',
-    fontSize: '0.875rem',
-    gap: '0.5rem',
-    gridTemplateColumns: '1rem 1fr',
-    marginInline: '0.25rem',
+    fontSize: fontSize.sm,
+    gap: space.s2,
+    gridTemplateColumns: `${space.s4} 1fr`,
+    marginInline: space.s1,
     outline: 'none',
-    paddingBlock: '0.375rem',
-    paddingInline: '0.5rem',
+    paddingBlock: space.s15,
+    paddingInline: space.s2,
     userSelect: 'none',
   },
   itemHighlighted: {

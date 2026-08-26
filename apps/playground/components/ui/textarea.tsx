@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export interface TextareaProps
@@ -24,19 +25,19 @@ const styles = stylex.create({
     borderColor: { default: colors.input, ':focus-visible': colors.ring },
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     color: colors.foreground,
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
-    minHeight: '4rem',
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
+    minHeight: space.s16,
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
-    outlineOffset: '-1px',
-    paddingBlock: '0.5rem',
-    paddingInline: '0.75rem',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: `calc(-1 * ${stroke.border})`,
+    paddingBlock: space.s2,
+    paddingInline: space.s3,
     resize: 'vertical',
-    transitionDuration: '150ms',
+    transitionDuration: duration.fast,
     transitionProperty: 'border-color, outline-color',
     width: '100%',
     '::placeholder': { color: colors.mutedForeground },

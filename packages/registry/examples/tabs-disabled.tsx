@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function TabsDisabled() {
@@ -18,6 +20,6 @@ export default function TabsDisabled() {
 
 const styles = stylex.create({
   tabs: {
-    width: '24rem',
+    width: container.lg,
   },
 });

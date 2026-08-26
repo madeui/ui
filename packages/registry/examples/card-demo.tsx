@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -31,6 +33,6 @@ export default function CardDemo() {
 
 const styles = stylex.create({
   card: {
-    width: '22rem',
+    width: container.md,
   },
 });

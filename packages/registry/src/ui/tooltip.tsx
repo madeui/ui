@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, z, duration, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 export const TooltipProvider = BaseTooltip.Provider;
@@ -39,13 +40,13 @@ export function TooltipContent({
 }
 
 const popupIn = stylex.keyframes({
-  from: { opacity: 0, transform: 'scale(0.96)' },
+  from: { opacity: 0, transform: 'scale(0.97)' },
   to: { opacity: 1, transform: 'scale(1)' },
 });
 
 const styles = stylex.create({
   popup: {
-    animationDuration: '120ms',
+    animationDuration: duration.fast,
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.foreground,
@@ -53,11 +54,11 @@ const styles = stylex.create({
     boxShadow: shadow.md,
     color: colors.background,
     fontFamily: font.sans,
-    fontSize: '0.75rem',
-    lineHeight: 1.4,
-    maxWidth: '18rem',
-    paddingBlock: '0.25rem',
-    paddingInline: '0.5rem',
-    zIndex: 50,
+    fontSize: fontSize.xs,
+    lineHeight: lineHeight.snug,
+    maxWidth: container.sm,
+    paddingBlock: space.s1,
+    paddingInline: space.s2,
+    zIndex: z.popup,
   },
 });

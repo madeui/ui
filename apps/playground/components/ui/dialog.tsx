@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -100,7 +101,7 @@ const overlayIn = stylex.keyframes({
 const contentIn = stylex.keyframes({
   from: {
     opacity: 0,
-    transform: 'translate(-50%, -50%) scale(0.96)',
+    transform: 'translate(-50%, -50%) scale(0.97)',
   },
   to: {
     opacity: 1,
@@ -110,59 +111,59 @@ const contentIn = stylex.keyframes({
 
 const styles = stylex.create({
   overlay: {
-    animationDuration: '150ms',
+    animationDuration: duration.fast,
     animationName: overlayIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.overlay,
     inset: 0,
     position: 'fixed',
-    zIndex: 50,
+    zIndex: z.popup,
   },
   content: {
-    animationDuration: '150ms',
+    animationDuration: duration.fast,
     animationName: contentIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.lg,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.lg,
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: '1rem',
+    gap: space.s4,
     left: '50%',
-    maxWidth: 'calc(100% - 2rem)',
-    padding: '1.5rem',
+    maxWidth: `calc(100% - ${space.s8})`,
+    padding: space.s6,
     position: 'fixed',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '32rem',
-    zIndex: 50,
+    width: container.xxl,
+    zIndex: z.popup,
   },
   header: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.375rem',
+    gap: space.s15,
   },
   footer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: '0.5rem',
+    gap: space.s2,
     justifyContent: 'flex-end',
   },
   title: {
-    fontSize: '1.125rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.tight,
     margin: 0,
   },
   description: {
     color: colors.mutedForeground,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
     margin: 0,
   },
 });

@@ -6,6 +6,7 @@ import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import * as stylex from '@stylexjs/stylex';
 
 import { stateProps } from '@/lib/stylex-utils';
+import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -70,15 +71,15 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: '0.5rem',
+    gap: space.s2,
   },
   list: {
     alignItems: 'center',
     backgroundColor: colors.muted,
     borderRadius: radius.md,
     display: 'inline-flex',
-    gap: '0.25rem',
-    padding: '0.25rem',
+    gap: space.s1,
+    padding: space.s1,
     width: 'fit-content',
   },
   trigger: {
@@ -90,16 +91,16 @@ const styles = stylex.create({
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    fontWeight: 500,
-    height: '1.75rem',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    height: space.s7,
     justifyContent: 'center',
-    lineHeight: 1,
+    lineHeight: lineHeight.none,
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
-    outlineOffset: '-2px',
-    paddingInline: '0.75rem',
-    transitionDuration: '150ms',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: `calc(-1 * ${stroke.focus})`,
+    paddingInline: space.s3,
+    transitionDuration: duration.fast,
     transitionProperty: 'background-color, color',
     userSelect: 'none',
     whiteSpace: 'nowrap',
@@ -110,8 +111,8 @@ const styles = stylex.create({
   },
   content: {
     color: colors.foreground,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
     outline: 'none',
   },
 });

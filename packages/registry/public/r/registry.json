@@ -8,7 +8,7 @@
       "name": "theme",
       "type": "registry:lib",
       "title": "Design tokens",
-      "description": "StyleX design tokens (defineVars) and the dark theme (createTheme). Edit lib/tokens.stylex.ts to retheme your app.",
+      "description": "StyleX design tokens: themable vars (tokens.stylex.ts), non-themed scales (constants.stylex.ts), and the dark theme (themes.ts). Edit lib/tokens.stylex.ts to retheme your app.",
       "dependencies": [
         "@stylexjs/stylex"
       ],
@@ -17,6 +17,11 @@
           "path": "lib/tokens.stylex.ts",
           "type": "registry:lib",
           "target": "lib/tokens.stylex.ts"
+        },
+        {
+          "path": "lib/constants.stylex.ts",
+          "type": "registry:lib",
+          "target": "lib/constants.stylex.ts"
         },
         {
           "path": "lib/themes.ts",

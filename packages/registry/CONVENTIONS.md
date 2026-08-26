@@ -26,8 +26,15 @@ requirement: agents and humans rely on the same shape everywhere.
 
 ## Styling
 
-- Tokens only: colors/radii/fonts/shadows come from `@/lib/tokens.stylex` —
-  never hardcode values that exist as tokens.
+Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
+[stylex-authoring.md](./stylex-authoring.md) (API mechanics). Summary:
+
+- Tokens only — no magic numbers or raw colors anywhere in components:
+  - themable vars from `@/lib/tokens.stylex` (colors, radius, font, shadow);
+  - non-themed scales from `@/lib/constants.stylex` (`space`, `fontSize`,
+    `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `container`).
+  If a value is missing, extend the scale deliberately — never invent a
+  one-off inside a component.
 - No attribute selectors in StyleX. Base UI state (checked, open, highlighted)
   is styled with the `stateProps` helper from `@/lib/stylex-utils`, which maps
   state to conditional StyleX styles via Base UI's className/style functions.

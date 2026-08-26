@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 export const ToastProvider = BaseToast.Provider;
@@ -62,48 +63,48 @@ const toastIn = stylex.keyframes({
 
 const styles = stylex.create({
   viewport: {
-    bottom: '1rem',
+    bottom: space.s4,
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: space.s2,
     position: 'fixed',
-    right: '1rem',
-    width: '20rem',
-    zIndex: 100,
+    right: space.s4,
+    width: container.md,
+    zIndex: z.toast,
   },
   root: {
     alignItems: 'flex-start',
-    animationDuration: '150ms',
+    animationDuration: duration.fast,
     animationName: toastIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.lg,
     color: colors.popoverForeground,
     display: 'flex',
     fontFamily: font.sans,
-    gap: '0.5rem',
+    gap: space.s2,
     justifyContent: 'space-between',
-    padding: '1rem',
+    padding: space.s4,
   },
   text: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.25rem',
+    gap: space.s1,
   },
   title: {
-    fontSize: '0.875rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.tight,
     margin: 0,
   },
   description: {
     color: colors.mutedForeground,
-    fontSize: '0.875rem',
-    lineHeight: 1.4,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.snug,
     margin: 0,
   },
   close: {
@@ -118,10 +119,10 @@ const styles = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     flexShrink: 0,
-    height: '1.5rem',
+    height: space.s6,
     justifyContent: 'center',
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     padding: 0,
-    width: '1.5rem',
+    width: space.s6,
   },
 });

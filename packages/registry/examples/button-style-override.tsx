@@ -1,5 +1,8 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { space } from '@/lib/constants.stylex';
+import { radius } from '@/lib/tokens.stylex';
+
 import { Button } from '@/components/ui/button';
 
 // The style prop merges last — StyleX guarantees it wins over the
@@ -19,8 +22,8 @@ const styles = stylex.create({
   row: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '0.5rem',
+    gap: space.s2,
   },
-  pill: { borderRadius: '9999px' },
-  wide: { paddingInline: '3rem' },
+  pill: { borderRadius: radius.full },
+  wide: { paddingInline: space.s12 },
 });

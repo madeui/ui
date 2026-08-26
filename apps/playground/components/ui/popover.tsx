@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Popover as BasePopover } from '@base-ui/react/popover';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 export const Popover = BasePopover.Root;
@@ -49,22 +50,22 @@ const popupIn = stylex.keyframes({
 
 const styles = stylex.create({
   popup: {
-    animationDuration: '120ms',
+    animationDuration: duration.fast,
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
     outline: 'none',
-    padding: '1rem',
-    width: '18rem',
-    zIndex: 50,
+    padding: space.s4,
+    width: container.sm,
+    zIndex: z.popup,
   },
 });

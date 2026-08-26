@@ -6,6 +6,7 @@ import { Switch as BaseSwitch } from '@base-ui/react/switch';
 import * as stylex from '@stylexjs/stylex';
 
 import { stateProps } from '@/lib/stylex-utils';
+import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 export interface SwitchProps
@@ -45,14 +46,14 @@ const styles = stylex.create({
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     flexShrink: 0,
-    height: '1.25rem',
+    height: space.s5,
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
-    outlineOffset: '2px',
-    padding: '2px',
-    transitionDuration: '150ms',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: stroke.focus,
+    padding: space.s05,
+    transitionDuration: duration.fast,
     transitionProperty: 'background-color',
-    width: '2.25rem',
+    width: space.s9,
   },
   rootChecked: {
     backgroundColor: colors.primary,
@@ -64,13 +65,13 @@ const styles = stylex.create({
   thumb: {
     backgroundColor: colors.background,
     borderRadius: radius.full,
-    height: '1rem',
+    height: space.s4,
     transform: 'translateX(0)',
-    transitionDuration: '150ms',
+    transitionDuration: duration.fast,
     transitionProperty: 'transform',
-    width: '1rem',
+    width: space.s4,
   },
   thumbChecked: {
-    transform: 'translateX(1rem)',
+    transform: `translateX(${space.s4})`,
   },
 });

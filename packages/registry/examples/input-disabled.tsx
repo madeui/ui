@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Input } from '@/components/ui/input';
 
 export default function InputDisabled() {
@@ -12,6 +14,6 @@ export default function InputDisabled() {
 
 const styles = stylex.create({
   wrap: {
-    width: '20rem',
+    width: container.md,
   },
 });

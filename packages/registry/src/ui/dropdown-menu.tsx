@@ -6,6 +6,7 @@ import { Menu as BaseMenu } from '@base-ui/react/menu';
 import * as stylex from '@stylexjs/stylex';
 
 import { stateProps } from '@/lib/stylex-utils';
+import { space, fontSize, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -92,35 +93,35 @@ const popupIn = stylex.keyframes({
 const styles = stylex.create({
   positioner: {
     outline: 'none',
-    zIndex: 50,
+    zIndex: z.popup,
   },
   popup: {
-    animationDuration: '120ms',
+    animationDuration: duration.fast,
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.md,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
-    minWidth: '10rem',
+    minWidth: container.xs,
     outline: 'none',
-    paddingBlock: '0.25rem',
+    paddingBlock: space.s1,
   },
   item: {
     alignItems: 'center',
     borderRadius: radius.sm,
     cursor: 'default',
     display: 'flex',
-    fontSize: '0.875rem',
-    gap: '0.5rem',
-    marginInline: '0.25rem',
+    fontSize: fontSize.sm,
+    gap: space.s2,
+    marginInline: space.s1,
     outline: 'none',
-    paddingBlock: '0.375rem',
-    paddingInline: '0.5rem',
+    paddingBlock: space.s15,
+    paddingInline: space.s2,
     userSelect: 'none',
   },
   itemHighlighted: {
@@ -133,14 +134,14 @@ const styles = stylex.create({
   },
   separator: {
     backgroundColor: colors.border,
-    height: '1px',
-    marginBlock: '0.25rem',
+    height: stroke.border,
+    marginBlock: space.s1,
   },
   label: {
     color: colors.mutedForeground,
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    paddingBlock: '0.375rem',
-    paddingInline: '0.75rem',
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    paddingBlock: space.s15,
+    paddingInline: space.s3,
   },
 });

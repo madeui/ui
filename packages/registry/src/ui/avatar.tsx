@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export type AvatarSize = 'sm' | 'md' | 'lg';
@@ -78,8 +79,8 @@ const styles = stylex.create({
     alignItems: 'center',
     color: colors.mutedForeground,
     display: 'flex',
-    fontSize: '0.875rem',
-    fontWeight: 500,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
     height: '100%',
     justifyContent: 'center',
     width: '100%',
@@ -87,7 +88,7 @@ const styles = stylex.create({
 });
 
 const sizes = stylex.create({
-  sm: { height: '2rem', width: '2rem' },
-  md: { height: '2.5rem', width: '2.5rem' },
-  lg: { height: '3rem', width: '3rem' },
+  sm: { height: space.s8, width: space.s8 },
+  md: { height: space.s10, width: space.s10 },
+  lg: { height: space.s12, width: space.s12 },
 });

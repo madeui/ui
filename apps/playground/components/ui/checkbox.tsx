@@ -6,6 +6,7 @@ import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import * as stylex from '@stylexjs/stylex';
 
 import { stateProps } from '@/lib/stylex-utils';
+import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 export interface CheckboxProps
@@ -63,19 +64,19 @@ const styles = stylex.create({
     borderColor: colors.input,
     borderRadius: radius.sm,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     flexShrink: 0,
-    height: '1rem',
+    height: space.s4,
     justifyContent: 'center',
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: { default: 'none', ':focus-visible': `2px solid ${colors.ring}` },
-    outlineOffset: '2px',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: stroke.focus,
     padding: 0,
-    transitionDuration: '150ms',
+    transitionDuration: duration.fast,
     transitionProperty: 'background-color, border-color',
-    width: '1rem',
+    width: space.s4,
   },
   rootChecked: {
     backgroundColor: colors.primary,

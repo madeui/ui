@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface DivProps
@@ -51,40 +52,40 @@ const styles = stylex.create({
     borderColor: colors.border,
     borderRadius: radius.lg,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     boxShadow: shadow.sm,
     color: colors.cardForeground,
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: '1.25rem',
-    paddingBlock: '1.25rem',
+    gap: space.s5,
+    paddingBlock: space.s5,
   },
   header: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.375rem',
-    paddingInline: '1.25rem',
+    gap: space.s15,
+    paddingInline: space.s5,
   },
   title: {
-    fontSize: '1rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.tight,
     margin: 0,
   },
   description: {
     color: colors.mutedForeground,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
     margin: 0,
   },
   content: {
-    paddingInline: '1.25rem',
+    paddingInline: space.s5,
   },
   footer: {
     alignItems: 'center',
     display: 'flex',
-    gap: '0.5rem',
-    paddingInline: '1.25rem',
+    gap: space.s2,
+    paddingInline: space.s5,
   },
 });

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export type BadgeVariant = 'primary' | 'secondary' | 'outline' | 'destructive';
@@ -26,12 +27,12 @@ const styles = stylex.create({
     borderRadius: radius.full,
     display: 'inline-flex',
     fontFamily: font.sans,
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    gap: '0.25rem',
-    lineHeight: 1,
-    paddingBlock: '0.25rem',
-    paddingInline: '0.625rem',
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    gap: space.s1,
+    lineHeight: lineHeight.none,
+    paddingBlock: space.s1,
+    paddingInline: space.s25,
     whiteSpace: 'nowrap',
   },
 });
@@ -48,7 +49,7 @@ const variants = stylex.create({
   outline: {
     borderColor: colors.border,
     borderStyle: 'solid',
-    borderWidth: '1px',
+    borderWidth: stroke.border,
     color: colors.foreground,
   },
   destructive: {

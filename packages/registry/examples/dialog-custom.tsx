@@ -1,5 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
+import { container } from '@/lib/constants.stylex';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -34,6 +36,6 @@ export default function DialogCustom() {
 
 const styles = stylex.create({
   narrow: {
-    width: '22rem',
+    width: container.md,
   },
 });
