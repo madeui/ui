@@ -1,0 +1,161 @@
+---
+title: Customization
+description: "Theming with tokens, dark mode, per-instance overrides, and editing component source."
+---
+
+Components are copied into your project — you own the source. Customization
+happens at four levels, from broadest to most targeted:
+
+1. **Tokens** — retheme the whole app by editing one file.
+2. **Themes** — swap token values for a subtree or the whole page (dark mode).
+3. **The `style` prop** — override any component instance from the outside.
+4. **The source itself** — change a component's anatomy or add variants.
+
+## Tokens
+
+`lib/tokens.stylex.ts` is the single source of truth for colors, radii, fonts,
+and shadows. Every component reads from it — change a value and the whole
+system follows:
+
+```tsx
+// lib/tokens.stylex.ts
+export const colors = stylex.defineVars({
+  primary: '#171717',        // ← your brand color here
+  primaryForeground: '#fafafa',
+  // ...
+});
+
+export const radius = stylex.defineVars({
+  md: '0.5rem',              // ← sharper or rounder corners everywhere
+  // ...
+});
+```
+
+Semantic names use the familiar convention (`background`, `foreground`,
+`primary`, `muted`, `accent`, `destructive`, `border`, `ring`, ...), so the
+mental model transfers directly.
+
+Two value-format rules keep files installable through the shadcn CLI (its
+transformer rewrites some CSS-like strings): use hex-alpha colors
+(`#00000080`, never `rgba(...)`) and no lone `0` spread in shadow shorthands.
+
+## Themes and dark mode
+
+A theme overrides token values for a DOM subtree. `lib/themes.ts` ships a
+`darkTheme` built with `stylex.createTheme`:
+
+```tsx
+// lib/themes.ts
+export const darkTheme = stylex.createTheme(colors, {
+  background: '#0a0a0a',
+  foreground: '#fafafa',
+  // ...
+});
+```
+
+Apply it to `<html>` — not a wrapper `<div>` — because dialogs, popovers,
+menus, and toasts portal to `<body>` and would escape a subtree theme:
+
+```tsx
+'use client';
+
+useEffect(() => {
+  const { className } = stylex.props(dark && darkTheme);
+  document.documentElement.className = className ?? '';
+}, [dark]);
+```
+
+Brand themes work the same way: create as many as you need with
+`stylex.createTheme(colors, { ... })` and apply per page, per tenant, or per
+section. Themes can be nested — the closest one wins.
+
+## The `style` prop
+
+Every styled component (and part) accepts `style?: StyleXStyles`. It is merged
+**last**, so your overrides always win — StyleX resolves conflicts
+deterministically at compile time. No `tailwind-merge`, no `!important`, no
+specificity wars:
+
+```tsx
+const styles = stylex.create({
+  pill: { borderRadius: '9999px' },
+  wide: { paddingInline: '3rem' },
+});
+
+<Button style={styles.pill}>Pill</Button>
+<Button style={[styles.pill, styles.wide]}>Pill + wide</Button>  // arrays compose
+```
+
+This is the right tool for one-off tweaks: a wider dialog, a full-width
+button, an extra margin. If you find yourself repeating the same override,
+promote it to a variant instead.
+
+## Editing the source
+
+Components live in `components/ui/` in your project. They are yours — edit
+them. The most common edit is adding a variant:
+
+```tsx
+// components/ui/button.tsx
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'destructive'
+  | 'success';           // 1. extend the type
+
+const variants = stylex.create({
+  // ...existing variants...
+  success: {              // 2. add the styles — tokens only
+    backgroundColor: '#16a34a',
+    color: colors.primaryForeground,
+  },
+});
+
+// 3. done: <Button variant="success">Save</Button>
+```
+
+Sizes work the same way through the `sizes` map.
+
+## Styling Base UI state
+
+StyleX has no attribute selectors, so state-driven styling (`checked`, `open`,
+`highlighted`, `disabled`) doesn't use `[data-checked]`. Components use the
+`stateProps` helper from `lib/stylex-utils.ts`, which maps Base UI's state
+object to conditional StyleX styles:
+
+```tsx
+<Switch.Root
+  {...stateProps((s: { checked: boolean; disabled: boolean }) => [
+    styles.root,
+    s.checked && styles.rootChecked,
+    s.disabled && styles.rootDisabled,
+    style,                // caller overrides still merge last
+  ])}
+/>
+```
+
+Interaction states that CSS can express directly (hover, focus, active) use
+StyleX conditional values instead:
+
+```tsx
+backgroundColor: {
+  default: colors.background,
+  ':hover': colors.accent,
+},
+outline: {
+  default: 'none',
+  ':focus-visible': `2px solid ${colors.ring}`,
+},
+```
+
+## Where to make which change
+
+| You want to... | Do this |
+| --- | --- |
+| Change the brand color / radius / font everywhere | Edit `lib/tokens.stylex.ts` |
+| Add dark mode or a second brand look | `stylex.createTheme` in `lib/themes.ts`, apply to `<html>` |
+| Tweak one instance | `style` prop |
+| Reusable new look for a component | Add a variant in its source file |
+| Change a component's structure or behavior | Edit `components/ui/<name>.tsx` — you own it |
