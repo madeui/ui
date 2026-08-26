@@ -57,6 +57,10 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
               attributes: true,
               attributeFilter: ['data-theme'],
             });
+            // Client-side navigation replaces <html>'s attributes with the new
+            // page's (which has no StyleX classes); re-apply before the new
+            // page paints.
+            document.addEventListener('astro:after-swap', apply);
           })();
         </script>
         {/* Inline styles: Blume compiles this override outside the normal
