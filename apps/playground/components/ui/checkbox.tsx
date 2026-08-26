@@ -20,11 +20,14 @@ export function Checkbox({ style, ...props }: CheckboxProps) {
   return (
     <BaseCheckbox.Root
       {...props}
-      {...stateProps((s: { checked: boolean; indeterminate: boolean }) => [
-        styles.root,
-        (s.checked || s.indeterminate) && styles.rootChecked,
-        style,
-      ])}
+      {...stateProps(
+        (s: { checked: boolean; indeterminate: boolean; disabled: boolean }) => [
+          styles.root,
+          (s.checked || s.indeterminate) && styles.rootChecked,
+          s.disabled && styles.rootDisabled,
+          style,
+        ]
+      )}
     >
       <BaseCheckbox.Indicator
         render={(indicatorProps, state) => (
@@ -77,6 +80,10 @@ const styles = stylex.create({
   rootChecked: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
+  },
+  rootDisabled: {
+    cursor: 'not-allowed',
+    opacity: 0.5,
   },
   indicator: {
     alignItems: 'center',

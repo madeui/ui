@@ -37,9 +37,10 @@ export function RadioGroupItem({
   return (
     <Radio.Root
       {...props}
-      {...stateProps((s: { checked: boolean }) => [
+      {...stateProps((s: { checked: boolean; disabled: boolean }) => [
         styles.item,
         s.checked && styles.itemChecked,
+        s.disabled && styles.itemDisabled,
         style,
       ])}
     >
@@ -76,6 +77,10 @@ const styles = stylex.create({
   },
   itemChecked: {
     borderColor: colors.primary,
+  },
+  itemDisabled: {
+    cursor: 'not-allowed',
+    opacity: 0.5,
   },
   indicator: {
     backgroundColor: colors.primary,

@@ -20,9 +20,10 @@ export function Switch({ style, ...props }: SwitchProps) {
   return (
     <BaseSwitch.Root
       {...props}
-      {...stateProps((s: { checked: boolean }) => [
+      {...stateProps((s: { checked: boolean; disabled: boolean }) => [
         styles.root,
         s.checked && styles.rootChecked,
+        s.disabled && styles.rootDisabled,
         style,
       ])}
     >
@@ -55,6 +56,10 @@ const styles = stylex.create({
   },
   rootChecked: {
     backgroundColor: colors.primary,
+  },
+  rootDisabled: {
+    cursor: 'not-allowed',
+    opacity: 0.5,
   },
   thumb: {
     backgroundColor: colors.background,

@@ -48,9 +48,10 @@ export function DropdownMenuItem({
   return (
     <BaseMenu.Item
       {...props}
-      {...stateProps((s: { highlighted: boolean }) => [
+      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
         styles.item,
         s.highlighted && styles.itemHighlighted,
+        s.disabled && styles.itemDisabled,
         style,
       ])}
     />
@@ -125,6 +126,10 @@ const styles = stylex.create({
   itemHighlighted: {
     backgroundColor: colors.accent,
     color: colors.accentForeground,
+  },
+  itemDisabled: {
+    color: colors.mutedForeground,
+    opacity: 0.5,
   },
   separator: {
     backgroundColor: colors.border,
