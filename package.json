@@ -2,7 +2,11 @@
   "name": "ui-lib-monorepo",
   "private": true,
   "scripts": {
-    "build:registry": "node packages/registry/scripts/build-registry.mjs"
+    "build:registry": "node packages/registry/scripts/build-registry.mjs",
+    "docs:dev": "pnpm --filter @ui-lib/docs dev",
+    "docs:build": "pnpm --filter @ui-lib/docs build",
+    "playground:dev": "pnpm --filter playground dev",
+    "playground:build": "pnpm --filter playground build"
   },
   "engines": {
     "node": ">=20"
