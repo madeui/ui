@@ -9,7 +9,7 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "https://example.com/r/theme.json"
+    "@ui-lib/theme"
   ],
   "files": [
     {

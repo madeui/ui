@@ -45,7 +45,7 @@ const uiItem = async (name, description) => ({
   title: name[0].toUpperCase() + name.slice(1),
   description,
   dependencies: ['@base-ui/react', '@stylexjs/stylex'],
-  registryDependencies: [`${HOMEPAGE}/r/theme.json`],
+  registryDependencies: ['@ui-lib/theme'],
   files: [
     {
       path: `ui/${name}.tsx`,
