@@ -20,8 +20,8 @@ system follows:
 ```tsx
 // lib/tokens.stylex.ts
 export const colors = stylex.defineVars({
-  primary: '#171717',        // ← your brand color here
-  primaryForeground: '#fafafa',
+  primary: 'oklch(0.55 0.2 260)',   // ← your brand color here
+  primaryForeground: 'oklch(0.985 0 0)',
   // ...
 });
 
@@ -50,8 +50,8 @@ A theme overrides token values for a DOM subtree. `lib/themes.ts` ships a
 ```tsx
 // lib/themes.ts
 export const darkTheme = stylex.createTheme(colors, {
-  background: '#0a0a0a',
-  foreground: '#fafafa',
+  background: 'oklch(0.145 0 0)',
+  foreground: 'oklch(0.985 0 0)',
   // ...
 });
 ```
@@ -110,8 +110,8 @@ export type ButtonVariant =
 
 const variants = stylex.create({
   // ...existing variants...
-  success: {              // 2. add the styles — tokens only
-    backgroundColor: '#16a34a',
+  success: {              // 2. add the styles
+    backgroundColor: 'oklch(0.63 0.17 149)',
     color: colors.primaryForeground,
   },
 });
