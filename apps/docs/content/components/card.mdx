@@ -1,6 +1,6 @@
 ---
 title: Card
-description: "A content container with header, content, and footer sections."
+description: "Displays a card with header, content, and footer."
 ---
 
 <Component path="card-demo" />
@@ -24,10 +24,21 @@ import {
 } from '@/components/ui/card';
 ```
 
+## Composition
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle />
+    <CardDescription />
+  </CardHeader>
+  <CardContent />
+  <CardFooter />
+</Card>
+```
+
 ## API reference
 
 ### Styling
 
 `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
-
-Compose the full anatomy: `CardHeader` (with `CardTitle` + `CardDescription`), `CardContent`, `CardFooter`.

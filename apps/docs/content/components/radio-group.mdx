@@ -1,6 +1,6 @@
 ---
 title: Radio Group
-description: "A set of mutually exclusive options. Built on Base UI Radio."
+description: "A set of checkable buttons where only one can be checked at a time."
 ---
 
 <Component path="radio-group-demo" />
@@ -15,12 +15,22 @@ npx shadcn@latest add @ui-lib/radio-group
 
 ```tsx
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+```
 
-<RadioGroup defaultValue="b">
-  <label><RadioGroupItem value="a" /> Option A</label>
-  <label><RadioGroupItem value="b" /> Option B</label>
+## Composition
+
+```tsx
+<RadioGroup>
+  <RadioGroupItem />
+  <RadioGroupItem />
 </RadioGroup>
 ```
+
+## Disabled
+
+Set `disabled` on the group to disable every item, or on a single `RadioGroupItem`.
+
+<Component path="radio-group-disabled" />
 
 ## API reference
 
@@ -40,6 +50,6 @@ Built on [Base UI Radio](https://base-ui.com/react/components/radio). The tables
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` *(required)* | `any` | — | Value this item represents. |
+| `value` *(required)* | `any` | — |  |
 | `disabled` | `boolean` | `false` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

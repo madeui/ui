@@ -1,17 +1,9 @@
 ---
 title: Button
-description: "Displays a button. Built on Base UI, styled with StyleX."
+description: "Displays a button or a component that looks like a button. Built on Base UI, styled with StyleX."
 ---
 
 <Component path="button-demo" />
-
-## Sizes
-
-<Component path="button-sizes" />
-
-## Style overrides
-
-<Component path="button-style-override" />
 
 ## Install
 
@@ -24,8 +16,54 @@ npx shadcn@latest add @ui-lib/button
 ```tsx
 import { Button } from '@/components/ui/button';
 
-<Button variant="outline" size="lg">Click me</Button>
+<Button variant="outline">Button</Button>
 ```
+
+## Default
+
+<Component path="button-default" />
+
+## Secondary
+
+<Component path="button-secondary" />
+
+## Outline
+
+<Component path="button-outline" />
+
+## Ghost
+
+<Component path="button-ghost" />
+
+## Destructive
+
+<Component path="button-destructive" />
+
+## Sizes
+
+<Component path="button-sizes" />
+
+## Icon
+
+Use `size="icon"` for a square, icon-only button. Always set `aria-label`.
+
+<Component path="button-icon" />
+
+## Disabled
+
+<Component path="button-disabled" />
+
+## Rounded
+
+Per-instance overrides go through the `style` prop — StyleX merges it last, so it always wins. No `tailwind-merge`, no `!important`.
+
+<Component path="button-rounded" />
+
+## As link
+
+The `render` prop swaps the underlying element while keeping the button styling — set `nativeButton={false}` when the element is not a `<button>`.
+
+<Component path="button-as-link" />
 
 ## API reference
 
@@ -37,5 +75,5 @@ Built on [Base UI Button](https://base-ui.com/react/components/button). The tabl
 | --- | --- | --- | --- |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'primary'` | Visual style. |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | `icon` renders a square button. |
-| `disabled` | `boolean` | `false` | Disables interaction and dims the button. |
+| `disabled` | `boolean` | `false` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

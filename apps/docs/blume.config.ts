@@ -35,8 +35,9 @@ const stylexIntegration = {
             },
           },
           plugins: [
+            // No CSS layers: the docs' own (unlayered) styles would beat
+            // layered StyleX rules; unlayered + appended last wins instead.
             StylexRsPlugin({
-              useCSSLayers: true,
               rsOptions,
             }),
           ],

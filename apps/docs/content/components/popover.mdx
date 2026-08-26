@@ -1,6 +1,6 @@
 ---
 title: Popover
-description: "A floating panel anchored to a trigger. Built on Base UI Popover."
+description: "Displays rich content in a portal, triggered by a button."
 ---
 
 <Component path="popover-demo" />
@@ -16,6 +16,19 @@ npx shadcn@latest add @ui-lib/popover
 ```tsx
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 ```
+
+## Composition
+
+```tsx
+<Popover>
+  <PopoverTrigger />
+  <PopoverContent />
+</Popover>
+```
+
+## Placement
+
+<Component path="popover-placement" />
 
 ## API reference
 

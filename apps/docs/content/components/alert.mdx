@@ -1,6 +1,6 @@
 ---
 title: Alert
-description: "A callout for user attention."
+description: "Displays a callout for user attention."
 ---
 
 <Component path="alert-demo" />
@@ -15,7 +15,25 @@ npx shadcn@latest add @ui-lib/alert
 
 ```tsx
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+<Alert>
+  <AlertTitle>Heads up!</AlertTitle>
+  <AlertDescription>...</AlertDescription>
+</Alert>
 ```
+
+## Composition
+
+```tsx
+<Alert>
+  <AlertTitle />
+  <AlertDescription />
+</Alert>
+```
+
+## Destructive
+
+<Component path="alert-destructive" />
 
 ## API reference
 

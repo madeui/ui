@@ -1,13 +1,9 @@
 ---
 title: Select
-description: "Choose a value from a popup list. Built on Base UI Select."
+description: "Displays a list of options for the user to pick from, triggered by a button."
 ---
 
 <Component path="select-demo" />
-
-## Disabled options
-
-<Component path="select-disabled" />
 
 ## Install
 
@@ -26,6 +22,31 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 ```
+
+## Composition
+
+```tsx
+<Select>
+  <SelectTrigger>
+    <SelectValue />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem />
+  </SelectContent>
+</Select>
+```
+
+## Scrollable
+
+<Component path="select-scrollable" />
+
+## Disabled options
+
+<Component path="select-disabled" />
+
+## Disabled
+
+<Component path="select-component-disabled" />
 
 ## API reference
 

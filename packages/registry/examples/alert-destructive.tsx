@@ -2,13 +2,11 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-export default function AlertDemo() {
+export default function AlertDestructive() {
   return (
-    <Alert style={styles.alert}>
-      <AlertTitle>Heads up!</AlertTitle>
-      <AlertDescription>
-        You can add components to your app using the CLI.
-      </AlertDescription>
+    <Alert variant="destructive" style={styles.alert}>
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>Your session has expired. Log in again.</AlertDescription>
     </Alert>
   );
 }

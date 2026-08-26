@@ -1,6 +1,6 @@
 ---
 title: Tooltip
-description: "A text label shown on hover or focus. Built on Base UI Tooltip."
+description: "A popup that displays information related to an element on hover or focus."
 ---
 
 <Component path="tooltip-demo" />
@@ -24,6 +24,21 @@ import {
 // Wrap your app (or a subtree) in <TooltipProvider> once.
 ```
 
+## Composition
+
+```tsx
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger />
+    <TooltipContent />
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Sides
+
+<Component path="tooltip-sides" />
+
 ## API reference
 
 Built on [Base UI Tooltip](https://base-ui.com/react/components/tooltip). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Tooltip API reference](https://base-ui.com/react/components/tooltip#api-reference) for the full list.
@@ -36,4 +51,4 @@ Built on [Base UI Tooltip](https://base-ui.com/react/components/tooltip). The ta
 | `sideOffset` | `number` | `6` | Distance from the trigger, in px. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`TooltipProvider`, `Tooltip` (Root), and `TooltipTrigger` are Base UI parts re-exported unstyled; `TooltipTrigger` accepts `render` to compose with your own element.
+`TooltipProvider`, `Tooltip` (Root), and `TooltipTrigger` are Base UI parts re-exported unstyled; `TooltipTrigger` accepts `render`.

@@ -1,6 +1,6 @@
 ---
 title: Tabs
-description: "Layered sections shown one at a time. Built on Base UI Tabs."
+description: "A set of layered sections of content displayed one at a time."
 ---
 
 <Component path="tabs-demo" />
@@ -15,14 +15,22 @@ npx shadcn@latest add @ui-lib/tabs
 
 ```tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+```
 
-<Tabs defaultValue="account">
+## Composition
+
+```tsx
+<Tabs>
   <TabsList>
-    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger />
   </TabsList>
-  <TabsContent value="account">...</TabsContent>
+  <TabsContent />
 </Tabs>
 ```
+
+## Disabled tab
+
+<Component path="tabs-disabled" />
 
 ## API reference
 

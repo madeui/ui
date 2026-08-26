@@ -1,13 +1,9 @@
 ---
 title: Dialog
-description: "A modal window over the page. Built on Base UI Dialog."
+description: "A window overlaid on the page, rendering the content underneath inert."
 ---
 
 <Component path="dialog-demo" />
-
-## Custom width
-
-<Component path="dialog-custom" />
 
 ## Install
 
@@ -30,6 +26,29 @@ import {
 } from '@/components/ui/dialog';
 ```
 
+## Composition
+
+```tsx
+<Dialog>
+  <DialogTrigger />
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle />
+      <DialogDescription />
+    </DialogHeader>
+    <DialogFooter>
+      <DialogClose />
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## Custom width
+
+Override the content width with the `style` prop.
+
+<Component path="dialog-custom" />
+
 ## API reference
 
 Built on [Base UI Dialog](https://base-ui.com/react/components/dialog). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Dialog API reference](https://base-ui.com/react/components/dialog#api-reference) for the full list.
@@ -39,13 +58,13 @@ Built on [Base UI Dialog](https://base-ui.com/react/components/dialog). The tabl
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `open` | `boolean` | — | Controlled open state. |
-| `defaultOpen` | `boolean` | `false` | Initial open state (uncontrolled). |
-| `onOpenChange` | `(open: boolean) => void` | — | Called when the open state changes. |
+| `defaultOpen` | `boolean` | `false` |  |
+| `onOpenChange` | `(open: boolean) => void` | — |  |
 
 ### Styling
 
 `DialogContent`, `DialogOverlay`, `DialogHeader`, `DialogFooter`, `DialogTitle`, `DialogDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
-`DialogTrigger` / `DialogClose` accept `render` to compose with your own button: `<DialogTrigger render={<Button />}>`.
+`DialogTrigger` / `DialogClose` accept `render`: `<DialogTrigger render={<Button />}>`. Always include a `DialogTitle` for accessibility.
 
 Theming note: dialogs portal to `<body>` — apply themes (e.g. `darkTheme`) to `<html>`, not a wrapper element.

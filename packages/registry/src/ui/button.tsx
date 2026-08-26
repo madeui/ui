@@ -55,6 +55,7 @@ const styles = stylex.create({
     justifyContent: 'center',
     lineHeight: 1,
     opacity: { default: 1, ':disabled': 0.5 },
+    textDecoration: 'none',
     outline: {
       default: 'none',
       ':focus-visible': `2px solid ${colors.ring}`,

@@ -1,6 +1,6 @@
 ---
 title: Dropdown Menu
-description: "A menu of actions opened from a trigger. Built on Base UI Menu."
+description: "Displays a menu of actions — opened by a trigger button."
 ---
 
 <Component path="dropdown-menu-demo" />
@@ -24,6 +24,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 ```
+
+## Composition
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger />
+  <DropdownMenuContent>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel />
+      <DropdownMenuItem />
+    </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Disabled item
+
+<Component path="dropdown-menu-disabled-item" />
 
 ## API reference
 

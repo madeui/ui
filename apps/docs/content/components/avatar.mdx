@@ -1,6 +1,6 @@
 ---
 title: Avatar
-description: "An image with a text fallback, built on Base UI Avatar."
+description: "An image element with a fallback for representing the user."
 ---
 
 <Component path="avatar-demo" />
@@ -15,12 +15,26 @@ npx shadcn@latest add @ui-lib/avatar
 
 ```tsx
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+```
 
-<Avatar size="lg">
-  <AvatarImage src="..." alt="..." />
-  <AvatarFallback>MD</AvatarFallback>
+## Composition
+
+```tsx
+<Avatar>
+  <AvatarImage />
+  <AvatarFallback />
 </Avatar>
 ```
+
+## Sizes
+
+<Component path="avatar-sizes" />
+
+## Fallback
+
+The fallback renders while the image loads — or when it fails. Always provide one.
+
+<Component path="avatar-fallback" />
 
 ## API reference
 
@@ -36,5 +50,3 @@ Built on [Base UI Avatar](https://base-ui.com/react/components/avatar). The tabl
 ### Styling
 
 `AvatarImage`, `AvatarFallback` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
-
-Always provide `AvatarFallback` for when the image fails to load.
