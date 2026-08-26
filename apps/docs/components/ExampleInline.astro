@@ -58,8 +58,18 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
               attributeFilter: ['data-theme'],
             });
             // Client-side navigation replaces <html>'s attributes with the new
-            // page's (which has no StyleX classes); re-apply before the new
-            // page paints.
+            // page's, which has no StyleX classes. Re-applying after the swap
+            // is too late: one style recalc happens with light tokens, and the
+            // components' 150ms background transitions animate the correction
+            // into a visible flash. Instead, stamp the theme onto the incoming
+            // document BEFORE the swap so no recalc ever sees light values.
+            document.addEventListener('astro:before-swap', (e) => {
+              if (html.dataset.theme !== 'dark') return;
+              const next = e.newDocument.documentElement;
+              next.dataset.theme = 'dark';
+              for (const c of classes) next.classList.add(c);
+            });
+            // Fallback for anything that still slips through.
             document.addEventListener('astro:after-swap', apply);
           })();
         </script>
