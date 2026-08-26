@@ -19,7 +19,7 @@ const styles = stylex.create({
 
 export default function DialogCustom() {
   return (
-    <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', minHeight: 320, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <Dialog>
         <DialogTrigger render={<Button />}>Rename</DialogTrigger>
         <DialogContent style={styles.narrow}>

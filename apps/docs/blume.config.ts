@@ -46,19 +46,19 @@ const stylexIntegration = {
     // The unplugin emits the generated CSS as dist/_astro/stylex.css, but
     // nothing links it: Blume folds examples.css into a Tailwind v4 entry
     // whose compiler drops the unknown `@stylex;` marker before any PostCSS
-    // step could replace it. Append the generated CSS to the stylesheets the
-    // preview frames actually link instead.
+    // step could replace it. Examples render inline in the docs pages (see
+    // components/ExampleInline.astro), so append the generated CSS to every
+    // stylesheet any built page links.
     'astro:build:done': ({ dir }: any) => {
       const dist = fileURLToPath(dir);
       const assets = join(dist, '_astro');
       const stylexCss = readFileSync(join(assets, 'stylex.css'), 'utf8');
-      const frames = join(dist, 'blume-examples');
       const linked = new Set<string>();
       const walk = (d: string) => {
         for (const e of readdirSync(d, { withFileTypes: true })) {
           const p = join(d, e.name);
           if (e.isDirectory()) walk(p);
-          else if (e.name === 'index.html') {
+          else if (e.name.endsWith('.html')) {
             for (const m of readFileSync(p, 'utf8').matchAll(
               /href="([^"]*\/_astro\/[^"]+\.css)"/g
             )) {
@@ -67,12 +67,12 @@ const stylexIntegration = {
           }
         }
       };
-      walk(frames);
+      walk(dist);
       for (const file of linked) {
         appendFileSync(join(assets, file), `\n${stylexCss}`);
       }
       console.log(
-        `[stylex] appended generated CSS to ${linked.size} preview stylesheet(s)`
+        `[stylex] appended generated CSS to ${linked.size} stylesheet(s)`
       );
     },
   },

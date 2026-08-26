@@ -14,7 +14,7 @@ const fruits = [
 
 export default function SelectDemo() {
   return (
-    <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 280, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <Select items={fruits}>
         <SelectTrigger>
           <SelectValue placeholder="Select a fruit" />

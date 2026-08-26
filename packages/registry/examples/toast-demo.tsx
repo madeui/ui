@@ -21,7 +21,7 @@ function DemoButton() {
 export default function ToastDemo() {
   return (
     <ToastProvider>
-      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', minHeight: 260, padding: 16 }}>
+      <div style={{ padding: 16 }}>
         <DemoButton />
       </div>
       <Toaster />

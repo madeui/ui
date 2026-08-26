@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export default function PopoverDemo() {
   return (
-    <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 320, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <Popover>
         <PopoverTrigger render={<Button variant="outline" />}>
           Open popover

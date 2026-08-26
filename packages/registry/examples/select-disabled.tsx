@@ -14,7 +14,7 @@ const plans = [
 
 export default function SelectDisabled() {
   return (
-    <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 280, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <Select items={plans} defaultValue="pro">
         <SelectTrigger>
           <SelectValue />

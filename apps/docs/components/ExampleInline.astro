@@ -1,0 +1,61 @@
+---
+// Overrides Blume's built-in <Component /> (see components.ts): renders the
+// example INLINE in the docs page instead of inside an isolated iframe, so
+// portaled UI (dialogs, popovers, menus, toasts) escapes the preview box and
+// overlays the whole site. The trade-off vs Blume's
+// default: docs CSS could leak into examples, which we contain with
+// `not-prose` on the preview pane.
+import data from 'blume:data';
+import { examples } from 'blume:examples';
+import Tab from 'blume/components/content/Tab.astro';
+import Tabs from 'blume/components/content/Tabs.astro';
+import { highlightCode } from 'blume/markdown';
+
+import ThemeSync from './ThemeSync';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+const entry = examples[path];
+const Example = entry?.Component;
+
+const codeHtml = entry
+  ? await highlightCode(entry.code, entry.lang, {
+      className: 'blume-source',
+      themes: data.config.codeThemes,
+    })
+  : undefined;
+---
+
+{
+  entry ? (
+    <Tabs hash={false} sync={false}>
+      <Tab class="not-prose p-0!" title="Preview">
+        <ThemeSync client:load />
+        <div class="ui-lib-preview">
+          <Example />
+        </div>
+      </Tab>
+      <Tab title="Code">
+        <Fragment set:html={codeHtml} />
+      </Tab>
+    </Tabs>
+  ) : (
+    <div class="not-prose my-6 rounded-blume border border-border px-3 py-2 text-muted-foreground text-sm">
+      No example found at <code class="font-mono">{path}</code>. Add it under{' '}
+      <code class="font-mono">examples/</code> in your project.
+    </div>
+  )
+}
+
+<style>
+  .ui-lib-preview {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 10rem;
+    width: 100%;
+  }
+</style>

@@ -12,7 +12,7 @@ import {
 
 export default function DialogDemo() {
   return (
-    <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', minHeight: 320, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <Dialog>
         <DialogTrigger render={<Button variant="outline" />}>
           Open dialog

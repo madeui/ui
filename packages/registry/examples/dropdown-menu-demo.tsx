@@ -11,7 +11,7 @@ import {
 
 export default function DropdownMenuDemo() {
   return (
-    <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 300, padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="outline" />}>
           Open menu
