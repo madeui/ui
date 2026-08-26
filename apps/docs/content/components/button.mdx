@@ -1,0 +1,32 @@
+---
+title: Button
+description: Button built on Base UI, styled with StyleX.
+---
+
+<Component path="button-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/button
+```
+
+## Usage
+
+```tsx
+import { Button } from '@/components/ui/button';
+
+<Button variant="outline" size="lg">Click me</Button>
+```
+
+Variants: `primary` (default), `secondary`, `outline`, `ghost`, `destructive`.
+Sizes: `sm`, `md` (default), `lg`, `icon`.
+
+Per-instance overrides use the `style` prop with StyleX styles — they merge
+last and always win:
+
+```tsx
+const styles = stylex.create({ pill: { borderRadius: '9999px' } });
+
+<Button style={styles.pill}>Pill</Button>
+```

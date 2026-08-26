@@ -1,0 +1,22 @@
+{
+  "name": "@ui-lib/docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "blume dev",
+    "build": "blume build"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.7.0",
+    "@stylexjs/stylex": "^0.19.0",
+    "blume": "^1.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@stylexswc/postcss-plugin": "^0.18.4",
+    "@stylexswc/unplugin": "^0.18.4",
+    "typescript": "^5.6.0"
+  }
+}

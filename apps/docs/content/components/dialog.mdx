@@ -1,0 +1,30 @@
+---
+title: Dialog
+description: Modal dialog built on Base UI Dialog, styled with StyleX.
+---
+
+<Component path="dialog-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/dialog
+```
+
+## Usage
+
+```tsx
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+```
+
+Theming note: dialogs portal to `<body>`, so apply themes (e.g. `darkTheme`)
+to `<html>` rather than a wrapper element.
