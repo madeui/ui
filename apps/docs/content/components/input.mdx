@@ -21,13 +21,13 @@ import { Input } from '@/components/ui/input';
 
 ## API reference
 
+Built on [Base UI Input](https://base-ui.com/react/components/input). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Input API reference](https://base-ui.com/react/components/input#api-reference) for the full list.
+
 ### Input
 
-<TypeTable
-  type={{
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 All native `<input>` props (`type`, `placeholder`, `value`, `onChange`, ...) are forwarded.

@@ -26,35 +26,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 ## API reference
 
+Built on [Base UI Tabs](https://base-ui.com/react/components/tabs). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Tabs API reference](https://base-ui.com/react/components/tabs#api-reference) for the full list.
+
 ### Tabs (Root)
 
-<TypeTable
-  type={{
-    'value': { type: 'any', description: 'Controlled selected tab value.' },
-    'defaultValue': { type: 'any' },
-    'onValueChange': { type: '(value: any) => void' },
-    'orientation': { type: "'horizontal' | 'vertical'", default: "'horizontal'" },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `any` | — | Controlled selected tab value. |
+| `defaultValue` | `any` | — |  |
+| `onValueChange` | `(value: any) => void` | — |  |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 ### TabsTrigger
 
-<TypeTable
-  type={{
-    'value': { type: 'any', required: true },
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` *(required)* | `any` | — |  |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 ### TabsContent
 
-<TypeTable
-  type={{
-    'value': { type: 'any', required: true },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` *(required)* | `any` | — |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### Styling
+
+`TabsList` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
 `TabsTrigger` must be inside `TabsList`.

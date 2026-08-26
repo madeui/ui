@@ -26,12 +26,8 @@ import {
 
 ## API reference
 
-### All parts
+### Styling
 
-<TypeTable
-  type={{
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
 Compose the full anatomy: `CardHeader` (with `CardTitle` + `CardDescription`), `CardContent`, `CardFooter`.

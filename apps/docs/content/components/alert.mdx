@@ -21,9 +21,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 ### Alert
 
-<TypeTable
-  type={{
-    'variant': { type: "'default' | 'destructive'", default: "'default'" },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'destructive'` | `'default'` | Visual style. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### Styling
+
+`AlertTitle`, `AlertDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

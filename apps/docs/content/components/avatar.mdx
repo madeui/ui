@@ -24,13 +24,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 ## API reference
 
+Built on [Base UI Avatar](https://base-ui.com/react/components/avatar). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Avatar API reference](https://base-ui.com/react/components/avatar#api-reference) for the full list.
+
 ### Avatar
 
-<TypeTable
-  type={{
-    'size': { type: "'sm' | 'md' | 'lg'", default: "'md'" },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### Styling
+
+`AvatarImage`, `AvatarFallback` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
 Always provide `AvatarFallback` for when the image fails to load.

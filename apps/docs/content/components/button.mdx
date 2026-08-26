@@ -29,15 +29,13 @@ import { Button } from '@/components/ui/button';
 
 ## API reference
 
+Built on [Base UI Button](https://base-ui.com/react/components/button). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Button API reference](https://base-ui.com/react/components/button#api-reference) for the full list.
+
 ### Button
 
-<TypeTable
-  type={{
-    'variant': { type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'", description: 'Visual style of the button.', default: "'primary'" },
-    'size': { type: "'sm' | 'md' | 'lg' | 'icon'", description: 'Height and padding preset. `icon` renders a square button.', default: "'md'" },
-    'disabled': { type: 'boolean', description: 'Disables interaction and dims the button.', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
-
-All other props are forwarded to the underlying Base UI `Button` / native `<button>`.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'primary'` | Visual style. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | `icon` renders a square button. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims the button. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

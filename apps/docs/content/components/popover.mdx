@@ -19,15 +19,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 ## API reference
 
+Built on [Base UI Popover](https://base-ui.com/react/components/popover). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Popover API reference](https://base-ui.com/react/components/popover#api-reference) for the full list.
+
 ### PopoverContent
 
-<TypeTable
-  type={{
-    'side': { type: "'top' | 'right' | 'bottom' | 'left'", default: "'bottom'" },
-    'align': { type: "'start' | 'center' | 'end'", default: "'center'" },
-    'sideOffset': { type: 'number', default: '6' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` |  |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` |  |
+| `sideOffset` | `number` | `6` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`Popover` (Root) accepts `open` / `defaultOpen` / `onOpenChange`; `PopoverTrigger` accepts `render`.
+`Popover` (Root), `PopoverTrigger`, and `PopoverClose` are Base UI parts re-exported unstyled — Root accepts `open` / `defaultOpen` / `onOpenChange`; Trigger accepts `render`.

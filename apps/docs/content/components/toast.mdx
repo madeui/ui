@@ -24,12 +24,14 @@ toast.add({ title: 'Saved', description: 'Your changes were saved.' });
 
 ## API reference
 
+Built on [Base UI Toast](https://base-ui.com/react/components/toast). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Toast API reference](https://base-ui.com/react/components/toast#api-reference) for the full list.
+
 ### useToast().add(options)
 
-<TypeTable
-  type={{
-    'title': { type: 'string', description: 'Toast heading.' },
-    'description': { type: 'string', description: 'Supporting text.' },
-    'timeout': { type: 'number', description: 'Auto-dismiss delay in ms (Base UI default: 5000).' },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | — | Toast heading. |
+| `description` | `string` | — | Supporting text. |
+| `timeout` | `number` | — | Auto-dismiss delay in ms (Base UI default: 5000). |
+
+`Toaster` renders the styled toast stack; to change its look, edit `components/ui/toast.tsx` directly — you own the source.

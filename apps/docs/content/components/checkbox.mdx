@@ -27,15 +27,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 ## API reference
 
+Built on [Base UI Checkbox](https://base-ui.com/react/components/checkbox). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Checkbox API reference](https://base-ui.com/react/components/checkbox#api-reference) for the full list.
+
 ### Checkbox
 
-<TypeTable
-  type={{
-    'checked': { type: 'boolean', description: 'Controlled checked state.' },
-    'defaultChecked': { type: 'boolean', default: 'false' },
-    'onCheckedChange': { type: '(checked: boolean) => void' },
-    'indeterminate': { type: 'boolean', default: 'false' },
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `checked` | `boolean` | — | Controlled checked state. |
+| `defaultChecked` | `boolean` | `false` |  |
+| `onCheckedChange` | `(checked: boolean) => void` | — |  |
+| `indeterminate` | `boolean` | `false` |  |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

@@ -32,24 +32,20 @@ import {
 
 ## API reference
 
+Built on [Base UI Dialog](https://base-ui.com/react/components/dialog). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Dialog API reference](https://base-ui.com/react/components/dialog#api-reference) for the full list.
+
 ### Dialog (Root)
 
-<TypeTable
-  type={{
-    'open': { type: 'boolean', description: 'Controlled open state.' },
-    'defaultOpen': { type: 'boolean', description: 'Initial open state (uncontrolled).', default: 'false' },
-    'onOpenChange': { type: '(open: boolean) => void', description: 'Called when the open state changes.' },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state. |
+| `defaultOpen` | `boolean` | `false` | Initial open state (uncontrolled). |
+| `onOpenChange` | `(open: boolean) => void` | — | Called when the open state changes. |
 
-### DialogContent
+### Styling
 
-<TypeTable
-  type={{
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+`DialogContent`, `DialogOverlay`, `DialogHeader`, `DialogFooter`, `DialogTitle`, `DialogDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
-`DialogTrigger` / `DialogClose` accept `render` to compose with your own button: `<DialogTrigger render={<Button />}>`. `DialogOverlay`, `DialogHeader`, `DialogFooter`, `DialogTitle`, `DialogDescription` all accept `style`.
+`DialogTrigger` / `DialogClose` accept `render` to compose with your own button: `<DialogTrigger render={<Button />}>`.
 
 Theming note: dialogs portal to `<body>` — apply themes (e.g. `darkTheme`) to `<html>`, not a wrapper element.

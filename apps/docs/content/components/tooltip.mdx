@@ -26,14 +26,14 @@ import {
 
 ## API reference
 
+Built on [Base UI Tooltip](https://base-ui.com/react/components/tooltip). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Tooltip API reference](https://base-ui.com/react/components/tooltip#api-reference) for the full list.
+
 ### TooltipContent
 
-<TypeTable
-  type={{
-    'side': { type: "'top' | 'right' | 'bottom' | 'left'", default: "'top'" },
-    'sideOffset': { type: 'number', description: 'Distance from the trigger, in px.', default: '6' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` |  |
+| `sideOffset` | `number` | `6` | Distance from the trigger, in px. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`TooltipTrigger` accepts `render` to compose with your own element: `<TooltipTrigger render={<Button />}>`.
+`TooltipProvider`, `Tooltip` (Root), and `TooltipTrigger` are Base UI parts re-exported unstyled; `TooltipTrigger` accepts `render` to compose with your own element.

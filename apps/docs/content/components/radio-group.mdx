@@ -24,24 +24,22 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 ## API reference
 
+Built on [Base UI Radio](https://base-ui.com/react/components/radio). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Radio API reference](https://base-ui.com/react/components/radio#api-reference) for the full list.
+
 ### RadioGroup
 
-<TypeTable
-  type={{
-    'value': { type: 'any', description: 'Controlled selected value.' },
-    'defaultValue': { type: 'any' },
-    'onValueChange': { type: '(value: any) => void' },
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `any` | — | Controlled selected value. |
+| `defaultValue` | `any` | — |  |
+| `onValueChange` | `(value: any) => void` | — |  |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 ### RadioGroupItem
 
-<TypeTable
-  type={{
-    'value': { type: 'any', description: 'Value this item represents.', required: true },
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` *(required)* | `any` | — | Value this item represents. |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

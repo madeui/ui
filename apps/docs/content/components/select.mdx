@@ -29,32 +29,28 @@ import {
 
 ## API reference
 
+Built on [Base UI Select](https://base-ui.com/react/components/select). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Select API reference](https://base-ui.com/react/components/select#api-reference) for the full list.
+
 ### Select (Root)
 
-<TypeTable
-  type={{
-    'items': { type: '{ label: string; value: any }[]', description: 'Item list; lets SelectValue render the selected label.' },
-    'value': { type: 'any', description: 'Controlled selected value.' },
-    'defaultValue': { type: 'any' },
-    'onValueChange': { type: '(value: any) => void' },
-    'disabled': { type: 'boolean', default: 'false' },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `{ label: string; value: any }[]` | — | Item list; lets `SelectValue` render the selected label. |
+| `value` | `any` | — | Controlled selected value. |
+| `defaultValue` | `any` | — |  |
+| `onValueChange` | `(value: any) => void` | — |  |
+| `disabled` | `boolean` | `false` |  |
 
 ### SelectItem
 
-<TypeTable
-  type={{
-    'value': { type: 'any', required: true },
-    'disabled': { type: 'boolean', default: 'false' },
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` *(required)* | `any` | — |  |
+| `disabled` | `boolean` | `false` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-### SelectTrigger / SelectContent
+### Styling
 
-<TypeTable
-  type={{
-    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
-  }}
-/>
+`SelectTrigger`, `SelectContent` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+
+`SelectValue` and `SelectGroup` are Base UI parts re-exported unstyled.
