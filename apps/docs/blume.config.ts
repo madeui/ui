@@ -22,10 +22,59 @@ const rsOptions = {
   unstable_moduleResolution: { type: 'commonJS' },
 };
 
+// Dev-only: `astro:build:done` never runs under `blume dev`, so the generated
+// StyleX CSS is served as a virtual module instead, imported into every page.
+// The CSS is produced by the @stylexswc PostCSS plugin scanning the registry
+// sources (same rs-compiler as the unplugin, so class hashes match).
+const VIRTUAL_CSS = 'virtual:ui-lib-stylex.css';
+const RESOLVED_CSS = `\0${VIRTUAL_CSS}`;
+
+const devStylexCss = () => {
+  let server: any;
+  const generate = async () => {
+    const { default: postcss } = await import('postcss');
+    const { default: stylexPostcss } = await import(
+      '@stylexswc/postcss-plugin'
+    );
+    const result = await postcss([
+      stylexPostcss({
+        cwd: root,
+        include: [
+          join(registry, 'src/**/*.{ts,tsx}'),
+          join(registry, 'examples/**/*.tsx'),
+        ],
+        rsOptions,
+      }) as any,
+    ]).process('@stylex;', { from: 'ui-lib-stylex.css' });
+    return result.css;
+  };
+  return {
+    name: 'ui-lib-dev-stylex-css',
+    apply: 'serve' as const,
+    configureServer(s: any) {
+      server = s;
+    },
+    resolveId(id: string) {
+      if (id === VIRTUAL_CSS) return RESOLVED_CSS;
+    },
+    async load(id: string) {
+      if (id === RESOLVED_CSS) return await generate();
+    },
+    handleHotUpdate(ctx: any) {
+      if (!ctx.file.startsWith(registry)) return;
+      const mod = server?.moduleGraph.getModuleById(RESOLVED_CSS);
+      if (mod) server.moduleGraph.invalidateModule(mod);
+    },
+  };
+};
+
 const stylexIntegration = {
   name: 'stylex',
   hooks: {
-    'astro:config:setup': ({ updateConfig }: any) => {
+    'astro:config:setup': ({ updateConfig, injectScript, command }: any) => {
+      if (command === 'dev') {
+        injectScript('page-ssr', `import '${VIRTUAL_CSS}';`);
+      }
       updateConfig({
         vite: {
           resolve: {
@@ -33,8 +82,16 @@ const stylexIntegration = {
               '@/components/ui': join(registry, 'src/ui'),
               '@/lib': join(registry, 'src/lib'),
             },
+            // The registry sources live outside the Vite root; without dedupe
+            // the dev server can evaluate a second React copy and every island
+            // dies with "Invalid hook call".
+            dedupe: ['react', 'react-dom'],
+          },
+          optimizeDeps: {
+            entries: [join(registry, 'examples/**/*.tsx')],
           },
           plugins: [
+            devStylexCss(),
             // No CSS layers: the docs' own (unlayered) styles would beat
             // layered StyleX rules; unlayered + appended last wins instead.
             StylexRsPlugin({

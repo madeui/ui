@@ -17,6 +17,7 @@
   "devDependencies": {
     "@stylexswc/postcss-plugin": "^0.18.4",
     "@stylexswc/unplugin": "^0.18.4",
+    "postcss": "^8.5.26",
     "typescript": "^5.6.0"
   }
 }

@@ -32,6 +32,9 @@ importers:
       '@stylexswc/unplugin':
         specifier: ^0.18.4
         version: 0.18.4(@swc/core@1.16.1(@swc/helpers@0.5.23))(esbuild@0.28.2)(rolldown@1.2.5)(vite@8.2.2(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
+      postcss:
+        specifier: ^8.5.26
+        version: 8.5.26
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
@@ -6581,7 +6584,7 @@ snapshots:
       fast-glob: 3.3.3
       glob-parent: 6.0.2
       is-glob: 4.0.3
-      postcss: 8.5.23
+      postcss: 8.5.26
     transitivePeerDependencies:
       - supports-color
 
