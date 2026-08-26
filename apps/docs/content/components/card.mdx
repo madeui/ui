@@ -1,6 +1,6 @@
 ---
 title: Card
-description: Content container with header, content, and footer sections.
+description: "A content container with header, content, and footer sections."
 ---
 
 <Component path="card-demo" />
@@ -23,3 +23,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 ```
+
+## API reference
+
+### All parts
+
+<TypeTable
+  type={{
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+Compose the full anatomy: `CardHeader` (with `CardTitle` + `CardDescription`), `CardContent`, `CardFooter`.

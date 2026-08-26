@@ -1,6 +1,6 @@
 ---
 title: Tabs
-description: Tabbed panels built on Base UI Tabs.
+description: "Layered sections shown one at a time. Built on Base UI Tabs."
 ---
 
 <Component path="tabs-demo" />
@@ -15,4 +15,46 @@ npx shadcn@latest add @ui-lib/tabs
 
 ```tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">...</TabsContent>
+</Tabs>
 ```
+
+## API reference
+
+### Tabs (Root)
+
+<TypeTable
+  type={{
+    'value': { type: 'any', description: 'Controlled selected tab value.' },
+    'defaultValue': { type: 'any' },
+    'onValueChange': { type: '(value: any) => void' },
+    'orientation': { type: "'horizontal' | 'vertical'", default: "'horizontal'" },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+### TabsTrigger
+
+<TypeTable
+  type={{
+    'value': { type: 'any', required: true },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+### TabsContent
+
+<TypeTable
+  type={{
+    'value': { type: 'any', required: true },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+`TabsTrigger` must be inside `TabsList`.

@@ -1,6 +1,6 @@
 ---
 title: Toast
-description: Notifications built on Base UI Toast.
+description: "A brief notification. Built on Base UI Toast."
 ---
 
 <Component path="toast-demo" />
@@ -17,6 +17,19 @@ npx shadcn@latest add @ui-lib/toast
 import { Toaster, ToastProvider, useToast } from '@/components/ui/toast';
 
 // 1. Wrap your app in <ToastProvider> and mount <Toaster /> once.
-// 2. const toast = useToast();
-//    toast.add({ title: 'Saved', description: '...' });
+// 2. In any component:
+const toast = useToast();
+toast.add({ title: 'Saved', description: 'Your changes were saved.' });
 ```
+
+## API reference
+
+### useToast().add(options)
+
+<TypeTable
+  type={{
+    'title': { type: 'string', description: 'Toast heading.' },
+    'description': { type: 'string', description: 'Supporting text.' },
+    'timeout': { type: 'number', description: 'Auto-dismiss delay in ms (Base UI default: 5000).' },
+  }}
+/>

@@ -1,6 +1,6 @@
 ---
 title: Avatar
-description: "Avatar with image and fallback. Sizes: sm, md, lg."
+description: "An image with a text fallback, built on Base UI Avatar."
 ---
 
 <Component path="avatar-demo" />
@@ -15,4 +15,22 @@ npx shadcn@latest add @ui-lib/avatar
 
 ```tsx
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+<Avatar size="lg">
+  <AvatarImage src="..." alt="..." />
+  <AvatarFallback>MD</AvatarFallback>
+</Avatar>
 ```
+
+## API reference
+
+### Avatar
+
+<TypeTable
+  type={{
+    'size': { type: "'sm' | 'md' | 'lg'", default: "'md'" },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+Always provide `AvatarFallback` for when the image fails to load.

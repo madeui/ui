@@ -1,6 +1,6 @@
 ---
 title: Switch
-description: Toggle switch built on Base UI Switch.
+description: "A toggle switch. Built on Base UI Switch."
 ---
 
 <Component path="switch-demo" />
@@ -18,3 +18,17 @@ import { Switch } from '@/components/ui/switch';
 
 <Switch defaultChecked />
 ```
+
+## API reference
+
+### Switch
+
+<TypeTable
+  type={{
+    'checked': { type: 'boolean', description: 'Controlled checked state.' },
+    'defaultChecked': { type: 'boolean', default: 'false' },
+    'onCheckedChange': { type: '(checked: boolean) => void' },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>

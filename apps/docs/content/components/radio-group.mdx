@@ -1,6 +1,6 @@
 ---
 title: Radio Group
-description: Radio group built on Base UI Radio and RadioGroup.
+description: "A set of mutually exclusive options. Built on Base UI Radio."
 ---
 
 <Component path="radio-group-demo" />
@@ -15,4 +15,33 @@ npx shadcn@latest add @ui-lib/radio-group
 
 ```tsx
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+<RadioGroup defaultValue="b">
+  <label><RadioGroupItem value="a" /> Option A</label>
+  <label><RadioGroupItem value="b" /> Option B</label>
+</RadioGroup>
 ```
+
+## API reference
+
+### RadioGroup
+
+<TypeTable
+  type={{
+    'value': { type: 'any', description: 'Controlled selected value.' },
+    'defaultValue': { type: 'any' },
+    'onValueChange': { type: '(value: any) => void' },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+### RadioGroupItem
+
+<TypeTable
+  type={{
+    'value': { type: 'any', description: 'Value this item represents.', required: true },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>

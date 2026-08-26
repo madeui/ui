@@ -1,9 +1,13 @@
 ---
 title: Select
-description: Select built on Base UI Select with popup list and indicators.
+description: "Choose a value from a popup list. Built on Base UI Select."
 ---
 
 <Component path="select-demo" />
+
+## Disabled options
+
+<Component path="select-disabled" />
 
 ## Install
 
@@ -22,3 +26,35 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 ```
+
+## API reference
+
+### Select (Root)
+
+<TypeTable
+  type={{
+    'items': { type: '{ label: string; value: any }[]', description: 'Item list; lets SelectValue render the selected label.' },
+    'value': { type: 'any', description: 'Controlled selected value.' },
+    'defaultValue': { type: 'any' },
+    'onValueChange': { type: '(value: any) => void' },
+    'disabled': { type: 'boolean', default: 'false' },
+  }}
+/>
+
+### SelectItem
+
+<TypeTable
+  type={{
+    'value': { type: 'any', required: true },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+### SelectTrigger / SelectContent
+
+<TypeTable
+  type={{
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>

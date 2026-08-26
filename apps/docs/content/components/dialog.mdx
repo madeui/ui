@@ -1,9 +1,13 @@
 ---
 title: Dialog
-description: Modal dialog built on Base UI Dialog, styled with StyleX.
+description: "A modal window over the page. Built on Base UI Dialog."
 ---
 
 <Component path="dialog-demo" />
+
+## Custom width
+
+<Component path="dialog-custom" />
 
 ## Install
 
@@ -26,5 +30,26 @@ import {
 } from '@/components/ui/dialog';
 ```
 
-Theming note: dialogs portal to `<body>`, so apply themes (e.g. `darkTheme`)
-to `<html>` rather than a wrapper element.
+## API reference
+
+### Dialog (Root)
+
+<TypeTable
+  type={{
+    'open': { type: 'boolean', description: 'Controlled open state.' },
+    'defaultOpen': { type: 'boolean', description: 'Initial open state (uncontrolled).', default: 'false' },
+    'onOpenChange': { type: '(open: boolean) => void', description: 'Called when the open state changes.' },
+  }}
+/>
+
+### DialogContent
+
+<TypeTable
+  type={{
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+`DialogTrigger` / `DialogClose` accept `render` to compose with your own button: `<DialogTrigger render={<Button />}>`. `DialogOverlay`, `DialogHeader`, `DialogFooter`, `DialogTitle`, `DialogDescription` all accept `style`.
+
+Theming note: dialogs portal to `<body>` — apply themes (e.g. `darkTheme`) to `<html>`, not a wrapper element.

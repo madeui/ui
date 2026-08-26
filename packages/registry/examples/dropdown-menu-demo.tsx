@@ -2,16 +2,16 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 
 export default function DropdownMenuDemo() {
   return (
-    <div style={{ padding: 16 }}>
+    <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 300, padding: 16 }}>
       <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="outline" />}>
           Open menu

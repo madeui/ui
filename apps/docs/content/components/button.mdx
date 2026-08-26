@@ -1,9 +1,17 @@
 ---
 title: Button
-description: Button built on Base UI, styled with StyleX.
+description: "Displays a button. Built on Base UI, styled with StyleX."
 ---
 
 <Component path="button-demo" />
+
+## Sizes
+
+<Component path="button-sizes" />
+
+## Style overrides
+
+<Component path="button-style-override" />
 
 ## Install
 
@@ -19,14 +27,17 @@ import { Button } from '@/components/ui/button';
 <Button variant="outline" size="lg">Click me</Button>
 ```
 
-Variants: `primary` (default), `secondary`, `outline`, `ghost`, `destructive`.
-Sizes: `sm`, `md` (default), `lg`, `icon`.
+## API reference
 
-Per-instance overrides use the `style` prop with StyleX styles — they merge
-last and always win:
+### Button
 
-```tsx
-const styles = stylex.create({ pill: { borderRadius: '9999px' } });
+<TypeTable
+  type={{
+    'variant': { type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'", description: 'Visual style of the button.', default: "'primary'" },
+    'size': { type: "'sm' | 'md' | 'lg' | 'icon'", description: 'Height and padding preset. `icon` renders a square button.', default: "'md'" },
+    'disabled': { type: 'boolean', description: 'Disables interaction and dims the button.', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
 
-<Button style={styles.pill}>Pill</Button>
-```
+All other props are forwarded to the underlying Base UI `Button` / native `<button>`.

@@ -1,6 +1,6 @@
 ---
 title: Tooltip
-description: Text label shown on hover/focus, built on Base UI Tooltip.
+description: "A text label shown on hover or focus. Built on Base UI Tooltip."
 ---
 
 <Component path="tooltip-demo" />
@@ -21,5 +21,19 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-// Wrap your app (or subtree) in <TooltipProvider> once.
+// Wrap your app (or a subtree) in <TooltipProvider> once.
 ```
+
+## API reference
+
+### TooltipContent
+
+<TypeTable
+  type={{
+    'side': { type: "'top' | 'right' | 'bottom' | 'left'", default: "'top'" },
+    'sideOffset': { type: 'number', description: 'Distance from the trigger, in px.', default: '6' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+`TooltipTrigger` accepts `render` to compose with your own element: `<TooltipTrigger render={<Button />}>`.

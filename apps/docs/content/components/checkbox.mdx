@@ -1,9 +1,13 @@
 ---
 title: Checkbox
-description: Checkbox built on Base UI with checked and indeterminate states.
+description: "A control for toggling between checked states. Built on Base UI Checkbox."
 ---
 
 <Component path="checkbox-demo" />
+
+## States
+
+<Component path="checkbox-states" />
 
 ## Install
 
@@ -20,3 +24,18 @@ import { Checkbox } from '@/components/ui/checkbox';
   <Checkbox defaultChecked /> Accept terms
 </label>
 ```
+
+## API reference
+
+### Checkbox
+
+<TypeTable
+  type={{
+    'checked': { type: 'boolean', description: 'Controlled checked state.' },
+    'defaultChecked': { type: 'boolean', default: 'false' },
+    'onCheckedChange': { type: '(checked: boolean) => void' },
+    'indeterminate': { type: 'boolean', default: 'false' },
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>

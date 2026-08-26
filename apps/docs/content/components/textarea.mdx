@@ -1,6 +1,6 @@
 ---
 title: Textarea
-description: Multi-line text input.
+description: "A multi-line text input."
 ---
 
 <Component path="textarea-demo" />
@@ -18,3 +18,16 @@ import { Textarea } from '@/components/ui/textarea';
 
 <Textarea placeholder="Type your message here." />
 ```
+
+## API reference
+
+### Textarea
+
+<TypeTable
+  type={{
+    'disabled': { type: 'boolean', default: 'false' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+All native `<textarea>` props are forwarded.

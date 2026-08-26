@@ -6,22 +6,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const fruits = [
-  { label: 'Apple', value: 'apple' },
-  { label: 'Banana', value: 'banana' },
-  { label: 'Cherry', value: 'cherry' },
+const plans = [
+  { label: 'Free', value: 'free' },
+  { label: 'Pro', value: 'pro' },
+  { label: 'Enterprise (contact us)', value: 'enterprise', disabled: true },
 ];
 
-export default function SelectDemo() {
+export default function SelectDisabled() {
   return (
     <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'center', minHeight: 280, padding: 16 }}>
-      <Select items={fruits}>
+      <Select items={plans} defaultValue="pro">
         <SelectTrigger>
-          <SelectValue placeholder="Select a fruit" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {fruits.map(({ label, value }) => (
-            <SelectItem key={value} value={value}>
+          {plans.map(({ label, value, disabled }) => (
+            <SelectItem key={value} value={value} disabled={disabled}>
               {label}
             </SelectItem>
           ))}

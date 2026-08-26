@@ -1,6 +1,6 @@
 ---
 title: Popover
-description: Floating panel anchored to a trigger, built on Base UI Popover.
+description: "A floating panel anchored to a trigger. Built on Base UI Popover."
 ---
 
 <Component path="popover-demo" />
@@ -16,3 +16,18 @@ npx shadcn@latest add @ui-lib/popover
 ```tsx
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 ```
+
+## API reference
+
+### PopoverContent
+
+<TypeTable
+  type={{
+    'side': { type: "'top' | 'right' | 'bottom' | 'left'", default: "'bottom'" },
+    'align': { type: "'start' | 'center' | 'end'", default: "'center'" },
+    'sideOffset': { type: 'number', default: '6' },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
+
+`Popover` (Root) accepts `open` / `defaultOpen` / `onOpenChange`; `PopoverTrigger` accepts `render`.

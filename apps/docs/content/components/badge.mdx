@@ -1,6 +1,6 @@
 ---
 title: Badge
-description: "Small status descriptor. Variants: primary, secondary, outline, destructive."
+description: "A small status descriptor."
 ---
 
 <Component path="badge-demo" />
@@ -18,3 +18,14 @@ import { Badge } from '@/components/ui/badge';
 
 <Badge variant="outline">Outline</Badge>
 ```
+
+## API reference
+
+### Badge
+
+<TypeTable
+  type={{
+    'variant': { type: "'primary' | 'secondary' | 'outline' | 'destructive'", default: "'primary'" },
+    'style': { type: 'StyleXStyles', description: "StyleX styles merged last — they always win over the component's own styles." },
+  }}
+/>
