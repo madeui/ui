@@ -42,9 +42,14 @@ requirement: agents and humans rely on the same shape everywhere.
 
 The shadcn CLI rewrites some CSS-like strings inside distributed files. To
 survive installation byte-identical:
-- colors with alpha as hex (`#00000080`), never `rgba()`;
-- no lone `0` component in shadow shorthands (`0 1px 2px #...`, not
-  `0 1px 2px 0 #...`);
+- colors as `oklch()` (space syntax) or hex — never comma syntax like
+  `rgba(0, 0, 0, 0.5)`;
+- in `oklch(... / alpha)`, keep adjacent components distinct tokens: write
+  black as `oklch(0% 0 0deg / 50%)`, never `oklch(0 0 0 / 50%)` (adjacent
+  equal zeros get collapsed);
+- shadow values: hex-alpha colors only (`0 1px 2px #0000000d`) — the CLI
+  parses shadow shorthands separately and mangles `oklch()` inside them — and
+  no lone `0` spread component;
 - inline SVG attributes with number lists (`viewBox`, `path d`) as template
   literals — `viewBox={` + backtick + `0 0 12 12` + backtick + `}` — plain string
   literals AND `{'...'}` both get mangled (`"0 0 12 12"` → `"0 12"`).

@@ -35,9 +35,12 @@ Semantic names use the familiar convention (`background`, `foreground`,
 `primary`, `muted`, `accent`, `destructive`, `border`, `ring`, ...), so the
 mental model transfers directly.
 
-Two value-format rules keep files installable through the shadcn CLI (its
-transformer rewrites some CSS-like strings): use hex-alpha colors
-(`#00000080`, never `rgba(...)`) and no lone `0` spread in shadow shorthands.
+Colors are `oklch()` — perceptually uniform, so shifting lightness or chroma
+behaves predictably, and any CSS color (hex, `hsl` space syntax) works too.
+A few value-format rules keep files installable through the shadcn CLI (its
+transformer rewrites some CSS-like strings): never use comma syntax like
+`rgba(0, 0, 0, 0.5)`; write black-with-alpha as `oklch(0% 0 0deg / 50%)`
+(adjacent equal zeros get collapsed); keep shadow colors hex-alpha.
 
 ## Themes and dark mode
 

@@ -2,26 +2,27 @@ import * as stylex from '@stylexjs/stylex';
 
 import { colors } from './tokens.stylex';
 
-// Apply to any subtree: <html {...stylex.props(darkTheme)}> or a wrapper div.
+// Apply to <html> (not a wrapper): dialogs/popovers portal to <body> and
+// would escape a subtree theme. <html {...stylex.props(darkTheme)}>.
 export const darkTheme = stylex.createTheme(colors, {
-  background: '#0a0a0a',
-  foreground: '#fafafa',
-  card: '#171717',
-  cardForeground: '#fafafa',
-  popover: '#171717',
-  popoverForeground: '#fafafa',
-  primary: '#fafafa',
-  primaryForeground: '#171717',
-  secondary: '#262626',
-  secondaryForeground: '#fafafa',
-  muted: '#262626',
-  mutedForeground: '#a1a1a1',
-  accent: '#262626',
-  accentForeground: '#fafafa',
-  destructive: '#ff6467',
-  destructiveForeground: '#171717',
-  border: '#262626',
-  input: '#333333',
-  ring: '#737373',
-  overlay: '#000000b3',
+  background: 'oklch(0.145 0 0)',
+  foreground: 'oklch(0.985 0 0)',
+  card: 'oklch(0.205 0 0)',
+  cardForeground: 'oklch(0.985 0 0)',
+  popover: 'oklch(0.205 0 0)',
+  popoverForeground: 'oklch(0.985 0 0)',
+  primary: 'oklch(0.922 0 0)',
+  primaryForeground: 'oklch(0.205 0 0)',
+  secondary: 'oklch(0.269 0 0)',
+  secondaryForeground: 'oklch(0.985 0 0)',
+  muted: 'oklch(0.269 0 0)',
+  mutedForeground: 'oklch(0.708 0 0)',
+  accent: 'oklch(0.269 0 0)',
+  accentForeground: 'oklch(0.985 0 0)',
+  destructive: 'oklch(0.704 0.191 22.216)',
+  destructiveForeground: 'oklch(0.205 0 0)',
+  border: 'oklch(0.269 0 0)',
+  input: 'oklch(0.325 0 0)',
+  ring: 'oklch(0.556 0 0)',
+  overlay: 'oklch(0% 0 0deg / 70%)',
 });
