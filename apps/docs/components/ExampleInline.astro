@@ -5,13 +5,14 @@
 // overlays the whole site. The trade-off vs Blume's
 // default: docs CSS could leak into examples, which we contain with
 // `not-prose` on the preview pane.
+import * as stylex from '@stylexjs/stylex';
 import data from 'blume:data';
 import { examples } from 'blume:examples';
 import Tab from 'blume/components/content/Tab.astro';
 import Tabs from 'blume/components/content/Tabs.astro';
 import { highlightCode } from 'blume/markdown';
 
-import ThemeSync from './ThemeSync';
+import { darkTheme } from '@/lib/themes';
 
 interface Props {
   path: string;
@@ -27,13 +28,37 @@ const codeHtml = entry
       themes: data.config.codeThemes,
     })
   : undefined;
+
+// The StyleX dark-theme classes, resolved server-side so the inline script
+// below can apply them BEFORE first paint (a useEffect would flash light).
+const darkClasses = stylex.props(darkTheme).className ?? '';
 ---
 
 {
   entry ? (
     <Tabs hash={false} sync={false}>
       <Tab class="not-prose p-0!" title="Preview">
-        <ThemeSync client:load />
+        {/* Mirrors Blume's data-theme onto the StyleX dark theme synchronously
+            (inline scripts block parsing, so previews below never paint in the
+            wrong theme) and keeps following toggles via a MutationObserver.
+            Runs once per page — later instances see the guard. */}
+        <script is:inline define:vars={{ darkClasses }}>
+          (() => {
+            if (window.__uiLibThemeSync) return;
+            window.__uiLibThemeSync = true;
+            const html = document.documentElement;
+            const classes = darkClasses.split(' ').filter(Boolean);
+            const apply = () => {
+              const dark = html.dataset.theme === 'dark';
+              for (const c of classes) html.classList.toggle(c, dark);
+            };
+            apply();
+            new MutationObserver(apply).observe(html, {
+              attributes: true,
+              attributeFilter: ['data-theme'],
+            });
+          })();
+        </script>
         {/* Inline styles: Blume compiles this override outside the normal
             Astro page pipeline, so <style> blocks here are dropped. */}
         <div
