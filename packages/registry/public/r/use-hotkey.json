@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-hotkey",
+  "type": "registry:lib",
+  "title": "useHotkey",
+  "description": "Global keyboard shortcut hook (e.g. ⌘K for the command palette).",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "files": [
+    {
+      "path": "lib/use-hotkey.ts",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nexport interface UseHotkeyOptions {\n  /** Require ⌘ (macOS) or Ctrl (elsewhere) to be held. Defaults to true. */\n  mod?: boolean;\n  /** Set false to temporarily disable the shortcut. */\n  enabled?: boolean;\n}\n\n/**\n * Global keyboard shortcut. Typical use — a ⌘K command palette:\n *\n * ```tsx\n * const [open, setOpen] = React.useState(false);\n * useHotkey('k', () => setOpen((o) => !o));\n * ```\n *\n * Skips the shortcut while an input, textarea, or contenteditable element has\n * focus, unless `mod` is required (cmdk-style behavior).\n */\nexport function useHotkey(\n  key: string,\n  onTrigger: (event: KeyboardEvent) => void,\n  { mod = true, enabled = true }: UseHotkeyOptions = {}\n) {\n  const handlerRef = React.useRef(onTrigger);\n  React.useEffect(() => {\n    handlerRef.current = onTrigger;\n  });\n\n  React.useEffect(() => {\n    if (!enabled) return;\n    const listener = (event: KeyboardEvent) => {\n      if (event.key.toLowerCase() !== key.toLowerCase()) return;\n      if (mod && !(event.metaKey || event.ctrlKey)) return;\n      if (!mod) {\n        const target = event.target as HTMLElement | null;\n        if (\n          target &&\n          (target.isContentEditable ||\n            target.tagName === 'INPUT' ||\n            target.tagName === 'TEXTAREA' ||\n            target.tagName === 'SELECT')\n        ) {\n          return;\n        }\n      }\n      event.preventDefault();\n      handlerRef.current(event);\n    };\n    window.addEventListener('keydown', listener);\n    return () => window.removeEventListener('keydown', listener);\n  }, [key, mod, enabled]);\n}\n",
+      "type": "registry:lib",
+      "target": "lib/use-hotkey.ts"
+    }
+  ]
+}

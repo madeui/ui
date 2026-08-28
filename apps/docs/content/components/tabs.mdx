@@ -28,6 +28,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 </Tabs>
 ```
 
+## Line variant
+
+Underline-style tabs: `variant="line"` on `TabsList`.
+
+<Component path="tabs-line" />
+
 ## Disabled tab
 
 <Component path="tabs-disabled" />
@@ -45,6 +51,8 @@ Built on [Base UI Tabs](https://base-ui.com/react/components/tabs). The tables b
 | `onValueChange` | `(value: any) => void` | — |  |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`TabsList` accepts `variant`: `'default'` (filled pill list) or `'line'` (underline). `Tabs` accepts `orientation`: `'horizontal' | 'vertical'` (Base UI keyboard behavior follows).
 
 ### TabsTrigger
 

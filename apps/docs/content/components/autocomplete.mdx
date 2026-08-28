@@ -1,0 +1,61 @@
+---
+title: Autocomplete
+description: "Free-text input with a filtered suggestion popup."
+---
+
+<Component path="autocomplete-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/autocomplete
+```
+
+## Usage
+
+```tsx
+import {
+  Autocomplete,
+  AutocompleteContent,
+  AutocompleteEmpty,
+  AutocompleteInput,
+  AutocompleteItem,
+  AutocompleteList,
+} from '@/components/ui/autocomplete';
+```
+
+## Composition
+
+```tsx
+<Autocomplete items={items}>
+  <AutocompleteInput />
+  <AutocompleteContent>
+    <AutocompleteEmpty />
+    <AutocompleteList>
+      {(item) => <AutocompleteItem value={item} />}
+    </AutocompleteList>
+  </AutocompleteContent>
+</Autocomplete>
+```
+
+## Autocomplete vs. Combobox
+
+Both filter a list as you type. **Combobox** selects from a fixed set — the
+value must be one of the options. **Autocomplete** is a free-text input where
+the list only suggests: any typed value is allowed. (Command is the same
+primitive in inline mode, rendered as a palette.)
+
+## API reference
+
+Built on [Base UI Autocomplete](https://base-ui.com/react/components/autocomplete). Pass `items` to `Autocomplete`; filtering and highlight ship with the primitive, and `AutocompleteList` accepts a render function over the filtered items. All other props are forwarded to the Base UI parts (`filter`, `onValueChange`, `openOnInputClick`, …); see the [Base UI Autocomplete API reference](https://base-ui.com/react/components/autocomplete#api-reference).
+
+### AutocompleteContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` |  |
+| `sideOffset` | `number` | `6` |  |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` |  |
+| `alignOffset` | `number` | `0` |  |
+
+Every part accepts a `style` prop (`StyleXStyles`, merged last).

@@ -38,6 +38,13 @@ import {
 </Command>
 ```
 
+## Keyboard shortcut
+
+Open the palette with **⌘K** / **Ctrl K** using the `useHotkey` helper
+(`npx shadcn@latest add @ui-lib/use-hotkey`).
+
+<Component path="command-dialog-hotkey" />
+
 ## API reference
 
 Built on [Base UI Autocomplete](https://base-ui.com/react/components/autocomplete) in `inline open` mode — the filtered list renders in place with no popup, like a command palette, with no extra dependency. Pass `items` to `Command`; filtering and highlight ship with the primitive, and `CommandList` accepts a render function over the filtered items. All other props are forwarded to the Base UI `Root` (`filter`, `onValueChange`, `itemToStringLabel`, …); see the [Base UI Autocomplete API reference](https://base-ui.com/react/components/autocomplete#api-reference).

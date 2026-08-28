@@ -1,0 +1,181 @@
+---
+title: Form
+description: "Validated form built on Base UI Form and Field."
+---
+
+<Component path="form-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/form
+```
+
+## Usage
+
+```tsx
+import { Form } from '@/components/ui/form';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+```
+
+## Composition
+
+```tsx
+<Form onFormSubmit={(values) => {}}>
+  <Field name="email">
+    <FieldLabel />
+    <Input />
+    <FieldDescription />
+    <FieldError />
+  </Field>
+  <Button type="submit" />
+</Form>
+```
+
+`Form` validates the `Field`s inside it. A field's control is whatever Base
+UI control you place in it — `Input`, `Textarea`, `Checkbox`, `Select`,
+`Switch`, `RadioGroup`, `Slider`, `NumberField` all join the field
+automatically (label association, `aria-describedby`, `aria-invalid`).
+Native constraint attributes (`required`, `type="email"`, `minLength`, …)
+and the field's `validate` function both feed `FieldError`.
+
+## Server errors
+
+Pass externally produced errors — e.g. from a server action — via `errors`,
+keyed by field `name`:
+
+```tsx
+const [errors, setErrors] = React.useState({});
+
+<Form
+  errors={errors}
+  onFormSubmit={async (values) => {
+    const response = await submit(values);
+    if (response.errors) setErrors(response.errors); // { email: 'Already in use' }
+  }}
+>
+```
+
+## React Hook Form
+
+Base UI fields interoperate with [react-hook-form](https://react-hook-form.com):
+keep RHF as the source of truth, tell the field about it with `invalid`, and
+render RHF's message through `FieldError` (external errors render as-is).
+Use a plain `<form>` — RHF owns submission.
+
+```tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+
+import { Button } from '@/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+
+export function ProfileForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ email: string }>();
+
+  return (
+    <form onSubmit={handleSubmit((values) => console.log(values))}>
+      <Field invalid={!!errors.email}>
+        <FieldLabel>Email</FieldLabel>
+        <Input
+          type="email"
+          {...register('email', { required: 'Email is required.' })}
+        />
+        <FieldError errors={[errors.email]} />
+      </Field>
+      <Button type="submit">Submit</Button>
+    </form>
+  );
+}
+```
+
+- `invalid` puts the field into its invalid state (`aria-invalid`, red label)
+  under RHF's control.
+- `FieldError errors={[...]}` renders RHF's messages directly — de-duplicated,
+  nothing when empty.
+- `register` spreads `name`, `ref`, `onChange`, `onBlur` onto our `Input`,
+  which forwards them to the native element.
+
+For controlled Base UI controls (`Select`, `Checkbox`, `Slider`, …) use RHF's
+`Controller` and map `field.value` / `field.onChange` to the control's
+`value` / `onValueChange` (or `checked` / `onCheckedChange`).
+
+## TanStack Form
+
+The same pattern works with [TanStack Form](https://tanstack.com/form) — its
+`form.Field` render prop supplies state and handlers, our `Field` renders it
+accessibly:
+
+```tsx
+'use client';
+
+import { useForm } from '@tanstack/react-form';
+
+import { Button } from '@/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+
+export function ProfileForm() {
+  const form = useForm({
+    defaultValues: { email: '' },
+    onSubmit: ({ value }) => console.log(value),
+  });
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <form.Field
+        name="email"
+        validators={{
+          onChange: ({ value }) =>
+            value.includes('@') ? undefined : 'Enter a valid email.',
+        }}
+      >
+        {(field) => (
+          <Field invalid={field.state.meta.errors.length > 0}>
+            <FieldLabel>Email</FieldLabel>
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(event) => field.handleChange(event.target.value)}
+            />
+            <FieldError
+              errors={field.state.meta.errors.map((message) => ({
+                message: String(message),
+              }))}
+            />
+          </Field>
+        )}
+      </form.Field>
+      <Button type="submit">Submit</Button>
+    </form>
+  );
+}
+```
+
+## API reference
+
+Built on [Base UI Form](https://base-ui.com/react/components/form). All props are forwarded (`errors`, `onFormSubmit`, `validationMode`, `actionsRef`, …); see the [Base UI Form API reference](https://base-ui.com/react/components/form#api-reference). See [Field](/docs/components/field) for the field parts.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `validationMode` | `'onSubmit' \| 'onBlur' \| 'onChange'` | `'onSubmit'` | When fields validate; a field's own `validationMode` wins. |
+| `errors` | `Record<string, string \| string[]>` | — | External errors keyed by field `name` (e.g. from a server). |
+| `onFormSubmit` | `(values) => void` | — | Called with the form values when validation passes. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

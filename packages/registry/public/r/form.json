@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "form",
+  "type": "registry:ui",
+  "title": "Form",
+  "description": "Form built on Base UI Form: validates fields, consolidates errors, accepts server errors.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/form.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Form as BaseForm } from '@base-ui/react/form';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space } from '@/lib/constants.stylex';\nimport { font } from '@/lib/tokens.stylex';\n\nexport interface FormProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseForm>,\n    'className' | 'style'\n  > {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\n/**\n * Built on Base UI Form: validates the Fields inside it (`validationMode`),\n * consolidates their errors, and accepts external errors — e.g. from a server\n * action — via the `errors` prop, keyed by Field `name`.\n */\nexport function Form({ style, ...props }: FormProps) {\n  return <BaseForm {...props} {...stylex.props(styles.root, style)} />;\n}\n\nconst styles = stylex.create({\n  root: {\n    display: 'flex',\n    flexDirection: 'column',\n    fontFamily: font.sans,\n    gap: space.s5,\n    width: '100%',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/form.tsx"
+    }
+  ]
+}

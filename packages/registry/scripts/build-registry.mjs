@@ -14,6 +14,8 @@ const HOMEPAGE = 'https://example.com';
 
 const DESCRIPTIONS = {
   accordion: 'Vertically stacked collapsible panels built on Base UI Accordion.',
+  autocomplete:
+    'Free-text input with a filtered suggestion popup, built on Base UI Autocomplete.',
   'aspect-ratio': 'Constrains content to a given width/height ratio.',
   'button-group': 'Fuses buttons and inputs into one segmented control.',
   'checkbox-group':
@@ -24,7 +26,9 @@ const DESCRIPTIONS = {
     'Swipeable panel built on Base UI Drawer. Directions: down, up, left, right.',
   empty: 'Empty state with media, title, description, and content slots.',
   field:
-    'Form field layout: label, description, error, separator, group, and fieldset parts.',
+    'Accessible form field layout built on Base UI Field: label, description, validation errors.',
+  form:
+    'Form built on Base UI Form: validates fields, consolidates errors, accepts server errors.',
   'input-group':
     'Input with leading/trailing addons, buttons, and text, drawn as one control.',
   item: 'Generic list row with media, content, and actions. Variants: default, outline, muted.',
@@ -78,7 +82,8 @@ const DESCRIPTIONS = {
   switch: 'Toggle switch built on Base UI Switch.',
   tabs: 'Tabbed panels built on Base UI Tabs.',
   textarea: 'Multi-line text input.',
-  toast: 'Notifications built on Base UI Toast: ToastProvider + Toaster + useToast().',
+  toast:
+    'Stacked, swipeable notifications built on Base UI Toast with an imperative toast() API.',
   tooltip: 'Text label on hover/focus, built on Base UI Tooltip.',
 };
 
@@ -157,6 +162,12 @@ const items = [
     'StyleX utilities',
     'stateProps: adapter mapping Base UI state to conditional StyleX styles.',
     ['stylex-utils.ts']
+  ),
+  await libItem(
+    'use-hotkey',
+    'useHotkey',
+    'Global keyboard shortcut hook (e.g. ⌘K for the command palette).',
+    ['use-hotkey.ts']
   ),
   ...(await Promise.all(componentNames.map(uiItem))),
 ];

@@ -43,20 +43,47 @@ import {
 </FieldSet>
 ```
 
+## Validation
+
+Give the field a `name` and place a Base UI control inside — the control
+joins the field automatically (label association, `aria-describedby`,
+`aria-invalid`, red label on error). Combine with [Form](/docs/components/form)
+to validate on submit, or set `validationMode="onChange"` per field. Custom
+rules go in `validate`:
+
+```tsx
+<Field
+  name="username"
+  validate={(value) => (String(value).length < 2 ? 'Too short.' : null)}
+>
+  <FieldLabel>Username</FieldLabel>
+  <Input required />
+  <FieldError />
+</Field>
+```
+
+Using react-hook-form or TanStack Form instead? See the
+[Form page](/docs/components/form) — `Field` takes `invalid` and `FieldError`
+takes `errors` for externally controlled state.
+
 ## API reference
 
-Plain layout markup around any control (works with Input, Select, Checkbox, RadioGroup, Slider, …). `FieldLabel` renders our `Label`.
+Built on [Base UI Field](https://base-ui.com/react/components/field) and [Fieldset](https://base-ui.com/react/components/fieldset): `Field` renders `Field.Root` (all validation props forwarded: `name`, `validate`, `validationMode`, `invalid`, `disabled`, …), `FieldLabel`/`FieldDescription`/`FieldError` render the matching parts, `FieldSet`/`FieldLegend` render Fieldset parts. `FieldGroup`, `FieldContent`, `FieldTitle`, and `FieldSeparator` are layout markup.
 
 ### Field
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` |  |
+| `name` | `string` | — | Identifies the field in form values and server errors. |
+| `validate` | `(value, formValues) => string \| string[] \| null` | — | Custom validation; return message(s) or null. |
+| `invalid` | `boolean` | — | Force the invalid state — for external form libraries. |
 
 ### FieldError
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `errors` | `Array<{ message?: string }>` | — | De-duplicated; one message renders as text, several as a list. Renders nothing when empty. |
+| `errors` | `Array<{ message?: string }>` | — | External errors rendered directly (de-duplicated; one message as text, several as a list; nothing when empty). Without it, the surrounding field's own validation message renders. |
+| `match` | `boolean \| keyof ValidityState` | — | When to show `children` (Base UI). `true` always shows — for external control. |
 
 `FieldLegend` accepts `variant`: `'legend'` (base size) or `'label'` (sm). `FieldSeparator` accepts children rendered centered over the line. All parts accept a `style` prop (`StyleXStyles`, merged last).

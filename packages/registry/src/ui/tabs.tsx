@@ -13,26 +13,54 @@ interface StyleProp {
   style?: stylex.StyleXStyles;
 }
 
+export type TabsVariant = 'default' | 'line';
+
+const TabsVariantContext = React.createContext<TabsVariant>('default');
+
 export function Tabs({
   style,
+  orientation = 'horizontal',
   ...props
 }: Omit<
   React.ComponentPropsWithoutRef<typeof BaseTabs.Root>,
   'className' | 'style'
 > &
   StyleProp) {
-  return <BaseTabs.Root {...props} {...stylex.props(styles.root, style)} />;
+  return (
+    <BaseTabs.Root
+      orientation={orientation}
+      {...props}
+      {...stylex.props(
+        styles.root,
+        orientation === 'vertical' && styles.rootVertical,
+        style
+      )}
+    />
+  );
 }
 
 export function TabsList({
   style,
+  variant = 'default',
   ...props
 }: Omit<
   React.ComponentPropsWithoutRef<typeof BaseTabs.List>,
   'className' | 'style'
 > &
-  StyleProp) {
-  return <BaseTabs.List {...props} {...stylex.props(styles.list, style)} />;
+  StyleProp & { variant?: TabsVariant }) {
+  return (
+    <TabsVariantContext.Provider value={variant}>
+      <BaseTabs.List
+        {...props}
+        {...stateProps((s: { orientation: 'horizontal' | 'vertical' }) => [
+          styles.list,
+          variant === 'line' && styles.listLine,
+          s.orientation === 'vertical' && styles.listVertical,
+          style,
+        ])}
+      />
+    </TabsVariantContext.Provider>
+  );
 }
 
 export function TabsTrigger({
@@ -43,12 +71,17 @@ export function TabsTrigger({
   'className' | 'style'
 > &
   StyleProp) {
+  const variant = React.useContext(TabsVariantContext);
   return (
     <BaseTabs.Tab
       {...props}
       {...stateProps((s: { active: boolean }) => [
         styles.trigger,
-        s.active && styles.triggerSelected,
+        variant === 'line' && styles.triggerLine,
+        s.active &&
+          (variant === 'line'
+            ? styles.triggerLineSelected
+            : styles.triggerSelected),
         style,
       ])}
     />
@@ -73,6 +106,9 @@ const styles = stylex.create({
     fontFamily: font.sans,
     gap: space.s2,
   },
+  rootVertical: {
+    flexDirection: 'row',
+  },
   list: {
     alignItems: 'center',
     backgroundColor: colors.muted,
@@ -81,6 +117,20 @@ const styles = stylex.create({
     gap: space.s1,
     padding: space.s1,
     width: 'fit-content',
+  },
+  listLine: {
+    backgroundColor: 'transparent',
+    borderBottomColor: colors.border,
+    borderBottomStyle: 'solid',
+    borderBottomWidth: stroke.border,
+    borderRadius: 0,
+    gap: 0,
+    padding: 0,
+  },
+  listVertical: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    height: 'fit-content',
   },
   trigger: {
     alignItems: 'center',
@@ -101,12 +151,25 @@ const styles = stylex.create({
     outlineOffset: `calc(-1 * ${stroke.focus})`,
     paddingInline: space.s3,
     transitionDuration: duration.fast,
-    transitionProperty: 'background-color, color',
+    transitionProperty: 'background-color, color, border-color',
     userSelect: 'none',
     whiteSpace: 'nowrap',
   },
   triggerSelected: {
     backgroundColor: colors.background,
+    color: colors.foreground,
+  },
+  // Underline style: the active tab draws a bar over the list's bottom border.
+  triggerLine: {
+    borderBottomColor: 'transparent',
+    borderBottomStyle: 'solid',
+    borderBottomWidth: stroke.focus,
+    borderRadius: 0,
+    height: space.s9,
+    marginBottom: `calc(-1 * ${stroke.border})`,
+  },
+  triggerLineSelected: {
+    borderBottomColor: colors.primary,
     color: colors.foreground,
   },
   content: {

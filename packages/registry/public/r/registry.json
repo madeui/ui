@@ -49,6 +49,23 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "use-hotkey",
+      "type": "registry:lib",
+      "title": "useHotkey",
+      "description": "Global keyboard shortcut hook (e.g. ⌘K for the command palette).",
+      "dependencies": [
+        "@stylexjs/stylex"
+      ],
+      "files": [
+        {
+          "path": "lib/use-hotkey.ts",
+          "type": "registry:lib",
+          "target": "lib/use-hotkey.ts"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "accordion",
       "type": "registry:ui",
       "title": "Accordion",
@@ -129,6 +146,28 @@
           "path": "ui/aspect-ratio.tsx",
           "type": "registry:ui",
           "target": "components/ui/aspect-ratio.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "autocomplete",
+      "type": "registry:ui",
+      "title": "Autocomplete",
+      "description": "Free-text input with a filtered suggestion popup, built on Base UI Autocomplete.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/autocomplete.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/autocomplete.tsx"
         }
       ]
     },
@@ -477,13 +516,14 @@
       "name": "field",
       "type": "registry:ui",
       "title": "Field",
-      "description": "Form field layout: label, description, error, separator, group, and fieldset parts.",
+      "description": "Accessible form field layout built on Base UI Field: label, description, validation errors.",
       "dependencies": [
+        "@base-ui/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
         "@ui-lib/theme",
-        "@ui-lib/label",
+        "@ui-lib/utils",
         "@ui-lib/separator"
       ],
       "files": [
@@ -491,6 +531,27 @@
           "path": "ui/field.tsx",
           "type": "registry:ui",
           "target": "components/ui/field.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "form",
+      "type": "registry:ui",
+      "title": "Form",
+      "description": "Form built on Base UI Form: validates fields, consolidates errors, accepts server errors.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/form.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/form.tsx"
         }
       ]
     },
@@ -891,7 +952,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {
@@ -1052,13 +1114,14 @@
       "name": "toast",
       "type": "registry:ui",
       "title": "Toast",
-      "description": "Notifications built on Base UI Toast: ToastProvider + Toaster + useToast().",
+      "description": "Stacked, swipeable notifications built on Base UI Toast with an imperative toast() API.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {

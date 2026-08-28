@@ -47,11 +47,13 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field';
+import { Form } from '@/components/ui/form';
 import {
   InputGroup,
   InputGroupAddon,
@@ -98,6 +100,14 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import {
+  Autocomplete,
+  AutocompleteContent,
+  AutocompleteEmpty,
+  AutocompleteInput,
+  AutocompleteItem,
+  AutocompleteList,
+} from '@/components/ui/autocomplete';
 import {
   Combobox,
   ComboboxContent,
@@ -358,6 +368,9 @@ export default function Home() {
             <label {...stylex.props(styles.label)}>
               <Switch defaultChecked /> Airplane mode
             </label>
+            <label {...stylex.props(styles.label)}>
+              <Switch size="sm" defaultChecked /> Small switch
+            </label>
             <RadioGroup defaultValue="b">
               <label {...stylex.props(styles.label)}>
                 <RadioGroupItem value="a" /> Option A
@@ -461,6 +474,16 @@ export default function Home() {
               </TabsList>
               <TabsContent value="account">Account settings.</TabsContent>
               <TabsContent value="password">Password settings.</TabsContent>
+            </Tabs>
+            <Tabs defaultValue="overview">
+              <TabsList variant="line">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="reports">Reports</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">Overview of your project.</TabsContent>
+              <TabsContent value="analytics">Traffic and usage.</TabsContent>
+              <TabsContent value="reports">Exportable reports.</TabsContent>
             </Tabs>
           </div>
         </section>
@@ -648,6 +671,19 @@ export default function Home() {
                 </ComboboxList>
               </ComboboxContent>
             </Combobox>
+            <Autocomplete items={fruits.map((f) => f.label)}>
+              <AutocompleteInput placeholder="Autocomplete fruit…" />
+              <AutocompleteContent>
+                <AutocompleteEmpty>No fruit found.</AutocompleteEmpty>
+                <AutocompleteList>
+                  {(item: string) => (
+                    <AutocompleteItem key={item} value={item}>
+                      {item}
+                    </AutocompleteItem>
+                  )}
+                </AutocompleteList>
+              </AutocompleteContent>
+            </Autocomplete>
             <InputOTP length={6}>
               <InputOTPGroup>
                 <InputOTPSlot />
@@ -761,6 +797,40 @@ export default function Home() {
                 <Spinner /> Loading…
               </Button>
             </div>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="forms-4">
+          <div {...stylex.props(styles.col)}>
+            <Form
+              onFormSubmit={(values) => {
+                console.log(values);
+              }}
+            >
+              <Field
+                name="username"
+                validate={(value) =>
+                  typeof value === 'string' && value.length < 2
+                    ? 'Username must be at least 2 characters.'
+                    : null
+                }
+              >
+                <FieldLabel>Username</FieldLabel>
+                <Input placeholder="madeui" required />
+                <FieldDescription>
+                  This is your public display name.
+                </FieldDescription>
+                <FieldError />
+              </Field>
+              <Field name="email">
+                <FieldLabel>Email</FieldLabel>
+                <Input type="email" placeholder="m@example.com" required />
+                <FieldError />
+              </Field>
+              <Button type="submit" style={styles.selfStart}>
+                Submit
+              </Button>
+            </Form>
           </div>
         </section>
 
@@ -894,6 +964,9 @@ export default function Home() {
 }
 
 const styles = stylex.create({
+  selfStart: {
+    alignSelf: 'flex-start',
+  },
   page: {
     backgroundColor: colors.background,
     color: colors.foreground,
