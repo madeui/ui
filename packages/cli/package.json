@@ -1,0 +1,16 @@
+{
+  "name": "@ui-lib/cli",
+  "version": "0.1.0",
+  "description": "CLI for the ui-lib registry: init (StyleX build setup) and add (install components).",
+  "type": "module",
+  "bin": {
+    "ui-lib": "src/index.mjs"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "license": "MIT"
+}
