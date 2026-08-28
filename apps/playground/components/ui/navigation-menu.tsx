@@ -161,7 +161,17 @@ export function NavigationMenuPositioner({
         {...stylex.props(styles.positioner, style)}
       >
         <BaseNavigationMenu.Popup
-          {...stylex.props(styles.popup, ring({ shadow: shadow.md }))}
+          {...stateProps(
+            (s: {
+              transitionStatus: 'starting' | 'ending' | 'idle' | undefined;
+            }) => [
+              styles.popup,
+              ring({ shadow: shadow.md }),
+              (s.transitionStatus === 'starting' ||
+                s.transitionStatus === 'ending') &&
+                styles.popupClosed,
+            ]
+          )}
         >
           <BaseNavigationMenu.Viewport {...stylex.props(styles.viewport)} />
         </BaseNavigationMenu.Popup>
@@ -271,13 +281,19 @@ const styles = stylex.create({
     borderRadius: radius.lg,
     color: colors.popoverForeground,
     height: 'var(--popup-height)',
+    opacity: 1,
     outline: 'none',
     position: 'relative',
+    transform: 'scale(1)',
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.slow,
     transitionProperty: 'opacity, transform, width, height',
     transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
     width: 'var(--popup-width)',
+  },
+  popupClosed: {
+    opacity: 0,
+    transform: 'scale(0.97)',
   },
   viewport: {
     height: '100%',

@@ -108,15 +108,26 @@ export function SelectContent({
       >
         <BaseSelect.Popup
           {...props}
-          {...stylex.props(
-            styles.popup,
-            // Edge as a ring, not a border: Base UI's align-item-with-trigger
-            // math ignores borders and would shift the aligned text.
-            ring({ shadow: shadow.md }),
-            // The align-with-trigger overlay repositions on open; a scale-in
-            // animation fights that, so it only runs in anchored mode.
-            !alignItemWithTrigger && styles.popupAnimated,
-            style
+          {...stateProps(
+            (s: {
+              transitionStatus: TransitionStatus;
+              side: PopupSide | 'none';
+            }) => [
+              styles.popup,
+              // Edge as a ring, not a border: Base UI's align-item-with-trigger
+              // math ignores borders and would shift the aligned text.
+              ring({ shadow: shadow.md }),
+              !alignItemWithTrigger && styles.popupAnchored,
+              // The align-with-trigger overlay repositions on open; a scale-in
+              // animation fights that, so it only fades. Anchored mode gets the
+              // full closed pose on entry and exit.
+              (s.transitionStatus === 'starting' ||
+                s.transitionStatus === 'ending') &&
+                (alignItemWithTrigger || s.side === 'none'
+                  ? s.transitionStatus === 'ending' && styles.popupFaded
+                  : closedSides[s.side]),
+              style,
+            ]
           )}
         >
           <ScrollArrow direction="up" />
@@ -171,9 +182,18 @@ export function SelectItem({
   );
 }
 
-const popupIn = stylex.keyframes({
-  from: { opacity: 0, transform: 'scale(0.97)' },
-  to: { opacity: 1, transform: 'scale(1)' },
+type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
+type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
+
+// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
+// the transition on the base style animates both entry and exit through it.
+const closedSides = stylex.create({
+  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
+  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
+  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
+  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
 });
 
 const styles = stylex.create({
@@ -216,17 +236,22 @@ const styles = stylex.create({
     fontFamily: font.sans,
     lineHeight: lineHeight.control,
     maxHeight: 'var(--available-height)',
+    opacity: 1,
     width: 'var(--anchor-width)',
     overflowX: 'hidden',
     overflowY: 'auto',
     position: 'relative',
+    transform: 'scale(1)',
     transformOrigin: 'var(--transform-origin)',
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: 'ease',
   },
-  popupAnimated: {
-    animationDuration: duration.fast,
-    animationName: popupIn,
-    animationTimingFunction: 'ease-out',
+  popupAnchored: {
     maxHeight: `min(${container.sm}, var(--available-height))`,
+  },
+  popupFaded: {
+    opacity: 0,
   },
   list: {
     paddingBlock: space.s1,

@@ -84,12 +84,24 @@ export function ComboboxContent({
       >
         <BaseCombobox.Popup
           {...props}
-          {...stylex.props(styles.popup, ring({ shadow: shadow.md }), style)}
+          {...stateProps(
+            (s: { transitionStatus: TransitionStatus; side: PopupSide }) => [
+              styles.popup,
+              ring({ shadow: shadow.md }),
+              (s.transitionStatus === 'starting' ||
+                s.transitionStatus === 'ending') &&
+                closedSides[s.side],
+              style,
+            ]
+          )}
         />
       </BaseCombobox.Positioner>
     </BaseCombobox.Portal>
   );
 }
+
+type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
+type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
 export function ComboboxList({
   style,
@@ -196,9 +208,15 @@ export function ComboboxSeparator({
   );
 }
 
-const popupIn = stylex.keyframes({
-  from: { opacity: 0, transform: 'scale(0.97)' },
-  to: { opacity: 1, transform: 'scale(1)' },
+// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
+// the transition on the base style animates both entry and exit through it.
+const closedSides = stylex.create({
+  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
+  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
+  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
+  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
 });
 
 const styles = stylex.create({
@@ -250,9 +268,6 @@ const styles = stylex.create({
     zIndex: z.popup,
   },
   popup: {
-    animationDuration: duration.fast,
-    animationName: popupIn,
-    animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
@@ -260,9 +275,14 @@ const styles = stylex.create({
     flexDirection: 'column',
     fontFamily: font.sans,
     maxHeight: `min(${container.sm}, var(--available-height))`,
+    opacity: 1,
     outline: 'none',
     overflow: 'hidden',
+    transform: 'scale(1)',
     transformOrigin: 'var(--transform-origin)',
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: 'ease',
     width: 'var(--anchor-width)',
   },
   list: {

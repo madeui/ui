@@ -52,7 +52,18 @@ export function TooltipContent({
         sideOffset={sideOffset}
         {...stylex.props(styles.positioner)}
       >
-        <BaseTooltip.Popup {...props} {...stylex.props(styles.popup, style)}>
+        <BaseTooltip.Popup
+          {...props}
+          {...stateProps(
+            (s: { transitionStatus: TransitionStatus; side: ArrowSide }) => [
+              styles.popup,
+              (s.transitionStatus === 'starting' ||
+                s.transitionStatus === 'ending') &&
+                closedSides[s.side],
+              style,
+            ]
+          )}
+        >
           {children}
           <BaseTooltip.Arrow
             {...stateProps((s: { side: ArrowSide }) => [
@@ -66,9 +77,17 @@ export function TooltipContent({
   );
 }
 
-const popupIn = stylex.keyframes({
-  from: { opacity: 0, transform: 'scale(0.97)' },
-  to: { opacity: 1, transform: 'scale(1)' },
+type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
+
+// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
+// the transition on the base style animates both entry and exit through it.
+const closedSides = stylex.create({
+  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
+  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
+  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
+  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
+  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
 });
 
 const styles = stylex.create({
@@ -77,9 +96,6 @@ const styles = stylex.create({
     zIndex: z.popup,
   },
   popup: {
-    animationDuration: duration.fast,
-    animationName: popupIn,
-    animationTimingFunction: 'ease-out',
     backgroundColor: colors.foreground,
     borderRadius: radius.sm,
     color: colors.background,
@@ -87,9 +103,14 @@ const styles = stylex.create({
     fontSize: fontSize.xs,
     lineHeight: lineHeight.snug,
     maxWidth: container.sm,
+    opacity: 1,
     paddingBlock: space.s15,
     paddingInline: space.s3,
+    transform: 'scale(1)',
     transformOrigin: 'var(--transform-origin)',
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: 'ease',
   },
   // A rotated square, half tucked under the popup; Base UI positions it along
   // the anchor axis, we only offset it on the cross axis per side.

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring } from '@/lib/stylex-utils';
+import { ring, stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -28,9 +28,20 @@ export function DialogOverlay({
 > &
   StyleXStyleProps) {
   return (
-    <BaseDialog.Backdrop {...props} {...stylex.props(styles.overlay, style)} />
+    <BaseDialog.Backdrop
+      {...props}
+      {...stateProps((s: { transitionStatus: TransitionStatus }) => [
+        styles.overlay,
+        (s.transitionStatus === 'starting' ||
+          s.transitionStatus === 'ending') &&
+          styles.overlayClosed,
+        style,
+      ])}
+    />
   );
 }
+
+type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
 
 export function DialogContent({
   style,
@@ -47,7 +58,14 @@ export function DialogContent({
       <DialogOverlay />
       <BaseDialog.Popup
         {...props}
-        {...stylex.props(styles.content, ring({ shadow: shadow.lg }), style)}
+        {...stateProps((s: { transitionStatus: TransitionStatus }) => [
+          styles.content,
+          ring({ shadow: shadow.lg }),
+          (s.transitionStatus === 'starting' ||
+            s.transitionStatus === 'ending') &&
+            styles.contentClosed,
+          style,
+        ])}
       >
         {children}
         {showCloseButton && (
@@ -114,36 +132,25 @@ export function DialogDescription({
   );
 }
 
-const overlayIn = stylex.keyframes({
-  from: { opacity: 0 },
-  to: { opacity: 1 },
-});
-
-const contentIn = stylex.keyframes({
-  from: {
+const styles = stylex.create({
+  overlay: {
+    backgroundColor: colors.overlay,
+    inset: 0,
+    opacity: 1,
+    position: 'fixed',
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity',
+    transitionTimingFunction: 'ease',
+    zIndex: z.popup,
+  },
+  overlayClosed: {
+    opacity: 0,
+  },
+  contentClosed: {
     opacity: 0,
     transform: 'translate(-50%, -50%) scale(0.97)',
   },
-  to: {
-    opacity: 1,
-    transform: 'translate(-50%, -50%) scale(1)',
-  },
-});
-
-const styles = stylex.create({
-  overlay: {
-    animationDuration: duration.fast,
-    animationName: overlayIn,
-    animationTimingFunction: 'ease-out',
-    backgroundColor: colors.overlay,
-    inset: 0,
-    position: 'fixed',
-    zIndex: z.popup,
-  },
   content: {
-    animationDuration: duration.fast,
-    animationName: contentIn,
-    animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
     borderRadius: radius.lg,
     color: colors.popoverForeground,
@@ -153,10 +160,14 @@ const styles = stylex.create({
     gap: space.s4,
     left: '50%',
     maxWidth: `calc(100% - ${space.s8})`,
+    opacity: 1,
     padding: space.s6,
     position: 'fixed',
     top: '50%',
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, -50%) scale(1)',
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: 'ease',
     width: container.xxl,
     zIndex: z.popup,
   },
