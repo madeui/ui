@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "vrt": "node scripts/vrt.mjs",
+    "vrt:update": "node scripts/vrt.mjs --update"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -21,6 +23,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.62.1",
+    "pngjs": "^7.0.0",
     "react-hook-form": "^7.86.0",
     "typescript": "^5"
   },

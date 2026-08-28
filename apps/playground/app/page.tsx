@@ -254,7 +254,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ring } from '@/lib/stylex-utils';
-import { darkTheme } from '@/lib/themes';
+import { darkTheme, emeraldTheme, violetTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -313,22 +313,46 @@ function ToastButton() {
 
 export default function Home() {
   const [dark, setDark] = useState(false);
+  const [accent, setAccent] = useState<'default' | 'violet' | 'emerald'>(
+    'default'
+  );
 
   // Theme goes on <html>, not a wrapper: dialogs/popovers portal to <body>,
-  // and a subtree theme would not reach them.
+  // and a subtree theme would not reach them. Accent themes are partial and
+  // compose with the dark theme.
   useEffect(() => {
-    const { className } = stylex.props(dark && darkTheme);
+    const { className } = stylex.props(
+      dark && darkTheme,
+      accent === 'violet' && violetTheme,
+      accent === 'emerald' && emeraldTheme
+    );
     document.documentElement.className = className ?? '';
-  }, [dark]);
+  }, [dark, accent]);
 
   return (
     <ToastProvider>
       <main {...stylex.props(styles.page)}>
         <div {...stylex.props(styles.headerRow)}>
           <h1 {...stylex.props(styles.heading)}>ui-lib playground</h1>
-          <Button variant="secondary" onClick={() => setDark(!dark)}>
-            {dark ? 'Light mode' : 'Dark mode'}
-          </Button>
+          <div {...stylex.props(styles.headerActions)}>
+            <Button
+              variant="outline"
+              onClick={() =>
+                setAccent(
+                  accent === 'default'
+                    ? 'violet'
+                    : accent === 'violet'
+                      ? 'emerald'
+                      : 'default'
+                )
+              }
+            >
+              Accent: {accent}
+            </Button>
+            <Button variant="secondary" onClick={() => setDark(!dark)}>
+              {dark ? 'Light mode' : 'Dark mode'}
+            </Button>
+          </div>
         </div>
 
         <section {...stylex.props(styles.row)} data-section="buttons">
@@ -964,6 +988,10 @@ export default function Home() {
 }
 
 const styles = stylex.create({
+  headerActions: {
+    display: 'flex',
+    gap: space.s2,
+  },
   selfStart: {
     alignSelf: 'flex-start',
   },

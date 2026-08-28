@@ -70,7 +70,36 @@ useEffect(() => {
 
 Brand themes work the same way: create as many as you need with
 `stylex.createTheme(colors, { ... })` and apply per page, per tenant, or per
-section. Themes can be nested — the closest one wins.
+section. Themes can be nested — the closest one wins. See
+[Dark mode](/dark-mode) for the no-flash setup.
+
+### Accent themes compose
+
+A theme doesn't have to override every token. `lib/themes.ts` also ships
+partial **accent themes** (`violetTheme`, `emeraldTheme`) that swap only the
+brand tokens (`primary`, `primaryForeground`, `ring`). Partial themes compose
+with full ones — later themes win per token:
+
+```tsx
+// Dark mode with a violet brand color:
+const { className } = stylex.props(darkTheme, violetTheme);
+document.documentElement.className = className ?? '';
+```
+
+Add your own the same way:
+
+```tsx
+export const brandTheme = stylex.createTheme(colors, {
+  primary: 'oklch(0.55 0.2 260)',
+  primaryForeground: 'oklch(0.985 0 0)',
+  ring: 'oklch(0.55 0.2 260)',
+});
+```
+
+One thing themes are **not**: runtime-generated. StyleX resolves every theme
+at compile time (that's what keeps the CSS static and small), so a
+"pick-a-color" theme builder must emit a `createTheme` call per choice rather
+than compute values in the browser.
 
 ## The `style` prop
 
