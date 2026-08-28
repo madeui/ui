@@ -55,6 +55,8 @@ export const z = stylex.defineConsts({
 
 export const duration = stylex.defineConsts({
   fast: '150ms',
+  // Larger surface moves (navigation menu popup resize/reposition).
+  slow: '350ms',
 });
 
 export const stroke = stylex.defineConsts({

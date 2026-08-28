@@ -44,6 +44,14 @@ import {
 
 <Component path="dropdown-menu-disabled-item" />
 
+## Checkbox and radio items
+
+<Component path="dropdown-menu-checkboxes" />
+
+## Submenu, shortcuts, destructive
+
+<Component path="dropdown-menu-submenu" />
+
 ## API reference
 
 Built on [Base UI Menu](https://base-ui.com/react/components/menu). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Menu API reference](https://base-ui.com/react/components/menu#api-reference) for the full list.
@@ -63,11 +71,21 @@ Built on [Base UI Menu](https://base-ui.com/react/components/menu). The tables b
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `disabled` | `boolean` | `false` |  |
+| `variant` | `'default' \| 'destructive'` | `'default'` |  |
+| `inset` | `boolean` | — | Indents to align with checkbox/radio item labels. |
 | `onClick` | `(event) => void` | — | Action to run when the item is selected. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
+### DropdownMenuCheckboxItem / DropdownMenuRadioItem
+
+Base UI checkbox/radio menu items with a trailing check indicator. `DropdownMenuRadioItem`s go inside a `DropdownMenuRadioGroup` (`value` / `defaultValue` / `onValueChange`).
+
+### DropdownMenuSubContent
+
+Same props as `DropdownMenuContent`; sizes to its content (defaults `sideOffset={0}`, `alignOffset={-4}`).
+
 ### Styling
 
-`DropdownMenuSeparator`, `DropdownMenuLabel` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`DropdownMenuSeparator`, `DropdownMenuLabel` (supports `inset`), and `DropdownMenuShortcut` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
-`DropdownMenu` (Root), `DropdownMenuTrigger`, and `DropdownMenuGroup` are Base UI parts re-exported unstyled. Keep items inside a `DropdownMenuGroup`; Trigger accepts `render`.
+`DropdownMenu` (Root), `DropdownMenuTrigger`, `DropdownMenuGroup`, `DropdownMenuPortal`, `DropdownMenuSub`, and `DropdownMenuRadioGroup` are Base UI parts re-exported unstyled. Keep items inside a `DropdownMenuGroup`; Trigger accepts `render`.

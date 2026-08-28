@@ -1,0 +1,67 @@
+---
+title: Context Menu
+description: "Displays a menu at the pointer, triggered by a right click or a long press."
+---
+
+<Component path="context-menu-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/context-menu
+```
+
+## Usage
+
+```tsx
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+```
+
+## Composition
+
+```tsx
+<ContextMenu>
+  <ContextMenuTrigger />
+  <ContextMenuContent>
+    <ContextMenuLabel />
+    <ContextMenuItem />
+    <ContextMenuCheckboxItem />
+    <ContextMenuRadioGroup>
+      <ContextMenuRadioItem />
+    </ContextMenuRadioGroup>
+    <ContextMenuSub>
+      <ContextMenuSubTrigger />
+      <ContextMenuSubContent />
+    </ContextMenuSub>
+    <ContextMenuSeparator />
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+## API reference
+
+Built on [Base UI Context Menu](https://base-ui.com/react/components/context-menu). The tables below cover the props this library adds or changes — every other prop is forwarded; see the [Base UI Context Menu API reference](https://base-ui.com/react/components/context-menu#api-reference).
+
+### ContextMenuContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |  |
+| `sideOffset` | `number` | `0` |  |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` |  |
+| `alignOffset` | `number` | `4` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### ContextMenuItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'destructive'` | `'default'` |  |
+| `inset` | `boolean` | — | Indents to align with checkbox/radio item labels. |
+
+`ContextMenuShortcut` renders right-aligned muted shortcut text. `ContextMenuSubContent` opens to the right with content-based width.

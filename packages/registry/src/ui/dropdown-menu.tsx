@@ -16,6 +16,9 @@ interface StyleProp {
 export const DropdownMenu = BaseMenu.Root;
 export const DropdownMenuTrigger = BaseMenu.Trigger;
 export const DropdownMenuGroup = BaseMenu.Group;
+export const DropdownMenuPortal = BaseMenu.Portal;
+export const DropdownMenuSub = BaseMenu.SubmenuRoot;
+export const DropdownMenuRadioGroup = BaseMenu.RadioGroup;
 
 export interface DropdownMenuContentProps
   extends Omit<
@@ -54,25 +57,185 @@ export function DropdownMenuContent({
   );
 }
 
+export type DropdownMenuItemVariant = 'default' | 'destructive';
+
+export interface DropdownMenuItemProps
+  extends Omit<
+      React.ComponentPropsWithoutRef<typeof BaseMenu.Item>,
+      'className' | 'style'
+    >,
+    StyleProp {
+  variant?: DropdownMenuItemVariant;
+  /** Indents the item to align with checkbox/radio item labels. */
+  inset?: boolean;
+}
+
 export function DropdownMenuItem({
   style,
+  variant = 'default',
+  inset,
   ...props
-}: Omit<
-  React.ComponentPropsWithoutRef<typeof BaseMenu.Item>,
-  'className' | 'style'
-> &
-  StyleProp) {
+}: DropdownMenuItemProps) {
   return (
     <BaseMenu.Item
       {...props}
       {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
         styles.item,
-        s.highlighted && styles.itemHighlighted,
+        inset && styles.itemInset,
+        variant === 'destructive' && styles.itemDestructive,
+        s.highlighted &&
+          (variant === 'destructive'
+            ? styles.itemDestructiveHighlighted
+            : styles.itemHighlighted),
         s.disabled && styles.itemDisabled,
         style,
       ])}
     />
   );
+}
+
+function IndicatorCheck() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox={`0 0 16 16`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d={`m3 8.5 3.5 3.5L13 4.5`} />
+    </svg>
+  );
+}
+
+export function DropdownMenuCheckboxItem({
+  style,
+  children,
+  ...props
+}: Omit<
+  React.ComponentPropsWithoutRef<typeof BaseMenu.CheckboxItem>,
+  'className' | 'style'
+> &
+  StyleProp) {
+  return (
+    <BaseMenu.CheckboxItem
+      {...props}
+      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
+        styles.item,
+        styles.indicatorItem,
+        s.highlighted && styles.itemHighlighted,
+        s.disabled && styles.itemDisabled,
+        style,
+      ])}
+    >
+      <span {...stylex.props(styles.indicator)}>
+        <BaseMenu.CheckboxItemIndicator>
+          <IndicatorCheck />
+        </BaseMenu.CheckboxItemIndicator>
+      </span>
+      {children}
+    </BaseMenu.CheckboxItem>
+  );
+}
+
+export function DropdownMenuRadioItem({
+  style,
+  children,
+  ...props
+}: Omit<
+  React.ComponentPropsWithoutRef<typeof BaseMenu.RadioItem>,
+  'className' | 'style'
+> &
+  StyleProp) {
+  return (
+    <BaseMenu.RadioItem
+      {...props}
+      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
+        styles.item,
+        styles.indicatorItem,
+        s.highlighted && styles.itemHighlighted,
+        s.disabled && styles.itemDisabled,
+        style,
+      ])}
+    >
+      <span {...stylex.props(styles.indicator)}>
+        <BaseMenu.RadioItemIndicator>
+          <IndicatorCheck />
+        </BaseMenu.RadioItemIndicator>
+      </span>
+      {children}
+    </BaseMenu.RadioItem>
+  );
+}
+
+export function DropdownMenuSubTrigger({
+  style,
+  inset,
+  children,
+  ...props
+}: Omit<
+  React.ComponentPropsWithoutRef<typeof BaseMenu.SubmenuTrigger>,
+  'className' | 'style'
+> &
+  StyleProp & { inset?: boolean }) {
+  return (
+    <BaseMenu.SubmenuTrigger
+      {...props}
+      {...stateProps(
+        (s: { highlighted: boolean; disabled: boolean; open: boolean }) => [
+          styles.item,
+          inset && styles.itemInset,
+          (s.highlighted || s.open) && styles.itemHighlighted,
+          s.disabled && styles.itemDisabled,
+          style,
+        ]
+      )}
+    >
+      {children}
+      <svg
+        width="16"
+        height="16"
+        viewBox={`0 0 16 16`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+        {...stylex.props(styles.subTriggerChevron)}
+      >
+        <path d={`m6 3 5 5-5 5`} />
+      </svg>
+    </BaseMenu.SubmenuTrigger>
+  );
+}
+
+export function DropdownMenuSubContent({
+  style,
+  sideOffset = 0,
+  alignOffset = -4,
+  ...props
+}: DropdownMenuContentProps) {
+  return (
+    <DropdownMenuContent
+      sideOffset={sideOffset}
+      alignOffset={alignOffset}
+      {...props}
+      style={[styles.subPopup, style]}
+    />
+  );
+}
+
+export function DropdownMenuShortcut({
+  style,
+  ...props
+}: Omit<React.ComponentPropsWithoutRef<'span'>, 'className' | 'style'> &
+  StyleProp) {
+  return <span {...props} {...stylex.props(styles.shortcut, style)} />;
 }
 
 export function DropdownMenuSeparator({
@@ -90,14 +253,18 @@ export function DropdownMenuSeparator({
 
 export function DropdownMenuLabel({
   style,
+  inset,
   ...props
 }: Omit<
   React.ComponentPropsWithoutRef<typeof BaseMenu.GroupLabel>,
   'className' | 'style'
 > &
-  StyleProp) {
+  StyleProp & { inset?: boolean }) {
   return (
-    <BaseMenu.GroupLabel {...props} {...stylex.props(styles.label, style)} />
+    <BaseMenu.GroupLabel
+      {...props}
+      {...stylex.props(styles.label, inset && styles.itemInset, style)}
+    />
   );
 }
 
@@ -128,6 +295,12 @@ const styles = stylex.create({
     transformOrigin: 'var(--transform-origin)',
     width: 'var(--anchor-width)',
   },
+  // Submenus anchor to their trigger item — the anchor width is the item, not
+  // the menu, so size to content instead.
+  subPopup: {
+    minWidth: container.xs,
+    width: 'max-content',
+  },
   item: {
     alignItems: 'center',
     borderRadius: radius.sm,
@@ -141,13 +314,49 @@ const styles = stylex.create({
     paddingInline: space.s2,
     userSelect: 'none',
   },
+  itemInset: {
+    paddingLeft: space.s7,
+  },
+  // Reserve room for the trailing check indicator (absolute, right-aligned —
+  indicatorItem: {
+    paddingRight: space.s8,
+    position: 'relative',
+  },
+  indicator: {
+    alignItems: 'center',
+    display: 'flex',
+    height: space.s4,
+    justifyContent: 'center',
+    pointerEvents: 'none',
+    position: 'absolute',
+    right: space.s2,
+    width: space.s4,
+  },
   itemHighlighted: {
     backgroundColor: colors.accent,
     color: colors.accentForeground,
   },
+  itemDestructive: {
+    color: colors.destructive,
+  },
+  itemDestructiveHighlighted: {
+    backgroundColor: `color-mix(in srgb, ${colors.destructive} 10%, transparent)`,
+    color: colors.destructive,
+  },
   itemDisabled: {
     color: colors.mutedForeground,
     opacity: 0.5,
+  },
+  subTriggerChevron: {
+    color: colors.mutedForeground,
+    flexShrink: 0,
+    marginLeft: 'auto',
+  },
+  shortcut: {
+    color: colors.mutedForeground,
+    fontSize: fontSize.xs,
+    letterSpacing: '0.1em',
+    marginLeft: 'auto',
   },
   separator: {
     backgroundColor: colors.border,

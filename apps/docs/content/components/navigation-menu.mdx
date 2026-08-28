@@ -1,0 +1,54 @@
+---
+title: Navigation Menu
+description: "A collection of links for navigating websites, with animated popup panels."
+---
+
+<Component path="navigation-menu-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/navigation-menu
+```
+
+## Usage
+
+```tsx
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+```
+
+## Composition
+
+```tsx
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger />
+      <NavigationMenuContent />
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink />
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+## API reference
+
+Built on [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu). `NavigationMenu` renders the shared popup (positioner + popup + viewport) itself — the popup morphs between panels as you move across triggers. All props are forwarded to the underlying Base UI parts; see the [Base UI Navigation Menu API reference](https://base-ui.com/react/components/navigation-menu#api-reference).
+
+### NavigationMenu
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | Popup alignment relative to the active trigger. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`NavigationMenuLink` supports `render` for framework link components (e.g. `render={<Link href="…" />}`) and highlights when `active`.

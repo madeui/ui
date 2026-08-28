@@ -1,0 +1,59 @@
+---
+title: Combobox
+description: "Autocomplete input and command palette with a list of suggestions."
+---
+
+<Component path="combobox-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/combobox
+```
+
+## Usage
+
+```tsx
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox';
+```
+
+## Composition
+
+```tsx
+<Combobox items={items}>
+  <ComboboxInput />
+  <ComboboxContent>
+    <ComboboxEmpty />
+    <ComboboxList>
+      {(item) => <ComboboxItem value={item} />}
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>
+```
+
+## API reference
+
+Built on [Base UI Combobox](https://base-ui.com/react/components/combobox). Pass `items` to the root and it filters as you type out of the box; `ComboboxList` accepts a render function over the filtered items. All props are forwarded to the underlying Base UI parts (`multiple`, `value`, `onValueChange`, custom `filter`, …); see the [Base UI Combobox API reference](https://base-ui.com/react/components/combobox#api-reference).
+
+### ComboboxInput
+
+Text input with a built-in dropdown trigger button. Accepts Base UI `Input` props plus `style` (`StyleXStyles`, merged last, applied to the wrapper).
+
+### ComboboxContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` |  |
+| `sideOffset` | `number` | `6` |  |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` |  |
+| `alignOffset` | `number` | `0` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`ComboboxGroup`, `ComboboxLabel`, `ComboboxSeparator`, `ComboboxValue`, and `ComboboxCollection` are also exported for grouped and multi-part lists.

@@ -34,6 +34,50 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox';
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from '@/components/ui/menubar';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -452,6 +496,98 @@ export default function Home() {
           </HoverCard>
         </section>
 
+        <section {...stylex.props(styles.row)} data-section="menus-2">
+          <div {...stylex.props(styles.col)}>
+            <Menubar>
+              <MenubarMenu>
+                <MenubarTrigger>File</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    New tab
+                    <MenubarShortcut>⌘T</MenubarShortcut>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarCheckboxItem defaultChecked>
+                    Show toolbar
+                  </MenubarCheckboxItem>
+                </MenubarContent>
+              </MenubarMenu>
+              <MenubarMenu>
+                <MenubarTrigger>Edit</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>Undo</MenubarItem>
+                  <MenubarItem>Redo</MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <NavigationMenuLink href="#">Analytics</NavigationMenuLink>
+                    <NavigationMenuLink href="#">Security</NavigationMenuLink>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="#">Docs</NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+          <div {...stylex.props(styles.col)}>
+            <Combobox items={fruits.map((f) => f.label)}>
+              <ComboboxInput placeholder="Search fruit…" />
+              <ComboboxContent>
+                <ComboboxEmpty>No fruit found.</ComboboxEmpty>
+                <ComboboxList>
+                  {(item: string) => (
+                    <ComboboxItem key={item} value={item}>
+                      {item}
+                    </ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
+            <InputOTP length={6}>
+              <InputOTPGroup>
+                <InputOTPSlot />
+                <InputOTPSlot />
+                <InputOTPSlot />
+              </InputOTPGroup>
+              <InputOTPSeparator />
+              <InputOTPGroup>
+                <InputOTPSlot />
+                <InputOTPSlot />
+                <InputOTPSlot />
+              </InputOTPGroup>
+            </InputOTP>
+            <ContextMenu>
+              <ContextMenuTrigger style={styles.contextTrigger}>
+                Right-click here
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem>
+                  Back
+                  <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+                </ContextMenuItem>
+                <ContextMenuSub>
+                  <ContextMenuSubTrigger>More tools</ContextMenuSubTrigger>
+                  <ContextMenuSubContent>
+                    <ContextMenuItem>Save page…</ContextMenuItem>
+                    <ContextMenuItem>Developer tools</ContextMenuItem>
+                  </ContextMenuSubContent>
+                </ContextMenuSub>
+                <ContextMenuSeparator />
+                <ContextMenuCheckboxItem defaultChecked>
+                  Show bookmarks
+                </ContextMenuCheckboxItem>
+                <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          </div>
+        </section>
+
         <section {...stylex.props(styles.row)} data-section="display-2">
           <div {...stylex.props(styles.col)}>
             <Accordion multiple={false} defaultValue={['a']}>
@@ -577,6 +713,17 @@ const styles = stylex.create({
   skeletonLineShort: {
     height: space.s3,
     width: space.s16,
+  },
+  contextTrigger: {
+    alignItems: 'center',
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderStyle: 'dashed',
+    borderWidth: stroke.border,
+    display: 'flex',
+    fontSize: fontSize.sm,
+    height: space.s16,
+    justifyContent: 'center',
   },
   scrollArea: {
     borderColor: colors.border,

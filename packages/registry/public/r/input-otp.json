@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-otp",
+  "type": "registry:ui",
+  "title": "Input Otp",
+  "description": "One-time-code input built on Base UI OTP Field with joined slots.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/input-otp.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { OTPField as BaseOTPField } from '@base-ui/react/otp-field';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space, fontSize, lineHeight, duration, stroke } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function InputOTP({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseOTPField.Root>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return <BaseOTPField.Root {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport function InputOTPGroup({\n  style,\n  ...props\n}: Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &\n  StyleProp) {\n  return <div {...props} {...stylex.props(styles.group, style)} />;\n}\n\nexport function InputOTPSlot({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseOTPField.Input>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseOTPField.Input {...props} {...stylex.props(styles.slot, style)} />\n  );\n}\n\nexport function InputOTPSeparator({\n  style,\n  ...props\n}: Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &\n  StyleProp) {\n  return (\n    <div role=\"separator\" {...props} {...stylex.props(styles.separator, style)}>\n      <svg\n        width=\"16\"\n        height=\"16\"\n        viewBox={`0 0 16 16`}\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"1.5\"\n        strokeLinecap=\"round\"\n        aria-hidden\n      >\n        <path d={`M4 8h8`} />\n      </svg>\n    </div>\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    display: 'flex',\n    fontFamily: font.sans,\n    gap: space.s2,\n  },\n  group: {\n    alignItems: 'center',\n    display: 'flex',\n  },\n  // Slots fuse into one field: shared vertical borders, a leading border only\n  // on the first slot, and end radii — joined-slot look. The\n  // focused slot draws a full ring above its neighbors.\n  slot: {\n    backgroundColor: colors.background,\n    borderBottomLeftRadius: { default: 0, ':first-child': radius.lg },\n    borderBottomRightRadius: { default: 0, ':last-child': radius.lg },\n    borderColor: { default: colors.input, ':focus': colors.ring },\n    borderStyle: 'solid',\n    borderTopLeftRadius: { default: 0, ':first-child': radius.lg },\n    borderTopRightRadius: { default: 0, ':last-child': radius.lg },\n    borderWidth: stroke.border,\n    boxShadow: {\n      default: 'none',\n      ':focus': `0 0 0 ${stroke.halo} color-mix(in srgb, ${colors.ring} 50%, transparent)`,\n    },\n    color: colors.foreground,\n    fontSize: fontSize.sm,\n    height: space.s8,\n    lineHeight: lineHeight.control,\n    marginLeft: { default: `calc(-1 * ${stroke.border})`, ':first-child': 0 },\n    opacity: { default: 1, ':disabled': 0.5 },\n    outline: 'none',\n    padding: 0,\n    position: 'relative',\n    textAlign: 'center',\n    transitionDuration: duration.fast,\n    transitionProperty: 'border-color, box-shadow',\n    width: space.s8,\n    zIndex: { default: 0, ':focus': 1 },\n  },\n  separator: {\n    alignItems: 'center',\n    color: colors.mutedForeground,\n    display: 'flex',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/input-otp.tsx"
+    }
+  ]
+}

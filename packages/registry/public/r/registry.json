@@ -259,6 +259,50 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "Autocomplete input built on Base UI Combobox: input with popup list, filtering, empty state.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/combobox.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/combobox.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context Menu",
+      "description": "Right-click menu built on Base UI Context Menu: items, checkbox/radio items, submenus, shortcuts.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/context-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/context-menu.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
@@ -346,6 +390,27 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Input Otp",
+      "description": "One-time-code input built on Base UI OTP Field with joined slots.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/input-otp.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input-otp.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
@@ -361,6 +426,51 @@
           "path": "ui/label.tsx",
           "type": "registry:ui",
           "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "Desktop-style menu bar built on Base UI Menubar, composing the dropdown-menu parts.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils",
+        "@ui-lib/dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "ui/menubar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/menubar.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "title": "Navigation Menu",
+      "description": "Site navigation with animated popup panels, built on Base UI Navigation Menu.",
+      "dependencies": [
+        "@base-ui/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "@ui-lib/theme",
+        "@ui-lib/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/navigation-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/navigation-menu.tsx"
         }
       ]
     },

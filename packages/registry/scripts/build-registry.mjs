@@ -19,6 +19,16 @@ const DESCRIPTIONS = {
     'Modal confirmation dialog built on Base UI Alert Dialog: Action, Cancel, Media. Sizes: md, sm.',
   breadcrumb: 'Path navigation with links, separators, and ellipsis.',
   collapsible: 'Collapsible region built on Base UI Collapsible (unstyled parts).',
+  combobox:
+    'Autocomplete input built on Base UI Combobox: input with popup list, filtering, empty state.',
+  'context-menu':
+    'Right-click menu built on Base UI Context Menu: items, checkbox/radio items, submenus, shortcuts.',
+  'input-otp':
+    'One-time-code input built on Base UI OTP Field with joined slots.',
+  menubar:
+    'Desktop-style menu bar built on Base UI Menubar, composing the dropdown-menu parts.',
+  'navigation-menu':
+    'Site navigation with animated popup panels, built on Base UI Navigation Menu.',
   'hover-card': 'Preview card shown on hover, built on Base UI Preview Card.',
   label: 'Form label with spacing for inline controls.',
   pagination: 'Page navigation with previous/next and page links, built on Button.',

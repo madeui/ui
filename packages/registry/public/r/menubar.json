@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "menubar",
+  "type": "registry:ui",
+  "title": "Menubar",
+  "description": "Desktop-style menu bar built on Base UI Menubar, composing the dropdown-menu parts.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/utils",
+    "@ui-lib/dropdown-menu"
+  ],
+  "files": [
+    {
+      "path": "ui/menubar.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Menubar as BaseMenubar } from '@base-ui/react/menubar';\nimport * as stylex from '@stylexjs/stylex';\n\nimport {\n  DropdownMenu,\n  DropdownMenuCheckboxItem,\n  DropdownMenuContent,\n  DropdownMenuGroup,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuPortal,\n  DropdownMenuRadioGroup,\n  DropdownMenuRadioItem,\n  DropdownMenuSeparator,\n  DropdownMenuShortcut,\n  DropdownMenuSub,\n  DropdownMenuSubContent,\n  DropdownMenuSubTrigger,\n  DropdownMenuTrigger,\n  type DropdownMenuContentProps,\n} from '@/components/ui/dropdown-menu';\nimport { stateProps } from '@/lib/stylex-utils';\nimport { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\nexport interface MenubarProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseMenubar>,\n    'className' | 'style'\n  > {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Menubar({ style, ...props }: MenubarProps) {\n  return <BaseMenubar {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport const MenubarMenu = DropdownMenu;\nexport const MenubarGroup = DropdownMenuGroup;\nexport const MenubarPortal = DropdownMenuPortal;\nexport const MenubarSub = DropdownMenuSub;\nexport const MenubarRadioGroup = DropdownMenuRadioGroup;\nexport const MenubarItem = DropdownMenuItem;\nexport const MenubarCheckboxItem = DropdownMenuCheckboxItem;\nexport const MenubarRadioItem = DropdownMenuRadioItem;\nexport const MenubarLabel = DropdownMenuLabel;\nexport const MenubarSeparator = DropdownMenuSeparator;\nexport const MenubarShortcut = DropdownMenuShortcut;\nexport const MenubarSubTrigger = DropdownMenuSubTrigger;\nexport const MenubarSubContent = DropdownMenuSubContent;\n\nexport function MenubarTrigger({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof DropdownMenuTrigger>,\n  'className' | 'style'\n> & { style?: stylex.StyleXStyles }) {\n  return (\n    <DropdownMenuTrigger\n      {...props}\n      {...stateProps((s: { open: boolean }) => [\n        styles.trigger,\n        s.open && styles.triggerOpen,\n        style,\n      ])}\n    />\n  );\n}\n\nexport function MenubarContent({\n  align = 'start',\n  alignOffset = -4,\n  sideOffset = 8,\n  style,\n  ...props\n}: DropdownMenuContentProps) {\n  return (\n    <DropdownMenuContent\n      align={align}\n      alignOffset={alignOffset}\n      sideOffset={sideOffset}\n      {...props}\n      style={[styles.content, style]}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    borderColor: colors.border,\n    borderRadius: radius.lg,\n    borderStyle: 'solid',\n    borderWidth: stroke.border,\n    display: 'flex',\n    fontFamily: font.sans,\n    gap: space.s05,\n    height: space.s8,\n    paddingInline: space.s05,\n  },\n  trigger: {\n    alignItems: 'center',\n    backgroundColor: {\n      default: 'transparent',\n      ':hover': colors.muted,\n    },\n    borderRadius: radius.sm,\n    borderStyle: 'none',\n    color: colors.foreground,\n    cursor: 'default',\n    display: 'flex',\n    fontFamily: font.sans,\n    fontSize: fontSize.sm,\n    fontWeight: fontWeight.medium,\n    outline: 'none',\n    paddingBlock: space.s05,\n    paddingInline: space.s15,\n    userSelect: 'none',\n  },\n  triggerOpen: {\n    backgroundColor: colors.muted,\n  },\n  // Menubar popups size to their content, not the trigger.\n  content: {\n    width: 'max-content',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/menubar.tsx"
+    }
+  ]
+}
