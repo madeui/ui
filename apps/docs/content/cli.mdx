@@ -1,0 +1,75 @@
+---
+title: CLI
+description: "ui-lib init, add, and list — plus shadcn CLI compatibility."
+---
+
+The `ui-lib` CLI sets up the StyleX build and copies components into your
+project. The registry is also shadcn-compatible, so `npx shadcn@latest add
+@ui-lib/<name>` works for installs once your build is set up.
+
+## init
+
+```bash
+npx ui-lib init
+```
+
+Sets up the current app:
+
+- Detects the framework (Next.js or Vite) and wires the StyleX build —
+  Babel + PostCSS plugin on Next.js, `@stylexjs/unplugin` on Vite. Config
+  files it doesn't fully understand are never rewritten; it prints the exact
+  snippet to apply instead.
+- Installs `@stylexjs/stylex` and `@base-ui/react`.
+- Ensures the global CSS has the `@stylex` marker with a `base` reset layer
+  declared before it (unlayered CSS would outrank StyleX).
+- Copies the design tokens (`lib/tokens.stylex.ts`, `lib/constants.stylex.ts`,
+  `lib/themes.ts`) and utilities (`lib/stylex-utils.ts`).
+- Appends a component-conventions section to `AGENTS.md` so coding agents
+  follow the house rules (tokens over literals, variants over escapes,
+  `stateProps` for Base UI state).
+- Writes `ui-lib.json` with your paths and registry.
+
+| Option | Description |
+| --- | --- |
+| `--registry <url\|dir>` | Registry to use (hosted URL or a local directory). |
+| `--no-install` | Print dependency installs instead of running them. |
+
+## add
+
+```bash
+npx ui-lib add button dialog select
+```
+
+Copies components into `components/ui/`, resolving registry dependencies
+(e.g. `pagination` pulls in `button`; every component pulls the tokens) and
+installing missing npm packages.
+
+| Option | Description |
+| --- | --- |
+| `--diff` | Show what would change without writing anything. |
+| `--overwrite` | Replace files that have local changes without asking. |
+| `--registry <url\|dir>` | Registry to use. |
+| `--no-install` | Print dependency installs instead of running them. |
+
+Because you own the files, `add` never silently overwrites local edits — it
+asks (or use `--diff` first).
+
+## list
+
+```bash
+npx ui-lib list
+```
+
+Lists every item in the configured registry with its description.
+
+## Using the shadcn CLI
+
+Every component page shows the equivalent install:
+
+```bash
+npx shadcn@latest add @ui-lib/button
+```
+
+The shadcn CLI handles the copy + npm dependencies; it does not set up the
+StyleX build — run `ui-lib init` (or the [manual setup](/installation)) once
+first.

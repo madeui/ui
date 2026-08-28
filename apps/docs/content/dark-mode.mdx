@@ -1,0 +1,103 @@
+---
+title: Dark mode
+description: "Apply the dark theme with StyleX createTheme — no flash, portals included."
+---
+
+Dark mode is a **StyleX theme**: `lib/themes.ts` exports `darkTheme`, a
+`stylex.createTheme(colors, { … })` that overrides every color token. Apply
+it and all components follow — there is no per-component dark styling.
+
+## Where to apply it
+
+Always on `<html>` (or `<body>`), **never a wrapper div**: dialogs, popovers,
+menus, and toasts portal to `<body>`, so a subtree theme would not reach them.
+
+```tsx
+import * as stylex from '@stylexjs/stylex';
+
+import { darkTheme } from '@/lib/themes';
+
+const { className } = stylex.props(dark && darkTheme);
+document.documentElement.className = className ?? '';
+```
+
+## Toggle with React state
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import * as stylex from '@stylexjs/stylex';
+
+import { Button } from '@/components/ui/button';
+import { darkTheme } from '@/lib/themes';
+
+export function ThemeToggle() {
+  const [dark, setDark] = React.useState(false);
+
+  React.useEffect(() => {
+    const { className } = stylex.props(dark && darkTheme);
+    document.documentElement.className = className ?? '';
+  }, [dark]);
+
+  return (
+    <Button variant="secondary" onClick={() => setDark(!dark)}>
+      {dark ? 'Light mode' : 'Dark mode'}
+    </Button>
+  );
+}
+```
+
+## Avoiding the flash of light mode
+
+An effect runs after first paint — a stored dark preference would flash light
+first. Stamp the theme class **before paint** with an inline script in
+`<head>`. The theme's class name comes from StyleX, so render it into the
+script from a shared constant:
+
+```tsx
+// app/layout.tsx (Next.js)
+import * as stylex from '@stylexjs/stylex';
+
+import { darkTheme } from '@/lib/themes';
+
+const darkClassName = stylex.props(darkTheme).className ?? '';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if (localStorage.theme === 'dark' || (!('theme' in localStorage) && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.className = ${JSON.stringify(darkClassName)};`,
+          }}
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+Store the preference when toggling (`localStorage.theme = 'dark' | 'light'`)
+and the script restores it on every load, including hard refreshes.
+
+## System preference only
+
+If you don't need a manual toggle, skip the storage and follow the OS:
+
+```tsx
+const prefersDark = matchMedia('(prefers-color-scheme: dark)');
+const apply = () => {
+  const { className } = stylex.props(prefersDark.matches && darkTheme);
+  document.documentElement.className = className ?? '';
+};
+apply();
+prefersDark.addEventListener('change', apply);
+```
+
+## More themes
+
+`darkTheme` is just a theme — create as many as you like
+(`stylex.createTheme(colors, { … })` in `lib/themes.ts`) and apply the same
+way. See [Customization](/customization) for the token contract.

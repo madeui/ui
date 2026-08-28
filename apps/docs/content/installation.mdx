@@ -1,0 +1,167 @@
+---
+title: Installation
+description: "Set up the StyleX build and install your first components — Next.js and Vite."
+---
+
+Components are copied into your project as source, so your app needs to be
+able to **compile StyleX** — that's the only setup beyond a normal React app.
+The `ui-lib init` command does it for you; the manual steps are below it for
+reference.
+
+## With the CLI (recommended)
+
+```bash
+npx ui-lib init
+npx ui-lib add button dialog select
+```
+
+`init` detects your framework (Next.js or Vite), wires the StyleX build,
+installs `@stylexjs/stylex` + `@base-ui/react`, copies the design tokens to
+`lib/`, and appends a component-conventions section to `AGENTS.md` so coding
+agents follow the house rules. `add` copies components (and anything they
+depend on) into `components/ui/`.
+
+Components are also installable with the shadcn CLI — the registry is
+shadcn-compatible:
+
+```bash
+npx shadcn@latest add @ui-lib/button
+```
+
+## Next.js (manual)
+
+StyleX compiles through Babel; on Next.js it runs inside PostCSS via the
+official `@stylexjs/postcss-plugin`.
+
+```bash
+npm install @stylexjs/stylex @base-ui/react
+npm install -D @stylexjs/babel-plugin @stylexjs/postcss-plugin
+```
+
+`babel.config.js`:
+
+```js
+const path = require('path');
+
+module.exports = {
+  presets: ['next/babel'],
+  plugins: [
+    [
+      '@stylexjs/babel-plugin',
+      {
+        dev: process.env.NODE_ENV !== 'production',
+        runtimeInjection: false,
+        treeshakeCompensation: true,
+        aliases: { '@/*': [path.join(__dirname, '*')] },
+        unstable_moduleResolution: { type: 'commonJS' },
+      },
+    ],
+  ],
+};
+```
+
+`postcss.config.js`:
+
+```js
+const babelConfig = require('./babel.config');
+
+module.exports = {
+  plugins: {
+    '@stylexjs/postcss-plugin': {
+      include: [
+        'app/**/*.{js,jsx,ts,tsx}',
+        'components/**/*.{js,jsx,ts,tsx}',
+        'lib/**/*.{js,jsx,ts,tsx}',
+      ],
+      babelConfig: {
+        babelrc: false,
+        parserOpts: { plugins: ['typescript', 'jsx'] },
+        plugins: babelConfig.plugins,
+      },
+      useCSSLayers: true,
+    },
+  },
+};
+```
+
+`app/globals.css` — the `@stylex` marker is where the generated CSS lands.
+**Declare the `base` layer before it**: with `useCSSLayers`, any unlayered
+global CSS would outrank every StyleX rule and silently zero component
+paddings:
+
+```css
+@layer base;
+
+@stylex;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+```
+
+## Vite (manual)
+
+Vite uses the official `@stylexjs/unplugin` — it runs its own Babel pass
+(works with `@vitejs/plugin-react` v6, which dropped its Babel pipeline) and
+injects the extracted CSS into the app's CSS asset. No PostCSS config or
+`@stylex` marker needed.
+
+```bash
+npm install @stylexjs/stylex @base-ui/react
+npm install -D @stylexjs/unplugin
+```
+
+`vite.config.ts` — the StyleX plugin must come **before** the React plugin to
+preserve Fast Refresh:
+
+```ts
+import { fileURLToPath } from 'node:url';
+
+import { unplugin as stylexPlugin } from '@stylexjs/unplugin';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    stylexPlugin.vite({
+      aliases: {
+        '@/*': [fileURLToPath(new URL('src/*', import.meta.url))],
+      },
+      unstable_moduleResolution: { type: 'commonJS' },
+    }),
+    react(),
+  ],
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('src', import.meta.url)) },
+  },
+});
+```
+
+Make sure the app imports at least one CSS file from its root (e.g.
+`import './index.css'` in `main.tsx`) — the plugin appends the generated CSS
+to the app's CSS bundle.
+
+## Path aliases
+
+Components import tokens and utilities via `@/lib/...` and each other via
+`@/components/ui/...`. Add the alias to `tsconfig.json` if you don't have it:
+
+```json
+{
+  "compilerOptions": {
+    "paths": { "@/*": ["./*"] }
+  }
+}
+```
+
+(For Vite projects the alias usually points at `./src/*`.)
+
+## Next steps
+
+- [Customization](/customization) — tokens, themes, the `style` prop.
+- [Dark mode](/dark-mode) — apply the dark theme without a flash.
+- [CLI reference](/cli) — everything `ui-lib init`, `add`, and `list` do.

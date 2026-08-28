@@ -1,0 +1,61 @@
+---
+title: For AI agents
+description: "Why this library is easy for coding agents — and how to point yours at it."
+---
+
+Agent-friendliness is a design requirement here, not marketing. Two things
+make a component library easy for a coding agent: **the source is in the
+repo** (the agent can read the real implementation instead of guessing at a
+package's internals) and **every component follows the same conventions**
+(one pattern learned, fifty components covered).
+
+## The contract
+
+Every component keeps the same shape:
+
+- `variant` and `size` props where meaningful, typed as string unions.
+- A `style?: StyleXStyles` prop, merged **last** via `stylex.props(...)` —
+  caller overrides always win. No `className`, ever.
+- All values come from tokens: colors/radius/fonts/shadows from
+  `lib/tokens.stylex.ts` (themable), spacing/type/z/duration scales from
+  `lib/constants.stylex.ts`. No magic numbers or raw colors in styles.
+- Base UI state (open/checked/highlighted/transitionStatus) is styled through
+  the `stateProps` adapter — the equivalent of Tailwind's
+  `data-[state=open]:` selectors, but type-checked:
+
+```tsx
+{...stateProps((s) => [styles.trigger, s.open && styles.triggerOpen, style])}
+```
+
+## AGENTS.md
+
+`ui-lib init` appends a conventions section to your project's `AGENTS.md`
+covering exactly these rules (tokens over literals, variants over escapes,
+`stateProps`, theming on `<html>`, the CSS layer gotcha). Agents that read
+`AGENTS.md` — Claude Code, Cursor, Codex, and friends — pick the rules up
+automatically.
+
+## Extending components: the rules agents follow
+
+1. **Add a variant, don't fork.** New look = new entry in the component's
+   variants map + the type union, using tokens.
+2. **Layout tweaks go through `style`.** One-off spacing/width belongs at the
+   call site, not in the component.
+3. **Never hardcode values.** If a token is missing, add it to the token
+   files — that keeps theming intact.
+4. **Registry JSON is generated.** Component source is the source of truth;
+   nothing edits `public/r/*.json` by hand.
+
+## Why compile-time styles help agents
+
+StyleX styles are plain typed JavaScript objects co-located with the
+component. An agent editing `components/ui/button.tsx` sees the complete
+style surface in one file, gets type errors for invalid properties, and
+cannot leak styles into other components — there are no global class-name
+collisions to reason about.
+
+## Pointing an agent at the docs
+
+Each component page documents only what this library adds; everything else
+links to the Base UI reference. The docs are static and crawlable, and every
+example is a standalone `.tsx` file the agent can copy verbatim.
