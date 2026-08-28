@@ -9,20 +9,20 @@ import kleur from 'kleur';
  * otherwise prints the exact snippet for the user to apply — never a risky
  * rewrite of a file we don't fully understand.
  *
- * Vite uses @stylexswc/unplugin (Rust compiler): @vitejs/plugin-react v6
- * dropped its Babel pipeline (oxc-based), so the official Babel plugin has no
- * host in current Vite apps. The unplugin transforms JS and extracts +
- * injects the CSS itself — no PostCSS config or @stylex marker needed.
+ * Vite uses the official @stylexjs/unplugin
+ * (https://stylexjs.com/docs/learn/installation/vite/vite-react):
+ * it runs its own bundled Babel pass, so it works with @vitejs/plugin-react v6
+ * (which dropped its Babel pipeline) and injects the extracted CSS into the
+ * app's CSS asset — no PostCSS config or @stylex marker needed. Per the
+ * official guide it must come BEFORE the React plugin to preserve Fast
+ * Refresh, and the app must import at least one CSS file from its root.
  */
 
-const STYLEX_PLUGIN_SNIPPET = `StylexRsPlugin({
-      rsOptions: {
-        dev: process.env.NODE_ENV !== 'production',
-        aliases: {
-          '@/*': [fileURLToPath(new URL('src/*', import.meta.url))],
-        },
-        unstable_moduleResolution: { type: 'commonJS' },
+const STYLEX_PLUGIN_SNIPPET = `stylexPlugin.vite({
+      aliases: {
+        '@/*': [fileURLToPath(new URL('src/*', import.meta.url))],
       },
+      unstable_moduleResolution: { type: 'commonJS' },
     })`;
 
 const RESOLVE_ALIAS_SNIPPET = `resolve: {
@@ -37,23 +37,24 @@ export function patchViteConfig(cwd, changed) {
 
   if (!file) {
     instructions.push(
-      `create a vite.config.ts with @stylexswc/unplugin registered:\n  plugins: [react(), ${STYLEX_PLUGIN_SNIPPET}]`
+      `create a vite.config.ts with @stylexjs/unplugin registered:\n  plugins: [${STYLEX_PLUGIN_SNIPPET}, react()]`
     );
     return instructions;
   }
 
   const name = path.basename(file);
   let source = fs.readFileSync(file, 'utf8');
-  if (source.includes('@stylexswc/unplugin')) {
+  if (source.includes('@stylexjs/unplugin')) {
     console.log(kleur.dim(`  = ${name} already configures StyleX`));
     return instructions;
   }
 
   let touched = false;
 
-  // 1. Register the StyleX plugin right after the React plugin.
+  // 1. Register the StyleX plugin BEFORE the React plugin (official guide:
+  // preserves Fast Refresh).
   if (/react\(\s*\)/.test(source)) {
-    source = source.replace(/react\(\s*\)/, `react(),\n    ${STYLEX_PLUGIN_SNIPPET}`);
+    source = source.replace(/react\(\s*\)/, `${STYLEX_PLUGIN_SNIPPET},\n    react()`);
     touched = true;
   } else {
     instructions.push(`${name}: add to the plugins array:\n  ${STYLEX_PLUGIN_SNIPPET}`);
@@ -69,8 +70,8 @@ export function patchViteConfig(cwd, changed) {
 
   if (touched) {
     const imports = [];
-    if (!source.includes('@stylexswc/unplugin')) {
-      imports.push("import StylexRsPlugin from '@stylexswc/unplugin/vite'");
+    if (!source.includes('@stylexjs/unplugin')) {
+      imports.push("import { unplugin as stylexPlugin } from '@stylexjs/unplugin'");
     }
     if (!source.includes("from 'node:url'") && !source.includes('from "node:url"')) {
       imports.push("import { fileURLToPath } from 'node:url'");

@@ -165,11 +165,11 @@ const FRAMEWORKS = {
   vite: {
     label: 'Vite + React',
     paths: { ui: 'src/components/ui', lib: 'src/lib' },
-    // @stylexswc/unplugin extracts and injects the CSS itself — no @stylex
-    // marker, no PostCSS config, and (with unlayered output) no reset-layer
-    // concern in the user's global CSS.
+    // The official @stylexjs/unplugin extracts and injects the CSS itself —
+    // no @stylex marker, no PostCSS config, and (with unlayered output) no
+    // reset-layer concern in the user's global CSS.
     css: null,
-    devDependencies: ['@stylexswc/unplugin'],
+    devDependencies: ['@stylexjs/unplugin'],
     setup(cwd, changed) {
       return [
         ...patchViteConfig(cwd, changed),

@@ -15,8 +15,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@stylexswc/postcss-plugin": "^0.18.4",
-    "@stylexswc/unplugin": "^0.18.4",
+    "@stylexjs/unplugin": "^0.19.0",
     "postcss": "^8.5.26",
     "typescript": "^5.6.0"
   }
