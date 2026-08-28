@@ -313,6 +313,9 @@ const styles = stylex.create({
   },
   empty: {
     color: colors.mutedForeground,
+    // Base UI renders the element with no children while results exist —
+    // hide it then so its padding doesn't reserve space.
+    display: { default: 'block', ':empty': 'none' },
     fontSize: fontSize.sm,
     paddingBlock: space.s2,
     textAlign: 'center',

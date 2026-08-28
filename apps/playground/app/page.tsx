@@ -242,9 +242,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { ring } from '@/lib/stylex-utils';
 import { darkTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 const commandItems = [
   { value: 'calendar', label: 'Calendar' },
@@ -738,7 +739,7 @@ export default function Home() {
 
         <section {...stylex.props(styles.row)} data-section="display-3">
           <div {...stylex.props(styles.col)}>
-            <Command items={commandItems}>
+            <Command items={commandItems} style={ring({ shadow: shadow.md })}>
               <CommandInput placeholder="Type a command…" />
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandList>

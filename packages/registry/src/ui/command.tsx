@@ -263,6 +263,9 @@ const styles = stylex.create({
     scrollPaddingBlock: space.s1,
   },
   empty: {
+    // Base UI renders the element with no children while results exist —
+    // hide it then so its padding doesn't reserve space.
+    display: { default: 'block', ':empty': 'none' },
     fontSize: fontSize.sm,
     paddingBlock: space.s6,
     textAlign: 'center',
