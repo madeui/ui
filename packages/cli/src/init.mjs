@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import kleur from 'kleur';
+
 import { add } from './add.mjs';
 import {
   CONFIG_FILE,
@@ -113,13 +115,13 @@ function detectFramework(cwd) {
 function writeIfAbsent(cwd, file, content, changed) {
   const dest = path.join(cwd, file);
   if (fs.existsSync(dest)) {
-    console.log(`  = ${file} exists — left untouched`);
+    console.log(kleur.dim(`  = ${file} exists — left untouched`));
     return false;
   }
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, content);
   changed.push(file);
-  console.log(`  + ${file}`);
+  console.log(kleur.green(`  + ${file}`));
   return true;
 }
 
@@ -133,12 +135,12 @@ function patchGlobalsCss(cwd, changed) {
   const file = path.join(cwd, existing);
   const css = fs.readFileSync(file, 'utf8');
   if (css.includes('@stylex')) {
-    console.log(`  = ${existing} already contains @stylex`);
+    console.log(kleur.dim(`  = ${existing} already contains @stylex`));
     return;
   }
   fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n@layer base {\n${css.trimEnd()}\n}\n`);
   changed.push(existing);
-  console.log(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`);
+  console.log(kleur.green(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`));
 }
 
 export async function init(cwd, flags) {
@@ -155,7 +157,7 @@ export async function init(cwd, flags) {
     );
   }
 
-  console.log('Setting up StyleX for Next.js:');
+  console.log(kleur.bold('Setting up StyleX for Next.js:'));
   const changed = [];
   writeIfAbsent(cwd, 'babel.config.js', BABEL_CONFIG, changed);
   writeIfAbsent(cwd, 'postcss.config.js', POSTCSS_CONFIG, changed);
@@ -169,7 +171,7 @@ export async function init(cwd, flags) {
   };
   if (!existingConfig) {
     saveConfig(cwd, config);
-    console.log(`  + ${CONFIG_FILE}`);
+    console.log(kleur.green(`  + ${CONFIG_FILE}`));
   }
 
   const missing = missingDependencies(cwd, ['@stylexjs/stylex']);
@@ -178,13 +180,13 @@ export async function init(cwd, flags) {
     '@stylexjs/postcss-plugin',
   ]);
   if (missing.length + missingDev.length > 0) {
-    console.log('installing dependencies:');
-    installDependencies(cwd, missing, { dryRun: flags.noInstall });
-    installDependencies(cwd, missingDev, { dev: true, dryRun: flags.noInstall });
+    console.log(kleur.bold('installing dependencies:'));
+    await installDependencies(cwd, missing, { dryRun: flags.noInstall });
+    await installDependencies(cwd, missingDev, { dev: true, dryRun: flags.noInstall });
   }
 
-  console.log('installing tokens + utils:');
+  console.log(kleur.bold('installing tokens + utils:'));
   await add(cwd, ['theme', 'utils'], flags);
 
-  console.log('\nDone. Add components with: ui-lib add button dialog …');
+  console.log(`\nDone. Add components with: ${kleur.bold('ui-lib add button dialog …')}`);
 }

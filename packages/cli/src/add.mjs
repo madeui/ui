@@ -1,6 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { createTwoFilesPatch } from 'diff';
+import kleur from 'kleur';
+import ora from 'ora';
+import prompts from 'prompts';
+
 import { resolveItems } from './registry.mjs';
 import {
   loadConfig,
@@ -8,6 +13,27 @@ import {
   missingDependencies,
   installDependencies,
 } from './project.mjs';
+
+function printPatch(target, oldContent, newContent) {
+  const patch = createTwoFilesPatch(target, target, oldContent, newContent);
+  for (const line of patch.split('\n').slice(4)) {
+    if (line.startsWith('+')) console.log(kleur.green(line));
+    else if (line.startsWith('-')) console.log(kleur.red(line));
+    else if (line.startsWith('@@')) console.log(kleur.cyan(line));
+    else console.log(kleur.dim(line));
+  }
+}
+
+async function confirmOverwrite(target) {
+  if (!process.stdout.isTTY) return false;
+  const { overwrite } = await prompts({
+    type: 'confirm',
+    name: 'overwrite',
+    message: `${target} has local changes — overwrite?`,
+    initial: false,
+  });
+  return overwrite === true;
+}
 
 export async function add(cwd, names, flags) {
   const config = loadConfig(cwd);
@@ -17,13 +43,19 @@ export async function add(cwd, names, flags) {
     );
   }
   const registry = flags.registry ?? config.registry;
-  if (names.length === 0) {
-    throw new Error('nothing to add — pass one or more component names.');
+
+  const spinner = ora(`resolving ${names.join(', ')}`).start();
+  let items;
+  try {
+    items = await resolveItems(registry, names);
+    spinner.succeed(`resolved ${items.length} item(s)`);
+  } catch (err) {
+    spinner.fail();
+    throw err;
   }
 
-  const items = await resolveItems(registry, names);
   const written = [];
-  const skipped = [];
+  const kept = [];
   const deps = new Set();
 
   for (const item of items) {
@@ -31,31 +63,43 @@ export async function add(cwd, names, flags) {
     for (const file of item.files ?? []) {
       const target = resolveTarget(file.target ?? file.path, config);
       const dest = path.join(cwd, target);
-      if (fs.existsSync(dest)) {
-        const current = fs.readFileSync(dest, 'utf8');
-        if (current === file.content) continue; // already up to date
-        if (!flags.overwrite) {
-          skipped.push(target);
-          continue;
+      const current = fs.existsSync(dest) ? fs.readFileSync(dest, 'utf8') : null;
+
+      if (current === file.content) continue; // already up to date
+
+      if (flags.diff) {
+        if (current === null) {
+          console.log(kleur.green(`+ ${target} (new file)`));
+        } else {
+          console.log(kleur.bold(`~ ${target}`));
+          printPatch(target, current, file.content);
         }
+        continue;
       }
+
+      if (current !== null && !flags.overwrite && !(await confirmOverwrite(target))) {
+        kept.push(target);
+        continue;
+      }
+
       fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.writeFileSync(dest, file.content);
       written.push(target);
     }
   }
 
-  for (const f of written) console.log(`  + ${f}`);
-  for (const f of skipped) {
-    console.log(`  ! ${f} exists with local changes — kept (use --overwrite to replace)`);
+  if (flags.diff) return;
+
+  for (const f of written) console.log(kleur.green(`  + ${f}`));
+  for (const f of kept) {
+    console.log(kleur.yellow(`  ! ${f} kept — rerun with --overwrite or --diff to compare`));
   }
-  if (written.length === 0 && skipped.length === 0) {
-    console.log('  everything already up to date.');
+  if (written.length === 0 && kept.length === 0) {
+    console.log(kleur.dim('  everything already up to date.'));
   }
 
   const missing = missingDependencies(cwd, [...deps]);
   if (missing.length > 0) {
-    console.log('installing dependencies:');
-    installDependencies(cwd, missing, { dryRun: flags.noInstall });
+    await installDependencies(cwd, missing, { dryRun: flags.noInstall });
   }
 }

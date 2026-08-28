@@ -1,73 +1,69 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { Command } from 'commander';
+import kleur from 'kleur';
+
 import { add } from './add.mjs';
 import { init } from './init.mjs';
 import { fetchItem } from './registry.mjs';
 import { loadConfig } from './project.mjs';
 
-const HELP = `ui-lib — components you own, built on Base UI + StyleX
+const pkg = JSON.parse(
+  fs.readFileSync(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), '../package.json'),
+    'utf8'
+  )
+);
 
-Usage:
-  ui-lib init                      set up StyleX build + tokens in this app
-  ui-lib add <name> [...names]     install components from the registry
-  ui-lib list                      list available registry items
+const program = new Command();
 
-Flags:
-  --registry <url|dir>   registry to use (default: ui-lib.json "registry")
-  --overwrite            replace existing files that have local changes
-  --no-install           print dependency installs instead of running them
-`;
+program
+  .name('ui-lib')
+  .description('components you own, built on Base UI + StyleX')
+  .version(pkg.version);
 
-function parseArgs(argv) {
-  const flags = { overwrite: false, noInstall: false, registry: undefined };
-  const positional = [];
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '--overwrite') flags.overwrite = true;
-    else if (a === '--no-install') flags.noInstall = true;
-    else if (a === '--registry') flags.registry = argv[++i];
-    else if (a === '--help' || a === '-h') flags.help = true;
-    else positional.push(a);
-  }
-  return { flags, positional };
+program
+  .command('init')
+  .description('set up the StyleX build, tokens, and AGENTS.md in this app')
+  .option('--registry <url|dir>', 'registry to use')
+  .option('--no-install', 'print dependency installs instead of running them')
+  .action((opts) => init(process.cwd(), normalize(opts)));
+
+program
+  .command('add')
+  .description('install components from the registry')
+  .argument('<components...>', 'component names (e.g. button dialog select)')
+  .option('--registry <url|dir>', 'registry to use')
+  .option('--overwrite', 'replace files that have local changes without asking')
+  .option('--diff', 'show what would change without writing anything')
+  .option('--no-install', 'print dependency installs instead of running them')
+  .action((names, opts) => add(process.cwd(), names, normalize(opts)));
+
+program
+  .command('list')
+  .description('list available registry items')
+  .option('--registry <url|dir>', 'registry to use')
+  .action(async (opts) => {
+    const registry = opts.registry ?? loadConfig(process.cwd())?.registry;
+    if (!registry) {
+      throw new Error('no registry configured — pass --registry or run init.');
+    }
+    const index = await fetchItem(registry, 'registry');
+    for (const item of index.items ?? []) {
+      console.log(`  ${kleur.bold(item.name.padEnd(16))} ${kleur.dim(item.description ?? '')}`);
+    }
+  });
+
+// Commander's --no-install arrives as `install: false`; flip it into the
+// affirmative flag the commands use.
+function normalize(opts) {
+  return { ...opts, noInstall: opts.install === false };
 }
 
-async function list(cwd, flags) {
-  const registry = flags.registry ?? loadConfig(cwd)?.registry;
-  if (!registry) throw new Error('no registry configured — pass --registry or run init.');
-  const index = await fetchItem(registry, 'registry');
-  for (const item of index.items ?? []) {
-    console.log(`  ${item.name.padEnd(16)} ${item.description ?? ''}`);
-  }
-}
-
-async function main() {
-  const [command, ...rest] = process.argv.slice(2);
-  const { flags, positional } = parseArgs(rest);
-  const cwd = process.cwd();
-
-  if (!command || flags.help || command === 'help') {
-    console.log(HELP);
-    return;
-  }
-
-  switch (command) {
-    case 'init':
-      await init(cwd, flags);
-      break;
-    case 'add':
-      await add(cwd, positional, flags);
-      break;
-    case 'list':
-      await list(cwd, flags);
-      break;
-    default:
-      console.error(`unknown command: ${command}\n`);
-      console.log(HELP);
-      process.exitCode = 1;
-  }
-}
-
-main().catch((err) => {
-  console.error(`error: ${err.message}`);
+program.parseAsync().catch((err) => {
+  console.error(kleur.red(`error: ${err.message}`));
   process.exitCode = 1;
 });

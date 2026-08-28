@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+
+import { execa } from 'execa';
+import kleur from 'kleur';
 
 export const CONFIG_FILE = 'ui-lib.json';
 
@@ -56,16 +58,18 @@ export function missingDependencies(cwd, deps) {
   return deps.filter((d) => !have[d]);
 }
 
-export function installDependencies(cwd, deps, { dev = false, dryRun = false } = {}) {
+export async function installDependencies(cwd, deps, { dev = false, dryRun = false } = {}) {
   if (deps.length === 0) return;
   const pm = detectPackageManager(cwd);
-  const add = pm === 'npm' ? 'install' : 'add';
-  const devFlag = dev ? (pm === 'npm' ? ' --save-dev' : ' -D') : '';
-  const cmd = `${pm} ${add}${devFlag} ${deps.join(' ')}`;
+  const args = [
+    pm === 'npm' ? 'install' : 'add',
+    ...(dev ? [pm === 'npm' ? '--save-dev' : '-D'] : []),
+    ...deps,
+  ];
   if (dryRun) {
-    console.log(`  (skipped) ${cmd}`);
+    console.log(kleur.dim(`  (skipped) ${pm} ${args.join(' ')}`));
     return;
   }
-  console.log(`  $ ${cmd}`);
-  execSync(cmd, { cwd, stdio: 'inherit' });
+  console.log(kleur.dim(`  $ ${pm} ${args.join(' ')}`));
+  await execa(pm, args, { cwd, stdio: 'inherit' });
 }
