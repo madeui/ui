@@ -13,29 +13,30 @@ import {
   missingDependencies,
   installDependencies,
 } from './project.mjs';
+import { patchViteConfig, patchTsconfigPaths } from './vite.mjs';
 
-const BABEL_CONFIG = `const path = require('path');
+const STYLEX_BABEL_PLUGIN = (aliasRoot) => `[
+      '@stylexjs/babel-plugin',
+      {
+        dev: process.env.NODE_ENV !== 'production',
+        runtimeInjection: false,
+        treeshakeCompensation: true,
+        aliases: { '@/*': [path.join(__dirname, ${aliasRoot})] },
+        unstable_moduleResolution: { type: 'commonJS' },
+      },
+    ]`;
 
-const dev = process.env.NODE_ENV !== 'production';
+const NEXT_BABEL_CONFIG = `const path = require('path');
 
 module.exports = {
   presets: ['next/babel'],
   plugins: [
-    [
-      '@stylexjs/babel-plugin',
-      {
-        dev,
-        runtimeInjection: false,
-        treeshakeCompensation: true,
-        aliases: { '@/*': [path.join(__dirname, '*')] },
-        unstable_moduleResolution: { type: 'commonJS' },
-      },
-    ],
+    ${STYLEX_BABEL_PLUGIN("'*'")},
   ],
 };
 `;
 
-const POSTCSS_CONFIG = `const babelConfig = require('./babel.config');
+const NEXT_POSTCSS_CONFIG = `const babelConfig = require('./babel.config');
 
 module.exports = {
   plugins: {
@@ -74,25 +75,25 @@ const GLOBALS_CSS = `@layer base;
 
 const AGENTS_MD = `# UI components (ui-lib)
 
-Components in \`components/ui\` are owned by this project (installed via
-\`ui-lib add <name>\`, edit freely). They wrap Base UI primitives and are styled
-with StyleX (compile-time CSS).
+The components under the configured \`ui\` path (see ui-lib.json) are owned by
+this project (installed via \`ui-lib add <name>\`, edit freely). They wrap
+Base UI primitives and are styled with StyleX (compile-time CSS).
 
 ## Rules
 
 - Tokens over literals: colors/radius/fonts/shadows come from
-  \`lib/tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
-  scales from \`lib/constants.stylex.ts\` (\`defineConsts\`). Never hardcode
+  \`tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
+  scales from \`constants.stylex.ts\` (\`defineConsts\`). Never hardcode
   colors, spacing, font sizes, z-indices, or durations in component styles.
 - Every component accepts \`variant\`, \`size\` (where meaningful), and a
   \`style?: StyleXStyles\` prop merged last via \`stylex.props(...)\` — caller
   styles always win. Extend by adding variants, not inline escapes.
 - StyleX has no attribute selectors. Base UI state (checked/open/highlighted)
-  is styled via the \`stateProps\` adapter in \`lib/stylex-utils.ts\`:
+  is styled via the \`stateProps\` adapter in \`stylex-utils.ts\`:
   \`{...stateProps((s) => [styles.root, s.checked && styles.checked, style])}\`.
 - Popup edges use the \`ring()\` recipe (box-shadow), not borders — Base UI
   positioning math ignores borders.
-- Theming: apply themes (e.g. \`darkTheme\` from \`lib/themes.ts\`) to \`<html>\`,
+- Theming: apply themes (e.g. \`darkTheme\` from \`themes.ts\`) to \`<html>\`,
   not a wrapper — dialogs/popovers portal to \`<body>\`.
 - Global CSS: keep resets inside \`@layer base\` (declared before \`@stylex\`);
   unlayered CSS overrides all StyleX rules.
@@ -125,49 +126,85 @@ function writeIfAbsent(cwd, file, content, changed) {
   return true;
 }
 
-function patchGlobalsCss(cwd, changed) {
-  const candidates = ['app/globals.css', 'src/app/globals.css', 'styles/globals.css'];
+/**
+ * Finds (or creates) the global CSS file and ensures it starts with the
+ * layered reset + @stylex marker. Returns the file path for ui-lib.json —
+ * detection happens once here, every later run reads the config instead.
+ */
+function ensureGlobalsCss(cwd, candidates, fallback, changed) {
   const existing = candidates.find((f) => fs.existsSync(path.join(cwd, f)));
   if (!existing) {
-    writeIfAbsent(cwd, 'app/globals.css', GLOBALS_CSS, changed);
-    return;
+    writeIfAbsent(cwd, fallback, GLOBALS_CSS, changed);
+    return fallback;
   }
   const file = path.join(cwd, existing);
   const css = fs.readFileSync(file, 'utf8');
   if (css.includes('@stylex')) {
     console.log(kleur.dim(`  = ${existing} already contains @stylex`));
-    return;
+    return existing;
   }
   fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n@layer base {\n${css.trimEnd()}\n}\n`);
   changed.push(existing);
   console.log(kleur.green(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`));
+  return existing;
 }
+
+const FRAMEWORKS = {
+  next: {
+    label: 'Next.js',
+    paths: { ui: 'components/ui', lib: 'lib' },
+    cssCandidates: ['app/globals.css', 'src/app/globals.css', 'styles/globals.css'],
+    cssFallback: 'app/globals.css',
+    devDependencies: ['@stylexjs/babel-plugin', '@stylexjs/postcss-plugin'],
+    setup(cwd, changed) {
+      writeIfAbsent(cwd, 'babel.config.js', NEXT_BABEL_CONFIG, changed);
+      writeIfAbsent(cwd, 'postcss.config.js', NEXT_POSTCSS_CONFIG, changed);
+      return [];
+    },
+  },
+  vite: {
+    label: 'Vite + React',
+    paths: { ui: 'src/components/ui', lib: 'src/lib' },
+    // @stylexswc/unplugin extracts and injects the CSS itself — no @stylex
+    // marker, no PostCSS config, and (with unlayered output) no reset-layer
+    // concern in the user's global CSS.
+    css: null,
+    devDependencies: ['@stylexswc/unplugin'],
+    setup(cwd, changed) {
+      return [
+        ...patchViteConfig(cwd, changed),
+        ...patchTsconfigPaths(cwd, changed),
+      ];
+    },
+  },
+};
 
 export async function init(cwd, flags) {
   const pkg = readPackageJson(cwd);
   if (!pkg) {
     throw new Error('no package.json here — run this inside your app.');
   }
-  const framework = detectFramework(cwd);
-  if (framework !== 'next') {
-    throw new Error(
-      framework === 'vite'
-        ? 'Vite setup is not automated yet — see the docs (StyleX via @stylexswc/unplugin + @stylexjs/postcss-plugin).'
-        : 'could not detect a supported framework (Next.js).'
-    );
+  const name = detectFramework(cwd);
+  const framework = FRAMEWORKS[name];
+  if (!framework) {
+    throw new Error('could not detect a supported framework (Next.js or Vite).');
   }
 
-  console.log(kleur.bold('Setting up StyleX for Next.js:'));
+  console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
   const changed = [];
-  writeIfAbsent(cwd, 'babel.config.js', BABEL_CONFIG, changed);
-  writeIfAbsent(cwd, 'postcss.config.js', POSTCSS_CONFIG, changed);
-  patchGlobalsCss(cwd, changed);
+  const instructions = framework.setup(cwd, changed);
+  const cssFile =
+    framework.css === null
+      ? null
+      : ensureGlobalsCss(cwd, framework.cssCandidates, framework.cssFallback, changed);
   writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
 
   const existingConfig = loadConfig(cwd);
   const config = existingConfig ?? {
     ...DEFAULT_CONFIG,
     ...(flags.registry ? { registry: flags.registry } : {}),
+    paths: framework.paths,
+    ...(cssFile ? { css: cssFile } : {}),
   };
   if (!existingConfig) {
     saveConfig(cwd, config);
@@ -175,10 +212,7 @@ export async function init(cwd, flags) {
   }
 
   const missing = missingDependencies(cwd, ['@stylexjs/stylex']);
-  const missingDev = missingDependencies(cwd, [
-    '@stylexjs/babel-plugin',
-    '@stylexjs/postcss-plugin',
-  ]);
+  const missingDev = missingDependencies(cwd, framework.devDependencies);
   if (missing.length + missingDev.length > 0) {
     console.log(kleur.bold('installing dependencies:'));
     await installDependencies(cwd, missing, { dryRun: flags.noInstall });
@@ -188,5 +222,9 @@ export async function init(cwd, flags) {
   console.log(kleur.bold('installing tokens + utils:'));
   await add(cwd, ['theme', 'utils'], flags);
 
+  if (instructions.length > 0) {
+    console.log(kleur.yellow('\nManual steps (could not patch safely):'));
+    for (const step of instructions) console.log(`  • ${step}`);
+  }
   console.log(`\nDone. Add components with: ${kleur.bold('ui-lib add button dialog …')}`);
 }

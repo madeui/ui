@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 
 import { stroke } from './constants.stylex';
-import { colors, shadow } from './tokens.stylex';
+import { colors } from './tokens.stylex';
 
 /** Re-exported so component files only import from one place. */
 export type StyleXStyles = stylex.StyleXStyles;
