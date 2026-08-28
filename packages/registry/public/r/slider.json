@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "slider",
+  "type": "registry:ui",
+  "title": "Slider",
+  "description": "Range slider built on Base UI Slider with one or more thumbs.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/utils"
+  ],
+  "files": [
+    {
+      "path": "ui/slider.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Slider as BaseSlider } from '@base-ui/react/slider';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { stateProps } from '@/lib/stylex-utils';\nimport { space, duration, stroke, container } from '@/lib/constants.stylex';\nimport { colors, radius } from '@/lib/tokens.stylex';\n\nexport interface SliderProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseSlider.Root>,\n    'className' | 'style'\n  > {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Slider({\n  style,\n  defaultValue,\n  value,\n  min = 0,\n  max = 100,\n  orientation = 'horizontal',\n  ...props\n}: SliderProps) {\n  const values = Array.isArray(value)\n    ? value\n    : Array.isArray(defaultValue)\n      ? defaultValue\n      : [min, max];\n\n  return (\n    <BaseSlider.Root\n      defaultValue={defaultValue}\n      value={value}\n      min={min}\n      max={max}\n      orientation={orientation}\n      thumbAlignment=\"edge\"\n      {...props}\n      {...stylex.props(rootOrientations[orientation], style)}\n    >\n      <BaseSlider.Control\n        {...stateProps((s: { disabled: boolean }) => [\n          styles.control,\n          controlOrientations[orientation],\n          s.disabled && styles.controlDisabled,\n        ])}\n      >\n        <BaseSlider.Track\n          {...stylex.props(styles.track, trackOrientations[orientation])}\n        >\n          <BaseSlider.Indicator\n            {...stylex.props(styles.range, rangeOrientations[orientation])}\n          />\n        </BaseSlider.Track>\n        {Array.from({ length: values.length }, (_, index) => (\n          <BaseSlider.Thumb key={index} {...stylex.props(styles.thumb)} />\n        ))}\n      </BaseSlider.Control>\n    </BaseSlider.Root>\n  );\n}\n\nconst haloShadow = `0 0 0 ${stroke.halo} color-mix(in srgb, ${colors.ring} 50%, transparent)`;\n\nconst styles = stylex.create({\n  control: {\n    alignItems: 'center',\n    display: 'flex',\n    position: 'relative',\n    touchAction: 'none',\n    userSelect: 'none',\n  },\n  controlDisabled: {\n    opacity: 0.5,\n    pointerEvents: 'none',\n  },\n  track: {\n    backgroundColor: colors.muted,\n    borderRadius: radius.full,\n    flexGrow: 1,\n    overflow: 'hidden',\n    position: 'relative',\n    userSelect: 'none',\n  },\n  range: {\n    backgroundColor: colors.primary,\n    userSelect: 'none',\n  },\n  thumb: {\n    backgroundColor: colors.background,\n    borderColor: colors.ring,\n    borderRadius: radius.full,\n    borderStyle: 'solid',\n    borderWidth: stroke.border,\n    boxShadow: {\n      default: 'none',\n      ':hover': haloShadow,\n      ':focus-visible': haloShadow,\n      ':active': haloShadow,\n    },\n    flexShrink: 0,\n    height: space.s3,\n    outline: 'none',\n    position: 'relative',\n    transitionDuration: duration.fast,\n    transitionProperty: 'box-shadow',\n    userSelect: 'none',\n    width: space.s3,\n  },\n});\n\nconst rootOrientations = stylex.create({\n  horizontal: {\n    width: '100%',\n  },\n  vertical: {\n    height: '100%',\n    minHeight: container.xs,\n  },\n});\n\nconst controlOrientations = stylex.create({\n  horizontal: {\n    width: '100%',\n  },\n  vertical: {\n    flexDirection: 'column',\n    height: '100%',\n    minHeight: container.xs,\n  },\n});\n\nconst trackOrientations = stylex.create({\n  horizontal: {\n    height: space.s1,\n    width: '100%',\n  },\n  vertical: {\n    height: '100%',\n    width: space.s1,\n  },\n});\n\nconst rangeOrientations = stylex.create({\n  horizontal: {\n    height: '100%',\n  },\n  vertical: {\n    width: '100%',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/slider.tsx"
+    }
+  ]
+}

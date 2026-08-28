@@ -1,0 +1,46 @@
+---
+title: Breadcrumb
+description: "Displays the path to the current resource using a hierarchy of links."
+---
+
+<Component path="breadcrumb-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/breadcrumb
+```
+
+## Usage
+
+```tsx
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+```
+
+## Composition
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink />
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage />
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+## API reference
+
+Plain semantic markup (`nav` / `ol` / `li` / `a`) — no headless primitive needed. Every part accepts its native element props plus a `style` prop (`StyleXStyles`, merged last). `BreadcrumbSeparator` renders a chevron by default; pass children to replace it. `BreadcrumbPage` marks the current page with `aria-current="page"`.

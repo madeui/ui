@@ -1,0 +1,60 @@
+---
+title: Sheet
+description: "Extends the Dialog component to display content that complements the main content of the screen."
+---
+
+<Component path="sheet-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/sheet
+```
+
+## Usage
+
+```tsx
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+```
+
+## Composition
+
+```tsx
+<Sheet>
+  <SheetTrigger />
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle />
+      <SheetDescription />
+    </SheetHeader>
+    <SheetFooter>
+      <SheetClose />
+    </SheetFooter>
+  </SheetContent>
+</Sheet>
+```
+
+## Sides
+
+<Component path="sheet-sides" />
+
+## API reference
+
+Built on [Base UI Dialog](https://base-ui.com/react/components/dialog) (same primitive as `Dialog`). The table below covers the props this library adds or changes — every other prop is forwarded; see the [Base UI Dialog API reference](https://base-ui.com/react/components/dialog#api-reference).
+
+### SheetContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` | Edge of the screen the sheet slides in from. |
+| `showCloseButton` | `boolean` | `true` | Renders an X close button in the top-right corner. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

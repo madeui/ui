@@ -1,0 +1,40 @@
+---
+title: Accordion
+description: "A vertically stacked set of interactive headings that each reveal a section of content."
+---
+
+<Component path="accordion-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/accordion
+```
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+```
+
+## Composition
+
+```tsx
+<Accordion>
+  <AccordionItem value="…">
+    <AccordionTrigger />
+    <AccordionContent />
+  </AccordionItem>
+</Accordion>
+```
+
+## API reference
+
+Built on [Base UI Accordion](https://base-ui.com/react/components/accordion). All props are forwarded to the underlying Base UI parts (`Root`, `Item`, `Trigger`, `Panel`); see the [Base UI Accordion API reference](https://base-ui.com/react/components/accordion#api-reference). Pass `multiple={false}` for single-open behavior. Every part also accepts a `style` prop (`StyleXStyles`, merged last).
+
+`AccordionTrigger` renders the Base UI `Header` + `Trigger` pair with a rotating chevron; `AccordionContent` wraps the Base UI `Panel` and animates open using the panel height provided by Base UI.

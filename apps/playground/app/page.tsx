@@ -4,10 +4,84 @@ import { useEffect, useState } from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import { Label } from '@/components/ui/label';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Slider } from '@/components/ui/slider';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Toggle } from '@/components/ui/toggle';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import {
   Card,
   CardContent,
@@ -61,8 +135,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { darkTheme } from '@/lib/themes';
-import { space, fontSize, fontWeight, container } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
+import { colors, font, radius } from '@/lib/tokens.stylex';
 
 const fruits = [
   { label: 'Apple', value: 'apple' },
@@ -247,6 +321,196 @@ export default function Home() {
             </Tabs>
           </div>
         </section>
+
+        <section {...stylex.props(styles.row)} data-section="controls-2">
+          <div {...stylex.props(styles.col)}>
+            <Label>
+              <Checkbox /> Label with checkbox
+            </Label>
+            <Slider defaultValue={40} />
+            <Slider defaultValue={[20, 60]} />
+            <Progress value={66} locale="en-US">
+              <ProgressLabel>Uploading…</ProgressLabel>
+              <ProgressValue />
+            </Progress>
+          </div>
+          <div {...stylex.props(styles.col)}>
+            <div {...stylex.props(styles.row)}>
+              <Toggle aria-label="Toggle bold" defaultPressed>
+                B
+              </Toggle>
+              <Toggle variant="outline" aria-label="Toggle italic">
+                Italic
+              </Toggle>
+            </div>
+            <ToggleGroup defaultValue={['b']}>
+              <ToggleGroupItem value="a">Bold</ToggleGroupItem>
+              <ToggleGroupItem value="b">Italic</ToggleGroupItem>
+            </ToggleGroup>
+            <ToggleGroup variant="outline" spacing="joined" defaultValue={['center']}>
+              <ToggleGroupItem value="left">Left</ToggleGroupItem>
+              <ToggleGroupItem value="center">Center</ToggleGroupItem>
+              <ToggleGroupItem value="right">Right</ToggleGroupItem>
+            </ToggleGroup>
+            <div {...stylex.props(styles.row)}>
+              <Skeleton style={styles.skeletonCircle} />
+              <div {...stylex.props(styles.colSmall)}>
+                <Skeleton style={styles.skeletonLine} />
+                <Skeleton style={styles.skeletonLineShort} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="navigation">
+          <div {...stylex.props(styles.col)}>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbEllipsis />
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <Separator />
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>
+                    2
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="overlays-2">
+          <AlertDialog>
+            <AlertDialogTrigger render={<Button variant="outline" />}>
+              Alert dialog
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel variant="destructive">
+                  Delete
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <Sheet>
+            <SheetTrigger render={<Button variant="outline" />}>
+              Open sheet
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Edit profile</SheetTitle>
+                <SheetDescription>
+                  Make changes to your profile here.
+                </SheetDescription>
+              </SheetHeader>
+              <SheetFooter>
+                <SheetClose render={<Button />}>Save changes</SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+
+          <HoverCard>
+            <HoverCardTrigger render={<Button variant="ghost" />}>
+              @ui-lib
+            </HoverCardTrigger>
+            <HoverCardContent>
+              Base UI + StyleX components you own.
+            </HoverCardContent>
+          </HoverCard>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="display-2">
+          <div {...stylex.props(styles.col)}>
+            <Accordion multiple={false} defaultValue={['a']}>
+              <AccordionItem value="a">
+                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It adheres to the WAI-ARIA design pattern.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="b">
+                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It matches the other components.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Collapsible defaultOpen>
+              <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
+                Toggle repositories
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div {...stylex.props(styles.colSmall)}>
+                  <span>@base-ui/react</span>
+                  <span>@stylexjs/stylex</span>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+          <div {...stylex.props(styles.col)}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Invoice</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>INV001</TableCell>
+                  <TableCell>Paid</TableCell>
+                  <TableCell>$250.00</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>INV002</TableCell>
+                  <TableCell>Pending</TableCell>
+                  <TableCell>$150.00</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <ScrollArea style={styles.scrollArea}>
+              <div {...stylex.props(styles.colSmall)}>
+                {Array.from({ length: 20 }, (_, i) => (
+                  <span key={i}>v1.2.0-beta.{20 - i}</span>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </section>
       </main>
       <Toaster />
     </ToastProvider>
@@ -294,5 +558,33 @@ const styles = stylex.create({
   },
   card: {
     maxWidth: container.md,
+  },
+  colSmall: {
+    display: 'flex',
+    flexDirection: 'column',
+    fontSize: fontSize.sm,
+    gap: space.s2,
+  },
+  skeletonCircle: {
+    borderRadius: radius.full,
+    height: space.s10,
+    width: space.s10,
+  },
+  skeletonLine: {
+    height: space.s3,
+    width: container.xs,
+  },
+  skeletonLineShort: {
+    height: space.s3,
+    width: space.s16,
+  },
+  scrollArea: {
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
+    height: container.xs,
+    padding: space.s3,
+    width: container.xs,
   },
 });

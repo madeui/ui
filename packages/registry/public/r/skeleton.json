@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton",
+  "type": "registry:ui",
+  "title": "Skeleton",
+  "description": "Loading placeholder with pulse animation.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/skeleton.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nimport { colors, radius } from '@/lib/tokens.stylex';\n\nexport interface SkeletonProps\n  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Skeleton({ style, ...props }: SkeletonProps) {\n  return <div {...props} {...stylex.props(styles.root, style)} />;\n}\n\nconst pulse = stylex.keyframes({\n  '0%': { opacity: 1 },\n  '50%': { opacity: 0.5 },\n  '100%': { opacity: 1 },\n});\n\nconst styles = stylex.create({\n  root: {\n    animationDuration: '2s',\n    animationIterationCount: 'infinite',\n    animationName: pulse,\n    animationTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',\n    backgroundColor: colors.muted,\n    borderRadius: radius.md,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/skeleton.tsx"
+    }
+  ]
+}

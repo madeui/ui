@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toggle-group",
+  "type": "registry:ui",
+  "title": "Toggle Group",
+  "description": "Group of toggles built on Base UI Toggle Group. Spacing: gap, joined.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/toggle"
+  ],
+  "files": [
+    {
+      "path": "ui/toggle-group.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { ToggleGroup as BaseToggleGroup } from '@base-ui/react/toggle-group';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { Toggle, type ToggleSize, type ToggleVariant, type ToggleProps } from '@/components/ui/toggle';\nimport { space, stroke } from '@/lib/constants.stylex';\nimport { radius } from '@/lib/tokens.stylex';\n\ninterface ToggleGroupContextValue {\n  variant: ToggleVariant;\n  size: ToggleSize;\n  joined: boolean;\n  orientation: 'horizontal' | 'vertical';\n}\n\nconst ToggleGroupContext = React.createContext<ToggleGroupContextValue>({\n  variant: 'default',\n  size: 'md',\n  joined: false,\n  orientation: 'horizontal',\n});\n\nexport interface ToggleGroupProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseToggleGroup>,\n    'className' | 'style'\n  > {\n  variant?: ToggleVariant;\n  size?: ToggleSize;\n  /** Item gap. `joined` fuses the items into one segmented control. */\n  spacing?: 'gap' | 'joined';\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function ToggleGroup({\n  variant = 'default',\n  size = 'md',\n  spacing = 'gap',\n  orientation = 'horizontal',\n  style,\n  children,\n  ...props\n}: ToggleGroupProps) {\n  const joined = spacing === 'joined';\n  return (\n    <BaseToggleGroup\n      orientation={orientation}\n      {...props}\n      {...stylex.props(\n        styles.root,\n        orientations[orientation],\n        !joined && styles.gap,\n        style\n      )}\n    >\n      <ToggleGroupContext.Provider value={{ variant, size, joined, orientation }}>\n        {children}\n      </ToggleGroupContext.Provider>\n    </BaseToggleGroup>\n  );\n}\n\nexport function ToggleGroupItem({ style, ...props }: ToggleProps) {\n  const { variant, size, joined, orientation } = React.useContext(ToggleGroupContext);\n  return (\n    <Toggle\n      variant={props.variant ?? variant}\n      size={props.size ?? size}\n      {...props}\n      style={[\n        styles.item,\n        joined && joinedItems[orientation],\n        joined && variant === 'outline' && joinedOutline[orientation],\n        style,\n      ]}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    display: 'flex',\n    width: 'fit-content',\n  },\n  gap: {\n    gap: space.s2,\n  },\n  item: {\n    flexShrink: 0,\n  },\n});\n\nconst orientations = stylex.create({\n  horizontal: {\n    alignItems: 'center',\n    flexDirection: 'row',\n  },\n  vertical: {\n    alignItems: 'stretch',\n    flexDirection: 'column',\n  },\n});\n\nconst joinedItems = stylex.create({\n  horizontal: {\n    borderBottomLeftRadius: { default: 0, ':first-child': radius.lg },\n    borderBottomRightRadius: { default: 0, ':last-child': radius.lg },\n    borderTopLeftRadius: { default: 0, ':first-child': radius.lg },\n    borderTopRightRadius: { default: 0, ':last-child': radius.lg },\n    paddingInline: space.s2,\n  },\n  vertical: {\n    borderBottomLeftRadius: { default: 0, ':last-child': radius.lg },\n    borderBottomRightRadius: { default: 0, ':last-child': radius.lg },\n    borderTopLeftRadius: { default: 0, ':first-child': radius.lg },\n    borderTopRightRadius: { default: 0, ':first-child': radius.lg },\n    paddingInline: space.s2,\n  },\n});\n\n// Joined outline items share edges — drop the leading border on every item\n// but the first so adjacent borders don't double up.\nconst joinedOutline = stylex.create({\n  horizontal: {\n    borderLeftWidth: { default: 0, ':first-child': stroke.border },\n  },\n  vertical: {\n    borderTopWidth: { default: 0, ':first-child': stroke.border },\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/toggle-group.tsx"
+    }
+  ]
+}

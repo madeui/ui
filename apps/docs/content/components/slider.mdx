@@ -1,0 +1,28 @@
+---
+title: Slider
+description: "An input where the user selects a value from within a given range."
+---
+
+<Component path="slider-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/slider
+```
+
+## Usage
+
+```tsx
+import { Slider } from '@/components/ui/slider';
+```
+
+## Range
+
+Pass an array to render one thumb per value.
+
+<Component path="slider-range" />
+
+## API reference
+
+Built on [Base UI Slider](https://base-ui.com/react/components/slider). All props are forwarded to the Base UI `Root` (`value`, `defaultValue`, `min`, `max`, `step`, `orientation`, `disabled`, `onValueChange`, …) — see the [Base UI Slider API reference](https://base-ui.com/react/components/slider#api-reference). The component renders the control, track, indicator, and thumbs itself (with `thumbAlignment="edge"`) and accepts a `style` prop (`StyleXStyles`, merged last) on the root.

@@ -1,0 +1,50 @@
+---
+title: Toggle Group
+description: "A set of two-state buttons that can be toggled on or off."
+---
+
+<Component path="toggle-group-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/toggle-group
+```
+
+## Usage
+
+```tsx
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+```
+
+## Composition
+
+```tsx
+<ToggleGroup>
+  <ToggleGroupItem value="…" />
+</ToggleGroup>
+```
+
+## Joined
+
+`spacing="joined"` fuses the items into one segmented control.
+
+<Component path="toggle-group-joined" />
+
+## API reference
+
+Built on [Base UI Toggle Group](https://base-ui.com/react/components/toggle-group). The table below covers the props this library adds — every other prop (`value`, `defaultValue`, `toggleMultiple`, `disabled`, …) is forwarded; see the [Base UI Toggle Group API reference](https://base-ui.com/react/components/toggle-group#api-reference).
+
+### ToggleGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'outline'` | `'default'` | Inherited by items. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Inherited by items. |
+| `spacing` | `'gap' \| 'joined'` | `'gap'` | `joined` fuses items into a segmented control. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### ToggleGroupItem
+
+Accepts all `Toggle` props; `variant` and `size` default to the group's values.

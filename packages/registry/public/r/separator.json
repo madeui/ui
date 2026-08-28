@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "separator",
+  "type": "registry:ui",
+  "title": "Separator",
+  "description": "Visual divider built on Base UI Separator. Horizontal or vertical.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/separator.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Separator as BaseSeparator } from '@base-ui/react/separator';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { stroke } from '@/lib/constants.stylex';\nimport { colors } from '@/lib/tokens.stylex';\n\nexport interface SeparatorProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseSeparator>,\n    'className' | 'style'\n  > {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Separator({\n  orientation = 'horizontal',\n  style,\n  ...props\n}: SeparatorProps) {\n  return (\n    <BaseSeparator\n      orientation={orientation}\n      {...props}\n      {...stylex.props(styles.root, orientations[orientation], style)}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    backgroundColor: colors.border,\n    flexShrink: 0,\n  },\n});\n\nconst orientations = stylex.create({\n  horizontal: {\n    height: stroke.border,\n    width: '100%',\n  },\n  vertical: {\n    alignSelf: 'stretch',\n    width: stroke.border,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/separator.tsx"
+    }
+  ]
+}

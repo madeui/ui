@@ -1,0 +1,32 @@
+---
+title: Toggle
+description: "A two-state button that can be either on or off."
+---
+
+<Component path="toggle-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/toggle
+```
+
+## Usage
+
+```tsx
+import { Toggle } from '@/components/ui/toggle';
+```
+
+## Outline
+
+<Component path="toggle-outline" />
+
+## API reference
+
+Built on [Base UI Toggle](https://base-ui.com/react/components/toggle). The table below covers the props this library adds — every other prop (`pressed`, `defaultPressed`, `onPressedChange`, `disabled`, …) is forwarded; see the [Base UI Toggle API reference](https://base-ui.com/react/components/toggle#api-reference).
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'outline'` | `'default'` |  |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

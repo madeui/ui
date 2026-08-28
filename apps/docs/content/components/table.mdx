@@ -1,0 +1,50 @@
+---
+title: Table
+description: "A responsive table component."
+---
+
+<Component path="table-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/table
+```
+
+## Usage
+
+```tsx
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+```
+
+## Composition
+
+```tsx
+<Table>
+  <TableCaption />
+  <TableHeader>
+    <TableRow>
+      <TableHead />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell />
+    </TableRow>
+  </TableBody>
+  <TableFooter />
+</Table>
+```
+
+## API reference
+
+Plain semantic table markup — `Table` wraps the `<table>` in an `overflow-x: auto` container for horizontal scrolling on small screens. Every part accepts its native element props plus a `style` prop (`StyleXStyles`, merged last).

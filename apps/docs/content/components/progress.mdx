@@ -1,0 +1,39 @@
+---
+title: Progress
+description: "Displays an indicator showing the completion progress of a task."
+---
+
+<Component path="progress-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/progress
+```
+
+## Usage
+
+```tsx
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from '@/components/ui/progress';
+```
+
+## Composition
+
+```tsx
+<Progress value={66}>
+  <ProgressLabel />
+  <ProgressValue />
+</Progress>
+```
+
+`Progress` renders the track and indicator itself; `ProgressLabel` and `ProgressValue` are optional children placed above the track.
+
+## API reference
+
+Built on [Base UI Progress](https://base-ui.com/react/components/progress). All props are forwarded to the underlying Base UI parts — pass `value` (or `value={null}` for indeterminate), `min`, `max`; see the [Base UI Progress API reference](https://base-ui.com/react/components/progress#api-reference).
+
+`ProgressValue` formats via `Intl.NumberFormat` using the runtime locale. In SSR apps, pass an explicit `locale` on `Progress` (e.g. `locale="en-US"`) — otherwise the server and a browser with a different locale render different text and React reports a hydration mismatch. Every part also accepts a `style` prop (`StyleXStyles`, merged last). `ProgressTrack` and `ProgressIndicator` are exported for custom layouts.

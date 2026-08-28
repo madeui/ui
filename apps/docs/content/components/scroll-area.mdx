@@ -1,0 +1,24 @@
+---
+title: Scroll Area
+description: "Augments native scroll functionality for custom, cross-browser styling."
+---
+
+<Component path="scroll-area-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/scroll-area
+```
+
+## Usage
+
+```tsx
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+```
+
+Give the `ScrollArea` a fixed size via `style`. For horizontal scrolling, add `<ScrollBar orientation="horizontal" />` as a child.
+
+## API reference
+
+Built on [Base UI Scroll Area](https://base-ui.com/react/components/scroll-area). `ScrollArea` composes `Root`, `Viewport`, a vertical `ScrollBar`, and `Corner`; all props are forwarded to the Base UI `Root` — see the [Base UI Scroll Area API reference](https://base-ui.com/react/components/scroll-area#api-reference). Both exports accept a `style` prop (`StyleXStyles`, merged last).

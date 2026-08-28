@@ -1,0 +1,67 @@
+---
+title: Pagination
+description: "Pagination with page navigation, next and previous links."
+---
+
+<Component path="pagination-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/pagination
+```
+
+## Usage
+
+```tsx
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+```
+
+## Composition
+
+```tsx
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+## API reference
+
+Plain semantic markup rendered through `Button` — links use Base UI's `render` prop under the hood, so they are real `<a>` elements.
+
+### PaginationLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isActive` | `boolean` | — | Renders as the `outline` button variant with `aria-current="page"`. |
+| `size` | `ButtonSize` | `'icon'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### PaginationPrevious / PaginationNext
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | `string` | `'Previous'` / `'Next'` | Label text; hidden below the `sm` breakpoint. |
+
+Both also accept all `PaginationLink` props except `size`.

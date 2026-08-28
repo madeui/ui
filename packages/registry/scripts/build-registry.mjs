@@ -13,7 +13,25 @@ const REGISTRY_NAME = 'ui-lib';
 const HOMEPAGE = 'https://example.com';
 
 const DESCRIPTIONS = {
+  accordion: 'Vertically stacked collapsible panels built on Base UI Accordion.',
   alert: 'Callout for user attention. Variants: default, destructive.',
+  'alert-dialog':
+    'Modal confirmation dialog built on Base UI Alert Dialog: Action, Cancel, Media. Sizes: md, sm.',
+  breadcrumb: 'Path navigation with links, separators, and ellipsis.',
+  collapsible: 'Collapsible region built on Base UI Collapsible (unstyled parts).',
+  'hover-card': 'Preview card shown on hover, built on Base UI Preview Card.',
+  label: 'Form label with spacing for inline controls.',
+  pagination: 'Page navigation with previous/next and page links, built on Button.',
+  progress: 'Task progress bar built on Base UI Progress with label and value.',
+  'scroll-area': 'Custom scrollbars built on Base UI Scroll Area.',
+  separator: 'Visual divider built on Base UI Separator. Horizontal or vertical.',
+  sheet: 'Side panel dialog built on Base UI Dialog. Sides: top, right, bottom, left.',
+  skeleton: 'Loading placeholder with pulse animation.',
+  slider: 'Range slider built on Base UI Slider with one or more thumbs.',
+  table: 'Data table with header, body, footer, and caption.',
+  toggle: 'Two-state button built on Base UI Toggle. Variants: default, outline.',
+  'toggle-group':
+    'Group of toggles built on Base UI Toggle Group. Spacing: gap, joined.',
   avatar: 'Avatar built on Base UI with image and fallback. Sizes: sm, md, lg.',
   badge: 'Small status descriptor. Variants: primary, secondary, outline, destructive.',
   button:
@@ -62,6 +80,10 @@ const uiItem = async (name) => {
   const registryDependencies = ['@ui-lib/theme'];
   if (content.includes("'@/lib/stylex-utils'")) {
     registryDependencies.push('@ui-lib/utils');
+  }
+  // Components composed from other components (e.g. pagination → button).
+  for (const match of content.matchAll(/from '@\/components\/ui\/([a-z-]+)'/g)) {
+    registryDependencies.push(`@ui-lib/${match[1]}`);
   }
   if (!DESCRIPTIONS[name]) {
     throw new Error(`Missing description for "${name}" in DESCRIPTIONS`);

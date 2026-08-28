@@ -1,0 +1,35 @@
+---
+title: Collapsible
+description: "An interactive component which expands and collapses a panel."
+---
+
+<Component path="collapsible-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/collapsible
+```
+
+## Usage
+
+```tsx
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+```
+
+## Composition
+
+```tsx
+<Collapsible>
+  <CollapsibleTrigger />
+  <CollapsibleContent />
+</Collapsible>
+```
+
+## API reference
+
+Built on [Base UI Collapsible](https://base-ui.com/react/components/collapsible). All three parts are Base UI parts re-exported unstyled — bring your own trigger via `render` (e.g. `render={<Button />}`) and style the content yourself. See the [Base UI Collapsible API reference](https://base-ui.com/react/components/collapsible#api-reference).

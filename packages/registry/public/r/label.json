@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "label",
+  "type": "registry:ui",
+  "title": "Label",
+  "description": "Form label with spacing for inline controls.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/label.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space, fontSize, lineHeight, fontWeight } from '@/lib/constants.stylex';\nimport { font } from '@/lib/tokens.stylex';\n\nexport interface LabelProps\n  extends Omit<React.ComponentPropsWithoutRef<'label'>, 'className' | 'style'> {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Label({ style, ...props }: LabelProps) {\n  return <label {...props} {...stylex.props(styles.root, style)} />;\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    display: 'flex',\n    fontFamily: font.sans,\n    fontSize: fontSize.sm,\n    fontWeight: fontWeight.medium,\n    gap: space.s2,\n    lineHeight: lineHeight.none,\n    userSelect: 'none',\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/label.tsx"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+---
+title: Alert Dialog
+description: "A modal dialog that interrupts the user with important content and expects a response."
+---
+
+<Component path="alert-dialog-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/alert-dialog
+```
+
+## Usage
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+```
+
+## Composition
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger />
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogMedia />
+      <AlertDialogTitle />
+      <AlertDialogDescription />
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel />
+      <AlertDialogAction />
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## Media
+
+<Component path="alert-dialog-media" />
+
+## API reference
+
+Built on [Base UI Alert Dialog](https://base-ui.com/react/components/alert-dialog). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Alert Dialog API reference](https://base-ui.com/react/components/alert-dialog#api-reference).
+
+### AlertDialogContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'md' \| 'sm'` | `'md'` | `sm` is narrower and keeps the footer buttons in a two-column grid. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### AlertDialogAction
+
+A plain `Button` (accepts `variant`, `size`). Wire your own `onClick` and close via the dialog's `open` state, so destructive actions can await work first.
+
+### AlertDialogCancel
+
+Base UI `Close` rendered as a `Button`.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` | `ButtonVariant` | `'outline'` |
+| `size` | `ButtonSize` | `'md'` |
