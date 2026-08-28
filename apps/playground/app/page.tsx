@@ -19,6 +19,7 @@ import {
 import { CheckboxGroup } from '@/components/ui/checkbox-group';
 import {
   Command,
+  CommandDialog,
   CommandEmpty,
   CommandInput,
   CommandItem,
@@ -259,6 +260,33 @@ const fruits = [
   { label: 'Banana', value: 'banana' },
   { label: 'Cherry', value: 'cherry' },
 ];
+
+function CommandDialogDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Command dialog <Kbd>⌘K</Kbd>
+      </Button>
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <Command items={commandItems}>
+          <CommandInput placeholder="Type a command or search…" />
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandList>
+            {(item: { value: string; label: string; shortcut?: string }) => (
+              <CommandItem key={item.value} value={item}>
+                {item.label}
+                {item.shortcut && (
+                  <CommandShortcut>{item.shortcut}</CommandShortcut>
+                )}
+              </CommandItem>
+            )}
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    </>
+  );
+}
 
 function ToastButton() {
   const toast = useToast();
@@ -753,6 +781,7 @@ export default function Home() {
                 )}
               </CommandList>
             </Command>
+            <CommandDialogDemo />
             <Drawer showSwipeHandle>
               <DrawerTrigger render={<Button variant="outline" />}>
                 Open drawer
