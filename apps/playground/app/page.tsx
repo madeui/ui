@@ -236,7 +236,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { Toaster, ToastProvider, useToast } from '@/components/ui/toast';
+import { toast, Toaster, ToastProvider } from '@/components/ui/toast';
 import {
   Tooltip,
   TooltipContent,
@@ -289,12 +289,11 @@ function CommandDialogDemo() {
 }
 
 function ToastButton() {
-  const toast = useToast();
   return (
     <Button
       variant="outline"
       onClick={() =>
-        toast.add({ title: 'Saved', description: 'Your changes were saved.' })
+        toast('Saved', { description: 'Your changes were saved.' })
       }
     >
       Show toast

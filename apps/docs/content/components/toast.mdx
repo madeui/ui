@@ -14,13 +14,33 @@ npx shadcn@latest add @ui-lib/toast
 ## Usage
 
 ```tsx
-import { Toaster, ToastProvider, useToast } from '@/components/ui/toast';
+import { toast, Toaster, ToastProvider } from '@/components/ui/toast';
 
-// 1. Wrap your app in <ToastProvider> and mount <Toaster /> once.
-// 2. In any component:
-const toast = useToast();
-toast.add({ title: 'Saved', description: 'Your changes were saved.' });
+// 1. Wrap your app in <ToastProvider> and mount <Toaster /> once (e.g. in the root layout).
+// 2. Call `toast` from anywhere — components, event handlers, stores:
+toast('Saved', { description: 'Your changes were saved.' });
+toast.success('Deployed');
+toast.error('Could not save');
 ```
+
+## Stacking
+
+Toasts pile up behind the newest one (up to the provider's `limit`, 3 by
+default). Hovering or focusing the stack expands it to show every toast.
+Trigger the demo above a few times in a row to see it.
+
+## Swipe to dismiss
+
+Drag a toast down or right (touch or mouse) to dismiss it. Configure with
+`<Toaster swipeDirection={['down', 'right']} />` — any of `'up' | 'down' |
+'left' | 'right'`, or a single value.
+
+## Promise
+
+`toast.promise` shows a loading toast, then updates it in place when the
+promise settles.
+
+<Component path="toast-promise" />
 
 ## Duration
 
@@ -30,12 +50,27 @@ toast.add({ title: 'Saved', description: 'Your changes were saved.' });
 
 Built on [Base UI Toast](https://base-ui.com/react/components/toast). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Toast API reference](https://base-ui.com/react/components/toast#api-reference) for the full list.
 
-### useToast().add(options)
+### toast(title, options?)
+
+Imperative API backed by a module-level toast manager — no hook needed, works
+outside React. `useToast()` remains available for the hook form
+(`useToast().add({ … })`).
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | — | Toast heading. |
-| `description` | `string` | — | Supporting text. |
+| `title` | `ReactNode` | — | Toast heading. |
+| `description` | `ReactNode` | — | Supporting text. |
 | `timeout` | `number` | — | Auto-dismiss delay in ms (Base UI default: 5000). |
+| `type` | `string` | — | Toast type; `toast.success` / `toast.error` set it for you. |
+| `actionProps` | `object` | — | Props for the action button (e.g. `{ children: 'Undo', onClick }`). |
+
+Also available: `toast.promise(promise, { loading, success, error })`,
+`toast.update(id, options)`, `toast.close(id)`.
+
+### Toaster
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `swipeDirection` | `Direction \| Direction[]` | `['down', 'right']` | Direction(s) a toast can be swiped to dismiss. |
 
 `Toaster` renders the styled toast stack; to change its look, edit `components/ui/toast.tsx` directly — you own the source.
