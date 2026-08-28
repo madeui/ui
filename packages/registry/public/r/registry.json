@@ -182,7 +182,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {
@@ -246,7 +247,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {
@@ -396,7 +398,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {

@@ -72,9 +72,17 @@ const styles = stylex.create({
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     outlineOffset: stroke.focus,
     padding: 0,
+    position: 'relative',
     transitionDuration: duration.fast,
     transitionProperty: 'border-color',
     width: space.s4,
+    // Invisible expanded hit area (larger touch target).
+    '::after': {
+      content: '""',
+      insetBlock: `calc(-1 * ${space.s2})`,
+      insetInline: `calc(-1 * ${space.s3})`,
+      position: 'absolute',
+    },
   },
   itemChecked: {
     borderColor: colors.primary,

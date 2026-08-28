@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
+import { ring, stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -17,22 +17,38 @@ export const DropdownMenu = BaseMenu.Root;
 export const DropdownMenuTrigger = BaseMenu.Trigger;
 export const DropdownMenuGroup = BaseMenu.Group;
 
+export interface DropdownMenuContentProps
+  extends Omit<
+      React.ComponentPropsWithoutRef<typeof BaseMenu.Popup>,
+      'className' | 'style'
+    >,
+    Pick<
+      React.ComponentPropsWithoutRef<typeof BaseMenu.Positioner>,
+      'align' | 'alignOffset' | 'side' | 'sideOffset'
+    >,
+    StyleProp {}
+
 export function DropdownMenuContent({
   style,
+  side = 'bottom',
   sideOffset = 4,
+  align = 'start',
+  alignOffset = 0,
   ...props
-}: Omit<
-  React.ComponentPropsWithoutRef<typeof BaseMenu.Popup>,
-  'className' | 'style'
-> &
-  StyleProp & { sideOffset?: number }) {
+}: DropdownMenuContentProps) {
   return (
     <BaseMenu.Portal>
       <BaseMenu.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
         sideOffset={sideOffset}
         {...stylex.props(styles.positioner)}
       >
-        <BaseMenu.Popup {...props} {...stylex.props(styles.popup, style)} />
+        <BaseMenu.Popup
+          {...props}
+          {...stylex.props(styles.popup, ring({ shadow: shadow.md }), style)}
+        />
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
   );
@@ -100,16 +116,17 @@ const styles = stylex.create({
     animationName: popupIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
-    borderColor: colors.border,
     borderRadius: radius.md,
-    borderStyle: 'solid',
-    borderWidth: stroke.border,
-    boxShadow: shadow.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
+    maxHeight: 'var(--available-height)',
     minWidth: container.xs,
     outline: 'none',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     paddingBlock: space.s1,
+    transformOrigin: 'var(--transform-origin)',
+    width: 'var(--anchor-width)',
   },
   item: {
     alignItems: 'center',

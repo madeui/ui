@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -34,17 +35,37 @@ export function DialogOverlay({
 export function DialogContent({
   style,
   children,
+  showCloseButton = true,
   ...props
 }: Omit<
   React.ComponentPropsWithoutRef<typeof BaseDialog.Popup>,
   'className' | 'style'
 > &
-  StyleXStyleProps) {
+  StyleXStyleProps & { showCloseButton?: boolean }) {
   return (
     <BaseDialog.Portal>
       <DialogOverlay />
-      <BaseDialog.Popup {...props} {...stylex.props(styles.content, style)}>
+      <BaseDialog.Popup
+        {...props}
+        {...stylex.props(styles.content, ring({ shadow: shadow.lg }), style)}
+      >
         {children}
+        {showCloseButton && (
+          <BaseDialog.Close aria-label="Close" {...stylex.props(styles.close)}>
+            <svg
+              width="16"
+              height="16"
+              viewBox={`0 0 16 16`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <path d={`m3 3 10 10M13 3 3 13`} />
+            </svg>
+          </BaseDialog.Close>
+        )}
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );
@@ -124,11 +145,7 @@ const styles = stylex.create({
     animationName: contentIn,
     animationTimingFunction: 'ease-out',
     backgroundColor: colors.popover,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderStyle: 'solid',
-    borderWidth: stroke.border,
-    boxShadow: shadow.lg,
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
@@ -142,6 +159,29 @@ const styles = stylex.create({
     transform: 'translate(-50%, -50%)',
     width: container.xxl,
     zIndex: z.popup,
+  },
+  close: {
+    alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      ':hover': colors.accent,
+    },
+    borderRadius: radius.sm,
+    borderStyle: 'none',
+    color: {
+      default: colors.mutedForeground,
+      ':hover': colors.accentForeground,
+    },
+    cursor: 'pointer',
+    display: 'inline-flex',
+    height: space.s7,
+    justifyContent: 'center',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    padding: 0,
+    position: 'absolute',
+    right: space.s3,
+    top: space.s3,
+    width: space.s7,
   },
   header: {
     display: 'flex',

@@ -48,7 +48,15 @@ Built on [Base UI Tooltip](https://base-ui.com/react/components/tooltip). The ta
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` |  |
-| `sideOffset` | `number` | `6` | Distance from the trigger, in px. |
+| `sideOffset` | `number` | `4` | Distance from the trigger, in px. |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` |  |
+| `alignOffset` | `number` | `0` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`TooltipProvider`, `Tooltip` (Root), and `TooltipTrigger` are Base UI parts re-exported unstyled; `TooltipTrigger` accepts `render`.
+### TooltipProvider
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `delay` | `number` | `0` | Hover delay before opening, in ms. Instant by default. |
+
+`Tooltip` (Root) and `TooltipTrigger` are Base UI parts re-exported unstyled; `TooltipTrigger` accepts `render`.

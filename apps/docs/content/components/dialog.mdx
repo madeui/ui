@@ -61,6 +61,13 @@ Built on [Base UI Dialog](https://base-ui.com/react/components/dialog). The tabl
 | `defaultOpen` | `boolean` | `false` |  |
 | `onOpenChange` | `(open: boolean) => void` | — |  |
 
+### DialogContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showCloseButton` | `boolean` | `true` | Renders an X close button in the top-right corner. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
 ### Styling
 
 `DialogContent`, `DialogOverlay`, `DialogHeader`, `DialogFooter`, `DialogTitle`, `DialogDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

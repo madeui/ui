@@ -1,7 +1,13 @@
+/* Declared before the StyleX layers so it always loses to them: an unlayered
+   reset would override every layered StyleX rule (unlayered > layered). */
+@layer base;
+
 @stylex;
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
