@@ -17,6 +17,30 @@ const stylexIntegration = {
       // pages — so inject it ourselves on every page.
       if (command === 'dev') {
         injectScript('page', `import 'virtual:stylex:runtime';`);
+        // The runtime injects a <style id="__stylex_virtual__"> into the
+        // initial document only. Astro's ClientRouter swaps in a whole new
+        // <head> on client-side navigation, dropping that tag — and no HMR
+        // update fires to restore it, so components render unstyled until a
+        // hard reload. Refetch and re-mount the tag after every swap.
+        injectScript(
+          'page',
+          `if (import.meta.env.DEV) {
+  const ensureStylexCss = async () => {
+    try {
+      const css = await (await fetch('/virtual:stylex.css')).text();
+      let el = document.getElementById('__stylex_virtual__');
+      if (!el) {
+        el = document.createElement('style');
+        el.id = '__stylex_virtual__';
+        document.head.appendChild(el);
+      }
+      if (css && el.textContent !== css) el.textContent = css;
+    } catch {}
+  };
+  document.addEventListener('astro:after-swap', ensureStylexCss);
+  ensureStylexCss();
+}`
+        );
       }
       const stylex = stylexPlugin.vite({
         dev: process.env.NODE_ENV !== 'production',
