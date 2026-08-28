@@ -79,7 +79,7 @@ export function NavigationMenuTrigger({
       {...props}
       {...stateProps((s: { open: boolean }) => [
         styles.trigger,
-        s.open && (styles.triggerOpen as stylex.StyleXStyles),
+        s.open && styles.triggerOpen,
         style,
       ])}
     >

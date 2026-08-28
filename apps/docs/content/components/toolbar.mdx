@@ -1,0 +1,39 @@
+---
+title: Toolbar
+description: "A container for grouping a set of buttons and controls."
+---
+
+<Component path="toolbar-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/toolbar
+```
+
+## Usage
+
+```tsx
+import {
+  Toolbar,
+  ToolbarButton,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from '@/components/ui/toolbar';
+```
+
+## Composition
+
+```tsx
+<Toolbar>
+  <ToolbarGroup>
+    <ToolbarButton render={<Toggle />} />
+  </ToolbarGroup>
+  <ToolbarSeparator />
+  <ToolbarButton render={<Button variant="ghost" size="sm" />} />
+</Toolbar>
+```
+
+## API reference
+
+Built on [Base UI Toolbar](https://base-ui.com/react/components/toolbar). The toolbar provides roving focus and arrow-key navigation; visuals come from the components you compose in via `render` (Button, Toggle, Input, …). `ToolbarButton`, `ToolbarLink`, and `ToolbarInput` are Base UI parts re-exported unstyled. All props are forwarded; see the [Base UI Toolbar API reference](https://base-ui.com/react/components/toolbar#api-reference).

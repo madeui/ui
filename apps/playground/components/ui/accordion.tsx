@@ -51,9 +51,7 @@ export function AccordionTrigger({
         {...props}
         {...stateProps((s: { open: boolean }) => [
           styles.trigger,
-          // Cast: styles defining only a custom property don't satisfy the
-          // StyleXStyles type, though stylex.props merges them fine.
-          s.open && (styles.triggerOpen as stylex.StyleXStyles),
+          s.open && styles.triggerOpen,
           style,
         ])}
       >

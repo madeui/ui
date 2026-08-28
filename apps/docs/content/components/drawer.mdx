@@ -1,0 +1,59 @@
+---
+title: Drawer
+description: "A swipeable panel that slides in from the edge of the screen."
+---
+
+<Component path="drawer-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/drawer
+```
+
+## Usage
+
+```tsx
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+```
+
+## Composition
+
+```tsx
+<Drawer>
+  <DrawerTrigger />
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle />
+      <DrawerDescription />
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose />
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+## API reference
+
+Built on [Base UI Drawer](https://base-ui.com/react/components/drawer). Swipe-to-dismiss and snap points come from the primitive — Base UI drives the swipe offsets through CSS variables that the styles consume. All props are forwarded to the Base UI `Root` (`open`, `snapPoints`, `modal`, `swipeDirection`, …); see the [Base UI Drawer API reference](https://base-ui.com/react/components/drawer#api-reference).
+
+Unlike `Sheet` (a fixed side panel on the Dialog primitive), Drawer is gesture-driven — prefer it on touch-first surfaces.
+
+### Drawer
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `swipeDirection` | `'down' \| 'up' \| 'left' \| 'right'` | `'down'` | Edge the drawer rests on and dismisses toward. |
+| `showSwipeHandle` | `boolean` | `false` | Renders a grab handle on the swipe edge. |
+
+Nested drawer stacking (scale/peek of the drawer behind) is not styled yet. Every part accepts a `style` prop (`StyleXStyles`, merged last).

@@ -1,0 +1,32 @@
+---
+title: Number Field
+description: "A numeric input with increment and decrement buttons."
+---
+
+<Component path="number-field-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/number-field
+```
+
+## Usage
+
+```tsx
+import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
+```
+
+## Composition
+
+```tsx
+<NumberField defaultValue={5} min={0} max={100}>
+  <NumberFieldGroup />
+</NumberField>
+```
+
+`NumberFieldGroup` renders decrement / input / increment by default; pass children to compose them yourself (`NumberFieldDecrement`, `NumberFieldInput`, `NumberFieldIncrement`).
+
+## API reference
+
+Built on [Base UI Number Field](https://base-ui.com/react/components/number-field). All props are forwarded to the Base UI `Root` (`value`, `min`, `max`, `step`, `format`, `snapOnStep`, …); see the [Base UI Number Field API reference](https://base-ui.com/react/components/number-field#api-reference). `NumberFieldScrubArea` / `NumberFieldScrubAreaCursor` are re-exported unstyled for pointer-scrubbing labels. Every part accepts a `style` prop (`StyleXStyles`, merged last).

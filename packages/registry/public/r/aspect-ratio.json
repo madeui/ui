@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "aspect-ratio",
+  "type": "registry:ui",
+  "title": "Aspect Ratio",
+  "description": "Constrains content to a given width/height ratio.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/aspect-ratio.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nexport interface AspectRatioProps\n  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> {\n  /** Width / height, e.g. `16 / 9`. */\n  ratio: number;\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function AspectRatio({ ratio, style, ...props }: AspectRatioProps) {\n  return (\n    <div {...props} {...stylex.props(styles.root, ratios.ratio(ratio), style)} />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    position: 'relative',\n    width: '100%',\n  },\n});\n\nconst ratios = stylex.create({\n  ratio: (value: number) => ({ aspectRatio: value }),\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/aspect-ratio.tsx"
+    }
+  ]
+}

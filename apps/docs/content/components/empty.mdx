@@ -1,0 +1,42 @@
+---
+title: Empty
+description: "Use the Empty component to display an empty state."
+---
+
+<Component path="empty-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/empty
+```
+
+## Usage
+
+```tsx
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+```
+
+## Composition
+
+```tsx
+<Empty>
+  <EmptyHeader>
+    <EmptyMedia variant="icon" />
+    <EmptyTitle />
+    <EmptyDescription />
+  </EmptyHeader>
+  <EmptyContent />
+</Empty>
+```
+
+## API reference
+
+Plain layout markup. `EmptyMedia` accepts `variant`: `'default'` (transparent) or `'icon'` (muted rounded square for an icon). Every part accepts a `style` prop (`StyleXStyles`, merged last).

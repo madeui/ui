@@ -1,0 +1,55 @@
+---
+title: Item
+description: "A flexible list row with media, content, and actions."
+---
+
+<Component path="item-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/item
+```
+
+## Usage
+
+```tsx
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item';
+```
+
+## Composition
+
+```tsx
+<ItemGroup>
+  <Item>
+    <ItemMedia />
+    <ItemContent>
+      <ItemTitle />
+      <ItemDescription />
+    </ItemContent>
+    <ItemActions />
+  </Item>
+  <ItemSeparator />
+</ItemGroup>
+```
+
+## API reference
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'outline' \| 'muted'` | `'default'` |  |
+| `size` | `'xs' \| 'sm' \| 'md'` | `'md'` |  |
+| `render` | `ReactElement` | — | Render as another element, e.g. `render={<a href="…" />}`. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`ItemMedia` accepts `variant`: `'default'`, `'icon'`, or `'image'` (40px rounded thumbnail). `ItemHeader` / `ItemFooter` span the full row width.

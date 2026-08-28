@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty",
+  "type": "registry:ui",
+  "title": "Empty",
+  "description": "Empty state with media, title, description, and content slots.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/empty.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space, fontSize, lineHeight, fontWeight, stroke, container } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\ntype DivProps = Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &\n  StyleProp;\n\nexport function Empty({ style, ...props }: DivProps) {\n  return <div {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport function EmptyHeader({ style, ...props }: DivProps) {\n  return <div {...props} {...stylex.props(styles.header, style)} />;\n}\n\nexport type EmptyMediaVariant = 'default' | 'icon';\n\nexport function EmptyMedia({\n  variant = 'default',\n  style,\n  ...props\n}: DivProps & { variant?: EmptyMediaVariant }) {\n  return (\n    <div\n      {...props}\n      {...stylex.props(styles.media, mediaVariants[variant], style)}\n    />\n  );\n}\n\nexport function EmptyTitle({ style, ...props }: DivProps) {\n  return <div {...props} {...stylex.props(styles.title, style)} />;\n}\n\nexport function EmptyDescription({ style, ...props }: DivProps) {\n  return <div {...props} {...stylex.props(styles.description, style)} />;\n}\n\nexport function EmptyContent({ style, ...props }: DivProps) {\n  return <div {...props} {...stylex.props(styles.content, style)} />;\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    borderColor: colors.border,\n    borderRadius: radius.xl,\n    borderStyle: 'dashed',\n    borderWidth: stroke.border,\n    display: 'flex',\n    flex: 1,\n    flexDirection: 'column',\n    fontFamily: font.sans,\n    gap: space.s4,\n    justifyContent: 'center',\n    minWidth: 0,\n    padding: space.s6,\n    textAlign: 'center',\n    textWrap: 'balance',\n    width: '100%',\n  },\n  header: {\n    alignItems: 'center',\n    display: 'flex',\n    flexDirection: 'column',\n    gap: space.s2,\n    maxWidth: container.lg,\n  },\n  media: {\n    alignItems: 'center',\n    display: 'flex',\n    flexShrink: 0,\n    justifyContent: 'center',\n    marginBottom: space.s2,\n  },\n  title: {\n    fontSize: fontSize.sm,\n    fontWeight: fontWeight.medium,\n    letterSpacing: '-0.01em',\n  },\n  description: {\n    color: colors.mutedForeground,\n    fontSize: fontSize.sm,\n    lineHeight: lineHeight.normal,\n  },\n  content: {\n    alignItems: 'center',\n    display: 'flex',\n    flexDirection: 'column',\n    fontSize: fontSize.sm,\n    gap: space.s25,\n    maxWidth: container.lg,\n    minWidth: 0,\n    width: '100%',\n  },\n});\n\nconst mediaVariants = stylex.create({\n  default: {},\n  icon: {\n    backgroundColor: colors.muted,\n    borderRadius: radius.lg,\n    color: colors.foreground,\n    height: space.s8,\n    width: space.s8,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/empty.tsx"
+    }
+  ]
+}

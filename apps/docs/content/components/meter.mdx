@@ -1,0 +1,31 @@
+---
+title: Meter
+description: "A graduated gauge for a value within a known range."
+---
+
+<Component path="meter-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/meter
+```
+
+## Usage
+
+```tsx
+import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
+```
+
+## Composition
+
+```tsx
+<Meter value={24} max={64}>
+  <MeterLabel />
+  <MeterValue />
+</Meter>
+```
+
+## API reference
+
+Built on [Base UI Meter](https://base-ui.com/react/components/meter) — same layout as `Progress`, but semantically a gauge (`role="meter"`) rather than task progress. All props are forwarded (`value`, `min`, `max`, `format`, …); see the [Base UI Meter API reference](https://base-ui.com/react/components/meter#api-reference). Like Progress, `MeterValue` formats via `Intl` — pass an explicit `locale` in SSR apps. Every part accepts a `style` prop (`StyleXStyles`, merged last).

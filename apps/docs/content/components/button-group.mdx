@@ -1,0 +1,33 @@
+---
+title: Button Group
+description: "A container that groups related buttons into a segmented control."
+---
+
+<Component path="button-group-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/button-group
+```
+
+## Usage
+
+```tsx
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+} from '@/components/ui/button-group';
+```
+
+## API reference
+
+### ButtonGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+StyleX has no child selectors, so the group clones its direct children and merges position styles (end radii, collapsed inner borders) through each child's `style` prop — children must be components that accept `style` (every component in this library does). `ButtonGroupText` renders a muted label segment; `ButtonGroupSeparator` divides segments of a filled group.

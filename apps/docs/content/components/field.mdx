@@ -1,0 +1,62 @@
+---
+title: Field
+description: "Combine labels, controls, and help text to compose accessible form fields."
+---
+
+<Component path="field-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/field
+```
+
+## Usage
+
+```tsx
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+} from '@/components/ui/field';
+```
+
+## Composition
+
+```tsx
+<FieldSet>
+  <FieldLegend />
+  <FieldGroup>
+    <Field>
+      <FieldLabel />
+      <Input />
+      <FieldDescription />
+      <FieldError />
+    </Field>
+    <FieldSeparator />
+  </FieldGroup>
+</FieldSet>
+```
+
+## API reference
+
+Plain layout markup around any control (works with Input, Select, Checkbox, RadioGroup, Slider, …). `FieldLabel` renders our `Label`.
+
+### Field
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` |  |
+
+### FieldError
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `errors` | `Array<{ message?: string }>` | — | De-duplicated; one message renders as text, several as a list. Renders nothing when empty. |
+
+`FieldLegend` accepts `variant`: `'legend'` (base size) or `'label'` (sm). `FieldSeparator` accepts children rendered centered over the line. All parts accept a `style` prop (`StyleXStyles`, merged last).

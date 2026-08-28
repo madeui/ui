@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button-group",
+  "type": "registry:ui",
+  "title": "Button Group",
+  "description": "Fuses buttons and inputs into one segmented control.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme",
+    "@ui-lib/separator"
+  ],
+  "files": [
+    {
+      "path": "ui/button-group.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nimport { Separator } from '@/components/ui/separator';\nimport { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport interface ButtonGroupProps\n  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'>,\n    StyleProp {\n  orientation?: 'horizontal' | 'vertical';\n}\n\n/**\n * Fuses its direct children (Buttons, Inputs, …) into one segmented control.\n * StyleX has no child selectors, so the group clones each child and passes\n * position styles through the child's `style` prop — children must accept it\n * (every component in this library does).\n */\nexport function ButtonGroup({\n  orientation = 'horizontal',\n  style,\n  children,\n  ...props\n}: ButtonGroupProps) {\n  const items = React.Children.toArray(children).filter(React.isValidElement);\n  return (\n    <div\n      role=\"group\"\n      {...props}\n      {...stylex.props(styles.root, orientations[orientation], style)}\n    >\n      {items.map((child, index) => {\n        const position =\n          items.length === 1\n            ? null\n            : index === 0\n              ? 'first'\n              : index === items.length - 1\n                ? 'last'\n                : 'middle';\n        const childStyle = (child.props as StyleProp).style;\n        return React.cloneElement(child as React.ReactElement<StyleProp>, {\n          key: child.key ?? index,\n          style: [\n            position && joined[`${orientation}-${position}` as keyof typeof joined],\n            childStyle,\n          ],\n        });\n      })}\n    </div>\n  );\n}\n\nexport function ButtonGroupText({\n  style,\n  ...props\n}: Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &\n  StyleProp) {\n  return <div {...props} {...stylex.props(styles.text, style)} />;\n}\n\nexport function ButtonGroupSeparator({\n  orientation = 'vertical',\n  style,\n  ...props\n}: React.ComponentPropsWithoutRef<typeof Separator>) {\n  return (\n    <Separator\n      orientation={orientation}\n      {...props}\n      style={[styles.separator, style]}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'stretch',\n    display: 'flex',\n    fontFamily: font.sans,\n    width: 'fit-content',\n  },\n  text: {\n    alignItems: 'center',\n    backgroundColor: colors.muted,\n    borderColor: colors.border,\n    borderRadius: radius.lg,\n    borderStyle: 'solid',\n    borderWidth: stroke.border,\n    display: 'flex',\n    fontSize: fontSize.sm,\n    fontWeight: fontWeight.medium,\n    gap: space.s2,\n    paddingInline: space.s25,\n  },\n  separator: {\n    alignSelf: 'stretch',\n    backgroundColor: colors.input,\n  },\n});\n\nconst orientations = stylex.create({\n  horizontal: {\n    flexDirection: 'row',\n  },\n  vertical: {\n    flexDirection: 'column',\n  },\n});\n\nconst joined = stylex.create({\n  'horizontal-first': {\n    borderBottomRightRadius: 0,\n    borderTopRightRadius: 0,\n  },\n  'horizontal-middle': {\n    borderLeftWidth: 0,\n    borderRadius: 0,\n  },\n  'horizontal-last': {\n    borderBottomLeftRadius: 0,\n    borderLeftWidth: 0,\n    borderTopLeftRadius: 0,\n  },\n  'vertical-first': {\n    borderBottomLeftRadius: 0,\n    borderBottomRightRadius: 0,\n  },\n  'vertical-middle': {\n    borderRadius: 0,\n    borderTopWidth: 0,\n  },\n  'vertical-last': {\n    borderTopLeftRadius: 0,\n    borderTopRightRadius: 0,\n    borderTopWidth: 0,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/button-group.tsx"
+    }
+  ]
+}

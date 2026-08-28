@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "kbd",
+  "type": "registry:ui",
+  "title": "Kbd",
+  "description": "Keyboard key hint.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/kbd.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space, fontSize, fontWeight } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Kbd({\n  style,\n  ...props\n}: Omit<React.ComponentPropsWithoutRef<'kbd'>, 'className' | 'style'> &\n  StyleProp) {\n  return <kbd {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport function KbdGroup({\n  style,\n  ...props\n}: Omit<React.ComponentPropsWithoutRef<'kbd'>, 'className' | 'style'> &\n  StyleProp) {\n  return <kbd {...props} {...stylex.props(styles.group, style)} />;\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    backgroundColor: colors.muted,\n    borderRadius: radius.sm,\n    color: colors.mutedForeground,\n    display: 'inline-flex',\n    fontFamily: font.sans,\n    fontSize: fontSize.xs,\n    fontWeight: fontWeight.medium,\n    gap: space.s1,\n    height: space.s5,\n    justifyContent: 'center',\n    minWidth: space.s5,\n    paddingInline: space.s1,\n    pointerEvents: 'none',\n    userSelect: 'none',\n    width: 'fit-content',\n  },\n  group: {\n    alignItems: 'center',\n    display: 'inline-flex',\n    fontFamily: font.sans,\n    gap: space.s1,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/kbd.tsx"
+    }
+  ]
+}

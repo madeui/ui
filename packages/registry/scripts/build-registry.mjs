@@ -14,6 +14,26 @@ const HOMEPAGE = 'https://example.com';
 
 const DESCRIPTIONS = {
   accordion: 'Vertically stacked collapsible panels built on Base UI Accordion.',
+  'aspect-ratio': 'Constrains content to a given width/height ratio.',
+  'button-group': 'Fuses buttons and inputs into one segmented control.',
+  'checkbox-group':
+    'Shared checked state across checkboxes, built on Base UI Checkbox Group.',
+  command:
+    'Command palette built on Base UI Autocomplete (inline mode): input, filtered list, dialog wrapper.',
+  drawer:
+    'Swipeable panel built on Base UI Drawer. Directions: down, up, left, right.',
+  empty: 'Empty state with media, title, description, and content slots.',
+  field:
+    'Form field layout: label, description, error, separator, group, and fieldset parts.',
+  'input-group':
+    'Input with leading/trailing addons, buttons, and text, drawn as one control.',
+  item: 'Generic list row with media, content, and actions. Variants: default, outline, muted.',
+  kbd: 'Keyboard key hint.',
+  meter: 'Graduated gauge built on Base UI Meter with label and value.',
+  'number-field':
+    'Numeric input with increment/decrement buttons, built on Base UI Number Field.',
+  spinner: 'Loading indicator.',
+  toolbar: 'Grouped controls built on Base UI Toolbar; compose with Button/Toggle via render.',
   alert: 'Callout for user attention. Variants: default, destructive.',
   'alert-dialog':
     'Modal confirmation dialog built on Base UI Alert Dialog: Action, Cancel, Media. Sizes: md, sm.',

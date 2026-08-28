@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toolbar",
+  "type": "registry:ui",
+  "title": "Toolbar",
+  "description": "Grouped controls built on Base UI Toolbar; compose with Button/Toggle via render.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/toolbar.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { Toolbar as BaseToolbar } from '@base-ui/react/toolbar';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space, stroke } from '@/lib/constants.stylex';\nimport { colors, font, radius } from '@/lib/tokens.stylex';\n\ninterface StyleProp {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\n// Buttons, links, toggles, and inputs inside a toolbar keep their own\n// component styles — compose with Button, Toggle, ToggleGroup, Input, etc.\n// via the Base UI `render` prop:\n//   <ToolbarButton render={<Button variant=\"ghost\" size=\"sm\" />} />\nexport const ToolbarButton = BaseToolbar.Button;\nexport const ToolbarLink = BaseToolbar.Link;\nexport const ToolbarInput = BaseToolbar.Input;\n\nexport function Toolbar({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseToolbar.Root>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return <BaseToolbar.Root {...props} {...stylex.props(styles.root, style)} />;\n}\n\nexport function ToolbarGroup({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseToolbar.Group>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseToolbar.Group {...props} {...stylex.props(styles.group, style)} />\n  );\n}\n\nexport function ToolbarSeparator({\n  style,\n  ...props\n}: Omit<\n  React.ComponentPropsWithoutRef<typeof BaseToolbar.Separator>,\n  'className' | 'style'\n> &\n  StyleProp) {\n  return (\n    <BaseToolbar.Separator\n      {...props}\n      {...stylex.props(styles.separator, style)}\n    />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    alignItems: 'center',\n    borderColor: colors.border,\n    borderRadius: radius.lg,\n    borderStyle: 'solid',\n    borderWidth: stroke.border,\n    display: 'flex',\n    fontFamily: font.sans,\n    gap: space.s1,\n    padding: space.s1,\n    width: 'fit-content',\n  },\n  group: {\n    alignItems: 'center',\n    display: 'flex',\n    gap: space.s1,\n  },\n  separator: {\n    alignSelf: 'stretch',\n    backgroundColor: colors.border,\n    marginBlock: space.s1,\n    marginInline: space.s1,\n    width: stroke.border,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/toolbar.tsx"
+    }
+  ]
+}

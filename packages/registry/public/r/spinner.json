@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "type": "registry:ui",
+  "title": "Spinner",
+  "description": "Loading indicator.",
+  "dependencies": [
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/spinner.tsx",
+      "content": "import * as React from 'react';\n\nimport * as stylex from '@stylexjs/stylex';\n\nexport interface SpinnerProps\n  extends Omit<React.ComponentPropsWithoutRef<'svg'>, 'className' | 'style'> {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\nexport function Spinner({ style, ...props }: SpinnerProps) {\n  return (\n    <svg\n      role=\"status\"\n      aria-label=\"Loading\"\n      width=\"16\"\n      height=\"16\"\n      viewBox={`0 0 16 16`}\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"1.5\"\n      strokeLinecap=\"round\"\n      {...props}\n      {...stylex.props(styles.root, style)}\n    >\n      <path d={`M8 1.5a6.5 6.5 0 1 1-6.5 6.5`} />\n    </svg>\n  );\n}\n\nconst spin = stylex.keyframes({\n  from: { transform: 'rotate(0deg)' },\n  to: { transform: 'rotate(360deg)' },\n});\n\nconst styles = stylex.create({\n  root: {\n    animationDuration: '1s',\n    animationIterationCount: 'infinite',\n    animationName: spin,\n    animationTimingFunction: 'linear',\n    flexShrink: 0,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/spinner.tsx"
+    }
+  ]
+}

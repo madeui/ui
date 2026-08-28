@@ -1,0 +1,60 @@
+---
+title: Command
+description: "Fast, composable command palette."
+---
+
+<Component path="command-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/command
+```
+
+## Usage
+
+```tsx
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from '@/components/ui/command';
+```
+
+## Composition
+
+```tsx
+<Command items={items}>
+  <CommandInput />
+  <CommandEmpty />
+  <CommandList>
+    {(item) => <CommandItem value={item} />}
+  </CommandList>
+</Command>
+```
+
+## API reference
+
+Built on [Base UI Autocomplete](https://base-ui.com/react/components/autocomplete) in `inline open` mode — the filtered list renders in place with no popup, like a command palette, with no extra dependency. Pass `items` to `Command`; filtering and highlight ship with the primitive, and `CommandList` accepts a render function over the filtered items. All other props are forwarded to the Base UI `Root` (`filter`, `onValueChange`, `itemToStringLabel`, …); see the [Base UI Autocomplete API reference](https://base-ui.com/react/components/autocomplete#api-reference).
+
+### CommandDialog
+
+Wraps the palette in our `Dialog` (installed as a dependency), positioned at the top third with no close button.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | `'Command Palette'` | Screen-reader-only dialog title. |
+| `description` | `string` | `'Search for a command to run…'` | Screen-reader-only description. |
+
+### CommandGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `heading` | `ReactNode` | — | Renders a muted group label above the items. |
+
+Every part accepts a `style` prop (`StyleXStyles`, merged last).

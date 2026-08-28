@@ -11,6 +11,70 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import {
+  ButtonGroup,
+  ButtonGroupText,
+} from '@/components/ui/button-group';
+import { CheckboxGroup } from '@/components/ui/checkbox-group';
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from '@/components/ui/command';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from '@/components/ui/input-group';
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item';
+import { Kbd, KbdGroup } from '@/components/ui/kbd';
+import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
+import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
+import { Spinner } from '@/components/ui/spinner';
+import {
+  Toolbar,
+  ToolbarButton,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from '@/components/ui/toolbar';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -181,6 +245,13 @@ import {
 import { darkTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
+
+const commandItems = [
+  { value: 'calendar', label: 'Calendar' },
+  { value: 'calculator', label: 'Calculator' },
+  { value: 'profile', label: 'Profile', shortcut: '⌘P' },
+  { value: 'settings', label: 'Settings', shortcut: '⌘S' },
+];
 
 const fruits = [
   { label: 'Apple', value: 'apple' },
@@ -588,6 +659,146 @@ export default function Home() {
           </div>
         </section>
 
+        <section {...stylex.props(styles.row)} data-section="forms-3">
+          <div {...stylex.props(styles.col)}>
+            <NumberField defaultValue={5} min={0} max={100}>
+              <NumberFieldGroup />
+            </NumberField>
+            <InputGroup>
+              <InputGroupAddon>
+                <InputGroupText>https://</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput placeholder="example.com" />
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton>Go</InputGroupButton>
+              </InputGroupAddon>
+            </InputGroup>
+            <ButtonGroup>
+              <Button variant="outline">Archive</Button>
+              <Button variant="outline">Report</Button>
+              <Button variant="outline">Snooze</Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <ButtonGroupText>Qty</ButtonGroupText>
+              <Button variant="outline">−</Button>
+              <Button variant="outline">+</Button>
+            </ButtonGroup>
+            <CheckboxGroup defaultValue={['a']} aria-label="Preferences">
+              <Label>
+                <Checkbox name="a" /> Newsletter
+              </Label>
+              <Label>
+                <Checkbox name="b" /> Product updates
+              </Label>
+            </CheckboxGroup>
+          </div>
+          <div {...stylex.props(styles.col)}>
+            <FieldSet>
+              <FieldLegend variant="label">Profile</FieldLegend>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="pg-name">Name</FieldLabel>
+                  <Input id="pg-name" placeholder="Evil Rabbit" />
+                  <FieldDescription>Shown on your profile.</FieldDescription>
+                </Field>
+              </FieldGroup>
+            </FieldSet>
+            <Meter value={24} max={64} locale="en-US">
+              <MeterLabel>Storage</MeterLabel>
+              <MeterValue />
+            </Meter>
+            <div {...stylex.props(styles.row)}>
+              <Toolbar>
+                <ToolbarGroup>
+                  <ToolbarButton render={<Toggle aria-label="Bold" />}>
+                    B
+                  </ToolbarButton>
+                  <ToolbarButton render={<Toggle aria-label="Italic" />}>
+                    I
+                  </ToolbarButton>
+                </ToolbarGroup>
+                <ToolbarSeparator />
+                <ToolbarButton render={<Button variant="ghost" size="sm" />}>
+                  Share
+                </ToolbarButton>
+              </Toolbar>
+            </div>
+            <div {...stylex.props(styles.row)}>
+              <KbdGroup>
+                <Kbd>⌘</Kbd>
+                <Kbd>⇧</Kbd>
+                <Kbd>P</Kbd>
+              </KbdGroup>
+              <Button variant="outline" disabled>
+                <Spinner /> Loading…
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="display-3">
+          <div {...stylex.props(styles.col)}>
+            <Command items={commandItems}>
+              <CommandInput placeholder="Type a command…" />
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandList>
+                {(item: { value: string; label: string; shortcut?: string }) => (
+                  <CommandItem key={item.value} value={item}>
+                    {item.label}
+                    {item.shortcut && (
+                      <CommandShortcut>{item.shortcut}</CommandShortcut>
+                    )}
+                  </CommandItem>
+                )}
+              </CommandList>
+            </Command>
+            <Drawer showSwipeHandle>
+              <DrawerTrigger render={<Button variant="outline" />}>
+                Open drawer
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Move goal</DrawerTitle>
+                  <DrawerDescription>
+                    Set your daily activity goal.
+                  </DrawerDescription>
+                </DrawerHeader>
+                <DrawerFooter>
+                  <DrawerClose render={<Button />}>Submit</DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          </div>
+          <div {...stylex.props(styles.col)}>
+            <Item variant="outline">
+              <ItemContent>
+                <ItemTitle>Two-factor authentication</ItemTitle>
+                <ItemDescription>
+                  Add an extra layer of security.
+                </ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Switch defaultChecked />
+              </ItemActions>
+            </Item>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">☁</EmptyMedia>
+                <EmptyTitle>No projects yet</EmptyTitle>
+                <EmptyDescription>
+                  Get started by creating your first project.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button size="sm">Create project</Button>
+              </EmptyContent>
+            </Empty>
+            <AspectRatio ratio={16 / 9} style={styles.ratioBox}>
+              <div {...stylex.props(styles.ratioFill)}>16 : 9</div>
+            </AspectRatio>
+          </div>
+        </section>
+
         <section {...stylex.props(styles.row)} data-section="display-2">
           <div {...stylex.props(styles.col)}>
             <Accordion multiple={false} defaultValue={['a']}>
@@ -713,6 +924,20 @@ const styles = stylex.create({
   skeletonLineShort: {
     height: space.s3,
     width: space.s16,
+  },
+  ratioBox: {
+    maxWidth: container.md,
+  },
+  ratioFill: {
+    alignItems: 'center',
+    backgroundColor: colors.muted,
+    borderRadius: radius.lg,
+    color: colors.mutedForeground,
+    display: 'flex',
+    fontSize: fontSize.sm,
+    height: '100%',
+    justifyContent: 'center',
+    width: '100%',
   },
   contextTrigger: {
     alignItems: 'center',

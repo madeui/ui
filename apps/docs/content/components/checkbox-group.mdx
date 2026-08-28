@@ -1,0 +1,23 @@
+---
+title: Checkbox Group
+description: "Shares checked state across multiple checkboxes."
+---
+
+<Component path="checkbox-group-demo" />
+
+## Install
+
+```bash
+npx shadcn@latest add @ui-lib/checkbox-group
+```
+
+## Usage
+
+```tsx
+import { Checkbox } from '@/components/ui/checkbox';
+import { CheckboxGroup } from '@/components/ui/checkbox-group';
+```
+
+## API reference
+
+Built on [Base UI Checkbox Group](https://base-ui.com/react/components/checkbox-group). Give each child `Checkbox` a `name` and control the group with `value` / `defaultValue` / `onValueChange` (arrays of names); a parent checkbox is supported via `allValues`. All props are forwarded — see the [Base UI Checkbox Group API reference](https://base-ui.com/react/components/checkbox-group#api-reference). Accepts a `style` prop (`StyleXStyles`, merged last).

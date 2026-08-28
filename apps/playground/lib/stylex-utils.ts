@@ -50,8 +50,19 @@ export const ring = ({
  *     {...stateProps((s) => [styles.root, s.checked && styles.checked, style])}
  *   />
  */
+// Accepts compiled style objects too (not just the StyleXStyles type): some
+// valid styles — CSS custom properties, string-typed consts on number-typed
+// properties like zIndex — don't satisfy StyleXStyles even though
+// stylex.props merges them fine.
+type StatePropsStyle =
+  | stylex.StyleXStyles
+  | Readonly<Record<string, unknown>>
+  | false
+  | null
+  | undefined;
+
 export function stateProps<State>(
-  resolve: (state: State) => ReadonlyArray<stylex.StyleXStyles | false | null | undefined>
+  resolve: (state: State) => ReadonlyArray<StatePropsStyle>
 ) {
   return {
     className: (state: State) => stylex.props(...(resolve(state) as any)).className ?? '',

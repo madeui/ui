@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox-group",
+  "type": "registry:ui",
+  "title": "Checkbox Group",
+  "description": "Shared checked state across checkboxes, built on Base UI Checkbox Group.",
+  "dependencies": [
+    "@base-ui/react",
+    "@stylexjs/stylex"
+  ],
+  "registryDependencies": [
+    "@ui-lib/theme"
+  ],
+  "files": [
+    {
+      "path": "ui/checkbox-group.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\n\nimport { CheckboxGroup as BaseCheckboxGroup } from '@base-ui/react/checkbox-group';\nimport * as stylex from '@stylexjs/stylex';\n\nimport { space } from '@/lib/constants.stylex';\nimport { font } from '@/lib/tokens.stylex';\n\nexport interface CheckboxGroupProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof BaseCheckboxGroup>,\n    'className' | 'style'\n  > {\n  /** StyleX styles merged last — always win over the component's own. */\n  style?: stylex.StyleXStyles;\n}\n\n/**\n * Shares checked state across Checkboxes: give each child Checkbox a `name`\n * and control the group with `value` / `defaultValue` (arrays of names).\n * A parent checkbox is supported via Base UI's `allValues`.\n */\nexport function CheckboxGroup({ style, ...props }: CheckboxGroupProps) {\n  return (\n    <BaseCheckboxGroup {...props} {...stylex.props(styles.root, style)} />\n  );\n}\n\nconst styles = stylex.create({\n  root: {\n    display: 'flex',\n    flexDirection: 'column',\n    fontFamily: font.sans,\n    gap: space.s2,\n  },\n});\n",
+      "type": "registry:ui",
+      "target": "components/ui/checkbox-group.tsx"
+    }
+  ]
+}
