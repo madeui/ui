@@ -1,6 +1,8 @@
 ---
 title: Introduction
 description: Base UI + StyleX components you own.
+sidebar:
+  order: 0
 ---
 
 An open-source UI library following the shadcn code-ownership model — components
@@ -10,8 +12,14 @@ behavior and accessibility) and StyleX (compile-time atomic CSS).
 ## Install
 
 ```bash
-npx shadcn@latest add @ui-lib/button
+npx ui-lib init
+npx ui-lib add button
 ```
+
+`init` wires the StyleX build into your Next.js or Vite app and copies the
+design tokens; `add` copies components into `components/ui/`. Once the build
+is set up, the shadcn CLI works too (`npx shadcn@latest add @ui-lib/button`) —
+see [Installation](/installation).
 
 ## Guides
 
