@@ -8,3 +8,6 @@ dist/
 .env*
 !.env.example
 .playwright-mcp/
+
+# Screenshots / VRT images — never in git
+*.png
