@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -159,15 +158,7 @@ export function CommandItem({
 > &
   StyleProp) {
   return (
-    <BaseAutocomplete.Item
-      {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
-        styles.item,
-        s.highlighted && styles.itemHighlighted,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
-    />
+    <BaseAutocomplete.Item {...props} {...stylex.props(styles.item, style)} />
   );
 }
 
@@ -279,25 +270,27 @@ const styles = stylex.create({
   },
   item: {
     alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.muted,
+    },
     borderRadius: radius.sm,
+    color: {
+      default: null,
+      '[data-highlighted]': colors.foreground,
+      '[data-disabled]': colors.mutedForeground,
+    },
     cursor: 'default',
     display: 'flex',
     fontSize: fontSize.sm,
     gap: space.s2,
     lineHeight: lineHeight.control,
     outline: 'none',
+    opacity: { default: 1, '[data-disabled]': 0.5 },
     paddingBlock: space.s15,
     paddingInline: space.s2,
     position: 'relative',
     userSelect: 'none',
-  },
-  itemHighlighted: {
-    backgroundColor: colors.muted,
-    color: colors.foreground,
-  },
-  itemDisabled: {
-    color: colors.mutedForeground,
-    opacity: 0.5,
   },
   separator: {
     backgroundColor: colors.border,

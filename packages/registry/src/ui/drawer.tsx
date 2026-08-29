@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -55,8 +54,6 @@ export const DrawerTrigger = BaseDrawer.Trigger;
 export const DrawerClose = BaseDrawer.Close;
 export const DrawerPortal = BaseDrawer.Portal;
 
-type TransitionState = { transitionStatus: 'starting' | 'ending' | 'idle' | undefined };
-
 export function DrawerOverlay({
   style,
   ...props
@@ -66,15 +63,7 @@ export function DrawerOverlay({
 > &
   StyleProp) {
   return (
-    <BaseDrawer.Backdrop
-      {...props}
-      {...stateProps((s: TransitionState) => [
-        styles.overlay,
-        (s.transitionStatus === 'starting' || s.transitionStatus === 'ending') &&
-          styles.overlayClosed,
-        style,
-      ])}
-    />
+    <BaseDrawer.Backdrop {...props} {...stylex.props(styles.overlay, style)} />
   );
 }
 
@@ -96,15 +85,7 @@ export function DrawerContent({
       >
         <BaseDrawer.Popup
           {...props}
-          {...stateProps((s: TransitionState & { swiping: boolean }) => [
-            styles.popup,
-            directions[swipeDirection],
-            (s.transitionStatus === 'starting' ||
-              s.transitionStatus === 'ending') &&
-              closedTransforms[swipeDirection],
-            s.swiping && styles.swiping,
-            style,
-          ])}
+          {...stylex.props(styles.popup, directions[swipeDirection], style)}
         >
           {showSwipeHandle && <DrawerSwipeHandle />}
           <BaseDrawer.Content {...stylex.props(styles.content)}>
@@ -189,16 +170,17 @@ const styles = stylex.create({
     inset: 0,
     minHeight: '100dvh',
     // Fades with the swipe: Base UI drives --drawer-swipe-progress inline.
-    opacity: 'max(0, calc(1 - var(--drawer-swipe-progress, 0)))',
+    opacity: {
+      default: 'max(0, calc(1 - var(--drawer-swipe-progress, 0)))',
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     position: 'fixed',
     transitionDuration: duration.slow,
     transitionProperty: 'opacity',
     transitionTimingFunction: drawerEase,
     userSelect: 'none',
     zIndex: z.popup,
-  },
-  overlayClosed: {
-    opacity: 0,
   },
   viewport: {
     inset: 0,
@@ -222,18 +204,14 @@ const styles = stylex.create({
     outline: 'none',
     pointerEvents: 'auto',
     position: 'fixed',
-    // Base UI drives the swipe/snap offsets through these inline vars.
-    transform:
-      'translate3d(var(--drawer-swipe-movement-x, 0px), calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0)',
-    transitionDuration: duration.slow,
+    // The transform (swipe/snap vars + per-direction closed pose) lives in
+    // `directions` below.
+    transitionDuration: { default: duration.slow, '[data-swiping]': '0s' },
     transitionProperty: 'transform, opacity',
     transitionTimingFunction: drawerEase,
     userSelect: 'none',
     willChange: 'transform',
     zIndex: z.popup,
-  },
-  swiping: {
-    transitionDuration: '0s',
   },
   content: {
     borderRadius: 'inherit',
@@ -295,6 +273,13 @@ const styles = stylex.create({
 
 const directions = stylex.create({
   down: {
+    // Base UI drives the swipe/snap offsets through these inline vars.
+    transform: {
+      default:
+        'translate3d(var(--drawer-swipe-movement-x, 0px), calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0)',
+      '[data-starting-style]': `translate3d(0, calc(100% + ${space.s05}), 0)`,
+      '[data-ending-style]': `translate3d(0, calc(100% + ${space.s05}), 0)`,
+    },
     borderTopColor: colors.border,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
@@ -306,6 +291,13 @@ const directions = stylex.create({
     right: 0,
   },
   up: {
+    // Base UI drives the swipe/snap offsets through these inline vars.
+    transform: {
+      default:
+        'translate3d(var(--drawer-swipe-movement-x, 0px), calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0)',
+      '[data-starting-style]': `translate3d(0, calc(-100% - ${space.s05}), 0)`,
+      '[data-ending-style]': `translate3d(0, calc(-100% - ${space.s05}), 0)`,
+    },
     borderBottomColor: colors.border,
     borderBottomLeftRadius: radius.xl,
     borderBottomRightRadius: radius.xl,
@@ -317,6 +309,13 @@ const directions = stylex.create({
     top: 0,
   },
   left: {
+    // Base UI drives the swipe/snap offsets through these inline vars.
+    transform: {
+      default:
+        'translate3d(var(--drawer-swipe-movement-x, 0px), calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0)',
+      '[data-starting-style]': `translate3d(calc(-100% - ${space.s05}), 0, 0)`,
+      '[data-ending-style]': `translate3d(calc(-100% - ${space.s05}), 0, 0)`,
+    },
     borderRightColor: colors.border,
     borderBottomRightRadius: radius.xl,
     borderRightStyle: 'solid',
@@ -330,6 +329,13 @@ const directions = stylex.create({
     width: '75%',
   },
   right: {
+    // Base UI drives the swipe/snap offsets through these inline vars.
+    transform: {
+      default:
+        'translate3d(var(--drawer-swipe-movement-x, 0px), calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0)',
+      '[data-starting-style]': `translate3d(calc(100% + ${space.s05}), 0, 0)`,
+      '[data-ending-style]': `translate3d(calc(100% + ${space.s05}), 0, 0)`,
+    },
     borderLeftColor: colors.border,
     borderBottomLeftRadius: radius.xl,
     borderLeftStyle: 'solid',
@@ -342,13 +348,6 @@ const directions = stylex.create({
     top: 0,
     width: '75%',
   },
-});
-
-const closedTransforms = stylex.create({
-  down: { transform: `translate3d(0, calc(100% + ${space.s05}), 0)` },
-  up: { transform: `translate3d(0, calc(-100% - ${space.s05}), 0)` },
-  left: { transform: `translate3d(calc(-100% - ${space.s05}), 0, 0)` },
-  right: { transform: `translate3d(calc(100% + ${space.s05}), 0, 0)` },
 });
 
 const swipeHandles = stylex.create({

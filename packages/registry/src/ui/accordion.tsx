@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -47,14 +46,7 @@ export function AccordionTrigger({
   StyleXStyleProps) {
   return (
     <BaseAccordion.Header {...stylex.props(styles.header)}>
-      <BaseAccordion.Trigger
-        {...props}
-        {...stateProps((s: { open: boolean }) => [
-          styles.trigger,
-          s.open && styles.triggerOpen,
-          style,
-        ])}
-      >
+      <BaseAccordion.Trigger {...props} {...stylex.props(styles.trigger, style)}>
         {children}
         <svg
           width="16"
@@ -131,13 +123,18 @@ const styles = stylex.create({
       default: 'none',
       ':focus-visible': `${stroke.focus} solid ${colors.ring}`,
     },
+    // Read by the chevron below — StyleX has no child selectors, so the
+    // trigger's [data-panel-open] state travels via a custom property.
+    // No `default` here: StyleX emits it unlayered, beating the layered
+    // [data-*] rule; the chevron's var() fallback covers the closed state.
+    '--accordion-trigger-rotation': {
+      default: null,
+      '[data-panel-open]': '180deg',
+    },
     paddingBlock: space.s25,
     paddingInline: 0,
     textAlign: 'left',
     textDecoration: { default: 'none', ':hover': 'underline' },
-  },
-  triggerOpen: {
-    '--accordion-trigger-rotation': '180deg',
   },
   chevron: {
     color: colors.mutedForeground,

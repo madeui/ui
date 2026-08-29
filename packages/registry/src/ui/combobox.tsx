@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -84,24 +84,12 @@ export function ComboboxContent({
       >
         <BaseCombobox.Popup
           {...props}
-          {...stateProps(
-            (s: { transitionStatus: TransitionStatus; side: PopupSide }) => [
-              styles.popup,
-              ring({ shadow: shadow.md }),
-              (s.transitionStatus === 'starting' ||
-                s.transitionStatus === 'ending') &&
-                closedSides[s.side],
-              style,
-            ]
-          )}
+          {...stylex.props(styles.popup, ring({ shadow: shadow.md }), style)}
         />
       </BaseCombobox.Positioner>
     </BaseCombobox.Portal>
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
-type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
 export function ComboboxList({
   style,
@@ -124,15 +112,7 @@ export function ComboboxItem({
 > &
   StyleProp) {
   return (
-    <BaseCombobox.Item
-      {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
-        styles.item,
-        s.highlighted && styles.itemHighlighted,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
-    >
+    <BaseCombobox.Item {...props} {...stylex.props(styles.item, style)}>
       {children}
       <BaseCombobox.ItemIndicator
         render={<span {...stylex.props(styles.indicator)} />}
@@ -208,17 +188,6 @@ export function ComboboxSeparator({
   );
 }
 
-// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
-// the transition on the base style animates both entry and exit through it.
-const closedSides = stylex.create({
-  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
-  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
-  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-});
-
 const styles = stylex.create({
   inputWrap: {
     position: 'relative',
@@ -267,7 +236,25 @@ const styles = stylex.create({
     outline: 'none',
     zIndex: z.popup,
   },
+  // Closed pose (Base UI's [data-starting-style]/[data-ending-style] frames):
+  // faded, slightly shrunk, nudged toward the anchor. [data-side] sets the
+  // nudge direction; the transition animates entry and exit through it.
   popup: {
+    // No `default` for conditional custom properties: StyleX emits the
+    // default rule unlayered (beating the layered [data-*] rules); the
+    // var() fallback covers the unset case instead.
+    '--popup-shift-x': {
+      default: null,
+      '[data-side="left"]': space.s2,
+      '[data-side="right"]': `calc(-1 * ${space.s2})`,
+      '[data-side="inline-start"]': space.s2,
+      '[data-side="inline-end"]': `calc(-1 * ${space.s2})`,
+    },
+    '--popup-shift-y': {
+      default: null,
+      '[data-side="top"]': space.s2,
+      '[data-side="bottom"]': `calc(-1 * ${space.s2})`,
+    },
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
@@ -275,10 +262,20 @@ const styles = stylex.create({
     flexDirection: 'column',
     fontFamily: font.sans,
     maxHeight: `min(${container.sm}, var(--available-height))`,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     outline: 'none',
     overflow: 'hidden',
-    transform: 'scale(1)',
+    transform: {
+      default: 'scale(1)',
+      '[data-starting-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+      '[data-ending-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+    },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
@@ -292,7 +289,16 @@ const styles = stylex.create({
   },
   item: {
     alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.accent,
+    },
     borderRadius: radius.sm,
+    color: {
+      default: null,
+      '[data-highlighted]': colors.accentForeground,
+      '[data-disabled]': colors.mutedForeground,
+    },
     cursor: 'default',
     display: 'flex',
     fontSize: fontSize.sm,
@@ -300,19 +306,12 @@ const styles = stylex.create({
     lineHeight: lineHeight.control,
     marginInline: space.s1,
     outline: 'none',
+    opacity: { default: 1, '[data-disabled]': 0.5 },
     paddingBlock: space.s15,
     paddingLeft: space.s2,
     paddingRight: space.s8,
     position: 'relative',
     userSelect: 'none',
-  },
-  itemHighlighted: {
-    backgroundColor: colors.accent,
-    color: colors.accentForeground,
-  },
-  itemDisabled: {
-    color: colors.mutedForeground,
-    opacity: 0.5,
   },
   indicator: {
     alignItems: 'center',

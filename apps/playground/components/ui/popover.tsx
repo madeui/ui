@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Popover as BasePopover } from '@base-ui/react/popover';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, z, duration, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -44,52 +44,57 @@ export function PopoverContent({
       >
         <BasePopover.Popup
           {...props}
-          {...stateProps(
-            (s: { transitionStatus: TransitionStatus; side: PopupSide }) => [
-              styles.popup,
-              ring({ shadow: shadow.md }),
-              (s.transitionStatus === 'starting' ||
-                s.transitionStatus === 'ending') &&
-                closedSides[s.side],
-              style,
-            ]
-          )}
+          {...stylex.props(styles.popup, ring({ shadow: shadow.md }), style)}
         />
       </BasePopover.Positioner>
     </BasePopover.Portal>
   );
 }
 
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
-type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
-
-// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
-// the transition on the base style animates both entry and exit through it.
-const closedSides = stylex.create({
-  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
-  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
-  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-});
-
 const styles = stylex.create({
   positioner: {
     outline: 'none',
     zIndex: z.popup,
   },
+  // Closed pose (Base UI's [data-starting-style]/[data-ending-style] frames):
+  // faded, slightly shrunk, nudged toward the anchor. [data-side] sets the
+  // nudge direction; the transition animates entry and exit through it.
   popup: {
+    // No `default` for conditional custom properties: StyleX emits the
+    // default rule unlayered (beating the layered [data-*] rules); the
+    // var() fallback covers the unset case instead.
+    '--popup-shift-x': {
+      default: null,
+      '[data-side="left"]': space.s2,
+      '[data-side="right"]': `calc(-1 * ${space.s2})`,
+      '[data-side="inline-start"]': space.s2,
+      '[data-side="inline-end"]': `calc(-1 * ${space.s2})`,
+    },
+    '--popup-shift-y': {
+      default: null,
+      '[data-side="top"]': space.s2,
+      '[data-side="bottom"]': `calc(-1 * ${space.s2})`,
+    },
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.normal,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     outline: 'none',
     padding: space.s4,
-    transform: 'scale(1)',
+    transform: {
+      default: 'scale(1)',
+      '[data-starting-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+      '[data-ending-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+    },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',

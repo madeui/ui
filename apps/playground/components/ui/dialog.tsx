@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -28,20 +28,9 @@ export function DialogOverlay({
 > &
   StyleXStyleProps) {
   return (
-    <BaseDialog.Backdrop
-      {...props}
-      {...stateProps((s: { transitionStatus: TransitionStatus }) => [
-        styles.overlay,
-        (s.transitionStatus === 'starting' ||
-          s.transitionStatus === 'ending') &&
-          styles.overlayClosed,
-        style,
-      ])}
-    />
+    <BaseDialog.Backdrop {...props} {...stylex.props(styles.overlay, style)} />
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
 
 export function DialogContent({
   style,
@@ -58,14 +47,7 @@ export function DialogContent({
       <DialogOverlay />
       <BaseDialog.Popup
         {...props}
-        {...stateProps((s: { transitionStatus: TransitionStatus }) => [
-          styles.content,
-          ring({ shadow: shadow.lg }),
-          (s.transitionStatus === 'starting' ||
-            s.transitionStatus === 'ending') &&
-            styles.contentClosed,
-          style,
-        ])}
+        {...stylex.props(styles.content, ring({ shadow: shadow.lg }), style)}
       >
         {children}
         {showCloseButton && (
@@ -136,19 +118,16 @@ const styles = stylex.create({
   overlay: {
     backgroundColor: colors.overlay,
     inset: 0,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     position: 'fixed',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity',
     transitionTimingFunction: 'ease',
     zIndex: z.popup,
-  },
-  overlayClosed: {
-    opacity: 0,
-  },
-  contentClosed: {
-    opacity: 0,
-    transform: 'translate(-50%, -50%) scale(0.97)',
   },
   content: {
     backgroundColor: colors.popover,
@@ -160,11 +139,19 @@ const styles = stylex.create({
     gap: space.s4,
     left: '50%',
     maxWidth: `calc(100% - ${space.s8})`,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     padding: space.s6,
     position: 'fixed',
     top: '50%',
-    transform: 'translate(-50%, -50%) scale(1)',
+    transform: {
+      default: 'translate(-50%, -50%) scale(1)',
+      '[data-starting-style]': 'translate(-50%, -50%) scale(0.97)',
+      '[data-ending-style]': 'translate(-50%, -50%) scale(0.97)',
+    },
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
     transitionTimingFunction: 'ease',

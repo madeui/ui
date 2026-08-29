@@ -19,19 +19,20 @@ Every component keeps the same shape:
 - All values come from tokens: colors/radius/fonts/shadows from
   `lib/tokens.stylex.ts` (themable), spacing/type/z/duration scales from
   `lib/constants.stylex.ts`. No magic numbers or raw colors in styles.
-- Base UI state (open/checked/highlighted/transitionStatus) is styled through
-  the `stateProps` adapter — the equivalent of Tailwind's
-  `data-[state=open]:` selectors, but type-checked:
+- Base UI state (open/checked/highlighted/transitionStatus) is styled with
+  attribute-selector condition keys — the equivalent of Tailwind's
+  `data-[state=open]:` selectors, declared inside `stylex.create`:
 
 ```tsx
-{...stateProps((s) => [styles.trigger, s.open && styles.triggerOpen, style])}
+backgroundColor: { default: 'transparent', '[data-popup-open]': colors.muted }
 ```
 
 ## AGENTS.md
 
 `ui-lib init` appends a conventions section to your project's `AGENTS.md`
 covering exactly these rules (tokens over literals, variants over escapes,
-`stateProps`, theming on `<html>`, the CSS layer gotcha). Agents that read
+`[data-*]` condition keys, theming on `<html>`, the CSS layer gotcha). Agents
+that read
 `AGENTS.md` — Claude Code, Cursor, Codex, and friends — pick the rules up
 automatically.
 

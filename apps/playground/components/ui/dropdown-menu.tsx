@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -50,24 +50,12 @@ export function DropdownMenuContent({
       >
         <BaseMenu.Popup
           {...props}
-          {...stateProps(
-            (s: { transitionStatus: TransitionStatus; side: PopupSide }) => [
-              styles.popup,
-              ring({ shadow: shadow.md }),
-              (s.transitionStatus === 'starting' ||
-                s.transitionStatus === 'ending') &&
-                closedSides[s.side],
-              style,
-            ]
-          )}
+          {...stylex.props(styles.popup, ring({ shadow: shadow.md }), style)}
         />
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
-type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
 export type DropdownMenuItemVariant = 'default' | 'destructive';
 
@@ -91,17 +79,12 @@ export function DropdownMenuItem({
   return (
     <BaseMenu.Item
       {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
+      {...stylex.props(
         styles.item,
         inset && styles.itemInset,
         variant === 'destructive' && styles.itemDestructive,
-        s.highlighted &&
-          (variant === 'destructive'
-            ? styles.itemDestructiveHighlighted
-            : styles.itemHighlighted),
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
+        style
+      )}
     />
   );
 }
@@ -136,13 +119,7 @@ export function DropdownMenuCheckboxItem({
   return (
     <BaseMenu.CheckboxItem
       {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
-        styles.item,
-        styles.indicatorItem,
-        s.highlighted && styles.itemHighlighted,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
+      {...stylex.props(styles.item, styles.indicatorItem, style)}
     >
       <span {...stylex.props(styles.indicator)}>
         <BaseMenu.CheckboxItemIndicator>
@@ -166,13 +143,7 @@ export function DropdownMenuRadioItem({
   return (
     <BaseMenu.RadioItem
       {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
-        styles.item,
-        styles.indicatorItem,
-        s.highlighted && styles.itemHighlighted,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
+      {...stylex.props(styles.item, styles.indicatorItem, style)}
     >
       <span {...stylex.props(styles.indicator)}>
         <BaseMenu.RadioItemIndicator>
@@ -197,14 +168,11 @@ export function DropdownMenuSubTrigger({
   return (
     <BaseMenu.SubmenuTrigger
       {...props}
-      {...stateProps(
-        (s: { highlighted: boolean; disabled: boolean; open: boolean }) => [
-          styles.item,
-          inset && styles.itemInset,
-          (s.highlighted || s.open) && styles.itemHighlighted,
-          s.disabled && styles.itemDisabled,
-          style,
-        ]
+      {...stylex.props(
+        styles.item,
+        styles.subTrigger,
+        inset && styles.itemInset,
+        style
       )}
     >
       {children}
@@ -280,35 +248,52 @@ export function DropdownMenuLabel({
   );
 }
 
-// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
-// the transition on the base style animates both entry and exit through it.
-const closedSides = stylex.create({
-  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
-  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
-  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-});
-
 const styles = stylex.create({
   positioner: {
     outline: 'none',
     zIndex: z.popup,
   },
+  // Closed pose (Base UI's [data-starting-style]/[data-ending-style] frames):
+  // faded, slightly shrunk, nudged toward the anchor. [data-side] sets the
+  // nudge direction; the transition animates entry and exit through it.
   popup: {
+    // No `default` for conditional custom properties: StyleX emits the
+    // default rule unlayered (beating the layered [data-*] rules); the
+    // var() fallback covers the unset case instead.
+    '--popup-shift-x': {
+      default: null,
+      '[data-side="left"]': space.s2,
+      '[data-side="right"]': `calc(-1 * ${space.s2})`,
+      '[data-side="inline-start"]': space.s2,
+      '[data-side="inline-end"]': `calc(-1 * ${space.s2})`,
+    },
+    '--popup-shift-y': {
+      default: null,
+      '[data-side="top"]': space.s2,
+      '[data-side="bottom"]': `calc(-1 * ${space.s2})`,
+    },
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
     fontFamily: font.sans,
     maxHeight: 'var(--available-height)',
     minWidth: container.xs,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     outline: 'none',
     overflowX: 'hidden',
     overflowY: 'auto',
     paddingBlock: space.s1,
-    transform: 'scale(1)',
+    transform: {
+      default: 'scale(1)',
+      '[data-starting-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+      '[data-ending-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+    },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
@@ -323,16 +308,40 @@ const styles = stylex.create({
   },
   item: {
     alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.accent,
+    },
     borderRadius: radius.sm,
+    color: {
+      default: null,
+      '[data-highlighted]': colors.accentForeground,
+      '[data-disabled]': colors.mutedForeground,
+    },
     cursor: 'default',
     display: 'flex',
     fontSize: fontSize.sm,
     gap: space.s2,
     marginInline: space.s1,
+    opacity: { default: 1, '[data-disabled]': 0.5 },
     outline: 'none',
     paddingBlock: space.s15,
     paddingInline: space.s2,
     userSelect: 'none',
+  },
+  // Submenu triggers also light up while their submenu is open.
+  subTrigger: {
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.accent,
+      '[data-popup-open]': colors.accent,
+    },
+    color: {
+      default: null,
+      '[data-highlighted]': colors.accentForeground,
+      '[data-popup-open]': colors.accentForeground,
+      '[data-disabled]': colors.mutedForeground,
+    },
   },
   itemInset: {
     paddingLeft: space.s7,
@@ -352,20 +361,15 @@ const styles = stylex.create({
     right: space.s2,
     width: space.s4,
   },
-  itemHighlighted: {
-    backgroundColor: colors.accent,
-    color: colors.accentForeground,
-  },
   itemDestructive: {
-    color: colors.destructive,
-  },
-  itemDestructiveHighlighted: {
-    backgroundColor: `color-mix(in srgb, ${colors.destructive} 10%, transparent)`,
-    color: colors.destructive,
-  },
-  itemDisabled: {
-    color: colors.mutedForeground,
-    opacity: 0.5,
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': `color-mix(in srgb, ${colors.destructive} 10%, transparent)`,
+    },
+    color: {
+      default: colors.destructive,
+      '[data-disabled]': colors.mutedForeground,
+    },
   },
   subTriggerChevron: {
     color: colors.mutedForeground,

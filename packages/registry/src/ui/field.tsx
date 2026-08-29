@@ -7,7 +7,6 @@ import { Fieldset as BaseFieldset } from '@base-ui/react/fieldset';
 import * as stylex from '@stylexjs/stylex';
 
 import { Separator } from '@/components/ui/separator';
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight } from '@/lib/constants.stylex';
 import { colors, font } from '@/lib/tokens.stylex';
 
@@ -95,12 +94,7 @@ export function FieldLabel({
   return (
     <BaseField.Label
       {...props}
-      {...stateProps((s: { valid: boolean | null }) => [
-        styles.labelBase,
-        styles.label,
-        s.valid === false && styles.labelInvalid,
-        style,
-      ])}
+      {...stylex.props(styles.labelBase, styles.label, style)}
     />
   );
 }
@@ -244,11 +238,9 @@ const styles = stylex.create({
     userSelect: 'none',
   },
   label: {
+    color: { default: null, '[data-invalid]': colors.destructive },
     lineHeight: lineHeight.snug,
     width: 'fit-content',
-  },
-  labelInvalid: {
-    color: colors.destructive,
   },
   title: {
     alignItems: 'center',

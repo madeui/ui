@@ -140,6 +140,55 @@ Recommended pseudo-classes include:
 
 ---
 
+## Attribute selectors (Base UI state)
+
+Since StyleX 0.18, attribute selectors are valid condition keys. Base UI
+mirrors every part's state as a data attribute (`data-checked`,
+`data-highlighted`, `data-popup-open`, `data-side="bottom"`,
+`data-starting-style`, `data-ending-style`, …), so state styling is declared
+inline — this is the house idiom for Base UI state:
+
+```tsx
+const styles = stylex.create({
+  item: {
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.accent,   // ≈ Tailwind data-[highlighted]:bg-accent
+    },
+    opacity: { default: 1, '[data-disabled]': 0.5 },
+  },
+});
+
+// The component spreads plain props — no className-as-function adapter:
+<BaseMenu.Item {...stylex.props(styles.item, style)} />
+```
+
+Compound conditions nest (each level adds a selector) or combine in one key:
+
+```tsx
+transform: {
+  default: 'scale(1)',
+  '[data-ending-style]': {
+    default: null,
+    '[data-side="top"]': 'translateY(0.5rem) scale(0.97)',
+  },
+  // equivalent single key: '[data-side="top"][data-ending-style]': …
+},
+```
+
+**Custom-property gotcha:** a conditional custom property must not define a
+non-null `default` — StyleX emits that default rule *outside* the CSS layers
+while the `[data-*]` rule is layered, so the default always wins. Use
+`default: null` and a `var(--x, fallback)` at the consumption site:
+
+```tsx
+'--chevron-rotation': { default: null, '[data-panel-open]': '180deg' },
+// consumer:
+transform: 'rotate(var(--chevron-rotation, 0deg))',
+```
+
+---
+
 ## Pseudo-elements
 
 Define pseudo-elements as top-level keys within a style namespace:

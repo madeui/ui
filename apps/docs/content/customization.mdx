@@ -152,24 +152,32 @@ Sizes work the same way through the `sizes` map.
 
 ## Styling Base UI state
 
-StyleX has no attribute selectors, so state-driven styling (`checked`, `open`,
-`highlighted`, `disabled`) doesn't use `[data-checked]`. Components use the
-`stateProps` helper from `lib/stylex-utils.ts`, which maps Base UI's state
-object to conditional StyleX styles:
+Base UI mirrors every part's state as a data attribute (`data-checked`,
+`data-highlighted`, `data-popup-open`, `data-starting-style`, …), and StyleX
+(0.18+) accepts attribute selectors as condition keys — so state styling is
+declared inline, the Tailwind `data-[state=open]:` equivalent:
 
 ```tsx
-<Switch.Root
-  {...stateProps((s: { checked: boolean; disabled: boolean }) => [
-    styles.root,
-    s.checked && styles.rootChecked,
-    s.disabled && styles.rootDisabled,
-    style,                // caller overrides still merge last
-  ])}
-/>
+const styles = stylex.create({
+  root: {
+    backgroundColor: {
+      default: colors.input,
+      '[data-checked]': colors.primary,   // like data-[state=checked]:bg-primary
+    },
+  },
+});
+
+<Switch.Root {...stylex.props(styles.root, style)} />
 ```
 
+Compound states nest (`'[data-side="bottom"]': { '[data-ending-style]': … }`)
+or combine into one key (`'[data-side="bottom"][data-ending-style]'`). One
+gotcha: a conditional **custom property** (`'--x': { … }`) must use
+`default: null` and a `var(--x, fallback)` where it's read — a non-null
+default is emitted outside the CSS layer and would always win.
+
 Interaction states that CSS can express directly (hover, focus, active) use
-StyleX conditional values instead:
+the same conditional-value syntax:
 
 ```tsx
 backgroundColor: {

@@ -6,7 +6,6 @@ import { Radio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -36,15 +35,7 @@ export function RadioGroupItem({
 > &
   StyleProp) {
   return (
-    <Radio.Root
-      {...props}
-      {...stateProps((s: { checked: boolean; disabled: boolean }) => [
-        styles.item,
-        s.checked && styles.itemChecked,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
-    >
+    <Radio.Root {...props} {...stylex.props(styles.item, style)}>
       <Radio.Indicator {...stylex.props(styles.indicator)} />
     </Radio.Root>
   );
@@ -59,7 +50,7 @@ const styles = stylex.create({
   item: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderColor: colors.input,
+    borderColor: { default: colors.input, '[data-checked]': colors.primary },
     borderRadius: radius.full,
     borderStyle: 'solid',
     borderWidth: stroke.border,
@@ -83,13 +74,6 @@ const styles = stylex.create({
       insetInline: `calc(-1 * ${space.s3})`,
       position: 'absolute',
     },
-  },
-  itemChecked: {
-    borderColor: colors.primary,
-  },
-  itemDisabled: {
-    cursor: 'not-allowed',
-    opacity: 0.5,
   },
   indicator: {
     backgroundColor: colors.primary,

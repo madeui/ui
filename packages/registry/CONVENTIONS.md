@@ -35,13 +35,20 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
     `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `container`).
   If a value is missing, extend the scale deliberately — never invent a
   one-off inside a component.
-- No attribute selectors in StyleX. Base UI state (checked, open, highlighted)
-  is styled with the `stateProps` helper from `@/lib/stylex-utils`, which maps
-  state to conditional StyleX styles via Base UI's className/style functions.
+- Base UI state (checked, open, highlighted, transitionStatus) is styled with
+  attribute-selector condition keys (StyleX ≥0.18) — Base UI mirrors every
+  state as a data attribute:
+  `backgroundColor: { default: 'transparent', '[data-highlighted]': colors.accent }`.
+  Components spread plain `stylex.props(...)`; no className-as-function
+  adapter. Conditional custom properties must use `default: null` + a
+  `var(--x, fallback)` at the consumption site (a non-null default is emitted
+  unlayered and beats the layered `[data-*]` rule).
 - Interactive states use StyleX conditional values
   (`{ default: ..., ':hover': ..., ':focus-visible': ... }`).
-- Entry animations via `stylex.keyframes`; keep exit animations out for now
-  (popups unmount on close).
+- Enter/exit animations are transitions through Base UI's
+  `[data-starting-style]` / `[data-ending-style]` frames (per-side slide via
+  `[data-side]`-driven custom properties); `stylex.keyframes` only where a
+  transition can't express it (e.g. accordion panel height).
 - Focus ring: `outline: 2px solid colors.ring; outlineOffset: 2px` (or inset
   where offset clips).
 - **Even metrics only.** Component metrics (heights, paddings, line boxes) land

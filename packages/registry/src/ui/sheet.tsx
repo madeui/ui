@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, shadow, radius } from '@/lib/tokens.stylex';
 
@@ -30,20 +29,9 @@ export function SheetOverlay({
 > &
   StyleXStyleProps) {
   return (
-    <BaseDialog.Backdrop
-      {...props}
-      {...stateProps((s: { transitionStatus: TransitionStatus }) => [
-        styles.overlay,
-        (s.transitionStatus === 'starting' ||
-          s.transitionStatus === 'ending') &&
-          styles.overlayClosed,
-        style,
-      ])}
-    />
+    <BaseDialog.Backdrop {...props} {...stylex.props(styles.overlay, style)} />
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
 
 export function SheetContent({
   style,
@@ -61,14 +49,7 @@ export function SheetContent({
       <SheetOverlay />
       <BaseDialog.Popup
         {...props}
-        {...stateProps((s: { transitionStatus: TransitionStatus }) => [
-          styles.content,
-          sides[side],
-          (s.transitionStatus === 'starting' ||
-            s.transitionStatus === 'ending') &&
-            closedSides[side],
-          style,
-        ])}
+        {...stylex.props(styles.content, sides[side], style)}
       >
         {children}
         {showCloseButton && (
@@ -135,28 +116,20 @@ export function SheetDescription({
   );
 }
 
-// Closed pose per side: faded and slid toward the sheet's edge — the
-// transition on the base style animates both entry and exit through it.
-const closedSides = stylex.create({
-  right: { opacity: 0, transform: `translateX(${space.s10})` },
-  left: { opacity: 0, transform: `translateX(calc(-1 * ${space.s10}))` },
-  top: { opacity: 0, transform: `translateY(calc(-1 * ${space.s10}))` },
-  bottom: { opacity: 0, transform: `translateY(${space.s10})` },
-});
-
 const styles = stylex.create({
   overlay: {
     backgroundColor: colors.overlay,
     inset: 0,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     position: 'fixed',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity',
     transitionTimingFunction: 'ease',
     zIndex: z.popup,
-  },
-  overlayClosed: {
-    opacity: 0,
   },
   content: {
     backgroundColor: colors.popover,
@@ -168,9 +141,12 @@ const styles = stylex.create({
     fontSize: fontSize.sm,
     gap: space.s4,
     lineHeight: lineHeight.normal,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     position: 'fixed',
-    transform: 'translate(0, 0)',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
     transitionTimingFunction: 'ease',
@@ -232,6 +208,11 @@ const styles = stylex.create({
 
 const sides = stylex.create({
   right: {
+    transform: {
+      default: 'translate(0, 0)',
+      '[data-starting-style]': `translateX(${space.s10})`,
+      '[data-ending-style]': `translateX(${space.s10})`,
+    },
     borderLeftColor: colors.border,
     borderLeftStyle: 'solid',
     borderLeftWidth: stroke.border,
@@ -242,6 +223,11 @@ const sides = stylex.create({
     width: '75%',
   },
   left: {
+    transform: {
+      default: 'translate(0, 0)',
+      '[data-starting-style]': `translateX(calc(-1 * ${space.s10}))`,
+      '[data-ending-style]': `translateX(calc(-1 * ${space.s10}))`,
+    },
     borderRightColor: colors.border,
     borderRightStyle: 'solid',
     borderRightWidth: stroke.border,
@@ -252,6 +238,11 @@ const sides = stylex.create({
     width: '75%',
   },
   top: {
+    transform: {
+      default: 'translate(0, 0)',
+      '[data-starting-style]': `translateY(calc(-1 * ${space.s10}))`,
+      '[data-ending-style]': `translateY(calc(-1 * ${space.s10}))`,
+    },
     borderBottomColor: colors.border,
     borderBottomStyle: 'solid',
     borderBottomWidth: stroke.border,
@@ -260,6 +251,11 @@ const sides = stylex.create({
     top: 0,
   },
   bottom: {
+    transform: {
+      default: 'translate(0, 0)',
+      '[data-starting-style]': `translateY(${space.s10})`,
+      '[data-ending-style]': `translateY(${space.s10})`,
+    },
     borderBottomStyle: 'none',
     borderTopColor: colors.border,
     borderTopStyle: 'solid',

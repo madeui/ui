@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Slider as BaseSlider } from '@base-ui/react/slider';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -45,11 +44,7 @@ export function Slider({
       {...stylex.props(rootOrientations[orientation], style)}
     >
       <BaseSlider.Control
-        {...stateProps((s: { disabled: boolean }) => [
-          styles.control,
-          controlOrientations[orientation],
-          s.disabled && styles.controlDisabled,
-        ])}
+        {...stylex.props(styles.control, controlOrientations[orientation])}
       >
         <BaseSlider.Track
           {...stylex.props(styles.track, trackOrientations[orientation])}
@@ -70,6 +65,7 @@ const haloShadow = `0 0 0 ${stroke.halo} color-mix(in srgb, ${colors.ring} 50%, 
 
 const styles = stylex.create({
   control: {
+    opacity: { default: 1, '[data-disabled]': 0.5 },
     alignItems: 'center',
     display: 'flex',
     position: 'relative',

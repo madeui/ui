@@ -90,9 +90,15 @@ Companion documents:
 - Shared patterns (state adapters, focus ring recipe) live in
   `lib/stylex-utils.ts` / the token layer — not copy-pasted.
 - Real CSS property names (`paddingInline`, `backgroundColor`, `alignItems`).
-- Pseudo-states (`:hover`, `:focus-visible`, `:disabled`) live inside the
-  style objects as conditional values; Base UI state (checked, open,
-  highlighted, disabled-on-span) goes through `stateProps`.
+- Pseudo-states (`:hover`, `:focus-visible`, `:disabled`) AND Base UI state
+  live inside the style objects as conditional values. Base UI mirrors every
+  state as a data attribute — target it directly (StyleX ≥0.18 accepts
+  attribute selectors as condition keys):
+  `backgroundColor: { default: 'transparent', '[data-highlighted]': colors.accent }`.
+  No JS state adapter; the component spreads plain `stylex.props(...)`.
+  One gotcha: a conditional **custom property** must not define a `default`
+  value (StyleX emits it unlayered, beating the layered `[data-*]` rule) —
+  use `default: null` and a `var(--x, fallback)` at the consumption site.
 - Dynamic values go through StyleX APIs or CSS variables. No raw inline
   `style={{}}` in components or examples.
 - Keep compilation-friendly code: static style objects only; avoid patterns

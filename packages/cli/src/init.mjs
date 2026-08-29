@@ -88,9 +88,11 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 - Every component accepts \`variant\`, \`size\` (where meaningful), and a
   \`style?: StyleXStyles\` prop merged last via \`stylex.props(...)\` — caller
   styles always win. Extend by adding variants, not inline escapes.
-- StyleX has no attribute selectors. Base UI state (checked/open/highlighted)
-  is styled via the \`stateProps\` adapter in \`stylex-utils.ts\`:
-  \`{...stateProps((s) => [styles.root, s.checked && styles.checked, style])}\`.
+- Base UI state (checked/open/highlighted) is styled with attribute-selector
+  condition keys inside \`stylex.create\` — Base UI mirrors state as data
+  attributes: \`backgroundColor: { default: '...', '[data-checked]': ... }\`.
+  Conditional custom properties: use \`default: null\` + \`var(--x, fallback)\`
+  where consumed (a non-null default is emitted unlayered and always wins).
 - Popup edges use the \`ring()\` recipe (box-shadow), not borders — Base UI
   positioning math ignores borders.
 - Theming: apply themes (e.g. \`darkTheme\` from \`themes.ts\`) to \`<html>\`,

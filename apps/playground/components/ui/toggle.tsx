@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -32,13 +31,12 @@ export function Toggle({
   return (
     <BaseToggle
       {...props}
-      {...stateProps((s: { pressed: boolean }) => [
+      {...stylex.props(
         styles.root,
         toggleVariants[variant],
         toggleSizes[size],
-        s.pressed && styles.pressed,
-        style,
-      ])}
+        style
+      )}
     />
   );
 }
@@ -49,6 +47,7 @@ const styles = stylex.create({
     backgroundColor: {
       default: 'transparent',
       ':hover:not(:disabled)': colors.muted,
+      '[data-pressed]': colors.muted,
     },
     borderRadius: radius.lg,
     borderStyle: 'none',
@@ -74,9 +73,6 @@ const styles = stylex.create({
     transitionProperty: 'background-color, border-color, color, opacity',
     userSelect: 'none',
     whiteSpace: 'nowrap',
-  },
-  pressed: {
-    backgroundColor: colors.muted,
   },
 });
 

@@ -35,7 +35,7 @@
       "name": "utils",
       "type": "registry:lib",
       "title": "StyleX utilities",
-      "description": "stateProps: adapter mapping Base UI state to conditional StyleX styles.",
+      "description": "ring(): box-shadow edge recipe for popups (borders shift Base UI positioning).",
       "dependencies": [
         "@stylexjs/stylex"
       ],
@@ -75,8 +75,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -305,8 +304,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -392,7 +390,6 @@
       ],
       "registryDependencies": [
         "@ui-lib/theme",
-        "@ui-lib/utils",
         "@ui-lib/dialog"
       ],
       "files": [
@@ -458,8 +455,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -523,7 +519,6 @@
       ],
       "registryDependencies": [
         "@ui-lib/theme",
-        "@ui-lib/utils",
         "@ui-lib/separator"
       ],
       "files": [
@@ -716,7 +711,6 @@
       ],
       "registryDependencies": [
         "@ui-lib/theme",
-        "@ui-lib/utils",
         "@ui-lib/dropdown-menu"
       ],
       "files": [
@@ -866,8 +860,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -952,8 +945,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -994,8 +986,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -1036,8 +1027,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -1078,8 +1068,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -1120,8 +1109,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -1142,8 +1130,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {
@@ -1207,8 +1194,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@ui-lib/theme"
       ],
       "files": [
         {

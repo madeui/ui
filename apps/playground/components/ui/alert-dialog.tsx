@@ -6,7 +6,7 @@ import { AlertDialog as BaseAlertDialog } from '@base-ui/react/alert-dialog';
 import * as stylex from '@stylexjs/stylex';
 
 import { Button, type ButtonProps } from '@/components/ui/button';
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -30,18 +30,10 @@ export function AlertDialogOverlay({
   return (
     <BaseAlertDialog.Backdrop
       {...props}
-      {...stateProps((s: { transitionStatus: TransitionStatus }) => [
-        styles.overlay,
-        (s.transitionStatus === 'starting' ||
-          s.transitionStatus === 'ending') &&
-          styles.overlayClosed,
-        style,
-      ])}
+      {...stylex.props(styles.overlay, style)}
     />
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
 
 export type AlertDialogSize = 'md' | 'sm';
 
@@ -59,15 +51,12 @@ export function AlertDialogContent({
       <AlertDialogOverlay />
       <BaseAlertDialog.Popup
         {...props}
-        {...stateProps((s: { transitionStatus: TransitionStatus }) => [
+        {...stylex.props(
           styles.content,
           sizes[size],
           ring({ shadow: shadow.lg }),
-          (s.transitionStatus === 'starting' ||
-            s.transitionStatus === 'ending') &&
-            styles.contentClosed,
-          style,
-        ])}
+          style
+        )}
       />
     </BaseAlertDialog.Portal>
   );
@@ -155,19 +144,16 @@ const styles = stylex.create({
   overlay: {
     backgroundColor: colors.overlay,
     inset: 0,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     position: 'fixed',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity',
     transitionTimingFunction: 'ease',
     zIndex: z.popup,
-  },
-  overlayClosed: {
-    opacity: 0,
-  },
-  contentClosed: {
-    opacity: 0,
-    transform: 'translate(-50%, -50%) scale(0.97)',
   },
   content: {
     backgroundColor: colors.popover,
@@ -179,11 +165,19 @@ const styles = stylex.create({
     gap: space.s4,
     left: '50%',
     maxWidth: `calc(100% - ${space.s8})`,
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     padding: space.s4,
     position: 'fixed',
     top: '50%',
-    transform: 'translate(-50%, -50%) scale(1)',
+    transform: {
+      default: 'translate(-50%, -50%) scale(1)',
+      '[data-starting-style]': 'translate(-50%, -50%) scale(0.97)',
+      '[data-ending-style]': 'translate(-50%, -50%) scale(0.97)',
+    },
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
     transitionTimingFunction: 'ease',

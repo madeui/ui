@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Select as BaseSelect } from '@base-ui/react/select';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -108,26 +108,16 @@ export function SelectContent({
       >
         <BaseSelect.Popup
           {...props}
-          {...stateProps(
-            (s: {
-              transitionStatus: TransitionStatus;
-              side: PopupSide | 'none';
-            }) => [
-              styles.popup,
-              // Edge as a ring, not a border: Base UI's align-item-with-trigger
-              // math ignores borders and would shift the aligned text.
-              ring({ shadow: shadow.md }),
-              !alignItemWithTrigger && styles.popupAnchored,
-              // The align-with-trigger overlay repositions on open; a scale-in
-              // animation fights that, so it only fades. Anchored mode gets the
-              // full closed pose on entry and exit.
-              (s.transitionStatus === 'starting' ||
-                s.transitionStatus === 'ending') &&
-                (alignItemWithTrigger || s.side === 'none'
-                  ? s.transitionStatus === 'ending' && styles.popupFaded
-                  : closedSides[s.side]),
-              style,
-            ]
+          {...stylex.props(
+            styles.popup,
+            // Edge as a ring, not a border: Base UI's align-item-with-trigger
+            // math ignores borders and would shift the aligned text.
+            ring({ shadow: shadow.md }),
+            // The align-with-trigger overlay repositions on open; a scale-in
+            // animation fights that, so it only fades out. Anchored mode gets
+            // the full closed pose on entry and exit.
+            !alignItemWithTrigger && styles.popupAnchored,
+            style
           )}
         >
           <ScrollArrow direction="up" />
@@ -151,15 +141,7 @@ export function SelectItem({
 > &
   StyleProp) {
   return (
-    <BaseSelect.Item
-      {...props}
-      {...stateProps((s: { highlighted: boolean; disabled: boolean }) => [
-        styles.item,
-        s.highlighted && styles.itemHighlighted,
-        s.disabled && styles.itemDisabled,
-        style,
-      ])}
-    >
+    <BaseSelect.Item {...props} {...stylex.props(styles.item, style)}>
       <BaseSelect.ItemText {...stylex.props(styles.itemText)}>
         {children}
       </BaseSelect.ItemText>
@@ -181,20 +163,6 @@ export function SelectItem({
     </BaseSelect.Item>
   );
 }
-
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
-type PopupSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
-
-// Closed pose per side: faded, slightly shrunk, nudged toward the anchor —
-// the transition on the base style animates both entry and exit through it.
-const closedSides = stylex.create({
-  top: { opacity: 0, transform: `translateY(${space.s2}) scale(0.97)` },
-  bottom: { opacity: 0, transform: `translateY(calc(-1 * ${space.s2})) scale(0.97)` },
-  left: { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  right: { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-  'inline-start': { opacity: 0, transform: `translateX(${space.s2}) scale(0.97)` },
-  'inline-end': { opacity: 0, transform: `translateX(calc(-1 * ${space.s2})) scale(0.97)` },
-});
 
 const styles = stylex.create({
   trigger: {
@@ -236,22 +204,47 @@ const styles = stylex.create({
     fontFamily: font.sans,
     lineHeight: lineHeight.control,
     maxHeight: 'var(--available-height)',
-    opacity: 1,
+    opacity: { default: 1, '[data-ending-style]': 0 },
     width: 'var(--anchor-width)',
     overflowX: 'hidden',
     overflowY: 'auto',
     position: 'relative',
-    transform: 'scale(1)',
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
     transitionProperty: 'opacity, transform',
     transitionTimingFunction: 'ease',
   },
+  // Closed pose (anchored mode only — [data-side] sets the nudge direction,
+  // [data-starting-style]/[data-ending-style] apply it).
   popupAnchored: {
+    // No `default` for conditional custom properties: StyleX emits the
+    // default rule unlayered (beating the layered [data-*] rules); the
+    // var() fallback covers the unset case instead.
+    '--popup-shift-x': {
+      default: null,
+      '[data-side="left"]': space.s2,
+      '[data-side="right"]': `calc(-1 * ${space.s2})`,
+      '[data-side="inline-start"]': space.s2,
+      '[data-side="inline-end"]': `calc(-1 * ${space.s2})`,
+    },
+    '--popup-shift-y': {
+      default: null,
+      '[data-side="top"]': space.s2,
+      '[data-side="bottom"]': `calc(-1 * ${space.s2})`,
+    },
     maxHeight: `min(${container.sm}, var(--available-height))`,
-  },
-  popupFaded: {
-    opacity: 0,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
+    transform: {
+      default: 'scale(1)',
+      '[data-starting-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+      '[data-ending-style]':
+        'translate(var(--popup-shift-x, 0px), var(--popup-shift-y, 0px)) scale(0.97)',
+    },
   },
   list: {
     paddingBlock: space.s1,
@@ -276,25 +269,27 @@ const styles = stylex.create({
   },
   item: {
     alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      '[data-highlighted]': colors.accent,
+    },
     borderRadius: radius.sm,
+    color: {
+      default: null,
+      '[data-highlighted]': colors.accentForeground,
+      '[data-disabled]': colors.mutedForeground,
+    },
     cursor: 'default',
     display: 'grid',
     fontSize: fontSize.sm,
     gap: space.s2,
     gridTemplateColumns: `1fr ${space.s4}`,
     marginInline: space.s1,
+    opacity: { default: 1, '[data-disabled]': 0.5 },
     outline: 'none',
     paddingBlock: space.s15,
     paddingInline: space.s2,
     userSelect: 'none',
-  },
-  itemHighlighted: {
-    backgroundColor: colors.accent,
-    color: colors.accentForeground,
-  },
-  itemDisabled: {
-    color: colors.mutedForeground,
-    opacity: 0.5,
   },
   itemIndicator: {
     alignItems: 'center',

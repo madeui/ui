@@ -23,7 +23,6 @@ import {
   DropdownMenuTrigger,
   type DropdownMenuContentProps,
 } from '@/components/ui/dropdown-menu';
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -64,11 +63,7 @@ export function MenubarTrigger({
   return (
     <DropdownMenuTrigger
       {...props}
-      {...stateProps((s: { open: boolean }) => [
-        styles.trigger,
-        s.open && styles.triggerOpen,
-        style,
-      ])}
+      {...stylex.props(styles.trigger, style)}
     />
   );
 }
@@ -109,6 +104,7 @@ const styles = stylex.create({
     backgroundColor: {
       default: 'transparent',
       ':hover': colors.muted,
+      '[data-popup-open]': colors.muted,
     },
     borderRadius: radius.sm,
     borderStyle: 'none',
@@ -122,9 +118,6 @@ const styles = stylex.create({
     paddingBlock: space.s05,
     paddingInline: space.s15,
     userSelect: 'none',
-  },
-  triggerOpen: {
-    backgroundColor: colors.muted,
   },
   // Menubar popups size to their content, not the trigger.
   content: {

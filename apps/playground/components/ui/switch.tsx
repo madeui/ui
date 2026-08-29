@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -24,28 +23,16 @@ export function Switch({ size = 'md', style, ...props }: SwitchProps) {
   return (
     <BaseSwitch.Root
       {...props}
-      {...stateProps((s: { checked: boolean; disabled: boolean }) => [
-        styles.root,
-        rootSizes[size],
-        s.checked && styles.rootChecked,
-        s.disabled && styles.rootDisabled,
-        style,
-      ])}
+      {...stylex.props(styles.root, rootSizes[size], style)}
     >
-      <BaseSwitch.Thumb
-        {...stateProps((s: { checked: boolean }) => [
-          styles.thumb,
-          thumbSizes[size],
-          s.checked && thumbCheckedSizes[size],
-        ])}
-      />
+      <BaseSwitch.Thumb {...stylex.props(styles.thumb, thumbSizes[size])} />
     </BaseSwitch.Root>
   );
 }
 
 const styles = stylex.create({
   root: {
-    backgroundColor: colors.input,
+    backgroundColor: { default: colors.input, '[data-checked]': colors.primary },
     borderRadius: radius.full,
     borderStyle: 'none',
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
@@ -66,17 +53,9 @@ const styles = stylex.create({
       position: 'absolute',
     },
   },
-  rootChecked: {
-    backgroundColor: colors.primary,
-  },
-  rootDisabled: {
-    cursor: 'not-allowed',
-    opacity: 0.5,
-  },
   thumb: {
     backgroundColor: colors.background,
     borderRadius: radius.full,
-    transform: 'translateX(0)',
     transitionDuration: duration.fast,
     transitionProperty: 'transform',
   },
@@ -96,19 +75,18 @@ const rootSizes = stylex.create({
 const thumbSizes = stylex.create({
   md: {
     height: space.s4,
+    transform: {
+      default: 'translateX(0)',
+      '[data-checked]': `translateX(${space.s4})`,
+    },
     width: space.s4,
   },
   sm: {
     height: space.s3,
+    transform: {
+      default: 'translateX(0)',
+      '[data-checked]': `translateX(${space.s3})`,
+    },
     width: space.s3,
-  },
-});
-
-const thumbCheckedSizes = stylex.create({
-  md: {
-    transform: `translateX(${space.s4})`,
-  },
-  sm: {
-    transform: `translateX(${space.s3})`,
   },
 });

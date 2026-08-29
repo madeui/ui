@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -52,12 +51,7 @@ export function TabsList({
     <TabsVariantContext.Provider value={variant}>
       <BaseTabs.List
         {...props}
-        {...stateProps((s: { orientation: 'horizontal' | 'vertical' }) => [
-          styles.list,
-          variant === 'line' && styles.listLine,
-          s.orientation === 'vertical' && styles.listVertical,
-          style,
-        ])}
+        {...stylex.props(styles.list, variant === 'line' && styles.listLine, style)}
       />
     </TabsVariantContext.Provider>
   );
@@ -75,15 +69,11 @@ export function TabsTrigger({
   return (
     <BaseTabs.Tab
       {...props}
-      {...stateProps((s: { active: boolean }) => [
+      {...stylex.props(
         styles.trigger,
         variant === 'line' && styles.triggerLine,
-        s.active &&
-          (variant === 'line'
-            ? styles.triggerLineSelected
-            : styles.triggerSelected),
-        style,
-      ])}
+        style
+      )}
     />
   );
 }
@@ -110,11 +100,13 @@ const styles = stylex.create({
     flexDirection: 'row',
   },
   list: {
-    alignItems: 'center',
+    alignItems: { default: 'center', '[data-orientation="vertical"]': 'stretch' },
     backgroundColor: colors.muted,
     borderRadius: radius.md,
     display: 'inline-flex',
+    flexDirection: { default: 'row', '[data-orientation="vertical"]': 'column' },
     gap: space.s1,
+    height: { default: null, '[data-orientation="vertical"]': 'fit-content' },
     padding: space.s1,
     width: 'fit-content',
   },
@@ -127,17 +119,15 @@ const styles = stylex.create({
     gap: 0,
     padding: 0,
   },
-  listVertical: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    height: 'fit-content',
-  },
   trigger: {
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: {
+      default: 'transparent',
+      '[data-active]': colors.background,
+    },
     borderRadius: radius.sm,
     borderStyle: 'none',
-    color: colors.mutedForeground,
+    color: { default: colors.mutedForeground, '[data-active]': colors.foreground },
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
     fontFamily: font.sans,
@@ -155,22 +145,18 @@ const styles = stylex.create({
     userSelect: 'none',
     whiteSpace: 'nowrap',
   },
-  triggerSelected: {
-    backgroundColor: colors.background,
-    color: colors.foreground,
-  },
   // Underline style: the active tab draws a bar over the list's bottom border.
   triggerLine: {
-    borderBottomColor: 'transparent',
+    backgroundColor: 'transparent',
+    borderBottomColor: {
+      default: 'transparent',
+      '[data-active]': colors.primary,
+    },
     borderBottomStyle: 'solid',
     borderBottomWidth: stroke.focus,
     borderRadius: 0,
     height: space.s9,
     marginBottom: `calc(-1 * ${stroke.border})`,
-  },
-  triggerLineSelected: {
-    borderBottomColor: colors.primary,
-    color: colors.foreground,
   },
   content: {
     color: colors.foreground,

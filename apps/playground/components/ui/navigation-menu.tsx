@@ -5,7 +5,7 @@ import * as React from 'react';
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import * as stylex from '@stylexjs/stylex';
 
-import { ring, stateProps } from '@/lib/stylex-utils';
+import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -77,11 +77,7 @@ export function NavigationMenuTrigger({
   return (
     <BaseNavigationMenu.Trigger
       {...props}
-      {...stateProps((s: { open: boolean }) => [
-        styles.trigger,
-        s.open && styles.triggerOpen,
-        style,
-      ])}
+      {...stylex.props(styles.trigger, style)}
     >
       {children}
       <svg
@@ -127,14 +123,7 @@ export function NavigationMenuLink({
 > &
   StyleProp) {
   return (
-    <BaseNavigationMenu.Link
-      {...props}
-      {...stateProps((s: { active: boolean }) => [
-        styles.link,
-        s.active && styles.linkActive,
-        style,
-      ])}
-    />
+    <BaseNavigationMenu.Link {...props} {...stylex.props(styles.link, style)} />
   );
 }
 
@@ -161,17 +150,7 @@ export function NavigationMenuPositioner({
         {...stylex.props(styles.positioner, style)}
       >
         <BaseNavigationMenu.Popup
-          {...stateProps(
-            (s: {
-              transitionStatus: 'starting' | 'ending' | 'idle' | undefined;
-            }) => [
-              styles.popup,
-              ring({ shadow: shadow.md }),
-              (s.transitionStatus === 'starting' ||
-                s.transitionStatus === 'ending') &&
-                styles.popupClosed,
-            ]
-          )}
+          {...stylex.props(styles.popup, ring({ shadow: shadow.md }))}
         >
           <BaseNavigationMenu.Viewport {...stylex.props(styles.viewport)} />
         </BaseNavigationMenu.Popup>
@@ -202,10 +181,19 @@ const styles = stylex.create({
     position: 'relative',
   },
   trigger: {
+    // Read by the chevron below — StyleX has no child selectors, so the
+    // trigger's [data-popup-open] state travels via a custom property.
+    // No `default` here: StyleX emits it unlayered, beating the layered
+    // [data-*] rule; the chevron's var() fallback covers the closed state.
+    '--navigation-menu-chevron-rotation': {
+      default: null,
+      '[data-popup-open]': '180deg',
+    },
     alignItems: 'center',
     backgroundColor: {
       default: 'transparent',
       ':hover': colors.muted,
+      '[data-popup-open]': `color-mix(in srgb, ${colors.muted} 50%, transparent)`,
     },
     borderRadius: radius.lg,
     borderStyle: 'none',
@@ -230,10 +218,6 @@ const styles = stylex.create({
     userSelect: 'none',
     width: 'max-content',
   },
-  triggerOpen: {
-    '--navigation-menu-chevron-rotation': '180deg',
-    backgroundColor: `color-mix(in srgb, ${colors.muted} 50%, transparent)`,
-  },
   triggerChevron: {
     marginTop: '1px',
     transform: 'rotate(var(--navigation-menu-chevron-rotation, 0deg))',
@@ -248,6 +232,7 @@ const styles = stylex.create({
     backgroundColor: {
       default: 'transparent',
       ':hover': colors.muted,
+      '[data-active]': `color-mix(in srgb, ${colors.muted} 50%, transparent)`,
     },
     borderRadius: radius.md,
     color: colors.foreground,
@@ -264,9 +249,6 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: 'background-color',
   },
-  linkActive: {
-    backgroundColor: `color-mix(in srgb, ${colors.muted} 50%, transparent)`,
-  },
   positioner: {
     height: 'var(--positioner-height)',
     maxWidth: 'var(--available-width)',
@@ -281,19 +263,23 @@ const styles = stylex.create({
     borderRadius: radius.lg,
     color: colors.popoverForeground,
     height: 'var(--popup-height)',
-    opacity: 1,
+    opacity: {
+      default: 1,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     outline: 'none',
     position: 'relative',
-    transform: 'scale(1)',
+    transform: {
+      default: 'scale(1)',
+      '[data-starting-style]': 'scale(0.97)',
+      '[data-ending-style]': 'scale(0.97)',
+    },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.slow,
     transitionProperty: 'opacity, transform, width, height',
     transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
     width: 'var(--popup-width)',
-  },
-  popupClosed: {
-    opacity: 0,
-    transform: 'scale(0.97)',
   },
   viewport: {
     height: '100%',

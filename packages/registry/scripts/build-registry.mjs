@@ -160,7 +160,7 @@ const items = [
   await libItem(
     'utils',
     'StyleX utilities',
-    'stateProps: adapter mapping Base UI state to conditional StyleX styles.',
+    'ring(): box-shadow edge recipe for popups (borders shift Base UI positioning).',
     ['stylex-utils.ts']
   ),
   await libItem(

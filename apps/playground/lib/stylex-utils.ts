@@ -39,33 +39,8 @@ export const ring = ({
 }: RingOptions = {}) =>
   recipes.boxShadow(`0 0 0 ${width} ${color}${drop ? `, ${drop}` : ''}`);
 
-/**
- * Adapter between StyleX and Base UI's state-driven styling.
- *
- * Base UI parts accept `className`/`style` as functions of the part's state
- * (checked, open, highlighted, ...). StyleX has no attribute selectors, so
- * state variants are expressed as conditional styles resolved per state:
- *
- *   <Switch.Root
- *     {...stateProps((s) => [styles.root, s.checked && styles.checked, style])}
- *   />
- */
-// Accepts compiled style objects too (not just the StyleXStyles type): some
-// valid styles — CSS custom properties, string-typed consts on number-typed
-// properties like zIndex — don't satisfy StyleXStyles even though
-// stylex.props merges them fine.
-type StatePropsStyle =
-  | stylex.StyleXStyles
-  | Readonly<Record<string, unknown>>
-  | false
-  | null
-  | undefined;
-
-export function stateProps<State>(
-  resolve: (state: State) => ReadonlyArray<StatePropsStyle>
-) {
-  return {
-    className: (state: State) => stylex.props(...(resolve(state) as any)).className ?? '',
-    style: (state: State) => stylex.props(...(resolve(state) as any)).style ?? {},
-  };
-}
+// Base UI state styling needs no JS adapter: since StyleX 0.18, attribute
+// selectors are valid condition keys, and Base UI mirrors every state as a
+// data attribute — style it inline:
+//
+//   backgroundColor: { default: 'transparent', '[data-highlighted]': colors.accent }

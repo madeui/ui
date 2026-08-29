@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -53,15 +52,6 @@ export function ToastProvider(
   return <BaseToast.Provider toastManager={toastManager} {...props} />;
 }
 
-type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
-
-interface ToastRootState {
-  transitionStatus: TransitionStatus;
-  expanded: boolean;
-  limited: boolean;
-  swiping: boolean;
-}
-
 function ToastList({
   swipeDirection,
 }: {
@@ -75,15 +65,7 @@ function ToastList({
       key={t.id}
       toast={t}
       swipeDirection={swipeDirection}
-      {...stateProps((s: ToastRootState) => [
-        styles.root,
-        s.expanded && styles.rootExpanded,
-        (s.transitionStatus === 'starting' ||
-          s.transitionStatus === 'ending') &&
-          styles.rootClosed,
-        s.swiping && styles.rootSwiping,
-        s.limited && styles.rootLimited,
-      ])}
+      {...stylex.props(styles.root)}
     >
       <div {...stylex.props(styles.content)}>
         <div {...stylex.props(styles.text)}>
@@ -163,37 +145,39 @@ const styles = stylex.create({
     color: colors.popoverForeground,
     display: 'flex',
     fontFamily: font.sans,
+    // Behind-card content fades in when the stack expands (read by .content).
+    '--toast-content-visible': { default: null, '[data-expanded]': '1' },
     // All toasts share the frontmost height while collapsed so the stack
     // reads as one card with edges peeking out.
-    height: 'var(--toast-frontmost-height)',
-    opacity: 1,
+    height: {
+      default: 'var(--toast-frontmost-height)',
+      '[data-expanded]': 'var(--toast-height)',
+    },
+    // [data-limited]: over the provider's limit — kept mounted, hidden by us.
+    opacity: {
+      default: 1,
+      '[data-limited]': 0,
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     overflow: 'hidden',
     padding: space.s4,
     position: 'absolute',
     right: 0,
-    transform: `translateX(var(--toast-swipe-movement-x, 0px)) translateY(calc(var(--toast-swipe-movement-y, 0px) + min(var(--toast-index), 10) * -1 * var(--toast-gap))) scale(calc(max(0.8, 1 - var(--toast-index) * 0.05)))`,
+    // Later conditions win at equal specificity: the closed pose overrides
+    // the expanded/collapsed stack pose while entering or leaving.
+    transform: {
+      default: `translateX(var(--toast-swipe-movement-x, 0px)) translateY(calc(var(--toast-swipe-movement-y, 0px) + min(var(--toast-index), 10) * -1 * var(--toast-gap))) scale(calc(max(0.8, 1 - var(--toast-index) * 0.05)))`,
+      '[data-expanded]': `translateX(var(--toast-swipe-movement-x, 0px)) translateY(calc(var(--toast-swipe-movement-y, 0px) - var(--toast-offset-y) - var(--toast-index) * var(--toast-gap)))`,
+      '[data-starting-style]': `translateY(calc(100% + ${space.s4}))`,
+      '[data-ending-style]': `translateY(calc(100% + ${space.s4}))`,
+    },
     transformOrigin: 'center bottom',
-    transitionDuration: duration.slow,
+    transitionDuration: { default: duration.slow, '[data-swiping]': '0s' },
     transitionProperty: 'transform, opacity, height',
     transitionTimingFunction: stackEase,
     width: '100%',
     zIndex: `calc(${z.toast} - var(--toast-index))`,
-  },
-  rootExpanded: {
-    '--toast-content-visible': '1',
-    height: 'var(--toast-height)',
-    transform: `translateX(var(--toast-swipe-movement-x, 0px)) translateY(calc(var(--toast-swipe-movement-y, 0px) - var(--toast-offset-y) - var(--toast-index) * var(--toast-gap)))`,
-  },
-  rootClosed: {
-    opacity: 0,
-    transform: `translateY(calc(100% + ${space.s4}))`,
-  },
-  rootSwiping: {
-    transitionDuration: '0s',
-  },
-  // Over the provider's limit: kept mounted by Base UI, hidden by us.
-  rootLimited: {
-    opacity: 0,
   },
   content: {
     alignItems: 'flex-start',

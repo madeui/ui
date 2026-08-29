@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import * as stylex from '@stylexjs/stylex';
 
-import { stateProps } from '@/lib/stylex-utils';
 import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -19,17 +18,7 @@ export interface CheckboxProps
 
 export function Checkbox({ style, ...props }: CheckboxProps) {
   return (
-    <BaseCheckbox.Root
-      {...props}
-      {...stateProps(
-        (s: { checked: boolean; indeterminate: boolean; disabled: boolean }) => [
-          styles.root,
-          (s.checked || s.indeterminate) && styles.rootChecked,
-          s.disabled && styles.rootDisabled,
-          style,
-        ]
-      )}
-    >
+    <BaseCheckbox.Root {...props} {...stylex.props(styles.root, style)}>
       <BaseCheckbox.Indicator
         render={(indicatorProps, state) => (
           <span {...indicatorProps} {...stylex.props(styles.indicator)}>
@@ -60,8 +49,16 @@ export function Checkbox({ style, ...props }: CheckboxProps) {
 const styles = stylex.create({
   root: {
     alignItems: 'center',
-    backgroundColor: colors.background,
-    borderColor: colors.input,
+    backgroundColor: {
+      default: colors.background,
+      '[data-checked]': colors.primary,
+      '[data-indeterminate]': colors.primary,
+    },
+    borderColor: {
+      default: colors.input,
+      '[data-checked]': colors.primary,
+      '[data-indeterminate]': colors.primary,
+    },
     borderRadius: radius.sm,
     borderStyle: 'solid',
     borderWidth: stroke.border,
@@ -85,14 +82,6 @@ const styles = stylex.create({
       insetInline: `calc(-1 * ${space.s3})`,
       position: 'absolute',
     },
-  },
-  rootChecked: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  rootDisabled: {
-    cursor: 'not-allowed',
-    opacity: 0.5,
   },
   indicator: {
     alignItems: 'center',
