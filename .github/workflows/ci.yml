@@ -26,19 +26,18 @@ jobs:
   playground:
     name: Playground typecheck + build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/playground
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: apps/playground/package-lock.json
-      - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npx next build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter playground exec tsc --noEmit
+      - run: pnpm --filter playground build
 
   docs:
     name: Docs build
