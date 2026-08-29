@@ -6,7 +6,7 @@ import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
-import { space, fontSize, fontWeight, lineHeight, z, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -229,8 +229,11 @@ const styles = stylex.create({
     },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
-    transitionProperty: 'opacity, transform',
-    transitionTimingFunction: 'ease',
+    transitionProperty: {
+      default: 'opacity, transform',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
     width: 'var(--anchor-width)',
   },
   list: {

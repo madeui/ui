@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ScrollArea as BaseScrollArea } from '@base-ui/react/scroll-area';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, stroke } from '@/lib/constants.stylex';
+import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -66,10 +66,25 @@ const styles = stylex.create({
     },
     width: '100%',
   },
+  // Overlay scrollbar: hidden at rest, fades in while hovering or scrolling.
+  // The delay only applies to the fade-out, so appearing is immediate but
+  // disappearing waits a beat after the pointer leaves.
   scrollbar: {
     display: 'flex',
+    opacity: {
+      default: 0,
+      '[data-hovering]': 1,
+      '[data-scrolling]': 1,
+    },
     padding: stroke.border,
     touchAction: 'none',
+    transitionDelay: {
+      default: duration.slow,
+      '[data-hovering]': '0s',
+      '[data-scrolling]': '0s',
+    },
+    transitionDuration: duration.fast,
+    transitionProperty: 'opacity',
     userSelect: 'none',
   },
   thumb: {

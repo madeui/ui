@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, z, duration, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, z, duration, easing, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 // Instant tooltips by default (Base UI's own default is 600ms).
@@ -105,8 +105,11 @@ const styles = stylex.create({
     },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
-    transitionProperty: 'opacity, transform',
-    transitionTimingFunction: 'ease',
+    transitionProperty: {
+      default: 'opacity, transform',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
   },
   // A rotated square, half tucked under the popup; Base UI positions it along
   // the anchor axis, we offset the cross axis per [data-side] — the rotated

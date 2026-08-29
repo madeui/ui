@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Collapsible as BaseCollapsible } from '@base-ui/react/collapsible';
 import * as stylex from '@stylexjs/stylex';
 
-import { duration } from '@/lib/constants.stylex';
+import { duration, easing } from '@/lib/constants.stylex';
 
 // Behavior parts: bring your own trigger (e.g.
 // render={<Button />}) and content styles. The panel animates open/close.
@@ -37,8 +37,11 @@ const styles = stylex.create({
       '[data-ending-style]': 0,
     },
     overflow: 'hidden',
-    transitionDuration: duration.fast,
+    transitionDuration: {
+      default: duration.fast,
+      '@media (prefers-reduced-motion: reduce)': '0s',
+    },
     transitionProperty: 'height',
-    transitionTimingFunction: 'ease-out',
+    transitionTimingFunction: easing.out,
   },
 });

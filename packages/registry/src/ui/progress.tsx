@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Progress as BaseProgress } from '@base-ui/react/progress';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, fontWeight, duration } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, duration, easing } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -104,6 +104,7 @@ const styles = stylex.create({
     height: '100%',
     transitionDuration: duration.fast,
     transitionProperty: 'width',
+    transitionTimingFunction: easing.out,
   },
   label: {
     fontSize: fontSize.sm,

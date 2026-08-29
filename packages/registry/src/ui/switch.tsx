@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, duration, stroke } from '@/lib/constants.stylex';
+import { space, duration, easing, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 export type SwitchSize = 'sm' | 'md';
@@ -57,7 +57,11 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     borderRadius: radius.full,
     transitionDuration: duration.fast,
-    transitionProperty: 'transform',
+    transitionProperty: {
+      default: 'transform',
+      '@media (prefers-reduced-motion: reduce)': 'none',
+    },
+    transitionTimingFunction: easing.inOut,
   },
 });
 

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, shadow, radius } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -126,9 +126,9 @@ const styles = stylex.create({
       '[data-ending-style]': 0,
     },
     position: 'fixed',
-    transitionDuration: duration.fast,
+    transitionDuration: duration.normal,
     transitionProperty: 'opacity',
-    transitionTimingFunction: 'ease',
+    transitionTimingFunction: easing.out,
     zIndex: z.popup,
   },
   content: {
@@ -147,9 +147,12 @@ const styles = stylex.create({
       '[data-ending-style]': 0,
     },
     position: 'fixed',
-    transitionDuration: duration.fast,
-    transitionProperty: 'opacity, transform',
-    transitionTimingFunction: 'ease',
+    transitionDuration: duration.normal,
+    transitionProperty: {
+      default: 'opacity, transform',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
     zIndex: z.popup,
   },
   close: {

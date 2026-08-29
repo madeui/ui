@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, duration, easing, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -139,7 +139,11 @@ const styles = stylex.create({
     pointerEvents: 'none',
     transform: 'rotate(var(--accordion-trigger-rotation, 0deg))',
     transitionDuration: duration.fast,
-    transitionProperty: 'transform',
+    transitionProperty: {
+      default: 'transform',
+      '@media (prefers-reduced-motion: reduce)': 'none',
+    },
+    transitionTimingFunction: easing.out,
   },
   // Height transition through Base UI's measured --accordion-panel-height;
   // the starting/ending frames pin it to 0 so both open AND close animate
@@ -153,9 +157,12 @@ const styles = stylex.create({
     },
     lineHeight: lineHeight.normal,
     overflow: 'hidden',
-    transitionDuration: duration.fast,
+    transitionDuration: {
+      default: duration.fast,
+      '@media (prefers-reduced-motion: reduce)': '0s',
+    },
     transitionProperty: 'height',
-    transitionTimingFunction: 'ease-out',
+    transitionTimingFunction: easing.out,
   },
   inner: {
     paddingBottom: space.s25,

@@ -47,8 +47,8 @@ Companion documents:
    Spacing comes only from the `space` scale. Color comes only from semantic
    tokens (`colors.foreground`, `colors.mutedForeground`, `colors.accent`, ...)
    — never raw palette values scattered in components. Radius, typography,
-   z-index, shadow, duration, stroke widths, container widths come only from
-   their scales. Do not mix `padding: space.s4` in one file and
+   z-index, shadow, duration, easing curves, stroke widths, container widths
+   come only from their scales. Do not mix `padding: space.s4` in one file and
    `paddingInline: '1rem'` in another.
 
 4. **Styles are named objects, not inline inventions.**
@@ -128,7 +128,8 @@ If a check fails, fix it — do not explain the violation and leave it.
 - **SVG geometry attributes** (`viewBox`, `path d`, icon `width`/`height`) are
   not CSS and stay literal.
 - **Motion micro-values** inside keyframes (`scale(0.97)`) stay literal; the
-  duration comes from the `duration` scale.
+  duration and timing function come from the `duration` and `easing` scales —
+  never inline a `cubic-bezier(...)` in component styles.
 
 ## Doctrine
 

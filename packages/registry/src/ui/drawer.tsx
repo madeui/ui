@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -162,8 +162,6 @@ export function DrawerDescription({
   );
 }
 
-const drawerEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
-
 const styles = stylex.create({
   overlay: {
     backgroundColor: colors.overlay,
@@ -178,7 +176,7 @@ const styles = stylex.create({
     position: 'fixed',
     transitionDuration: duration.slow,
     transitionProperty: 'opacity',
-    transitionTimingFunction: drawerEase,
+    transitionTimingFunction: easing.drawer,
     userSelect: 'none',
     zIndex: z.popup,
   },
@@ -207,8 +205,11 @@ const styles = stylex.create({
     // The transform (swipe/snap vars + per-direction closed pose) lives in
     // `directions` below.
     transitionDuration: { default: duration.slow, '[data-swiping]': '0s' },
-    transitionProperty: 'transform, opacity',
-    transitionTimingFunction: drawerEase,
+    transitionProperty: {
+      default: 'transform, opacity',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.drawer,
     userSelect: 'none',
     willChange: 'transform',
     zIndex: z.popup,

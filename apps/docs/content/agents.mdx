@@ -17,8 +17,8 @@ Every component keeps the same shape:
 - A `style?: StyleXStyles` prop, merged **last** via `stylex.props(...)` —
   caller overrides always win. No `className`, ever.
 - All values come from tokens: colors/radius/fonts/shadows from
-  `lib/tokens.stylex.ts` (themable), spacing/type/z/duration scales from
-  `lib/constants.stylex.ts`. No magic numbers or raw colors in styles.
+  `lib/tokens.stylex.ts` (themable), spacing/type/z/duration/easing scales
+  from `lib/constants.stylex.ts`. No magic numbers or raw colors in styles.
 - Base UI state (open/checked/highlighted/transitionStatus) is styled with
   attribute-selector condition keys — the equivalent of Tailwind's
   `data-[state=open]:` selectors, declared inside `stylex.create`:

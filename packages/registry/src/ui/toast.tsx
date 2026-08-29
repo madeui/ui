@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, lineHeight, fontWeight, z, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 /** The manager behind the imperative `toast` API — pass to `useToast` consumers if needed. */
@@ -119,7 +119,6 @@ export function Toaster({
   );
 }
 
-const stackEase = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 const styles = stylex.create({
   viewport: {
@@ -174,8 +173,11 @@ const styles = stylex.create({
     },
     transformOrigin: 'center bottom',
     transitionDuration: { default: duration.slow, '[data-swiping]': '0s' },
-    transitionProperty: 'transform, opacity, height',
-    transitionTimingFunction: stackEase,
+    transitionProperty: {
+      default: 'transform, opacity, height',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
     width: '100%',
     zIndex: `calc(${z.toast} - var(--toast-index))`,
   },

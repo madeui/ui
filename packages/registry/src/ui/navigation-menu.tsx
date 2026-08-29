@@ -6,7 +6,7 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
-import { space, fontSize, fontWeight, lineHeight, z, duration, stroke } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -223,6 +223,7 @@ const styles = stylex.create({
     transform: 'rotate(var(--navigation-menu-chevron-rotation, 0deg))',
     transitionDuration: duration.slow,
     transitionProperty: 'transform',
+    transitionTimingFunction: easing.out,
   },
   content: {
     padding: space.s1,
@@ -253,8 +254,13 @@ const styles = stylex.create({
     height: 'var(--positioner-height)',
     maxWidth: 'var(--available-width)',
     transitionDuration: duration.slow,
-    transitionProperty: 'top, left, right, bottom',
-    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    transitionProperty: {
+      default: 'top, left, right, bottom',
+      '@media (prefers-reduced-motion: reduce)': 'none',
+    },
+    // Must match the popup's curve — positioner and popup move as one
+    // surface during the trigger-to-trigger morph.
+    transitionTimingFunction: easing.out,
     width: 'var(--positioner-width)',
     zIndex: z.popup,
   },
@@ -277,8 +283,11 @@ const styles = stylex.create({
     },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.slow,
-    transitionProperty: 'opacity, transform, width, height',
-    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    transitionProperty: {
+      default: 'opacity, transform, width, height',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
     width: 'var(--popup-width)',
   },
   viewport: {

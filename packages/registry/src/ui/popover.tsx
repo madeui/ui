@@ -6,7 +6,7 @@ import { Popover as BasePopover } from '@base-ui/react/popover';
 import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
-import { space, fontSize, lineHeight, z, duration, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, z, duration, easing, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 export const Popover = BasePopover.Root;
@@ -97,8 +97,11 @@ const styles = stylex.create({
     },
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: duration.fast,
-    transitionProperty: 'opacity, transform',
-    transitionTimingFunction: 'ease',
+    transitionProperty: {
+      default: 'opacity, transform',
+      '@media (prefers-reduced-motion: reduce)': 'opacity',
+    },
+    transitionTimingFunction: easing.out,
     width: container.sm,
   },
 });
