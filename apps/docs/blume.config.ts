@@ -103,10 +103,12 @@ const stylexIntegration = {
 };
 
 export default defineConfig({
-  title: 'ui-lib',
+  title: 'madeui',
   description:
     'Base UI + StyleX components you own. Agent-friendly by design.',
   content: { root: 'content' },
+  // Absolute origin for sitemap, canonicals, and the changelog RSS feed.
+  deployment: { site: 'https://madeui.com' },
   navigation: {
     // href lands on the generated timeline index; without it the tab would
     // resolve to the newest entry (the changelog index isn't a content page).

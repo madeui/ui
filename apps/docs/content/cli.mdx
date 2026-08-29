@@ -1,18 +1,18 @@
 ---
 title: CLI
-description: "ui-lib init, add, and list — plus shadcn CLI compatibility."
+description: "madeui init, add, and list — plus shadcn CLI compatibility."
 sidebar:
   order: 4
 ---
 
-The `ui-lib` CLI sets up the StyleX build and copies components into your
+The `madeui` CLI sets up the StyleX build and copies components into your
 project. The registry is also shadcn-compatible, so `npx shadcn@latest add
-@ui-lib/<name>` works for installs once your build is set up.
+@madeui/<name>` works for installs once your build is set up.
 
 ## init
 
 ```bash
-npx ui-lib init
+npx madeui init
 ```
 
 Sets up the current app:
@@ -29,7 +29,7 @@ Sets up the current app:
 - Appends a component-conventions section to `AGENTS.md` so coding agents
   follow the house rules (tokens over literals, variants over escapes,
   `[data-*]` condition keys for Base UI state).
-- Writes `ui-lib.json` with your paths and registry.
+- Writes `madeui.json` with your paths and registry.
 
 | Option | Description |
 | --- | --- |
@@ -39,7 +39,7 @@ Sets up the current app:
 ## add
 
 ```bash
-npx ui-lib add button dialog select
+npx madeui add button dialog select
 ```
 
 Copies components into `components/ui/`, resolving registry dependencies
@@ -59,7 +59,7 @@ asks (or use `--diff` first).
 ## list
 
 ```bash
-npx ui-lib list
+npx madeui list
 ```
 
 Lists every item in the configured registry with its description.
@@ -69,9 +69,9 @@ Lists every item in the configured registry with its description.
 Every component page shows the equivalent install:
 
 ```bash
-npx shadcn@latest add @ui-lib/button
+npx shadcn@latest add @madeui/button
 ```
 
 The shadcn CLI handles the copy + npm dependencies; it does not set up the
-StyleX build — run `ui-lib init` (or the [manual setup](/installation)) once
+StyleX build — run `madeui init` (or the [manual setup](/installation)) once
 first.

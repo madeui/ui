@@ -8,7 +8,7 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme"
+    "@madeui/theme"
   ],
   "files": [
     {

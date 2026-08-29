@@ -8,9 +8,8 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'public', 'r');
 
-const REGISTRY_NAME = 'ui-lib';
-// Placeholder until the registry is hosted; local installs use file paths.
-const HOMEPAGE = 'https://example.com';
+const REGISTRY_NAME = 'madeui';
+const HOMEPAGE = 'https://madeui.com';
 
 const DESCRIPTIONS = {
   accordion: 'Vertically stacked collapsible panels built on Base UI Accordion.',
@@ -117,13 +116,13 @@ const uiItem = async (name) => {
   if (content.includes("from '@base-ui/react/")) {
     dependencies.unshift('@base-ui/react');
   }
-  const registryDependencies = ['@ui-lib/theme'];
+  const registryDependencies = ['@madeui/theme'];
   if (content.includes("'@/lib/stylex-utils'")) {
-    registryDependencies.push('@ui-lib/utils');
+    registryDependencies.push('@madeui/utils');
   }
   // Components composed from other components (e.g. pagination → button).
   for (const match of content.matchAll(/from '@\/components\/ui\/([a-z-]+)'/g)) {
-    registryDependencies.push(`@ui-lib/${match[1]}`);
+    registryDependencies.push(`@madeui/${match[1]}`);
   }
   if (!DESCRIPTIONS[name]) {
     throw new Error(`Missing description for "${name}" in DESCRIPTIONS`);

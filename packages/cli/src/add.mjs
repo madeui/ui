@@ -39,7 +39,7 @@ export async function add(cwd, names, flags) {
   const config = loadConfig(cwd);
   if (!config) {
     throw new Error(
-      "no ui-lib.json found — run `ui-lib init` first (or create one with a `registry` field)."
+      "no madeui.json found — run `madeui init` first (or create one with a `registry` field)."
     );
   }
   const registry = flags.registry ?? config.registry;

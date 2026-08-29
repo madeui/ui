@@ -9,8 +9,8 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/toggle"
+    "@madeui/theme",
+    "@madeui/toggle"
   ],
   "files": [
     {

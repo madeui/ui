@@ -24,7 +24,7 @@ export default function DialogCustom() {
           <DialogTitle>Rename project</DialogTitle>
           <DialogDescription>Give your project a new name.</DialogDescription>
         </DialogHeader>
-        <Input defaultValue="ui-lib" />
+        <Input defaultValue="madeui" />
         <DialogFooter>
           <DialogClose render={<Button variant="ghost" />}>Cancel</DialogClose>
           <DialogClose render={<Button />}>Save</DialogClose>

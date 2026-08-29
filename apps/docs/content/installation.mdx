@@ -7,14 +7,14 @@ sidebar:
 
 Components are copied into your project as source, so your app needs to be
 able to **compile StyleX** — that's the only setup beyond a normal React app.
-The `ui-lib init` command does it for you; the manual steps are below it for
+The `madeui init` command does it for you; the manual steps are below it for
 reference.
 
 ## With the CLI (recommended)
 
 ```bash
-npx ui-lib init
-npx ui-lib add button dialog select
+npx madeui init
+npx madeui add button dialog select
 ```
 
 `init` detects your framework (Next.js or Vite), wires the StyleX build,
@@ -27,7 +27,7 @@ Components are also installable with the shadcn CLI — the registry is
 shadcn-compatible:
 
 ```bash
-npx shadcn@latest add @ui-lib/button
+npx shadcn@latest add @madeui/button
 ```
 
 ## Next.js (manual)
@@ -166,4 +166,4 @@ Components import tokens and utilities via `@/lib/...` and each other via
 
 - [Customization](/customization) — tokens, themes, the `style` prop.
 - [Dark mode](/dark-mode) — apply the dark theme without a flash.
-- [CLI reference](/cli) — everything `ui-lib init`, `add`, and `list` do.
+- [CLI reference](/cli) — everything `madeui init`, `add`, and `list` do.

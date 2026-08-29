@@ -10,7 +10,7 @@
     "cssVariables": false
   },
   "registries": {
-    "@ui-lib": "http://localhost:8787/r/{name}.json"
+    "@madeui": "http://localhost:8787/r/{name}.json"
   },
   "aliases": {
     "components": "@/components",

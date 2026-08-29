@@ -8,8 +8,8 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/separator"
+    "@madeui/theme",
+    "@madeui/separator"
   ],
   "files": [
     {

@@ -1,10 +1,10 @@
 {
-  "name": "@ui-lib/cli",
+  "name": "@madeui/cli",
   "version": "0.1.0",
-  "description": "CLI for the ui-lib registry: init (StyleX build setup) and add (install components).",
+  "description": "CLI for the madeui registry: init (StyleX build setup) and add (install components).",
   "type": "module",
   "bin": {
-    "ui-lib": "src/index.mjs"
+    "madeui": "src/index.mjs"
   },
   "files": [
     "src"

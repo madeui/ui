@@ -4,7 +4,7 @@ import path from 'node:path';
 import { execa } from 'execa';
 import kleur from 'kleur';
 
-export const CONFIG_FILE = 'ui-lib.json';
+export const CONFIG_FILE = 'madeui.json';
 
 export const DEFAULT_CONFIG = {
   registry: 'https://example.com/r',

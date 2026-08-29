@@ -73,10 +73,10 @@ const GLOBALS_CSS = `@layer base;
 }
 `;
 
-const AGENTS_MD = `# UI components (ui-lib)
+const AGENTS_MD = `# UI components (madeui)
 
-The components under the configured \`ui\` path (see ui-lib.json) are owned by
-this project (installed via \`ui-lib add <name>\`, edit freely). They wrap
+The components under the configured \`ui\` path (see madeui.json) are owned by
+this project (installed via \`madeui add <name>\`, edit freely). They wrap
 Base UI primitives and are styled with StyleX (compile-time CSS).
 
 ## Rules
@@ -130,7 +130,7 @@ function writeIfAbsent(cwd, file, content, changed) {
 
 /**
  * Finds (or creates) the global CSS file and ensures it starts with the
- * layered reset + @stylex marker. Returns the file path for ui-lib.json —
+ * layered reset + @stylex marker. Returns the file path for madeui.json —
  * detection happens once here, every later run reads the config instead.
  */
 function ensureGlobalsCss(cwd, candidates, fallback, changed) {
@@ -228,5 +228,5 @@ export async function init(cwd, flags) {
     console.log(kleur.yellow('\nManual steps (could not patch safely):'));
     for (const step of instructions) console.log(`  • ${step}`);
   }
-  console.log(`\nDone. Add components with: ${kleur.bold('ui-lib add button dialog …')}`);
+  console.log(`\nDone. Add components with: ${kleur.bold('madeui add button dialog …')}`);
 }

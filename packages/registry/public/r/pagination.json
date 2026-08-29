@@ -8,8 +8,8 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/button"
+    "@madeui/theme",
+    "@madeui/button"
   ],
   "files": [
     {

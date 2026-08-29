@@ -8,10 +8,10 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/button",
-    "@ui-lib/input",
-    "@ui-lib/textarea"
+    "@madeui/theme",
+    "@madeui/button",
+    "@madeui/input",
+    "@madeui/textarea"
   ],
   "files": [
     {

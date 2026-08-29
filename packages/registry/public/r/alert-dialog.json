@@ -9,9 +9,9 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/utils",
-    "@ui-lib/button"
+    "@madeui/theme",
+    "@madeui/utils",
+    "@madeui/button"
   ],
   "files": [
     {

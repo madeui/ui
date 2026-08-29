@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "ui-lib",
-  "homepage": "https://example.com",
+  "name": "madeui",
+  "homepage": "https://madeui.com",
   "items": [
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
@@ -75,7 +75,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -95,7 +95,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -116,9 +116,9 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils",
-        "@ui-lib/button"
+        "@madeui/theme",
+        "@madeui/utils",
+        "@madeui/button"
       ],
       "files": [
         {
@@ -138,7 +138,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -159,8 +159,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -181,8 +181,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -203,7 +203,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -223,7 +223,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -244,7 +244,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -264,8 +264,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/separator"
+        "@madeui/theme",
+        "@madeui/separator"
       ],
       "files": [
         {
@@ -285,7 +285,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -306,7 +306,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -327,7 +327,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -348,7 +348,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -369,8 +369,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -391,8 +391,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/dialog"
+        "@madeui/theme",
+        "@madeui/dialog"
       ],
       "files": [
         {
@@ -413,8 +413,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -435,8 +435,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -457,7 +457,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -478,8 +478,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -499,7 +499,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -520,8 +520,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/separator"
+        "@madeui/theme",
+        "@madeui/separator"
       ],
       "files": [
         {
@@ -542,7 +542,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -563,8 +563,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -585,7 +585,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -605,10 +605,10 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/button",
-        "@ui-lib/input",
-        "@ui-lib/textarea"
+        "@madeui/theme",
+        "@madeui/button",
+        "@madeui/input",
+        "@madeui/textarea"
       ],
       "files": [
         {
@@ -629,7 +629,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -650,8 +650,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/separator"
+        "@madeui/theme",
+        "@madeui/separator"
       ],
       "files": [
         {
@@ -671,7 +671,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -691,7 +691,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -712,8 +712,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/dropdown-menu"
+        "@madeui/theme",
+        "@madeui/dropdown-menu"
       ],
       "files": [
         {
@@ -734,7 +734,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -755,8 +755,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -777,7 +777,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -797,8 +797,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/button"
+        "@madeui/theme",
+        "@madeui/button"
       ],
       "files": [
         {
@@ -819,8 +819,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -841,7 +841,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -862,7 +862,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -883,7 +883,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -904,8 +904,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/utils"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -926,7 +926,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -947,7 +947,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -967,7 +967,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -988,7 +988,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1008,7 +1008,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1029,7 +1029,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1049,7 +1049,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1070,7 +1070,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1090,7 +1090,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1111,7 +1111,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1132,7 +1132,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1153,8 +1153,8 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme",
-        "@ui-lib/toggle"
+        "@madeui/theme",
+        "@madeui/toggle"
       ],
       "files": [
         {
@@ -1175,7 +1175,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {
@@ -1196,7 +1196,7 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@madeui/theme"
       ],
       "files": [
         {

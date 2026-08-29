@@ -9,8 +9,8 @@
     "@stylexjs/stylex"
   ],
   "registryDependencies": [
-    "@ui-lib/theme",
-    "@ui-lib/dropdown-menu"
+    "@madeui/theme",
+    "@madeui/dropdown-menu"
   ],
   "files": [
     {

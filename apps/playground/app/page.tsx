@@ -333,7 +333,7 @@ export default function Home() {
     <ToastProvider>
       <main {...stylex.props(styles.page)}>
         <div {...stylex.props(styles.headerRow)}>
-          <h1 {...stylex.props(styles.heading)}>ui-lib playground</h1>
+          <h1 {...stylex.props(styles.heading)}>madeui playground</h1>
           <div {...stylex.props(styles.headerActions)}>
             <Button
               variant="outline"
@@ -634,7 +634,7 @@ export default function Home() {
 
           <HoverCard>
             <HoverCardTrigger render={<Button variant="ghost" />}>
-              @ui-lib
+              @madeui
             </HoverCardTrigger>
             <HoverCardContent>
               Base UI + StyleX components you own.

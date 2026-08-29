@@ -21,7 +21,7 @@ const pkg = JSON.parse(
 const program = new Command();
 
 program
-  .name('ui-lib')
+  .name('madeui')
   .description('components you own, built on Base UI + StyleX')
   .version(pkg.version);
 
