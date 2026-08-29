@@ -21,24 +21,39 @@ const stylexIntegration = {
         // initial document only. Astro's ClientRouter swaps in a whole new
         // <head> on client-side navigation, dropping that tag — and no HMR
         // update fires to restore it, so components render unstyled until a
-        // hard reload. Refetch and re-mount the tag after every swap.
+        // hard reload. Keep the CSS in memory and stamp it onto the INCOMING
+        // document at astro:before-swap (synchronously, so no unstyled
+        // frame — same pattern as the dark-theme fix), then refetch after
+        // each navigation to pick up newly transformed modules.
         injectScript(
           'page',
           `if (import.meta.env.DEV) {
-  const ensureStylexCss = async () => {
+  let lastStylexCss = '';
+  const mountStylexCss = (doc, css) => {
+    let el = doc.getElementById('__stylex_virtual__');
+    if (!el) {
+      el = doc.createElement('style');
+      el.id = '__stylex_virtual__';
+      doc.head.appendChild(el);
+    }
+    if (css && el.textContent !== css) el.textContent = css;
+  };
+  const refreshStylexCss = async () => {
     try {
       const css = await (await fetch('/virtual:stylex.css')).text();
-      let el = document.getElementById('__stylex_virtual__');
-      if (!el) {
-        el = document.createElement('style');
-        el.id = '__stylex_virtual__';
-        document.head.appendChild(el);
+      if (css) {
+        lastStylexCss = css;
+        mountStylexCss(document, css);
       }
-      if (css && el.textContent !== css) el.textContent = css;
     } catch {}
   };
-  document.addEventListener('astro:after-swap', ensureStylexCss);
-  ensureStylexCss();
+  document.addEventListener('astro:before-swap', (event) => {
+    const current = document.getElementById('__stylex_virtual__');
+    if (current?.textContent) lastStylexCss = current.textContent;
+    mountStylexCss(event.newDocument, lastStylexCss);
+  });
+  document.addEventListener('astro:page-load', refreshStylexCss);
+  refreshStylexCss();
 }`
         );
       }
