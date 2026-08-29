@@ -6,7 +6,7 @@ import { Select as BaseSelect } from '@base-ui/react/select';
 import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
-import { space, fontSize, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
@@ -164,11 +164,49 @@ export function SelectItem({
   );
 }
 
+export function SelectLabel({
+  style,
+  ...props
+}: Omit<
+  React.ComponentPropsWithoutRef<typeof BaseSelect.GroupLabel>,
+  'className' | 'style'
+> &
+  StyleProp) {
+  return (
+    <BaseSelect.GroupLabel {...props} {...stylex.props(styles.label, style)} />
+  );
+}
+
+export function SelectSeparator({
+  style,
+  ...props
+}: Omit<
+  React.ComponentPropsWithoutRef<typeof BaseSelect.Separator>,
+  'className' | 'style'
+> &
+  StyleProp) {
+  return (
+    <BaseSelect.Separator {...props} {...stylex.props(styles.separator, style)} />
+  );
+}
+
 const styles = stylex.create({
+  label: {
+    color: colors.mutedForeground,
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    paddingBlock: space.s15,
+    paddingInline: space.s3,
+  },
+  separator: {
+    backgroundColor: colors.border,
+    height: stroke.border,
+    marginBlock: space.s1,
+  },
   trigger: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderColor: colors.input,
+    borderColor: { default: colors.input, '[data-invalid]': colors.destructive },
     borderRadius: radius.md,
     borderStyle: 'solid',
     borderWidth: stroke.border,

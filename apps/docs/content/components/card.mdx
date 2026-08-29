@@ -16,6 +16,7 @@ npx shadcn@latest add @ui-lib/card
 ```tsx
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -31,14 +32,34 @@ import {
   <CardHeader>
     <CardTitle />
     <CardDescription />
+    <CardAction />
   </CardHeader>
   <CardContent />
   <CardFooter />
 </Card>
 ```
 
+## Action
+
+`CardAction` pins a slot (typically a button) to the top-right of `CardHeader`, spanning the title and description rows.
+
+<Component path="card-action" />
+
+## Small
+
+Set `size="sm"` on `Card` for tighter padding across the header, content, and footer.
+
+<Component path="card-small" />
+
 ## API reference
+
+### Card
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'md' \| 'sm'` | `'md'` | `sm` tightens the padding shared by `CardHeader`, `CardContent`, and `CardFooter`. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 ### Styling
 
-`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

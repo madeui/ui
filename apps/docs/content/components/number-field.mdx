@@ -27,6 +27,16 @@ import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
 
 `NumberFieldGroup` renders decrement / input / increment by default; pass children to compose them yourself (`NumberFieldDecrement`, `NumberFieldInput`, `NumberFieldIncrement`).
 
+## Min, max, and step
+
+<Component path="number-field-min-max-step" />
+
+## Formatted
+
+Pass `format` (`Intl.NumberFormatOptions`) to display the value as currency, a percentage, or any other `Intl.NumberFormat` style.
+
+<Component path="number-field-formatted" />
+
 ## API reference
 
 Built on [Base UI Number Field](https://base-ui.com/react/components/number-field). All props are forwarded to the Base UI `Root` (`value`, `min`, `max`, `step`, `format`, `snapOnStep`, …); see the [Base UI Number Field API reference](https://base-ui.com/react/components/number-field#api-reference). `NumberFieldScrubArea` / `NumberFieldScrubAreaCursor` are re-exported unstyled for pointer-scrubbing labels. Every part accepts a `style` prop (`StyleXStyles`, merged last).

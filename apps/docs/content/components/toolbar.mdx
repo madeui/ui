@@ -34,6 +34,12 @@ import {
 </Toolbar>
 ```
 
+## With a toggle group
+
+Compose a [`ToggleGroup`](/docs/components/toggle-group) directly in the toolbar — wrap each `ToggleGroupItem` in a `ToolbarButton` via `render` so it joins the toolbar's roving focus.
+
+<Component path="toolbar-with-toggle-group" />
+
 ## API reference
 
 Built on [Base UI Toolbar](https://base-ui.com/react/components/toolbar). The toolbar provides roving focus and arrow-key navigation; visuals come from the components you compose in via `render` (Button, Toggle, Input, …). `ToolbarButton`, `ToolbarLink`, and `ToolbarInput` are Base UI parts re-exported unstyled. All props are forwarded; see the [Base UI Toolbar API reference](https://base-ui.com/react/components/toolbar#api-reference).

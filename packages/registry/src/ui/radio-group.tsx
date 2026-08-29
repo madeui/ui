@@ -50,7 +50,11 @@ const styles = stylex.create({
   item: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderColor: { default: colors.input, '[data-checked]': colors.primary },
+    borderColor: {
+      default: colors.input,
+      '[data-checked]': colors.primary,
+      '[data-invalid]': colors.destructive,
+    },
     borderRadius: radius.full,
     borderStyle: 'solid',
     borderWidth: stroke.border,

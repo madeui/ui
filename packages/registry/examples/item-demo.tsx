@@ -15,7 +15,7 @@ import { container } from '@/lib/constants.stylex';
 
 export default function ItemDemo() {
   return (
-    <ItemGroup {...stylex.props(styles.group)}>
+    <ItemGroup style={styles.group}>
       <Item variant="outline">
         <ItemContent>
           <ItemTitle>Two-factor authentication</ItemTitle>

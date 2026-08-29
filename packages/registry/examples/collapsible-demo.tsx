@@ -21,7 +21,7 @@ export default function CollapsibleDemo() {
         </CollapsibleTrigger>
       </div>
       <div {...stylex.props(styles.repo)}>@radix-ui/primitives</div>
-      <CollapsibleContent {...stylex.props(styles.panel)}>
+      <CollapsibleContent style={styles.panel}>
         <div {...stylex.props(styles.repo)}>@base-ui/react</div>
         <div {...stylex.props(styles.repo)}>@stylexjs/stylex</div>
       </CollapsibleContent>

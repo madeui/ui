@@ -14,7 +14,14 @@ npx shadcn@latest add @ui-lib/avatar
 ## Usage
 
 ```tsx
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from '@/components/ui/avatar';
 ```
 
 ## Composition
@@ -23,6 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 <Avatar>
   <AvatarImage />
   <AvatarFallback />
+  <AvatarBadge />
 </Avatar>
 ```
 
@@ -36,6 +44,24 @@ The fallback renders while the image loads — or when it fails. Always provide 
 
 <Component path="avatar-fallback" />
 
+## Badge
+
+`AvatarBadge` anchors a status indicator to the bottom-right corner. Pass a small icon as children for something other than a plain dot.
+
+<Component path="avatar-badge" />
+
+## Group
+
+`AvatarGroup` overlaps its children with a `colors.background` ring separating each one.
+
+<Component path="avatar-group" />
+
+## Group count
+
+Add an `AvatarGroupCount` as the last child to show a "+N" overflow indicator.
+
+<Component path="avatar-group-count" />
+
 ## API reference
 
 Built on [Base UI Avatar](https://base-ui.com/react/components/avatar). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Avatar API reference](https://base-ui.com/react/components/avatar#api-reference) for the full list.
@@ -47,6 +73,13 @@ Built on [Base UI Avatar](https://base-ui.com/react/components/avatar). The tabl
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
+### AvatarGroupCount
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Matches the size of the avatars in the group. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
 ### Styling
 
-`AvatarImage`, `AvatarFallback` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`AvatarImage`, `AvatarFallback`, `AvatarBadge`, `AvatarGroup` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

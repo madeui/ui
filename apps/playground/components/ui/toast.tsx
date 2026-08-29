@@ -134,7 +134,9 @@ const styles = stylex.create({
     '--toast-gap': space.s2,
     alignItems: 'flex-start',
     backgroundColor: colors.popover,
-    borderColor: colors.border,
+    // Error toasts get a destructive accent; other types render neutrally
+    // (matches sonner's default look — no per-type colors without opt-in).
+    borderColor: { default: colors.border, '[data-type="error"]': colors.destructive },
     borderRadius: radius.md,
     borderStyle: 'solid',
     borderWidth: stroke.border,

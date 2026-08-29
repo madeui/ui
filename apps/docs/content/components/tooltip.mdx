@@ -39,6 +39,12 @@ import {
 
 <Component path="tooltip-sides" />
 
+## Disabled button
+
+Native `disabled` buttons don't fire pointer events, so the tooltip trigger has to be a wrapping element instead of the button itself.
+
+<Component path="tooltip-disabled-button" />
+
 ## API reference
 
 Built on [Base UI Tooltip](https://base-ui.com/react/components/tooltip). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Tooltip API reference](https://base-ui.com/react/components/tooltip#api-reference) for the full list.

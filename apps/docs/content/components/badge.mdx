@@ -23,11 +23,26 @@ import { Badge } from '@/components/ui/badge';
 
 <Component path="badge-variants" />
 
+## With icon
+
+<Component path="badge-icon" />
+
+## With spinner
+
+<Component path="badge-spinner" />
+
+## Link
+
+Pass a `render` element to render the badge as a different element, such as a link.
+
+<Component path="badge-link" />
+
 ## API reference
 
 ### Badge
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'destructive'` | `'primary'` | Visual style. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'primary'` | Visual style. |
+| `render` | `ReactElement \| (props, state) => ReactElement` | — | Renders the badge as a different element (e.g. an `<a>`) while keeping the badge styling. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

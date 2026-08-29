@@ -46,6 +46,28 @@ promise settles.
 
 <Component path="toast-duration" />
 
+## Types
+
+`toast.success` and `toast.error` set a `type` on the toast (mirrored as
+`data-type` on the rendered element). Styling is identical across types out
+of the box — since you own `components/ui/toast.tsx`, add a `[data-type="…"]`
+condition to `styles.root` to color-code them.
+
+<Component path="toast-types" />
+
+## Action
+
+Pass `actionProps` to render an action button inside the toast.
+
+<Component path="toast-action" />
+
+## Position
+
+The stack's screen position lives in `Toaster`'s own styles; override it with
+the `style` prop, same as any other component in this library.
+
+<Component path="toast-position" />
+
 ## API reference
 
 Built on [Base UI Toast](https://base-ui.com/react/components/toast). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Toast API reference](https://base-ui.com/react/components/toast#api-reference) for the full list.

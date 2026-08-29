@@ -26,6 +26,12 @@ import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 </Meter>
 ```
 
+## Custom range
+
+Set `min` and `max` for a range other than 0–100, and render a formatted value label via `MeterValue`'s render function.
+
+<Component path="meter-custom-range" />
+
 ## API reference
 
 Built on [Base UI Meter](https://base-ui.com/react/components/meter) — same layout as `Progress`, but semantically a gauge (`role="meter"`) rather than task progress. All props are forwarded (`value`, `min`, `max`, `format`, …); see the [Base UI Meter API reference](https://base-ui.com/react/components/meter#api-reference). Like Progress, `MeterValue` formats via `Intl` — pass an explicit `locale` in SSR apps. Every part accepts a `style` prop (`StyleXStyles`, merged last).

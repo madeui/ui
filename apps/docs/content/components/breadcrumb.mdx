@@ -41,6 +41,24 @@ import {
 </Breadcrumb>
 ```
 
+## Ellipsis
+
+Collapses intermediate segments; `BreadcrumbEllipsis` is a static indicator by default.
+
+<Component path="breadcrumb-ellipsis" />
+
+## Dropdown
+
+Pair `BreadcrumbEllipsis` with a `DropdownMenu` (installed as a dependency) to make the collapsed segment interactive.
+
+<Component path="breadcrumb-dropdown" />
+
+## Custom separator
+
+Pass children to `BreadcrumbSeparator` to replace the default chevron.
+
+<Component path="breadcrumb-separator" />
+
 ## API reference
 
 Plain semantic markup (`nav` / `ol` / `li` / `a`) — no headless primitive needed. Every part accepts its native element props plus a `style` prop (`StyleXStyles`, merged last). `BreadcrumbSeparator` renders a chevron by default; pass children to replace it. `BreadcrumbPage` marks the current page with `aria-current="page"`.

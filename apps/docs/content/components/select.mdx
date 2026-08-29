@@ -36,6 +36,10 @@ import {
 </Select>
 ```
 
+## Groups
+
+<Component path="select-groups" />
+
 ## Scrollable
 
 <Component path="select-scrollable" />
@@ -47,6 +51,12 @@ import {
 ## Disabled
 
 <Component path="select-component-disabled" />
+
+## Invalid
+
+Wrap `Select` in a [`Field`](/docs/components/field) with `invalid` — the error propagates to the trigger automatically (`aria-invalid`/`data-invalid`), while `FieldLabel` and `FieldError` carry the visible error state.
+
+<Component path="select-invalid" />
 
 ## API reference
 
@@ -83,6 +93,6 @@ Built on [Base UI Select](https://base-ui.com/react/components/select). The tabl
 
 ### Styling
 
-`SelectTrigger` accepts `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`SelectTrigger`, `SelectLabel`, and `SelectSeparator` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
 
 `SelectValue` and `SelectGroup` are Base UI parts re-exported unstyled.

@@ -32,6 +32,18 @@ import {
 
 `Progress` renders the track and indicator itself; `ProgressLabel` and `ProgressValue` are optional children placed above the track.
 
+## Label
+
+Use `ProgressLabel` and `ProgressValue` to add a label and percentage text.
+
+<Component path="progress-label" />
+
+## Controlled
+
+Drive `value` from state — here a button advances it.
+
+<Component path="progress-controlled" />
+
 ## API reference
 
 Built on [Base UI Progress](https://base-ui.com/react/components/progress). All props are forwarded to the underlying Base UI parts — pass `value` (or `value={null}` for indeterminate), `min`, `max`; see the [Base UI Progress API reference](https://base-ui.com/react/components/progress#api-reference).

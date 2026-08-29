@@ -22,7 +22,11 @@ export function Textarea({ style, ...props }: TextareaProps) {
 const styles = stylex.create({
   root: {
     backgroundColor: colors.background,
-    borderColor: { default: colors.input, ':focus-visible': colors.ring },
+    borderColor: {
+      default: colors.input,
+      ':focus-visible': colors.ring,
+      '[data-invalid]': colors.destructive,
+    },
     borderRadius: radius.md,
     borderStyle: 'solid',
     borderWidth: stroke.border,

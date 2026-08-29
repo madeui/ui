@@ -49,6 +49,18 @@ Use `size="icon"` for a square, icon-only button. Always set `aria-label`.
 
 <Component path="button-icon" />
 
+## Icon sizes
+
+`icon` pairs with `md`; use `iconXs`, `iconSm`, and `iconLg` to match the `xs`, `sm`, and `lg` text sizes.
+
+<Component path="button-icon-sizes" />
+
+## Loading
+
+Render a `<Spinner />` before the label and set `disabled` to show a loading state.
+
+<Component path="button-loading" />
+
 ## Disabled
 
 <Component path="button-disabled" />
@@ -74,6 +86,6 @@ Built on [Base UI Button](https://base-ui.com/react/components/button). The tabl
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'primary'` | Visual style. |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | `icon` renders a square button. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'icon' \| 'iconXs' \| 'iconSm' \| 'iconLg'` | `'md'` | `icon`, `iconXs`, `iconSm`, `iconLg` render a square button. |
 | `disabled` | `boolean` | `false` |  |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |

@@ -58,6 +58,7 @@ const styles = stylex.create({
       default: colors.input,
       '[data-checked]': colors.primary,
       '[data-indeterminate]': colors.primary,
+      '[data-invalid]': colors.destructive,
     },
     borderRadius: radius.sm,
     borderStyle: 'solid',

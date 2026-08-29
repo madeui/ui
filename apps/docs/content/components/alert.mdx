@@ -14,7 +14,7 @@ npx shadcn@latest add @ui-lib/alert
 ## Usage
 
 ```tsx
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 <Alert>
   <AlertTitle>Heads up!</AlertTitle>
@@ -28,12 +28,19 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 <Alert>
   <AlertTitle />
   <AlertDescription />
+  <AlertAction />
 </Alert>
 ```
 
 ## Destructive
 
 <Component path="alert-destructive" />
+
+## Action
+
+`AlertAction` pins a slot (typically a button) to the top-right corner.
+
+<Component path="alert-action" />
 
 ## API reference
 
@@ -46,4 +53,4 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 ### Styling
 
-`AlertTitle`, `AlertDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+`AlertTitle`, `AlertDescription`, `AlertAction` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

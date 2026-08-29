@@ -12,8 +12,14 @@ interface DivProps
   style?: stylex.StyleXStyles;
 }
 
-export function Card({ style, ...props }: DivProps) {
-  return <div {...props} {...stylex.props(styles.root, style)} />;
+export type CardSize = 'md' | 'sm';
+
+export function Card({
+  size = 'md',
+  style,
+  ...props
+}: DivProps & { size?: CardSize }) {
+  return <div {...props} {...stylex.props(styles.root, sizes[size], style)} />;
 }
 
 export function CardHeader({ style, ...props }: DivProps) {
@@ -38,6 +44,11 @@ export function CardDescription({
   return <p {...props} {...stylex.props(styles.description, style)} />;
 }
 
+/** Slot for a header-level action (e.g. a button), pinned top-right. */
+export function CardAction({ style, ...props }: DivProps) {
+  return <div {...props} {...stylex.props(styles.action, style)} />;
+}
+
 export function CardContent({ style, ...props }: DivProps) {
   return <div {...props} {...stylex.props(styles.content, style)} />;
 }
@@ -46,6 +57,12 @@ export function CardFooter({ style, ...props }: DivProps) {
   return <div {...props} {...stylex.props(styles.footer, style)} />;
 }
 
+// `--card-spacing` lets `size` retune the paddings owned by the sections
+// below without prop-drilling: `sizes.sm` sets it, every section's own
+// padding reads it with a fallback. It's a plain per-variant value (not a
+// Base UI attribute-conditional default), so the custom-property gotcha in
+// STYLEX.md (conditional default beating a layered [data-*] rule) doesn't
+// apply here.
 const styles = stylex.create({
   root: {
     backgroundColor: colors.card,
@@ -58,34 +75,48 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     fontFamily: font.sans,
-    gap: space.s5,
-    paddingBlock: space.s5,
+    gap: `var(--card-spacing, ${space.s5})`,
+    paddingBlock: `var(--card-spacing, ${space.s5})`,
   },
   header: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: space.s15,
-    paddingInline: space.s5,
+    columnGap: space.s2,
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    paddingInline: `var(--card-spacing, ${space.s5})`,
+    rowGap: space.s15,
   },
   title: {
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
+    gridColumn: 1,
     lineHeight: lineHeight.tight,
     margin: 0,
   },
   description: {
     color: colors.mutedForeground,
     fontSize: fontSize.sm,
+    gridColumn: 1,
     lineHeight: lineHeight.normal,
     margin: 0,
   },
+  action: {
+    alignSelf: 'start',
+    gridColumn: 2,
+    gridRow: 'span 2',
+    justifySelf: 'end',
+  },
   content: {
-    paddingInline: space.s5,
+    paddingInline: `var(--card-spacing, ${space.s5})`,
   },
   footer: {
     alignItems: 'center',
     display: 'flex',
     gap: space.s2,
-    paddingInline: space.s5,
+    paddingInline: `var(--card-spacing, ${space.s5})`,
   },
+});
+
+const sizes = stylex.create({
+  md: {},
+  sm: { '--card-spacing': space.s4 },
 });

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 export default function ButtonSizes() {
   return (
     <div {...stylex.props(styles.row)}>
+      <Button size="xs" variant="outline">Extra small</Button>
       <Button size="sm" variant="outline">Small</Button>
       <Button size="md" variant="outline">Medium</Button>
       <Button size="lg" variant="outline">Large</Button>

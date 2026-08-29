@@ -14,7 +14,7 @@ import { container } from '@/lib/constants.stylex';
 
 export default function FieldDemo() {
   return (
-    <FieldSet {...stylex.props(styles.root)}>
+    <FieldSet style={styles.root}>
       <FieldLegend>Profile</FieldLegend>
       <FieldGroup>
         <Field>

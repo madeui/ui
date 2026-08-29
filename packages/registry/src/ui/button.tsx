@@ -15,7 +15,15 @@ export type ButtonVariant =
   | 'ghost'
   | 'destructive';
 
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
+export type ButtonSize =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'icon'
+  | 'iconXs'
+  | 'iconSm'
+  | 'iconLg';
 
 export interface ButtonProps
   extends Omit<
@@ -117,6 +125,12 @@ const variants = stylex.create({
 });
 
 const sizes = stylex.create({
+  xs: {
+    fontSize: fontSize.xs,
+    gap: space.s1,
+    height: space.s7,
+    paddingInline: space.s2,
+  },
   sm: {
     height: space.s8,
     paddingInline: space.s3,
@@ -134,5 +148,20 @@ const sizes = stylex.create({
     height: space.s9,
     paddingInline: 0,
     width: space.s9,
+  },
+  iconXs: {
+    height: space.s7,
+    paddingInline: 0,
+    width: space.s7,
+  },
+  iconSm: {
+    height: space.s8,
+    paddingInline: 0,
+    width: space.s8,
+  },
+  iconLg: {
+    height: space.s10,
+    paddingInline: 0,
+    width: space.s10,
   },
 });

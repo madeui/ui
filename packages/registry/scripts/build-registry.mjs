@@ -38,13 +38,14 @@ const DESCRIPTIONS = {
     'Numeric input with increment/decrement buttons, built on Base UI Number Field.',
   spinner: 'Loading indicator.',
   toolbar: 'Grouped controls built on Base UI Toolbar; compose with Button/Toggle via render.',
-  alert: 'Callout for user attention. Variants: default, destructive.',
+  alert:
+    'Callout for user attention with an optional action slot. Variants: default, destructive.',
   'alert-dialog':
     'Modal confirmation dialog built on Base UI Alert Dialog: Action, Cancel, Media. Sizes: md, sm.',
   breadcrumb: 'Path navigation with links, separators, and ellipsis.',
   collapsible: 'Collapsible region built on Base UI Collapsible (unstyled parts).',
   combobox:
-    'Autocomplete input built on Base UI Combobox: input with popup list, filtering, empty state.',
+    'Autocomplete input built on Base UI Combobox: filtering popup list, multi-select chips, select-like trigger, clear button.',
   'context-menu':
     'Right-click menu built on Base UI Context Menu: items, checkbox/radio items, submenus, shortcuts.',
   'input-otp':
@@ -66,17 +67,21 @@ const DESCRIPTIONS = {
   toggle: 'Two-state button built on Base UI Toggle. Variants: default, outline.',
   'toggle-group':
     'Group of toggles built on Base UI Toggle Group. Spacing: gap, joined.',
-  avatar: 'Avatar built on Base UI with image and fallback. Sizes: sm, md, lg.',
-  badge: 'Small status descriptor. Variants: primary, secondary, outline, destructive.',
+  avatar:
+    'Avatar built on Base UI with image and fallback, plus badge, group, and group-count parts. Sizes: sm, md, lg.',
+  badge:
+    'Small status descriptor. Variants: primary, secondary, outline, ghost, destructive.',
   button:
-    'Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: sm, md, lg, icon.',
-  card: 'Content container with header, content, and footer sections.',
+    'Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: xs, sm, md, lg, icon, iconXs, iconSm, iconLg.',
+  card:
+    'Content container with header, action, content, and footer sections. Sizes: md, sm.',
   checkbox: 'Checkbox built on Base UI with checked/indeterminate states.',
   dialog: 'Modal dialog built on Base UI Dialog.',
   'dropdown-menu':
     'Menu of actions built on Base UI Menu: items, groups, labels, separators.',
   input: 'Text input built on Base UI Input.',
-  popover: 'Floating panel anchored to a trigger, built on Base UI Popover.',
+  popover:
+    'Floating panel anchored to a trigger, built on Base UI Popover, with header, title, and description parts.',
   'radio-group': 'Radio group built on Base UI Radio/RadioGroup.',
   select: 'Select built on Base UI Select with popup list and indicators.',
   switch: 'Toggle switch built on Base UI Switch.',

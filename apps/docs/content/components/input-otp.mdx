@@ -40,6 +40,18 @@ import {
 </InputOTP>
 ```
 
+## Separator
+
+<Component path="input-otp-separator" />
+
+## Disabled
+
+<Component path="input-otp-disabled" />
+
+## Controlled
+
+<Component path="input-otp-controlled" />
+
 ## API reference
 
 Built on [Base UI OTP Field](https://base-ui.com/react/components/otp-field) — every slot is a real `<input>`, so focus, caret, and paste behavior come from the platform. All props are forwarded to the Base UI `Root` (`length` is required; `value`, `onValueChange`, `mask`, `validationType`, `autoSubmit`, …); see the [Base UI OTP Field API reference](https://base-ui.com/react/components/otp-field#api-reference). Each part also accepts a `style` prop (`StyleXStyles`, merged last). `InputOTPSlot` maps to a Base UI `Input`; slot order determines the character index.

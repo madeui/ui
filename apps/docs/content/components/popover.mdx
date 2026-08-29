@@ -14,7 +14,14 @@ npx shadcn@latest add @ui-lib/popover
 ## Usage
 
 ```tsx
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 ```
 
 ## Composition
@@ -22,13 +29,28 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 ```tsx
 <Popover>
   <PopoverTrigger />
-  <PopoverContent />
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle />
+      <PopoverDescription />
+    </PopoverHeader>
+  </PopoverContent>
 </Popover>
 ```
 
 ## Placement
 
 <Component path="popover-placement" />
+
+## Header, title, description
+
+`PopoverHeader` is a plain layout wrapper; `PopoverTitle` and `PopoverDescription` are Base UI's `Popover.Title` / `Popover.Description`, wiring up `aria-labelledby` / `aria-describedby` on the popup automatically.
+
+<Component path="popover-parts" />
+
+## With form
+
+<Component path="popover-form" />
 
 ## API reference
 
@@ -45,3 +67,7 @@ Built on [Base UI Popover](https://base-ui.com/react/components/popover). The ta
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 `Popover` (Root), `PopoverTrigger`, and `PopoverClose` are Base UI parts re-exported unstyled — Root accepts `open` / `defaultOpen` / `onOpenChange`; Trigger accepts `render`.
+
+### Styling
+
+`PopoverHeader`, `PopoverTitle`, `PopoverDescription` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

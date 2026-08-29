@@ -45,6 +45,15 @@ export function AlertDescription({
   return <div {...props} {...stylex.props(styles.description, style)} />;
 }
 
+/** Slot pinned to the top-right corner of an `Alert`, for a dismiss or undo action. */
+export function AlertAction({
+  style,
+  ...props
+}: Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &
+  StyleProp) {
+  return <div {...props} {...stylex.props(styles.action, style)} />;
+}
+
 const styles = stylex.create({
   root: {
     backgroundColor: colors.card,
@@ -58,6 +67,7 @@ const styles = stylex.create({
     fontFamily: font.sans,
     gap: space.s1,
     padding: space.s4,
+    position: 'relative',
     width: '100%',
   },
   title: {
@@ -70,6 +80,11 @@ const styles = stylex.create({
     color: colors.mutedForeground,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.normal,
+  },
+  action: {
+    insetBlockStart: space.s4,
+    insetInlineEnd: space.s4,
+    position: 'absolute',
   },
 });
 

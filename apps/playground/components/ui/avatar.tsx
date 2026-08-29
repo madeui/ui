@@ -5,7 +5,8 @@ import * as React from 'react';
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
+import { ring } from '@/lib/stylex-utils';
+import { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export type AvatarSize = 'sm' | 'md' | 'lg';
@@ -13,6 +14,9 @@ export type AvatarSize = 'sm' | 'md' | 'lg';
 interface StyleProp {
   style?: stylex.StyleXStyles;
 }
+
+type DivProps = Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> &
+  StyleProp;
 
 export function Avatar({
   size = 'md',
@@ -57,6 +61,53 @@ export function AvatarFallback({
   );
 }
 
+/** Status indicator anchored to the bottom-right corner of an `Avatar`. */
+export function AvatarBadge({ style, ...props }: DivProps) {
+  return <div {...props} {...stylex.props(styles.badge, style)} />;
+}
+
+/**
+ * Overlaps its `Avatar` (and `AvatarGroupCount`) children, each with a
+ * `colors.background` ring separating it from its neighbors. StyleX has no
+ * sibling selectors, so each child is wrapped in a span carrying the
+ * overlap + ring styles directly.
+ */
+export function AvatarGroup({ style, children, ...props }: DivProps) {
+  const items = React.Children.toArray(children);
+  return (
+    <div {...props} {...stylex.props(styles.group, style)}>
+      {items.map((child, index) => (
+        <span
+          key={index}
+          {...stylex.props(
+            styles.groupItem,
+            index > 0 && styles.groupItemOverlap,
+            styles.groupItemStack(items.length - index),
+            ring({ width: stroke.focus, color: colors.background }),
+          )}
+        >
+          {child}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** Trailing "+N" indicator for an `AvatarGroup`, sized to match `Avatar`. */
+export function AvatarGroupCount({
+  size = 'md',
+  style,
+  ...props
+}: Omit<React.ComponentPropsWithoutRef<'span'>, 'className' | 'style'> &
+  StyleProp & { size?: AvatarSize }) {
+  return (
+    <span
+      {...props}
+      {...stylex.props(styles.groupCount, sizes[size], style)}
+    />
+  );
+}
+
 const styles = stylex.create({
   root: {
     alignItems: 'center',
@@ -84,6 +135,47 @@ const styles = stylex.create({
     height: '100%',
     justifyContent: 'center',
     width: '100%',
+  },
+  badge: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderColor: colors.background,
+    borderRadius: radius.full,
+    borderStyle: 'solid',
+    borderWidth: stroke.focus,
+    color: colors.primaryForeground,
+    display: 'flex',
+    insetInlineEnd: 0,
+    insetBlockEnd: 0,
+    justifyContent: 'center',
+    minHeight: space.s4,
+    minWidth: space.s4,
+    position: 'absolute',
+  },
+  group: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+  groupItem: {
+    borderRadius: radius.full,
+    display: 'inline-flex',
+  },
+  groupItemOverlap: {
+    marginInlineStart: `calc(-1 * ${space.s2})`,
+  },
+  groupItemStack: (order: number) => ({
+    zIndex: order,
+  }),
+  groupCount: {
+    alignItems: 'center',
+    backgroundColor: colors.muted,
+    borderRadius: radius.full,
+    color: colors.mutedForeground,
+    display: 'flex',
+    fontFamily: font.sans,
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    justifyContent: 'center',
   },
 });
 

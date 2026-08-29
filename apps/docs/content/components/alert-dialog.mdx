@@ -51,6 +51,18 @@ import {
 
 <Component path="alert-dialog-media" />
 
+## Small
+
+<Component path="alert-dialog-small" />
+
+## Destructive action
+
+Use `AlertDialogAction` (a plain `Button`) instead of `AlertDialogCancel` when
+the confirming action needs to run async work — like this delete request —
+before the dialog closes.
+
+<Component path="alert-dialog-destructive" />
+
 ## API reference
 
 Built on [Base UI Alert Dialog](https://base-ui.com/react/components/alert-dialog). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Alert Dialog API reference](https://base-ui.com/react/components/alert-dialog#api-reference).

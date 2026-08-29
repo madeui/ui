@@ -46,6 +46,18 @@ import {
 </Pagination>
 ```
 
+## Simple
+
+Numbers only, no previous/next controls.
+
+<Component path="pagination-simple" />
+
+## Icons only
+
+Pass `text=""` to `PaginationPrevious` / `PaginationNext` to hide the label at every breakpoint — `aria-label` still carries the accessible name. `size` is fixed to `md` on both, so a `style` override squares up the padding for an icon-only look.
+
+<Component path="pagination-icons-only" />
+
 ## API reference
 
 Plain semantic markup rendered through `Button` — links use Base UI's `render` prop under the hood, so they are real `<a>` elements.

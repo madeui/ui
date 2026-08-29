@@ -18,6 +18,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CheckboxGroup } from '@/components/ui/checkbox-group';
 ```
 
+## Parent checkbox
+
+A "select all" checkbox: make the group controlled, pass every child's identifier to `allValues`, and add `parent` to a `Checkbox` with no `name` — it ticks all, unticks all, and goes indeterminate when only some children are checked.
+
+<Component path="checkbox-group-with-parent" />
+
 ## API reference
 
 Built on [Base UI Checkbox Group](https://base-ui.com/react/components/checkbox-group). Give each child `Checkbox` a `name` and control the group with `value` / `defaultValue` / `onValueChange` (arrays of names); a parent checkbox is supported via `allValues`. All props are forwarded — see the [Base UI Checkbox Group API reference](https://base-ui.com/react/components/checkbox-group#api-reference). Accepts a `style` prop (`StyleXStyles`, merged last).

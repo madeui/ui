@@ -17,6 +17,20 @@ npx shadcn@latest add @ui-lib/spinner
 import { Spinner } from '@/components/ui/spinner';
 ```
 
+## Sizes
+
+`width` and `height` are plain SVG attributes (like `viewBox`), so pass them
+directly to resize the spinner.
+
+<Component path="spinner-sizes" />
+
+## Composition
+
+`Spinner` inherits `currentColor`, so it drops into any text-colored
+container — a `Badge`, a line of body text, anywhere.
+
+<Component path="spinner-composition" />
+
 ## API reference
 
 An inline SVG with a spin animation, sized 16px and colored via `currentColor` — it inherits the surrounding text color (e.g. inside a `Button`). Accepts SVG props plus a `style` prop (`StyleXStyles`, merged last).

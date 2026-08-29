@@ -90,7 +90,7 @@
       "name": "alert",
       "type": "registry:ui",
       "title": "Alert",
-      "description": "Callout for user attention. Variants: default, destructive.",
+      "description": "Callout for user attention with an optional action slot. Variants: default, destructive.",
       "dependencies": [
         "@stylexjs/stylex"
       ],
@@ -175,13 +175,14 @@
       "name": "avatar",
       "type": "registry:ui",
       "title": "Avatar",
-      "description": "Avatar built on Base UI with image and fallback. Sizes: sm, md, lg.",
+      "description": "Avatar built on Base UI with image and fallback, plus badge, group, and group-count parts. Sizes: sm, md, lg.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "@ui-lib/theme"
+        "@ui-lib/theme",
+        "@ui-lib/utils"
       ],
       "files": [
         {
@@ -196,8 +197,9 @@
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
-      "description": "Small status descriptor. Variants: primary, secondary, outline, destructive.",
+      "description": "Small status descriptor. Variants: primary, secondary, outline, ghost, destructive.",
       "dependencies": [
+        "@base-ui/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
@@ -236,7 +238,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: sm, md, lg, icon.",
+      "description": "Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: xs, sm, md, lg, icon, iconXs, iconSm, iconLg.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
@@ -278,7 +280,7 @@
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
-      "description": "Content container with header, content, and footer sections.",
+      "description": "Content container with header, action, content, and footer sections. Sizes: md, sm.",
       "dependencies": [
         "@stylexjs/stylex"
       ],
@@ -361,7 +363,7 @@
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
-      "description": "Autocomplete input built on Base UI Combobox: input with popup list, filtering, empty state.",
+      "description": "Autocomplete input built on Base UI Combobox: filtering popup list, multi-select chips, select-like trigger, clear button.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"
@@ -811,7 +813,7 @@
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
-      "description": "Floating panel anchored to a trigger, built on Base UI Popover.",
+      "description": "Floating panel anchored to a trigger, built on Base UI Popover, with header, title, and description parts.",
       "dependencies": [
         "@base-ui/react",
         "@stylexjs/stylex"

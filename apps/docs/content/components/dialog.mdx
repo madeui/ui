@@ -49,6 +49,20 @@ Override the content width with the `style` prop.
 
 <Component path="dialog-custom" />
 
+## Scrollable content
+
+Give `DialogContent` a `maxHeight` and wrap the long content in its own
+scrollable container — the header and footer stay put.
+
+<Component path="dialog-scrollable" />
+
+## No close button
+
+Set `showCloseButton={false}` and close the dialog through your own footer
+buttons instead.
+
+<Component path="dialog-no-close-button" />
+
 ## API reference
 
 Built on [Base UI Dialog](https://base-ui.com/react/components/dialog). The tables below cover the props this library adds or changes — every other prop is forwarded to the underlying Base UI part; see the [Base UI Dialog API reference](https://base-ui.com/react/components/dialog#api-reference) for the full list.

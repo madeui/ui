@@ -32,7 +32,11 @@ export function Switch({ size = 'md', style, ...props }: SwitchProps) {
 
 const styles = stylex.create({
   root: {
-    backgroundColor: { default: colors.input, '[data-checked]': colors.primary },
+    backgroundColor: {
+      default: colors.input,
+      '[data-checked]': colors.primary,
+      '[data-invalid]': colors.destructive,
+    },
     borderRadius: radius.full,
     borderStyle: 'none',
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },

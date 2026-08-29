@@ -19,9 +19,21 @@ import { Textarea } from '@/components/ui/textarea';
 <Textarea placeholder="Type your message here." />
 ```
 
+## With field
+
+Use `Field`, `FieldLabel`, and `FieldDescription` to create a textarea with a label and description.
+
+<Component path="textarea-with-field" />
+
 ## Disabled
 
 <Component path="textarea-disabled" />
+
+## Invalid
+
+Set `invalid` on `Field` to show validation errors — the label and error message pick up the invalid styling, and `aria-invalid` is applied to the textarea automatically.
+
+<Component path="textarea-invalid" />
 
 ## API reference
 

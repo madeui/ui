@@ -26,6 +26,10 @@ import {
 
 ## Composition
 
+### Simple
+
+A single-line input and a flat list.
+
 ```tsx
 <Combobox items={items}>
   <ComboboxInput />
@@ -38,13 +42,87 @@ import {
 </Combobox>
 ```
 
+### With chips
+
+Multi-select with `multiple`, chips, and a chips input. `ComboboxChips` also
+serves as the popup anchor — pass a ref to `ComboboxContent`'s `anchor`.
+
+```tsx
+<Combobox items={items} multiple value={value} onValueChange={setValue}>
+  <ComboboxChips ref={anchorRef}>
+    <ComboboxValue>
+      {(values) => values.map((value) => <ComboboxChip key={value}>{value}</ComboboxChip>)}
+    </ComboboxValue>
+    <ComboboxChipsInput />
+  </ComboboxChips>
+  <ComboboxContent anchor={anchorRef}>
+    <ComboboxEmpty />
+    <ComboboxList>
+      {(item) => <ComboboxItem value={item} />}
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>
+```
+
+## Multiple
+
+Use `multiple` with `ComboboxChips` for multi-select. Selected values render
+as removable chips inline with the input.
+
+<Component path="combobox-multiple" />
+
+## Popup
+
+Trigger the combobox from a button-like `ComboboxTrigger` instead of an
+always-visible input — move `ComboboxInput` inside `ComboboxContent` with
+`showTrigger={false}`.
+
+<Component path="combobox-popup" />
+
+## Clear
+
+Use `showClear` on `ComboboxInput` to show a button that clears the value.
+
+<Component path="combobox-clear" />
+
+## Groups
+
+Use `ComboboxGroup`, `ComboboxLabel`, `ComboboxCollection`, and
+`ComboboxSeparator` to group related items.
+
+<Component path="combobox-groups" />
+
+## Custom items
+
+Use `itemToStringValue` when items are objects, and render any content
+inside `ComboboxItem`.
+
+<Component path="combobox-custom-items" />
+
+## Disabled
+
+<Component path="combobox-disabled" />
+
+## Auto highlight
+
+Use `autoHighlight` to highlight the first matching item automatically while
+filtering.
+
+<Component path="combobox-auto-highlight" />
+
 ## API reference
 
-Built on [Base UI Combobox](https://base-ui.com/react/components/combobox). Pass `items` to the root and it filters as you type out of the box; `ComboboxList` accepts a render function over the filtered items. All props are forwarded to the underlying Base UI parts (`multiple`, `value`, `onValueChange`, custom `filter`, …); see the [Base UI Combobox API reference](https://base-ui.com/react/components/combobox#api-reference).
+Built on [Base UI Combobox](https://base-ui.com/react/components/combobox). Pass `items` to the root and it filters as you type out of the box; `ComboboxList` accepts a render function over the filtered items. All other props are forwarded to the underlying Base UI parts (`multiple`, `value`, `onValueChange`, `itemToStringValue`, `autoHighlight`, custom `filter`, …); see the [Base UI Combobox API reference](https://base-ui.com/react/components/combobox#api-reference).
 
 ### ComboboxInput
 
-Text input with a built-in dropdown trigger button. Accepts Base UI `Input` props plus `style` (`StyleXStyles`, merged last, applied to the wrapper).
+Text input with a built-in dropdown trigger button.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showTrigger` | `boolean` | `true` | Render the built-in dropdown trigger button. Set `false` when the input lives inside `ComboboxContent` and a `ComboboxTrigger` elsewhere anchors the popup. |
+| `showClear` | `boolean` | `false` | Render a clear button (`Base UI Clear`) before the trigger. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles, applied to the wrapper. |
 
 ### ComboboxContent
 
@@ -54,6 +132,11 @@ Text input with a built-in dropdown trigger button. Accepts Base UI `Input` prop
 | `sideOffset` | `number` | `6` |  |
 | `align` | `'start' \| 'center' \| 'end'` | `'start'` |  |
 | `alignOffset` | `number` | `0` |  |
+| `anchor` | `Element \| RefObject<Element \| null> \| (() => Element)` | — | Positions the popup against an element other than the input/trigger, e.g. `ComboboxChips`. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`ComboboxGroup`, `ComboboxLabel`, `ComboboxSeparator`, `ComboboxValue`, and `ComboboxCollection` are also exported for grouped and multi-part lists.
+### Styling
+
+`ComboboxTrigger` (select-like popup trigger button), `ComboboxChips` (chips container, also usable as a popup anchor), `ComboboxChip` (pill with a built-in remove button), and `ComboboxChipsInput` (borderless input for inline use inside `ComboboxChips`) all accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.
+
+`ComboboxGroup`, `ComboboxLabel`, `ComboboxValue`, and `ComboboxCollection` are also exported for grouped and multi-part lists.
