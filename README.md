@@ -22,8 +22,8 @@ instead of Radix + Tailwind.
 ## Quick start
 
 ```bash
-npx madeui init   # wires the StyleX build (Next.js or Vite), copies tokens
-npx madeui add button dialog select
+npx @madeui/cli init   # wires the StyleX build (Next.js or Vite), copies tokens
+npx @madeui/cli add button dialog select
 ```
 
 The registry is shadcn-compatible, so once the build is set up this works
