@@ -118,18 +118,21 @@ const styles = stylex.create({
     flexShrink: 0,
     fontFamily: font.sans,
     justifyContent: 'center',
-    overflow: 'hidden',
+    // No overflow:hidden here — it would clip AvatarBadge at the corner;
+    // the image and fallback round themselves instead.
     position: 'relative',
     userSelect: 'none',
     verticalAlign: 'middle',
   },
   image: {
+    borderRadius: radius.full,
     height: '100%',
     objectFit: 'cover',
     width: '100%',
   },
   fallback: {
     alignItems: 'center',
+    borderRadius: radius.full,
     color: colors.mutedForeground,
     display: 'flex',
     fontSize: fontSize.sm,
