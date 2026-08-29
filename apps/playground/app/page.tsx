@@ -924,7 +924,7 @@ export default function Home() {
 
         <section {...stylex.props(styles.row)} data-section="display-2">
           <div {...stylex.props(styles.col)}>
-            <Accordion multiple={false} defaultValue={['a']}>
+            <Accordion multiple={false}>
               <AccordionItem value="a">
                 <AccordionTrigger>Is it accessible?</AccordionTrigger>
                 <AccordionContent>

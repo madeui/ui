@@ -10,7 +10,7 @@ import { container } from '@/lib/constants.stylex';
 
 export default function AccordionDemo() {
   return (
-    <Accordion multiple={false} defaultValue={['item-1']} style={styles.root}>
+    <Accordion multiple={false} style={styles.root}>
       <AccordionItem value="item-1">
         <AccordionTrigger>Is it accessible?</AccordionTrigger>
         <AccordionContent>

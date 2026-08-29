@@ -83,11 +83,6 @@ export function AccordionContent({
   );
 }
 
-const panelDown = stylex.keyframes({
-  from: { height: 0 },
-  to: { height: 'var(--accordion-panel-height)' },
-});
-
 const styles = stylex.create({
   root: {
     display: 'flex',
@@ -146,13 +141,21 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: 'transform',
   },
+  // Height transition through Base UI's measured --accordion-panel-height;
+  // the starting/ending frames pin it to 0 so both open AND close animate
+  // (a one-way keyframe would replay its open animation on close).
   panel: {
-    animationDuration: duration.fast,
-    animationName: panelDown,
-    animationTimingFunction: 'ease-out',
     fontSize: fontSize.sm,
+    height: {
+      default: 'var(--accordion-panel-height)',
+      '[data-starting-style]': 0,
+      '[data-ending-style]': 0,
+    },
     lineHeight: lineHeight.normal,
     overflow: 'hidden',
+    transitionDuration: duration.fast,
+    transitionProperty: 'height',
+    transitionTimingFunction: 'ease-out',
   },
   inner: {
     paddingBottom: space.s25,
