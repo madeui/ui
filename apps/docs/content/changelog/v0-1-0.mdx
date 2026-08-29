@@ -1,20 +1,26 @@
 ---
 title: v0.1.0
 type: changelog
-date: 2026-08-26
+date: 2026-08-29
 changelog:
   version: 0.1.0
-  category: Components
+  category: Release
 ---
 
-The library takes shape: 17 components built on Base UI + StyleX, a
-shadcn-compatible registry generated straight from the sources, and a docs
-site with live inline previews.
+The first release: a component library you own, built on Base UI and
+StyleX. Components are copied into your project as editable source — no
+package to depend on, no class-name soup to fight.
 
-- Button, Dialog, Select, Checkbox, Switch, and 12 more — each with
-  `variant`/`size` props and a `style` escape hatch merged last
-- Design tokens in `lib/tokens.stylex.ts` (themable) and a dark theme via
-  `stylex.createTheme`
-- Registry JSON generated from source — installable with
-  `npx shadcn@latest add @ui-lib/<name>`
-- Verified end to end: shadcn CLI install + StyleX build in a Next.js app
+- **54 components** — from Button and Dialog to Combobox with multi-select
+  chips, Command palette, Drawer, Toast, and less common ones like
+  Autocomplete, Meter, Number Field, Toolbar, and Checkbox Group
+- **Base UI underneath** — accessibility, focus management, and positioning
+  from headless primitives; every state styled via data attributes
+- **StyleX styling** — compile-time atomic CSS, design tokens for every
+  color/space/type/motion value, dark mode as a single theme object
+- **Consistent API** — `variant`, `size`, and a `style` prop merged last on
+  every component; agents and humans learn one pattern
+- **Docs with live previews** — focused examples for every feature, plus
+  guides for installation, theming, and dark mode
+- **Two install paths** — the `ui-lib` CLI (`init` wires the StyleX build),
+  or the shadcn CLI against our registry
