@@ -107,6 +107,11 @@ export default defineConfig({
   description:
     'Base UI + StyleX components you own. Agent-friendly by design.',
   content: { root: 'content' },
+  navigation: {
+    // href lands on the generated timeline index; without it the tab would
+    // resolve to the newest entry (the changelog index isn't a content page).
+    tabs: [{ label: 'Changelog', path: '/changelog', href: '/changelog' }],
+  },
   examples: {
     source: '../../packages/registry/examples',
     css: 'styles/examples.css',

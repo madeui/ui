@@ -1,0 +1,19 @@
+---
+title: First 17 components
+type: changelog
+date: 2026-08-26
+changelog:
+  category: Components
+---
+
+The library takes shape: 17 components built on Base UI + StyleX, a
+shadcn-compatible registry generated straight from the sources, and a docs
+site with live inline previews.
+
+- Button, Dialog, Select, Checkbox, Switch, and 12 more — each with
+  `variant`/`size` props and a `style` escape hatch merged last
+- Design tokens in `lib/tokens.stylex.ts` (themable) and a dark theme via
+  `stylex.createTheme`
+- Registry JSON generated from source — installable with
+  `npx shadcn@latest add @ui-lib/<name>`
+- Verified end to end: shadcn CLI install + StyleX build in a Next.js app
