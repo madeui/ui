@@ -11,3 +11,7 @@ dist/
 
 # Screenshots / VRT images — never in git
 *.png
+
+# Internal working docs — local only
+ROADMAP.md
+CLAUDE.local.md

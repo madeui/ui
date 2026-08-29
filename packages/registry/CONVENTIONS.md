@@ -84,6 +84,7 @@ survive installation byte-identical:
 ## Examples & docs authoring
 
 
+
 - **One focused example per feature.** Never a variant collage. Files are named
   `<component>-<feature>.tsx` (`button-outline.tsx`, `select-scrollable.tsx`);
   the hero is `<component>-demo.tsx` and shows the single most representative

@@ -349,7 +349,7 @@ const styles = stylex.create({
   itemInset: {
     paddingLeft: space.s7,
   },
-  // Reserve room for the trailing check indicator (absolute, right-aligned —
+  // Reserve room for the trailing check indicator (absolute, right-aligned).
   indicatorItem: {
     paddingRight: space.s8,
     position: 'relative',

@@ -122,7 +122,7 @@ If a check fails, fix it — do not explain the violation and leave it.
 
 - **The `style` prop stays broadly typed** (`StyleXStyles`, merged last). The
   doctrine prefers whitelisted slot overrides; here the distribution model is
-  code ownership — the component source in the consumer's project
+  code ownership as the distribution model — the component source in the consumer's project
   is the real escape hatch, and a broad `style` prop is a core, documented
   selling point. Variants remain the recommended path; the guide says so.
 - **SVG geometry attributes** (`viewBox`, `path d`, icon `width`/`height`) are
