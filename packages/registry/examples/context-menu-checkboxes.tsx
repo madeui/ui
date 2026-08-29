@@ -4,8 +4,8 @@ import {
   ContextMenu,
   ContextMenuCheckboxItem,
   ContextMenuContent,
+  ContextMenuGroup,
   ContextMenuLabel,
-  ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { space, fontSize, stroke, container } from '@/lib/constants.stylex';
@@ -18,12 +18,15 @@ export default function ContextMenuCheckboxes() {
         Right-click here
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuLabel>Appearance</ContextMenuLabel>
-        <ContextMenuSeparator />
-        <ContextMenuCheckboxItem defaultChecked>
-          Show bookmarks bar
-        </ContextMenuCheckboxItem>
-        <ContextMenuCheckboxItem>Show full URLs</ContextMenuCheckboxItem>
+        {/* Menu labels are Base UI GroupLabels — they must live inside a
+            Group or RadioGroup. */}
+        <ContextMenuGroup>
+          <ContextMenuLabel>Appearance</ContextMenuLabel>
+          <ContextMenuCheckboxItem defaultChecked>
+            Show bookmarks bar
+          </ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem>Show full URLs</ContextMenuCheckboxItem>
+        </ContextMenuGroup>
       </ContextMenuContent>
     </ContextMenu>
   );

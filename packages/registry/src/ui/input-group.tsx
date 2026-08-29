@@ -40,9 +40,14 @@ export function InputGroupAddon({
   return (
     <div
       role="group"
+      // Read by the group root's :has() to switch to a column layout for
+      // block-aligned addons.
+      data-align={align}
       onClick={(event) => {
         if ((event.target as HTMLElement).closest('button')) return;
-        event.currentTarget.parentElement?.querySelector('input')?.focus();
+        event.currentTarget.parentElement
+          ?.querySelector<HTMLElement>('input, textarea')
+          ?.focus();
       }}
       {...props}
       {...stylex.props(styles.addon, addonAligns[align], style)}
@@ -92,13 +97,21 @@ export function InputGroupTextarea({
 
 const styles = stylex.create({
   root: {
-    alignItems: 'center',
+    // Block-aligned addons (textarea groups) stack the group vertically.
+    alignItems: {
+      default: 'center',
+      ':has([data-align^="block"])': 'stretch',
+    },
     backgroundColor: colors.background,
     borderColor: { default: colors.input, ':focus-within': colors.ring },
     borderRadius: radius.md,
     borderStyle: 'solid',
     borderWidth: stroke.border,
     display: 'flex',
+    flexDirection: {
+      default: 'row',
+      ':has([data-align^="block"])': 'column',
+    },
     fontFamily: font.sans,
     minWidth: 0,
     outline: {

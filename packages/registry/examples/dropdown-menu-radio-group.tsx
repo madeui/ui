@@ -16,9 +16,11 @@ export default function DropdownMenuRadioGroupExample() {
         Text size
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Font size</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* Menu labels are Base UI GroupLabels — they must live inside a
+            Group or RadioGroup. */}
         <DropdownMenuRadioGroup defaultValue="md">
+          <DropdownMenuLabel>Font size</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuRadioItem value="sm">Small</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="md">Medium</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="lg">Large</DropdownMenuRadioItem>

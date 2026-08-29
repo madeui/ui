@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -17,14 +18,18 @@ export default function DropdownMenuCheckboxes() {
         View options
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
-        <DropdownMenuCheckboxItem defaultChecked>
-          Status bar
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem>Activity bar</DropdownMenuCheckboxItem>
+        {/* Menu labels are Base UI GroupLabels — they must live inside a
+            Group or RadioGroup. */}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+          <DropdownMenuCheckboxItem defaultChecked>
+            Status bar
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem>Activity bar</DropdownMenuCheckboxItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>Panel position</DropdownMenuLabel>
         <DropdownMenuRadioGroup defaultValue="bottom">
+          <DropdownMenuLabel>Panel position</DropdownMenuLabel>
           <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>

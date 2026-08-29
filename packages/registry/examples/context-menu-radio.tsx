@@ -3,6 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import {
   ContextMenu,
   ContextMenuContent,
+  ContextMenuItem,
   ContextMenuRadioGroup,
   ContextMenuRadioItem,
   ContextMenuSeparator,
@@ -23,9 +24,8 @@ export default function ContextMenuRadio() {
           <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
         </ContextMenuRadioGroup>
         <ContextMenuSeparator />
-        <ContextMenuRadioItem value="new" disabled>
-          Add new user…
-        </ContextMenuRadioItem>
+        {/* A radio item outside its RadioGroup has no context — plain item. */}
+        <ContextMenuItem disabled>Add new user…</ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   );

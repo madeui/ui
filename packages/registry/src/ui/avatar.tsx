@@ -114,6 +114,8 @@ const styles = stylex.create({
     backgroundColor: colors.muted,
     borderRadius: radius.full,
     display: 'inline-flex',
+    // Fixed-size chrome: never let a flex row squeeze the avatar.
+    flexShrink: 0,
     fontFamily: font.sans,
     justifyContent: 'center',
     overflow: 'hidden',

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Input as BaseInput } from '@base-ui/react/input';
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 export interface InputProps
@@ -43,5 +43,18 @@ const styles = stylex.create({
     transitionProperty: 'border-color, outline-color',
     width: '100%',
     '::placeholder': { color: colors.mutedForeground },
+    // type="file": render the browser's picker button as quiet inline text,
+    // vertically centered inside the fixed-height control.
+    '::file-selector-button': {
+      backgroundColor: 'transparent',
+      borderStyle: 'none',
+      color: colors.foreground,
+      fontFamily: font.sans,
+      fontSize: fontSize.sm,
+      fontWeight: fontWeight.medium,
+      height: '100%',
+      marginInlineEnd: space.s3,
+      padding: 0,
+    },
   },
 });
