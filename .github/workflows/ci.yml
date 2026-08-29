@@ -36,8 +36,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter playground exec tsc --noEmit
+      # next build first: it generates the route types (LayoutProps etc.)
+      # that the standalone tsc pass then checks against.
       - run: pnpm --filter playground build
+      - run: pnpm --filter playground exec tsc --noEmit
 
   docs:
     name: Docs build
