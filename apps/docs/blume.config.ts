@@ -106,6 +106,12 @@ export default defineConfig({
   title: 'madeui',
   description:
     'Base UI + StyleX components you own. Agent-friendly by design.',
+  // Full lockup SVG (glyph + wordmark + dot); text lives inside the SVG.
+  logo: { image: '/brand/lockup.svg', text: '' },
+  theme: {
+    // Brand violet — same as the wordmark dot.
+    accent: '#6D5CE8',
+  },
   content: { root: 'content' },
   // Absolute origin for sitemap, canonicals, and the changelog RSS feed.
   deployment: { site: 'https://madeui.com' },

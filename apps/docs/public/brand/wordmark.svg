@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 32" width="150" height="32">
+  <!-- Standalone wordmark: "madeui" + round violet dot. -->
+  <text x="0" y="24.5" font-family="Geist, system-ui, -apple-system, 'Segoe UI', sans-serif"
+        font-size="26" font-weight="700" letter-spacing="-0.8" fill="currentColor"
+        textLength="132" lengthAdjust="spacingAndGlyphs">madeui</text>
+  <circle cx="141.5" cy="22" r="3.4" fill="#6D5CE8"/>
+</svg>

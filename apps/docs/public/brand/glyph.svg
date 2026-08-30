@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Chip follows the page ink; the m shows the page background through it.
+       Inlined by Blume, so currentColor / --blume-background both resolve. -->
+  <rect width="48" height="48" rx="10.5" fill="currentColor"/>
+  <path d="M13.5 32.5 V23 Q13.5 17 19 17 Q24 17 24 23 V32.5 M24 23 Q24 17 29 17 Q34.5 17 34.5 23 V32.5"
+        fill="none" stroke="var(--blume-background, #fff)" stroke-width="4.8" stroke-linecap="round"/>
+</svg>

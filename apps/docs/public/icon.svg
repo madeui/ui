@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Favicon: self-colored chip so it reads on any tab background. -->
+  <rect width="48" height="48" rx="10.5" fill="#17181C"/>
+  <path d="M11.5 33 V22 Q11.5 15 18 15 Q24 15 24 22 V33 M24 22 Q24 15 30 15 Q36.5 15 36.5 22 V33"
+        fill="none" stroke="#FAFAFA" stroke-width="5.4" stroke-linecap="round"/>
+</svg>
