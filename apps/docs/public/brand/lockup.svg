@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 28" width="128" height="28">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 28" width="112" height="28">
   <!-- Header lockup: chip glyph + wordmark + violet dot. Inlined by Blume so
        currentColor and --blume-background follow the active theme. -->
   <rect width="28" height="28" rx="8.5" fill="currentColor"/>
   <path d="M7.9 19 V13.4 Q7.9 9.9 11.1 9.9 Q14 9.9 14 13.4 V19 M14 13.4 Q14 9.9 16.9 9.9 Q20.1 9.9 20.1 13.4 V19"
         fill="none" stroke="var(--blume-background, #fff)" stroke-width="2.8" stroke-linecap="round"/>
   <text x="37" y="21" font-family="inherit" font-size="18.5" font-weight="700" letter-spacing="-0.5"
-        fill="currentColor" textLength="76" lengthAdjust="spacingAndGlyphs">madeui</text>
-  <circle cx="119" cy="19" r="2.6" fill="#6D5CE8"/>
+        fill="currentColor" textLength="64" lengthAdjust="spacingAndGlyphs">madeui</text>
+  <circle cx="107.5" cy="19" r="2.6" fill="#6D5CE8"/>
 </svg>
