@@ -1,0 +1,248 @@
+---
+// madeui landing — centered hero + live component bento (real registry
+// examples rendered as islands, same pipeline as the docs previews).
+import * as stylex from '@stylexjs/stylex';
+
+import { darkTheme } from '@/lib/themes';
+
+import ApiKeyCard from '../landing/ApiKeyCard.tsx';
+import BackupCard from '../landing/BackupCard.tsx';
+import ComposeCard from '../landing/ComposeCard.tsx';
+import FocusCard from '../landing/FocusCard.tsx';
+import KitchenSink from '../landing/KitchenSink.tsx';
+import ReviewerCard from '../landing/ReviewerCard.tsx';
+import RsvpCard from '../landing/RsvpCard.tsx';
+import ShortcutsCard from '../landing/ShortcutsCard.tsx';
+
+// StyleX dark-theme classes, applied to <html> before paint by the inline
+// script below (same bridge the docs previews use).
+const darkClasses = stylex.props(darkTheme).className ?? '';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>madeui — Components, made yours</title>
+    <meta
+      name="description"
+      content="Base UI + StyleX components you own. Copied into your project as editable source. Agent-friendly by design."
+    />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script is:inline define:vars={{ darkClasses }}>
+      // Follow the system/dataset theme and mirror it onto the StyleX dark
+      // theme before first paint (inline script blocks parsing — no flash).
+      (() => {
+        const html = document.documentElement;
+        const classes = darkClasses.split(' ').filter(Boolean);
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const apply = () => {
+          const dark =
+            html.dataset.theme === 'dark' ||
+            (!html.dataset.theme && media.matches);
+          for (const c of classes) html.classList.toggle(c, dark);
+        };
+        apply();
+        media.addEventListener('change', apply);
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --ink: #111114;
+        --muted: #6f727a;
+        --faint: #a2a4ac;
+        --line: #e7e7ea;
+        --card: #ffffff;
+        --violet: #6d5ce8;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #0b0b0d;
+          --ink: #f4f4f5;
+          --muted: #94969f;
+          --faint: #5d5f67;
+          --line: #212226;
+          --card: #131316;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #0b0b0d;
+        --ink: #f4f4f5;
+        --muted: #94969f;
+        --faint: #5d5f67;
+        --line: #212226;
+        --card: #131316;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Geist', system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+      .mono { font-family: 'JetBrains Mono', monospace; }
+
+      /* header */
+      header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 18px 0;
+      }
+      .lockup { display: inline-flex; color: var(--ink); }
+      nav { display: flex; gap: 2px; align-items: center; font-size: 14px; color: var(--muted); }
+      nav a { padding: 6px 11px; border-radius: 7px; transition: color 150ms ease; }
+      @media (hover: hover) and (pointer: fine) { nav a:hover { color: var(--ink); } }
+
+      /* hero — centered, compact */
+      .hero { text-align: center; padding: 64px 0 56px; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 13px; font-weight: 500; color: var(--muted);
+        border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+        transition: color 150ms ease, border-color 150ms ease;
+      }
+      .pill b { color: var(--violet); font-weight: 500; }
+      @media (hover: hover) and (pointer: fine) {
+        .pill:hover { color: var(--ink); border-color: var(--faint); }
+      }
+      h1 {
+        font-size: clamp(38px, 5.6vw, 60px);
+        font-weight: 700; letter-spacing: -0.04em; line-height: 1.06;
+        margin: 20px auto 0; max-width: 20ch; text-wrap: balance;
+      }
+      h1 i { display: inline-block; width: 0.12em; height: 0.12em; border-radius: 50%; background: var(--violet); margin-left: 0.04em; }
+      .sub {
+        margin: 18px auto 0; max-width: 62ch;
+        font-size: 16.5px; color: var(--muted);
+      }
+      .sub b { color: var(--ink); font-weight: 500; }
+      .cta { display: flex; justify-content: center; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
+      .btn {
+        font-size: 14px; font-weight: 600; border-radius: 999px; padding: 10px 20px;
+        border: 1px solid transparent; cursor: pointer;
+        transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), opacity 150ms ease, border-color 150ms ease;
+      }
+      .btn:active { transform: scale(0.97); }
+      .btn.solid { background: var(--ink); color: var(--bg); }
+      .btn.ghost { border-color: var(--line); color: var(--ink); }
+      @media (hover: hover) and (pointer: fine) {
+        .btn.solid:hover { opacity: 0.88; }
+        .btn.ghost:hover { border-color: var(--faint); }
+      }
+      .cmdline { margin-top: 22px; font-size: 13px; color: var(--faint); }
+      .cmdline b { color: var(--violet); font-weight: 400; margin-right: 7px; }
+
+      /* bento — real components */
+      .bento { columns: 3; column-gap: 14px; padding-bottom: 24px; }
+      @media (max-width: 980px) { .bento { columns: 2; } }
+      @media (max-width: 640px) { .bento { columns: 1; } }
+      .cell { break-inside: avoid; margin-bottom: 14px; }
+      /* The loose primitives cluster sits in a plain card frame. */
+      .cell.sink {
+        border: 1px solid var(--line); border-radius: 16px;
+        background: var(--card);
+        padding: 20px 18px;
+      }
+
+      /* compat + footer */
+      .compat {
+        margin-top: 40px; padding: 22px 0;
+        border-top: 1px solid var(--line);
+        display: flex; align-items: center; justify-content: center; gap: 10px 28px; flex-wrap: wrap;
+        font-size: 13.5px; color: var(--muted); text-align: center;
+      }
+      .compat code {
+        font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+        border-radius: 6px; padding: 3px 9px;
+      }
+      footer {
+        border-top: 1px solid var(--line); padding: 22px 0 44px;
+        display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+        font-size: 13px; color: var(--faint);
+      }
+      footer .links { display: flex; gap: 22px; }
+      @media (hover: hover) and (pointer: fine) { footer a:hover { color: var(--ink); } }
+
+      /* single quiet entrance */
+      .hero { opacity: 0; animation: appear 400ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+      @keyframes appear { to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .hero { animation-duration: 150ms; }
+        .btn:active { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a class="lockup" href="/" aria-label="madeui">
+          <svg viewBox="0 0 112 28" width="112" height="28" aria-hidden="true">
+            <rect width="28" height="28" rx="8.5" fill="currentColor"></rect>
+            <path d="M7.9 19 V13.4 Q7.9 9.9 11.1 9.9 Q14 9.9 14 13.4 V19 M14 13.4 Q14 9.9 16.9 9.9 Q20.1 9.9 20.1 13.4 V19"
+                  fill="none" stroke="var(--bg)" stroke-width="2.8" stroke-linecap="round"></path>
+            <text x="37" y="21" font-family="inherit" font-size="18.5" font-weight="700" letter-spacing="-0.5"
+                  fill="currentColor" textLength="64" lengthAdjust="spacingAndGlyphs">madeui</text>
+            <circle cx="107.5" cy="19" r="2.6" fill="var(--violet)"></circle>
+          </svg>
+        </a>
+        <nav>
+          <a href="/docs">Docs</a>
+          <a href="/docs/components/accordion">Components</a>
+          <a href="/changelog">Changelog</a>
+          <a href="https://github.com/madeui/ui">GitHub</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <a class="pill" href="/changelog"><b>v0.1.0</b> First release <span aria-hidden="true">→</span></a>
+        <h1>Components, made yours<i></i></h1>
+        <p class="sub">
+          Copied into your project as <b>editable source</b>, styled with
+          compile-time <b>StyleX tokens</b>, built on headless <b>Base UI</b> —
+          and constrained enough that your AI agent can't break it.
+        </p>
+        <div class="cta">
+          <a class="btn solid" href="/docs/installation">Get Started</a>
+          <a class="btn ghost" href="/docs/components/accordion">View Components</a>
+        </div>
+        <div class="cmdline mono"><b>$</b>npx @madeui/cli init</div>
+      </section>
+
+      <section class="bento" aria-label="Live component previews">
+        <div class="cell sink"><KitchenSink client:visible /></div>
+        <div class="cell"><ApiKeyCard client:visible /></div>
+        <div class="cell"><ComposeCard client:visible /></div>
+        <div class="cell"><BackupCard client:visible /></div>
+        <div class="cell"><RsvpCard client:visible /></div>
+        <div class="cell"><FocusCard client:visible /></div>
+        <div class="cell"><ReviewerCard client:visible /></div>
+        <div class="cell"><ShortcutsCard client:visible /></div>
+      </section>
+
+      <div class="compat">
+        <span>Every preview above is the real component. shadcn CLI works too:</span>
+        <code>npx shadcn@latest add @madeui/button</code>
+      </div>
+
+      <footer>
+        <span>MIT © madeui</span>
+        <div class="links">
+          <a href="/docs">Docs</a>
+          <a href="/changelog">Changelog</a>
+          <a href="https://github.com/madeui/ui">GitHub</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

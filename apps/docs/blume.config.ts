@@ -10,6 +10,31 @@ const registry = join(root, '../../packages/registry');
 const stylexIntegration = {
   name: 'stylex',
   hooks: {
+    // The unplugin appends all collected StyleX CSS to ONE css asset (the
+    // docs' shared chunk). The landing page (custom page, own chunk) never
+    // links it — find the asset by a token only StyleX css contains and add
+    // the link so the live component bento renders styled.
+    'astro:build:done': async ({ dir }: any) => {
+      const { readdir, readFile, writeFile } = await import('node:fs/promises');
+      const dist = fileURLToPath(dir);
+      const astroDir = join(dist, '_astro');
+      const files = (await readdir(astroDir)).filter((f: string) => f.endsWith('.css'));
+      let target: string | undefined;
+      for (const f of files) {
+        const css = await readFile(join(astroDir, f), 'utf8');
+        if (css.includes('cubic-bezier(.23, 1, .32, 1)') || css.includes('cubic-bezier(0.23, 1, 0.32, 1)')) {
+          target = f;
+          break;
+        }
+      }
+      if (!target) return;
+      const indexPath = join(dist, 'index.html');
+      let html = await readFile(indexPath, 'utf8');
+      if (!html.includes(target)) {
+        html = html.replace('</head>', `<link rel="stylesheet" href="/_astro/${target}"></head>`);
+        await writeFile(indexPath, html);
+      }
+    },
     'astro:config:setup': ({ updateConfig, injectScript, command }: any) => {
       // Dev: the plugin serves its CSS at /virtual:stylex.css and ships a
       // runtime script that inlines it (+ HMR updates), but it injects that
@@ -118,7 +143,10 @@ export default defineConfig({
   navigation: {
     // href lands on the generated timeline index; without it the tab would
     // resolve to the newest entry (the changelog index isn't a content page).
-    tabs: [{ label: 'Changelog', path: '/changelog', href: '/changelog' }],
+    tabs: [
+      { label: 'Docs', path: '/docs' },
+      { label: 'Changelog', path: '/changelog', href: '/changelog' },
+    ],
   },
   examples: {
     source: '../../packages/registry/examples',
