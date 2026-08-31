@@ -51,6 +51,12 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
         media.addEventListener('change', apply);
       })();
     </script>
+    <style is:global>
+      /* Astro scopes the main style block, so island children never see the
+         reset — inputs/textareas at width:100% + padding overflow their card
+         without border-box. */
+      *, *::before, *::after { box-sizing: border-box; }
+    </style>
     <style>
       :root {
         --bg: #fafafa;
@@ -80,7 +86,6 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
         --card: #131316;
       }
 
-      * { box-sizing: border-box; }
       body {
         margin: 0;
         background: var(--bg);
