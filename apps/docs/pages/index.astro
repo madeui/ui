@@ -1,18 +1,11 @@
 ---
-// madeui landing — centered hero + live component bento (real registry
-// examples rendered as islands, same pipeline as the docs previews).
+// madeui landing — thin shell; the page itself is a StyleX-styled React
+// component (landing/IndexPage.tsx), same pipeline as the docs previews.
 import * as stylex from '@stylexjs/stylex';
 
 import { darkTheme } from '@/lib/themes';
 
-import ApiKeyCard from '../landing/ApiKeyCard.tsx';
-import BackupCard from '../landing/BackupCard.tsx';
-import ComposeCard from '../landing/ComposeCard.tsx';
-import FocusCard from '../landing/FocusCard.tsx';
-import KitchenSink from '../landing/KitchenSink.tsx';
-import ReviewerCard from '../landing/ReviewerCard.tsx';
-import RsvpCard from '../landing/RsvpCard.tsx';
-import ShortcutsCard from '../landing/ShortcutsCard.tsx';
+import IndexPage from '../landing/IndexPage.tsx';
 
 // StyleX dark-theme classes, applied to <html> before paint by the inline
 // script below (same bridge the docs previews use).
@@ -32,7 +25,7 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap"
     />
     {import.meta.env.DEV && <link rel="stylesheet" href="/virtual:stylex.css" />}
     <script is:inline define:vars={{ darkClasses }}>
@@ -67,256 +60,13 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
       })();
     </script>
     <style is:global>
-      /* Astro scopes the main style block, so island children never see the
-         reset — inputs/textareas at width:100% + padding overflow their card
-         without border-box. */
+      /* Minimal ground: components assume border-box; everything else is
+         StyleX in landing/IndexPage.tsx. */
       *, *::before, *::after { box-sizing: border-box; }
-    </style>
-    <style>
-      :root {
-        --bg: #fafafa;
-        --ink: #111114;
-        --muted: #6f727a;
-        --faint: #a2a4ac;
-        --line: #e7e7ea;
-        --card: #ffffff;
-        --violet: #6d5ce8;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme='light']) {
-          --bg: #0b0b0d;
-          --ink: #f4f4f5;
-          --muted: #94969f;
-          --faint: #5d5f67;
-          --line: #212226;
-          --card: #131316;
-        }
-      }
-      :root[data-theme='dark'] {
-        --bg: #0b0b0d;
-        --ink: #f4f4f5;
-        --muted: #94969f;
-        --faint: #5d5f67;
-        --line: #212226;
-        --card: #131316;
-      }
-
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--ink);
-        font-family: 'Geist', system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
-      a { color: inherit; text-decoration: none; }
-      .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-      .mono { font-family: 'JetBrains Mono', monospace; }
-
-      /* header */
-      header {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 18px 0;
-      }
-      .lockup { display: inline-flex; color: var(--ink); }
-      nav { display: flex; gap: 2px; align-items: center; font-size: 14px; color: var(--muted); }
-      nav a { padding: 6px 11px; border-radius: 7px; transition: color 150ms ease; }
-      @media (hover: hover) and (pointer: fine) { nav a:hover { color: var(--ink); } }
-      .theme { position: relative; margin-left: 6px; }
-      .theme-btn {
-        all: unset; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        width: 30px; height: 30px; border-radius: 8px; color: var(--muted);
-        transition: color 150ms ease, background 150ms ease;
-      }
-      .theme-btn:focus-visible { outline: 2px solid var(--violet); }
-      @media (hover: hover) and (pointer: fine) {
-        .theme-btn:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
-      }
-      .theme-btn .moon { display: none; }
-      :root[data-theme='dark'] .theme-btn .sun { display: none; }
-      :root[data-theme='dark'] .theme-btn .moon { display: block; }
-      .theme-menu {
-        position: absolute; right: 0; top: calc(100% + 6px); z-index: 10;
-        min-width: 120px; padding: 4px;
-        background: var(--card); border: 1px solid var(--line); border-radius: 10px;
-        box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 10%, transparent);
-        display: flex; flex-direction: column;
-      }
-      .theme-menu[hidden] { display: none; }
-      .theme-menu button {
-        all: unset; cursor: pointer; font-size: 13.5px; color: var(--ink);
-        padding: 7px 10px; border-radius: 7px;
-      }
-      .theme-menu button:focus-visible { outline: 2px solid var(--violet); }
-      @media (hover: hover) and (pointer: fine) {
-        .theme-menu button:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
-      }
-
-      /* hero — centered, compact */
-      .hero { text-align: center; padding: 64px 0 56px; }
-      .pill {
-        display: inline-flex; align-items: center; gap: 7px;
-        font-size: 13px; font-weight: 500; color: var(--muted);
-        border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
-        transition: color 150ms ease, border-color 150ms ease;
-      }
-      .pill b { color: var(--violet); font-weight: 500; }
-      @media (hover: hover) and (pointer: fine) {
-        .pill:hover { color: var(--ink); border-color: var(--faint); }
-      }
-      h1 {
-        font-size: clamp(38px, 5.6vw, 60px);
-        font-weight: 700; letter-spacing: -0.04em; line-height: 1.06;
-        margin: 20px auto 0; max-width: 20ch; text-wrap: balance;
-      }
-      h1 i { display: inline-block; width: 0.12em; height: 0.12em; border-radius: 50%; background: var(--violet); margin-left: 0.04em; }
-      .sub {
-        margin: 18px auto 0; max-width: 62ch;
-        font-size: 16.5px; color: var(--muted);
-      }
-      .sub b { color: var(--ink); font-weight: 500; }
-      .cta { display: flex; justify-content: center; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
-      .btn {
-        font-size: 14px; font-weight: 600; border-radius: 999px; padding: 10px 20px;
-        border: 1px solid transparent; cursor: pointer;
-        transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), opacity 150ms ease, border-color 150ms ease;
-      }
-      .btn:active { transform: scale(0.97); }
-      .btn.solid { background: var(--ink); color: var(--bg); }
-      .btn.ghost { border-color: var(--line); color: var(--ink); }
-      @media (hover: hover) and (pointer: fine) {
-        .btn.solid:hover { opacity: 0.88; }
-        .btn.ghost:hover { border-color: var(--faint); }
-      }
-      .cmdline { margin-top: 22px; font-size: 13px; color: var(--faint); }
-      .cmdline b { color: var(--violet); font-weight: 400; margin-right: 7px; }
-
-      /* bento — real components */
-      .bento { columns: 3; column-gap: 14px; padding-bottom: 24px; }
-      @media (max-width: 980px) { .bento { columns: 2; } }
-      @media (max-width: 640px) { .bento { columns: 1; } }
-      .cell { break-inside: avoid; margin-bottom: 14px; }
-      /* The loose primitives cluster sits in a plain card frame. */
-      .cell.sink {
-        border: 1px solid var(--line); border-radius: 16px;
-        background: var(--card);
-        padding: 20px 18px;
-      }
-
-      /* compat + footer */
-      .compat {
-        margin-top: 40px; padding: 22px 0;
-        border-top: 1px solid var(--line);
-        display: flex; align-items: center; justify-content: center; gap: 10px 28px; flex-wrap: wrap;
-        font-size: 13.5px; color: var(--muted); text-align: center;
-      }
-      .compat code {
-        font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--ink);
-        background: color-mix(in srgb, var(--ink) 6%, transparent);
-        border-radius: 6px; padding: 3px 9px;
-      }
-      footer {
-        border-top: 1px solid var(--line); padding: 22px 0 44px;
-        display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-        font-size: 13px; color: var(--faint);
-      }
-      footer .links { display: flex; gap: 22px; }
-      @media (hover: hover) and (pointer: fine) { footer a:hover { color: var(--ink); } }
-
-      /* single quiet entrance */
-      .hero { opacity: 0; animation: appear 400ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-      @keyframes appear { to { opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) {
-        .hero { animation-duration: 150ms; }
-        .btn:active { transform: none; }
-      }
+      body { margin: 0; }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <a class="lockup" href="/" aria-label="madeui">
-          <svg viewBox="0 0 112 28" width="112" height="28" aria-hidden="true">
-  <rect width="28" height="28" rx="8.5" fill="currentColor"/>
-  <path d="M7.9 19 V13.4 Q7.9 9.9 11.1 9.9 Q14 9.9 14 13.4 V19 M14 13.4 Q14 9.9 16.9 9.9 Q20.1 9.9 20.1 13.4 V19"
-        fill="none" stroke="var(--bg)" stroke-width="2.8" stroke-linecap="round"/>
-  <g transform="translate(37,21) scale(0.185)" fill="currentColor"><path d="M21.6 0L6.6 0L6.6-53.6L20.1-53.6L20.6-40.7L19.2-41.3Q20.3-45.6 22.6-48.6Q24.8-51.6 28-53.2Q31.2-54.8 35-54.8Q41.7-54.8 45.9-50.9Q50-47 51.2-40.4L49.3-40.3Q50.2-45 52.5-48.2Q54.7-51.5 58-53.2Q61.3-54.8 65.4-54.8Q71-54.8 75-52.5Q79-50.2 81.2-45.7Q83.4-41.1 83.4-34.5L83.4 0L68.4 0L68.4-30.3Q68.4-36.6 66.5-39.7Q64.6-42.9 60.3-42.9Q57.6-42.9 55.7-41.4Q53.8-39.9 52.8-37.1Q51.7-34.2 51.7-30.1L51.7 0L38.2 0L38.2-30.1Q38.2-36.3 36.4-39.6Q34.6-42.9 30.2-42.9Q27.5-42.9 25.6-41.4Q23.6-39.9 22.6-37Q21.6-34.1 21.6-30.1M109.8 1.2Q101.5 1.2 96.3-2.7Q91-6.5 91-13.4Q91-20.5 95.5-24.4Q99.9-28.2 108.6-30L125.9-33.4Q125.9-38.6 123.5-41.2Q121.2-43.9 116.8-43.9Q112.5-43.9 110.1-42Q107.7-40 107-36.2L91.9-36.9Q93.4-45.7 99.8-50.2Q106.3-54.8 116.8-54.8Q128.8-54.8 134.8-49.1Q140.9-43.4 140.9-32.4L140.9-14.1Q140.9-11.8 141.7-11.1Q142.4-10.3 143.9-10.3L145.4-10.3L145.4 0Q144.7 0.2 143.2 0.4Q141.6 0.6 140.1 0.6Q136.9 0.6 134.2-0.5Q131.4-1.6 129.7-4.2Q128-6.9 128-11.8L129.3-10.8Q128.3-7.2 125.8-4.5Q123.2-1.8 119.2-0.3Q115.1 1.2 109.8 1.2M113.4-9.1Q117.1-9.1 119.9-10.6Q122.7-12 124.3-14.8Q125.9-17.6 125.9-21.4L125.9-24L113.7-21.4Q110.1-20.7 108.3-19.1Q106.4-17.4 106.4-14.8Q106.4-12.1 108.2-10.6Q110-9.1 113.4-9.1M169.7 1.2Q162.9 1.2 157.9-2.2Q153-5.7 150.3-12Q147.7-18.2 147.7-26.8Q147.7-35.4 150.4-41.7Q153.1-47.9 158.1-51.4Q163-54.8 169.7-54.8Q175.4-54.8 179.6-52.5Q183.7-50.1 185.8-46L185.8-71L200.8-71L200.8 0L186.5 0L186.2-7.9Q184-3.6 179.7-1.2Q175.3 1.2 169.7 1.2M174.6-10.3Q178.2-10.3 180.7-12.2Q183.2-14.1 184.5-17.7Q185.8-21.4 185.8-26.8Q185.8-32.3 184.5-36Q183.2-39.6 180.7-41.5Q178.2-43.3 174.6-43.3Q169.3-43.3 166.2-38.9Q163.1-34.4 163.1-26.8Q163.1-19.3 166.3-14.8Q169.4-10.3 174.6-10.3M235.4 1.2Q227.2 1.2 221.1-2.2Q215.1-5.7 211.8-12Q208.4-18.3 208.4-26.8Q208.4-35.3 211.8-41.6Q215.1-47.8 221.1-51.3Q227.1-54.8 235.3-54.8Q243.3-54.8 249.2-51.3Q255.1-47.8 258.4-41.3Q261.6-34.8 261.6-25.8L261.6-22.8L223.9-22.8Q224.2-16.4 227.3-13.3Q230.5-10.2 235.7-10.2Q239.5-10.2 242-11.8Q244.6-13.4 245.7-16.7L260.8-15.8Q258.7-7.8 251.9-3.3Q245.1 1.2 235.4 1.2M223.9-32L246.2-32Q245.9-37.9 242.9-40.8Q240-43.7 235.3-43.7Q230.6-43.7 227.5-40.7Q224.5-37.6 223.9-32M286.7 1.2Q278.4 1.2 273.8-4.2Q269.1-9.5 269.1-19.1L269.1-53.6L284.1-53.6L284.1-22.6Q284.1-16.4 286-13.6Q287.9-10.7 292-10.7Q296.6-10.7 299.1-13.9Q301.7-17 301.7-23.3L301.7-53.6L316.7-53.6L316.7 0L303 0L302.6-15.4L304.5-15Q303.3-7 298.8-2.9Q294.3 1.2 286.7 1.2M342.1 0L327.1 0L327.1-53.6L342.1-53.6L342.1 0M342.3-60.2L326.8-60.2L326.8-72.2L342.3-72.2"/></g>
-  <circle cx="106.8" cy="18.4" r="2.6" fill="#6D5CE8"/>
-          </svg>
-        </a>
-        <nav>
-          <a href="/docs">Docs</a>
-          <a href="/docs/components/accordion">Components</a>
-          <a href="/changelog">Changelog</a>
-          <a href="https://github.com/madeui/ui">GitHub</a>
-          <div class="theme">
-            <button type="button" class="theme-btn" aria-label="Theme" aria-haspopup="menu">
-              <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
-              <svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
-            </button>
-            <div class="theme-menu" role="menu" hidden>
-              <button type="button" role="menuitem" data-mode="light">Light</button>
-              <button type="button" role="menuitem" data-mode="dark">Dark</button>
-              <button type="button" role="menuitem" data-mode="system">System</button>
-            </div>
-          </div>
-        </nav>
-      </header>
-
-      <section class="hero">
-        <a class="pill" href="/changelog"><b>v0.1.0</b> First release <span aria-hidden="true">→</span></a>
-        <h1>Components, made yours<i></i></h1>
-        <p class="sub">
-          Copied into your project as <b>editable source</b>, styled with
-          compile-time <b>StyleX tokens</b>, built on headless <b>Base UI</b> —
-          and constrained enough that your AI agent can't break it.
-        </p>
-        <div class="cta">
-          <a class="btn solid" href="/docs/installation">Get Started</a>
-          <a class="btn ghost" href="/docs/components/accordion">View Components</a>
-        </div>
-        <div class="cmdline mono"><b>$</b>npx @madeui/cli init</div>
-      </section>
-
-      <section class="bento" aria-label="Live component previews">
-        <div class="cell sink"><KitchenSink client:visible /></div>
-        <div class="cell"><ApiKeyCard client:visible /></div>
-        <div class="cell"><ComposeCard client:visible /></div>
-        <div class="cell"><BackupCard client:visible /></div>
-        <div class="cell"><RsvpCard client:visible /></div>
-        <div class="cell"><FocusCard client:visible /></div>
-        <div class="cell"><ReviewerCard client:visible /></div>
-        <div class="cell"><ShortcutsCard client:visible /></div>
-      </section>
-
-      <div class="compat">
-        <span>Every preview above is the real component. shadcn CLI works too:</span>
-        <code>npx shadcn@latest add @madeui/button</code>
-      </div>
-
-      <footer>
-        <span>MIT © madeui</span>
-        <div class="links">
-          <a href="/docs">Docs</a>
-          <a href="/changelog">Changelog</a>
-          <a href="https://github.com/madeui/ui">GitHub</a>
-        </div>
-      </footer>
-    </div>
-    <script>
-      const themeBtn = document.querySelector('.theme-btn');
-      const themeMenu = document.querySelector('.theme-menu');
-      themeBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        themeMenu?.toggleAttribute('hidden');
-      });
-      themeMenu?.addEventListener('click', (e) => {
-        const mode = (e.target as HTMLElement).dataset?.mode;
-        if (!mode) return;
-        (window as any).__setTheme(mode);
-        themeMenu.setAttribute('hidden', '');
-      });
-      document.addEventListener('click', () => themeMenu?.setAttribute('hidden', ''));
-    </script>
+    <IndexPage client:load />
   </body>
 </html>
