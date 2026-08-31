@@ -64,6 +64,8 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
          StyleX in landing/IndexPage.tsx. */
       *, *::before, *::after { box-sizing: border-box; }
       body { margin: 0; }
+      /* StyleX 0.19 emits an empty value for break-inside — one utility. */
+      .bento-cell { break-inside: avoid; }
     </style>
   </head>
   <body>
