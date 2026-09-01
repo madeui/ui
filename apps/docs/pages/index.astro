@@ -1,0 +1,74 @@
+---
+// madeui landing — thin shell; the page itself is a StyleX-styled React
+// component (landing/IndexPage.tsx), same pipeline as the docs previews.
+import * as stylex from '@stylexjs/stylex';
+
+import { darkTheme } from '@/lib/themes';
+
+import IndexPage from '../landing/IndexPage.tsx';
+
+// StyleX dark-theme classes, applied to <html> before paint by the inline
+// script below (same bridge the docs previews use).
+const darkClasses = stylex.props(darkTheme).className ?? '';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>madeui — Components, made yours</title>
+    <meta
+      name="description"
+      content="Base UI + StyleX components you own. Copied into your project as editable source. Agent-friendly by design."
+    />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap"
+    />
+    {import.meta.env.DEV && <link rel="stylesheet" href="/virtual:stylex.css" />}
+    <script is:inline define:vars={{ darkClasses }}>
+      // Shared theme state with the docs ("blume-theme" in localStorage):
+      // resolve stored/system to data-theme, mirror onto the StyleX dark
+      // theme before first paint, and expose a setter for the header menu.
+      (() => {
+        const html = document.documentElement;
+        const classes = darkClasses.split(' ').filter(Boolean);
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const resolve = () => {
+          let stored = null;
+          try { stored = localStorage.getItem('blume-theme'); } catch {}
+          return stored === 'dark' || stored === 'light'
+            ? stored
+            : media.matches ? 'dark' : 'light';
+        };
+        const apply = () => {
+          const theme = resolve();
+          html.dataset.theme = theme;
+          for (const c of classes) html.classList.toggle(c, theme === 'dark');
+        };
+        apply();
+        media.addEventListener('change', apply);
+        window.__setTheme = (mode) => {
+          try {
+            if (mode === 'system') localStorage.removeItem('blume-theme');
+            else localStorage.setItem('blume-theme', mode);
+          } catch {}
+          apply();
+        };
+      })();
+    </script>
+    <style is:global>
+      /* Minimal ground: components assume border-box; everything else is
+         StyleX in landing/IndexPage.tsx. */
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; }
+      /* StyleX 0.19 emits an empty value for break-inside — one utility. */
+      .bento-cell { break-inside: avoid; }
+    </style>
+  </head>
+  <body>
+    <IndexPage client:load />
+  </body>
+</html>
