@@ -157,10 +157,10 @@ export default function IndexPage() {
             <a href="/docs" {...stylex.props(styles.navLink)}>
               Docs
             </a>
-            <a href="/docs/components/accordion" {...stylex.props(styles.navLink)}>
+            <a href="/docs/components/accordion" {...stylex.props(styles.navLink, styles.navSecondary)}>
               Components
             </a>
-            <a href="/changelog" {...stylex.props(styles.navLink)}>
+            <a href="/changelog" {...stylex.props(styles.navLink, styles.navSecondary)}>
               Changelog
             </a>
             <a href="https://github.com/madeui/ui" {...stylex.props(styles.navLink)}>
@@ -254,6 +254,7 @@ const appear = stylex.keyframes({
 });
 
 const HOVER = "@media (hover: hover) and (pointer: fine)" as const;
+const MOBILE = "@media (max-width: 36rem)" as const;
 
 const styles = stylex.create({
   page: {
@@ -269,7 +270,7 @@ const styles = stylex.create({
   wrap: {
     marginInline: "auto",
     maxWidth: "75rem",
-    paddingInline: space.s6,
+    paddingInline: { default: space.s6, [MOBILE]: space.s4 },
   },
   header: {
     alignItems: "center",
@@ -285,10 +286,19 @@ const styles = stylex.create({
   nav: {
     alignItems: "center",
     display: "flex",
+    // Without this the links compress past their text and overlap on
+    // narrow screens instead of the row simply getting tighter.
+    flexShrink: 0,
     gap: space.s05,
+  },
+  // Docs and GitHub carry the header on phones; Components and Changelog
+  // are one tap away from either, and both sit in the footer.
+  navSecondary: {
+    display: { default: null, [MOBILE]: "none" },
   },
   navLink: {
     borderRadius: radius.md,
+    whiteSpace: "nowrap",
     color: {
       default: colors.mutedForeground,
       [HOVER]: { default: null, ":hover": colors.foreground },
@@ -359,7 +369,10 @@ const styles = stylex.create({
     animationName: appear,
     animationTimingFunction: easing.out,
     opacity: 0,
-    paddingBlock: `${space.s16} ${space.s12}`,
+    paddingBlock: {
+      default: `${space.s16} ${space.s12}`,
+      [MOBILE]: `${space.s10} ${space.s9}`,
+    },
     textAlign: "center",
   },
   pill: {
