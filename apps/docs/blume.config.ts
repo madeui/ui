@@ -7,6 +7,21 @@ import { defineConfig } from 'blume';
 const root = dirname(fileURLToPath(import.meta.url));
 const registry = join(root, '../../packages/registry');
 
+// The generated registry JSON (packages/registry/public/r) is what the
+// shadcn CLI fetches — it has to ship with the site, but it lives outside
+// this app so it can't sit in public/. Copy it into the build output.
+const registryEndpoints = {
+  name: 'registry-endpoints',
+  hooks: {
+    'astro:build:done': async ({ dir }: any) => {
+      const { cp } = await import('node:fs/promises');
+      await cp(join(registry, 'public/r'), join(fileURLToPath(dir), 'r'), {
+        recursive: true,
+      });
+    },
+  },
+};
+
 const stylexIntegration = {
   name: 'stylex',
   hooks: {
@@ -152,5 +167,5 @@ export default defineConfig({
     source: '../../packages/registry/examples',
     css: 'styles/examples.css',
   },
-  integrations: [stylexIntegration as any],
+  integrations: [stylexIntegration as any, registryEndpoints as any],
 });
