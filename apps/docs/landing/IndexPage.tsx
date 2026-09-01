@@ -139,6 +139,73 @@ function ThemeMenu() {
   );
 }
 
+// One copyable command. The copy button is the whole chip: nothing else on
+// it is interactive, so a 40px-wide icon target would just be a smaller
+// version of the same action.
+function CopyCommand({ command, compact }: { command: string; compact?: boolean }) {
+  const [copied, setCopied] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+    } catch {
+      return; // no clipboard (insecure context) — leave the chip untouched
+    }
+    setCopied(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(false), 1600);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      aria-label={`Copy ${command}`}
+      {...stylex.props(styles.cmd, compact && styles.cmdCompact)}
+    >
+      <span aria-hidden {...stylex.props(styles.cmdPrompt)}>
+        $
+      </span>
+      <code {...stylex.props(styles.cmdText)}>{command}</code>
+      <span aria-hidden {...stylex.props(styles.cmdIcons)}>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          {...stylex.props(styles.cmdIcon, copied && styles.cmdIconOut)}
+        >
+          <rect x="9" y="9" width="12" height="12" rx="2" />
+          <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+        </svg>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          {...stylex.props(styles.cmdIcon, styles.cmdCheck, copied && styles.cmdIconIn)}
+        >
+          <path d="m4 12.5 5.2 5.2L20 7" />
+        </svg>
+      </span>
+      <span role="status" aria-live="polite" {...stylex.props(styles.srOnly)}>
+        {copied ? "Copied" : ""}
+      </span>
+    </button>
+  );
+}
+
 export default function IndexPage() {
   // Merges the StyleX cell styles with the one global utility class the
   // astro shell provides (break-inside — see the compiler-bug note below).
@@ -194,7 +261,7 @@ export default function IndexPage() {
             </a>
           </div>
           <div {...stylex.props(styles.cmdline)}>
-            <span {...stylex.props(styles.cmdPrompt)}>$</span> npx @madeui/cli init
+            <CopyCommand command="npx @madeui/cli init" />
           </div>
         </section>
 
@@ -227,7 +294,7 @@ export default function IndexPage() {
 
         <div {...stylex.props(styles.compat)}>
           <span>Every preview above is the real component. shadcn CLI works too:</span>
-          <code {...stylex.props(styles.compatCode)}>npx shadcn@latest add @madeui/button</code>
+          <CopyCommand command="npx shadcn@latest add @madeui/button" compact />
         </div>
 
         <footer {...stylex.props(styles.footer)}>
@@ -471,14 +538,92 @@ const styles = stylex.create({
     color: colors.foreground,
   },
   cmdline: {
-    color: colors.mutedForeground,
+    marginTop: space.s5,
+  },
+  // A real surface: the bare mono line read as text floating on the page,
+  // and it never looked like something you could click.
+  cmd: {
+    alignItems: "center",
+    backgroundColor: colors.muted,
+    // muted and accent are the same value in both themes, so the hover
+    // signal has to come from the border.
+    borderColor: {
+      default: colors.border,
+      [HOVER]: { default: null, ":hover": colors.mutedForeground },
+    },
+    borderRadius: radius.full,
+    borderStyle: "solid",
+    borderWidth: stroke.border,
+    color: colors.foreground,
+    cursor: "pointer",
+    display: "inline-flex",
     fontFamily: font.mono,
     fontSize: fontSize.xs,
-    marginTop: space.s5,
+    gap: space.s2,
+    paddingBlock: space.s2,
+    paddingInline: space.s4,
+    transform: { default: "scale(1)", ":active": "scale(0.97)" },
+    transitionDuration: duration.fast,
+    transitionProperty: {
+      default: "transform, border-color",
+      "@media (prefers-reduced-motion: reduce)": "border-color",
+    },
+    transitionTimingFunction: easing.out,
+  },
+  cmdCompact: {
+    paddingBlock: space.s05,
+    paddingInline: space.s25,
   },
   cmdPrompt: {
     color: VIOLET,
-    marginRight: space.s15,
+  },
+  cmdText: {
+    fontFamily: font.mono,
+  },
+  // Both icons share one cell so the swap is a crossfade in place, not a
+  // width change that would shift the command text.
+  cmdIcons: {
+    color: colors.mutedForeground,
+    display: "inline-block",
+    height: "14px",
+    marginLeft: space.s1,
+    position: "relative",
+    width: "14px",
+  },
+  cmdIcon: {
+    insetInlineStart: 0,
+    opacity: 1,
+    position: "absolute",
+    top: 0,
+    transform: "scale(1)",
+    transitionDuration: duration.fast,
+    transitionProperty: {
+      default: "transform, opacity",
+      "@media (prefers-reduced-motion: reduce)": "opacity",
+    },
+    transitionTimingFunction: easing.out,
+  },
+  cmdIconOut: {
+    opacity: 0,
+    transform: "scale(0.8)",
+  },
+  cmdCheck: {
+    color: VIOLET,
+    opacity: 0,
+    transform: "scale(0.8)",
+  },
+  cmdIconIn: {
+    opacity: 1,
+    transform: "scale(1)",
+  },
+  srOnly: {
+    borderWidth: 0,
+    clipPath: "inset(50%)",
+    height: "1px",
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: "1px",
   },
 
   bento: {
@@ -519,15 +664,6 @@ const styles = stylex.create({
     marginTop: space.s10,
     paddingBlock: space.s5,
     textAlign: "center",
-  },
-  compatCode: {
-    backgroundColor: colors.muted,
-    borderRadius: radius.md,
-    color: colors.foreground,
-    fontFamily: font.mono,
-    fontSize: fontSize.xs,
-    paddingBlock: space.s05,
-    paddingInline: space.s2,
   },
 
   footer: {
