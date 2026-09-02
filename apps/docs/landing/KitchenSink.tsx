@@ -22,7 +22,7 @@ export default function KitchenSink() {
       <Input placeholder="you@example.com" aria-label="Email" />
       <div {...stylex.props(styles.row)}>
         <Badge variant="secondary">Draft</Badge>
-        <Badge variant="outline">v0.1.0</Badge>
+        <Badge variant="outline">v1.0.0</Badge>
         <Badge>New</Badge>
         <KbdGroup>
           <Kbd>⌘</Kbd>

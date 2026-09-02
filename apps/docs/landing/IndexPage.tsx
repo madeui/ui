@@ -239,7 +239,7 @@ export default function IndexPage() {
 
         <section {...stylex.props(styles.hero)}>
           <a href="/changelog" {...stylex.props(styles.pill)}>
-            <span {...stylex.props(styles.pillVersion)}>v0.1.0</span> First release{" "}
+            <span {...stylex.props(styles.pillVersion)}>v1.0.0</span> First release{" "}
             <span aria-hidden>→</span>
           </a>
           <h1 {...stylex.props(styles.h1)}>
