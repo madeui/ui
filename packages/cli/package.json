@@ -2,6 +2,24 @@
   "name": "@madeui/cli",
   "version": "0.1.0",
   "description": "CLI for the madeui registry: init (StyleX build setup) and add (install components).",
+  "keywords": [
+    "ui",
+    "components",
+    "stylex",
+    "base-ui",
+    "react",
+    "registry",
+    "shadcn"
+  ],
+  "homepage": "https://madeui.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madeui/ui.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/madeui/ui/issues"
+  },
   "type": "module",
   "bin": {
     "madeui": "src/index.mjs"
@@ -9,6 +27,9 @@
   "files": [
     "src"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18.17"
   },

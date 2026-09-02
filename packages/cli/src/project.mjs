@@ -7,7 +7,7 @@ import kleur from 'kleur';
 export const CONFIG_FILE = 'madeui.json';
 
 export const DEFAULT_CONFIG = {
-  registry: 'https://example.com/r',
+  registry: 'https://madeui.com/r',
   paths: {
     ui: 'components/ui',
     lib: 'lib',
