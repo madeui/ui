@@ -1,6 +1,7 @@
 {
   "name": "madeui-monorepo",
   "private": true,
+  "packageManager": "pnpm@11.12.0",
   "scripts": {
     "build:registry": "node packages/registry/scripts/build-registry.mjs",
     "docs:dev": "pnpm --filter @madeui/docs dev",
