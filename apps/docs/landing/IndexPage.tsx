@@ -26,25 +26,33 @@ import ReviewerCard from "./ReviewerCard";
 import RsvpCard from "./RsvpCard";
 import ShortcutsCard from "./ShortcutsCard";
 
-// Marketing accent — deliberately outside the token scale (the brand violet
-// is not a component color; see the wordmark dot).
-const VIOLET = "#6D5CE8";
-
 function Lockup() {
   return (
-    <svg viewBox={`0 0 112 28`} width="112" height="28" aria-hidden>
-      <rect width="28" height="28" rx="8.5" fill="currentColor" />
-      <path
-        d={`M7.9 19 V13.4 Q7.9 9.9 11.1 9.9 Q14 9.9 14 13.4 V19 M14 13.4 Q14 9.9 16.9 9.9 Q20.1 9.9 20.1 13.4 V19`}
-        fill="none"
-        stroke={`var(--madeui-page-bg, #fff)`}
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-      <g transform={`translate(37,21) scale(0.185)`} fill="currentColor">
+    <svg viewBox={`0 0 99 28`} width="99" height="28" aria-hidden>
+      {/* Glyph: three placed components and one snapping into its slot.
+          Fitted by its true bounding box (the tilted slot overshoots the
+          64-grid), so it fills the lockup's full 28-unit cell. */}
+      <g transform={`scale(0.47417) translate(-6, 1.05)`} fill="currentColor">
+        <rect x="6" y="6" width="24" height="24" rx="7" />
+        <rect x="6" y="34" width="24" height="24" rx="7" />
+        <rect x="34" y="34" width="24" height="24" rx="7" />
+        <rect
+          x="38"
+          y="2"
+          width="24"
+          height="24"
+          rx="7"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeDasharray={`5 4`}
+          strokeLinecap="round"
+          transform={`rotate(8 50 14)`}
+        />
+      </g>
+      <g transform={`translate(34,21) scale(0.185)`} fill="currentColor">
         <path d={WORDMARK_PATH} />
       </g>
-      <circle cx="106.8" cy="18.4" r="2.6" fill={VIOLET} />
     </svg>
   );
 }
@@ -466,7 +474,7 @@ const styles = stylex.create({
     transitionProperty: "color, border-color",
   },
   pillVersion: {
-    color: VIOLET,
+    color: colors.foreground,
   },
   h1: {
     // Display scale — a marketing size with no place on the control type scale.
@@ -480,7 +488,7 @@ const styles = stylex.create({
     textWrap: "balance",
   },
   dot: {
-    backgroundColor: VIOLET,
+    backgroundColor: colors.foreground,
     borderRadius: radius.full,
     display: "inline-block",
     height: "0.12em",
@@ -575,7 +583,7 @@ const styles = stylex.create({
     paddingInline: space.s25,
   },
   cmdPrompt: {
-    color: VIOLET,
+    color: colors.foreground,
   },
   cmdText: {
     fontFamily: font.mono,
@@ -608,7 +616,7 @@ const styles = stylex.create({
     transform: "scale(0.8)",
   },
   cmdCheck: {
-    color: VIOLET,
+    color: colors.foreground,
     opacity: 0,
     transform: "scale(0.8)",
   },

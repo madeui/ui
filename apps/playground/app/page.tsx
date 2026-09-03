@@ -254,7 +254,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ring } from '@/lib/stylex-utils';
-import { darkTheme, emeraldTheme, violetTheme } from '@/lib/themes';
+import { darkTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -313,21 +313,13 @@ function ToastButton() {
 
 export default function Home() {
   const [dark, setDark] = useState(false);
-  const [accent, setAccent] = useState<'default' | 'violet' | 'emerald'>(
-    'default'
-  );
 
   // Theme goes on <html>, not a wrapper: dialogs/popovers portal to <body>,
-  // and a subtree theme would not reach them. Accent themes are partial and
-  // compose with the dark theme.
+  // and a subtree theme would not reach them.
   useEffect(() => {
-    const { className } = stylex.props(
-      dark && darkTheme,
-      accent === 'violet' && violetTheme,
-      accent === 'emerald' && emeraldTheme
-    );
+    const { className } = stylex.props(dark && darkTheme);
     document.documentElement.className = className ?? '';
-  }, [dark, accent]);
+  }, [dark]);
 
   return (
     <ToastProvider>
@@ -335,20 +327,6 @@ export default function Home() {
         <div {...stylex.props(styles.headerRow)}>
           <h1 {...stylex.props(styles.heading)}>madeui playground</h1>
           <div {...stylex.props(styles.headerActions)}>
-            <Button
-              variant="outline"
-              onClick={() =>
-                setAccent(
-                  accent === 'default'
-                    ? 'violet'
-                    : accent === 'violet'
-                      ? 'emerald'
-                      : 'default'
-                )
-              }
-            >
-              Accent: {accent}
-            </Button>
             <Button variant="secondary" onClick={() => setDark(!dark)}>
               {dark ? 'Light mode' : 'Dark mode'}
             </Button>

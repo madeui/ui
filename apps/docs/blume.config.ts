@@ -22,6 +22,51 @@ const registryEndpoints = {
   },
 };
 
+// Blume sizes the header brand mark with a hardcoded utility class and exposes
+// no config for it, so madeui's one override ships as a plain stylesheet:
+// copied into the build output and linked from every page. A CSS `import` via
+// injectScript is silently dropped here, hence the copy-and-link route (the
+// same shape as registryEndpoints above). The dev hook re-adds it client-side,
+// since astro:build:done never runs under `blume dev`.
+const brandStyles = {
+  name: 'brand-styles',
+  hooks: {
+    'astro:config:setup': ({ injectScript, command }: any) => {
+      if (command === 'dev') {
+        injectScript(
+          'page',
+          `if (!document.querySelector('link[data-madeui-brand]')) {
+             const l = document.createElement('link');
+             l.rel = 'stylesheet'; l.href = '/brand.css';
+             l.setAttribute('data-madeui-brand', '');
+             document.head.appendChild(l);
+           }`,
+        );
+      }
+    },
+    'astro:build:done': async ({ dir }: any) => {
+      const { copyFile, readdir, readFile, writeFile } = await import('node:fs/promises');
+      const dist = fileURLToPath(dir);
+      await copyFile(join(root, 'styles/brand.css'), join(dist, 'brand.css'));
+      const tag = '<link rel="stylesheet" href="/brand.css" data-madeui-brand>';
+      const walk = async (d: string): Promise<string[]> => {
+        const out: string[] = [];
+        for (const e of await readdir(d, { withFileTypes: true })) {
+          const full = join(d, e.name);
+          if (e.isDirectory()) out.push(...(await walk(full)));
+          else if (e.name.endsWith('.html')) out.push(full);
+        }
+        return out;
+      };
+      for (const file of await walk(dist)) {
+        const html = await readFile(file, 'utf8');
+        if (html.includes('data-madeui-brand') || !html.includes('</head>')) continue;
+        await writeFile(file, html.replace('</head>', `${tag}</head>`));
+      }
+    },
+  },
+};
+
 const stylexIntegration = {
   name: 'stylex',
   hooks: {
@@ -146,11 +191,13 @@ export default defineConfig({
   title: 'madeui',
   description:
     'Base UI + StyleX components you own. Agent-friendly by design.',
-  // Full lockup SVG (glyph + wordmark + dot); text lives inside the SVG.
+  // Full lockup SVG (glyph + wordmark); text lives inside the SVG.
   logo: { image: '/brand/lockup.svg', text: '' },
   theme: {
-    // Brand violet — same as the wordmark dot.
-    accent: '#6D5CE8',
+    // The brand is monochrome: the accent is ink, so it has to flip per mode
+    // (a single near-black accent would vanish on the dark background).
+    // Same values as the `foreground` token in lib/tokens.stylex.ts.
+    accent: { light: '#0A0A0A', dark: '#FAFAFA' },
   },
   content: { root: 'content' },
   // Absolute origin for sitemap, canonicals, and the changelog RSS feed.
@@ -167,5 +214,5 @@ export default defineConfig({
     source: '../../packages/registry/examples',
     css: 'styles/examples.css',
   },
-  integrations: [stylexIntegration as any, registryEndpoints as any],
+  integrations: [stylexIntegration as any, registryEndpoints as any, brandStyles as any],
 });

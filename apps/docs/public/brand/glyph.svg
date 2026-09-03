@@ -1,7 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <!-- Chip follows the page ink; the m shows the page background through it.
-       Inlined by Blume, so currentColor / --blume-background both resolve. -->
-  <rect width="48" height="48" rx="10.5" fill="currentColor"/>
-  <path d="M13.5 32.5 V23 Q13.5 17 19 17 Q24 17 24 23 V32.5 M24 23 Q24 17 29 17 Q34.5 17 34.5 23 V32.5"
-        fill="none" stroke="var(--blume-background, #fff)" stroke-width="4.8" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 -1.05 59.05 59.05" width="48" height="48">
+  <!-- Three placed components and one still snapping into its slot.
+       All currentColor, so the mark follows the page ink in both modes.
+       The viewBox is the mark's true bounding box (the tilted slot overshoots
+       the 64-unit grid), so the mark fills its box with no baked-in padding. -->
+  <rect x="6" y="6" width="24" height="24" rx="7" fill="currentColor"/>
+  <rect x="6" y="34" width="24" height="24" rx="7" fill="currentColor"/>
+  <rect x="34" y="34" width="24" height="24" rx="7" fill="currentColor"/>
+  <rect x="38" y="2" width="24" height="24" rx="7" fill="none" stroke="currentColor"
+      stroke-width="3" stroke-dasharray="5 4" stroke-linecap="round"
+      transform="rotate(8 50 14)"/>
 </svg>

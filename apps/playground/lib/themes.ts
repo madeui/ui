@@ -27,18 +27,8 @@ export const darkTheme = stylex.createTheme(colors, {
   overlay: 'oklch(0% 0 0deg / 70%)',
 });
 
-// Accent themes override only the brand tokens, so they compose with the
-// base palette or darkTheme: stylex.props(darkTheme, violetTheme). Themes
-// are static by design — StyleX resolves them at compile time, so generate
-// variations by adding more createTheme calls here, not at runtime.
-export const violetTheme = stylex.createTheme(colors, {
-  primary: 'oklch(0.541 0.281 293.009)',
-  primaryForeground: 'oklch(0.969 0.016 293.756)',
-  ring: 'oklch(0.541 0.281 293.009)',
-});
-
-export const emeraldTheme = stylex.createTheme(colors, {
-  primary: 'oklch(0.596 0.145 163.225)',
-  primaryForeground: 'oklch(0.979 0.021 166.113)',
-  ring: 'oklch(0.596 0.145 163.225)',
-});
+// Themes are static by design — StyleX resolves `createTheme` at compile
+// time, so add variations by writing more `createTheme` calls here, not by
+// computing them at runtime. A theme need not override every token: a partial
+// one composes with a full one and the later theme wins per token, e.g.
+// `stylex.props(darkTheme, brandTheme)`.

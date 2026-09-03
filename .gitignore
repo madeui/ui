@@ -16,3 +16,9 @@ dist/
 ROADMAP.md
 CLAUDE.local.md
 .blume-verify/
+
+# design-sync (claude.ai/design) — local only, never committed:
+# .design-sync/ holds a personal claude.ai/design projectId + sync artifacts.
+.ds-sync/
+ds-bundle/
+.design-sync/

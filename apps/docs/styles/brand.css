@@ -1,0 +1,15 @@
+/* Blume clamps the header brand mark to 20px (`h-5`) inside a 64px header.
+   That height was tuned for a solid logo; madeui's mark is an open 2x2
+   arrangement of separate squares, so it carries far less ink at the same
+   height and reads undersized next to the wordmark. Give the whole lockup
+   more room — the mark and the wordmark scale together, so the internal
+   proportions are untouched.
+
+   Specificity beats Blume's `[&>svg]:h-5` utility without !important; keyed
+   on Blume's own `data-blume-header`, which is stable markup. */
+[data-blume-header] a > span[aria-hidden='true'] {
+  height: 1.75rem;
+}
+[data-blume-header] a > span[aria-hidden='true'] > svg {
+  height: 1.75rem;
+}
