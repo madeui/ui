@@ -95,6 +95,9 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
   where consumed (a non-null default is emitted unlayered and always wins).
 - Popup edges use the \`ring()\` recipe (box-shadow), not borders — Base UI
   positioning math ignores borders.
+- Icons are \`lucide-react\`, sized with the \`icon\` styles from
+  \`stylex-utils.ts\` (\`{...stylex.props(icon.md)}\`) — never hand-drawn SVG,
+  never the \`size\` prop.
 - Theming: apply themes (e.g. \`darkTheme\` from \`themes.ts\`) to \`<html>\`,
   not a wrapper — dialogs/popovers portal to \`<body>\`.
 - Global CSS: keep resets inside \`@layer base\` (declared before \`@stylex\`);

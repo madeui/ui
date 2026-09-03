@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import * as stylex from '@stylexjs/stylex';
+import { X } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, shadow, radius } from '@/lib/tokens.stylex';
 
@@ -54,18 +56,7 @@ export function SheetContent({
         {children}
         {showCloseButton && (
           <BaseDialog.Close aria-label="Close" {...stylex.props(styles.close)}>
-            <svg
-              width="16"
-              height="16"
-              viewBox={`0 0 16 16`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              aria-hidden
-            >
-              <path d={`m3 3 10 10M13 3 3 13`} />
-            </svg>
+            <X {...stylex.props(icon.md)} />
           </BaseDialog.Close>
         )}
       </BaseDialog.Popup>

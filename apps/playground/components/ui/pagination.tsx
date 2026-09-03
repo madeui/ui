@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
+import { ChevronLeft, ChevronRight, Ellipsis } from 'lucide-react';
 
 import { Button, type ButtonSize } from '@/components/ui/button';
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize } from '@/lib/constants.stylex';
 import { font } from '@/lib/tokens.stylex';
 
@@ -78,7 +80,7 @@ export function PaginationPrevious({
       {...props}
       style={[styles.previous, style]}
     >
-      <Chevron direction="left" />
+      <ChevronLeft {...stylex.props(icon.md)} />
       <span {...stylex.props(styles.linkText)}>{text}</span>
     </PaginationLink>
   );
@@ -97,7 +99,7 @@ export function PaginationNext({
       style={[styles.next, style]}
     >
       <span {...stylex.props(styles.linkText)}>{text}</span>
-      <Chevron direction="right" />
+      <ChevronRight {...stylex.props(icon.md)} />
     </PaginationLink>
   );
 }
@@ -109,39 +111,12 @@ export function PaginationEllipsis({
   StyleXStyleProps) {
   return (
     <span aria-hidden {...props} {...stylex.props(styles.ellipsis, style)}>
-      <svg
-        width="16"
-        height="16"
-        viewBox={`0 0 16 16`}
-        fill="currentColor"
-        aria-hidden
-      >
-        <circle cx="3" cy="8" r="1.25" />
-        <circle cx="8" cy="8" r="1.25" />
-        <circle cx="13" cy="8" r="1.25" />
-      </svg>
+      <Ellipsis {...stylex.props(icon.md)} />
       <span {...stylex.props(styles.srOnly)}>More pages</span>
     </span>
   );
 }
 
-function Chevron({ direction }: { direction: 'left' | 'right' }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d={direction === 'left' ? `m10 3-5 5 5 5` : `m6 3 5 5-5 5`} />
-    </svg>
-  );
-}
 
 const styles = stylex.create({
   nav: {

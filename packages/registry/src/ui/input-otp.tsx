@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { OTPField as BaseOTPField } from '@base-ui/react/otp-field';
 import * as stylex from '@stylexjs/stylex';
+import { Minus } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -52,18 +54,7 @@ export function InputOTPSeparator({
   StyleProp) {
   return (
     <div role="separator" {...props} {...stylex.props(styles.separator, style)}>
-      <svg
-        width="16"
-        height="16"
-        viewBox={`0 0 16 16`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        aria-hidden
-      >
-        <path d={`M4 8h8`} />
-      </svg>
+      <Minus {...stylex.props(icon.md)} />
     </div>
   );
 }

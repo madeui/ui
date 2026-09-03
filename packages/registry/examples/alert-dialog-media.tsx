@@ -1,3 +1,6 @@
+import * as stylex from '@stylexjs/stylex';
+import { Trash2 } from 'lucide-react';
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { icon } from '@/lib/stylex-utils';
 
 export default function AlertDialogMediaDemo() {
   return (
@@ -20,19 +24,7 @@ export default function AlertDialogMediaDemo() {
       <AlertDialogContent size="sm">
         <AlertDialogHeader>
           <AlertDialogMedia>
-            <svg
-              width="24"
-              height="24"
-              viewBox={`0 0 24 24`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <path d={`M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13h8l1-13`} />
-            </svg>
+            <Trash2 {...stylex.props(icon.lg)} />
           </AlertDialogMedia>
           <AlertDialogTitle>Empty trash?</AlertDialogTitle>
           <AlertDialogDescription>

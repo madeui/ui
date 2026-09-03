@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import * as stylex from '@stylexjs/stylex';
+import { Search } from 'lucide-react';
 
 import {
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -79,20 +81,7 @@ export function CommandInput({
   StyleProp) {
   return (
     <div {...stylex.props(styles.inputWrap, style)}>
-      <svg
-        width="16"
-        height="16"
-        viewBox={`0 0 16 16`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        aria-hidden
-        {...stylex.props(styles.inputIcon)}
-      >
-        <circle cx="7" cy="7" r="4.5" />
-        <path d={`m10.5 10.5 3 3`} />
-      </svg>
+      <Search {...stylex.props(icon.md, styles.inputIcon)} />
       <BaseAutocomplete.Input {...props} {...stylex.props(styles.input)} />
     </div>
   );
@@ -231,7 +220,6 @@ const styles = stylex.create({
     paddingInline: space.s2,
   },
   inputIcon: {
-    flexShrink: 0,
     opacity: 0.5,
   },
   input: {

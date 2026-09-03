@@ -5,6 +5,7 @@ import * as stylex from '@stylexjs/stylex';
 
 // Spacing scale in 0.25rem (4px) steps; sNN = NN * 0.25rem.
 export const space = stylex.defineConsts({
+  px: '1px',
   s05: '0.125rem',
   s1: '0.25rem',
   s15: '0.375rem',
@@ -72,6 +73,21 @@ export const easing = stylex.defineConsts({
   inOut: 'cubic-bezier(0.77, 0, 0.175, 1)',
   // iOS-like drawer curve.
   drawer: 'cubic-bezier(0.32, 0.72, 0, 1)',
+});
+
+// Icon box sizes. Lucide icons default to 24px — size them with the `icon`
+// styles in stylex-utils (`{...stylex.props(icon.md)}`), never the `size` prop.
+export const iconSize = stylex.defineConsts({
+  // Status dots and badges (avatar badge).
+  xxs: '0.5rem',
+  // Indicators inside 16px controls: checkbox, select item, chip remove.
+  xs: '0.75rem',
+  // Secondary chrome: breadcrumb separators, xs/sm buttons, tree rows.
+  sm: '0.875rem',
+  // Default for buttons, menus, inputs, triggers.
+  md: '1rem',
+  // Media and empty-state art.
+  lg: '1.5rem',
 });
 
 export const stroke = stylex.defineConsts({

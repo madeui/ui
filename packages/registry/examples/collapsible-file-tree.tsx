@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
+import { ChevronRight, File as FileIcon, Folder as FolderIcon } from 'lucide-react';
 
 import {
   Collapsible,
@@ -8,63 +9,8 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
+import { icon } from '@/lib/stylex-utils';
 import { colors, font, radius } from '@/lib/tokens.stylex';
-
-function ChevronIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...stylex.props(styles.chevron)}
-    >
-      <path d={`m6 3 5 5-5 5`} />
-    </svg>
-  );
-}
-
-function FolderIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d={`M2 4.5A1.5 1.5 0 0 1 3.5 3h2.6l1.2 1.5H12.5A1.5 1.5 0 0 1 14 6v6a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12z`} />
-    </svg>
-  );
-}
-
-function FileIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d={`M4 2h5l3 3v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z`} />
-      <path d={`M9 2v3h3`} />
-    </svg>
-  );
-}
 
 function Folder({
   name,
@@ -82,8 +28,8 @@ function Folder({
       <CollapsibleTrigger
         {...stylex.props(styles.row, indents.depth(depth))}
       >
-        <ChevronIcon />
-        <FolderIcon />
+        <ChevronRight {...stylex.props(icon.sm, styles.chevron)} />
+        <FolderIcon {...stylex.props(icon.sm)} />
         <span>{name}</span>
       </CollapsibleTrigger>
       <CollapsibleContent>{children}</CollapsibleContent>
@@ -95,7 +41,7 @@ function File({ name, depth = 1 }: { name: string; depth?: number }) {
   return (
     <div {...stylex.props(styles.row, styles.file, indents.depth(depth))}>
       <span {...stylex.props(styles.fileSpacer)} />
-      <FileIcon />
+      <FileIcon {...stylex.props(icon.sm)} />
       <span>{name}</span>
     </div>
   );
@@ -164,7 +110,6 @@ const styles = stylex.create({
     width: space.s25,
   },
   chevron: {
-    flexShrink: 0,
     transform: 'rotate(var(--file-tree-chevron-rotation, 0deg))',
     transitionDuration: duration.fast,
     transitionProperty: 'transform',

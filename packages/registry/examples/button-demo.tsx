@@ -1,11 +1,13 @@
+import * as stylex from '@stylexjs/stylex';
+import { Plus } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
+import { icon } from '@/lib/stylex-utils';
 
 export default function ButtonDemo() {
   return (
     <Button variant="outline">
-      <svg width="16" height="16" viewBox={`0 0 16 16`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
-        <path d={`M8 3v10M3 8h10`} />
-      </svg>
+      <Plus {...stylex.props(icon.md)} />
       New project
     </Button>
   );

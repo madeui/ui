@@ -116,6 +116,9 @@ const uiItem = async (name) => {
   if (content.includes("from '@base-ui/react/")) {
     dependencies.unshift('@base-ui/react');
   }
+  if (content.includes("from 'lucide-react'")) {
+    dependencies.push('lucide-react');
+  }
   const registryDependencies = ['@madeui/theme'];
   if (content.includes("'@/lib/stylex-utils'")) {
     registryDependencies.push('@madeui/utils');

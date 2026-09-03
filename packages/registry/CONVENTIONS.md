@@ -32,7 +32,8 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
 - Tokens only — no magic numbers or raw colors anywhere in components:
   - themable vars from `@/lib/tokens.stylex` (colors, radius, font, shadow);
   - non-themed scales from `@/lib/constants.stylex` (`space`, `fontSize`,
-    `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `container`).
+    `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `iconSize`,
+    `container`).
   If a value is missing, extend the scale deliberately — never invent a
   one-off inside a component.
 - Base UI state (checked, open, highlighted, transitionStatus) is styled with
@@ -51,6 +52,15 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
   transition can't express it (e.g. accordion panel height).
 - Focus ring: `outline: 2px solid colors.ring; outlineOffset: 2px` (or inset
   where offset clips).
+- **Icons are `lucide-react`, never hand-drawn SVG.** Size them with the
+  `icon` styles from `@/lib/stylex-utils` (`{...stylex.props(icon.md)}`;
+  `xs`/`sm`/`md`/`lg` map to the `iconSize` scale) — never the `size` or
+  `strokeWidth` props. `md` (16px) is the default for buttons, menus, and
+  inputs; `xs` for indicators inside 16px controls; `sm` for secondary chrome
+  (breadcrumb separators, tree rows). Decorative icons need no `aria-hidden`
+  (lucide adds it); keep `aria-label` on icon-only buttons. Components that
+  import lucide get `lucide-react` in their registry `dependencies`
+  automatically, and `madeui add` installs it when missing.
 - **Even metrics only.** Component metrics (heights, paddings, line boxes) land
   on the 4px grid — never a value that produces odd pixel sizes. Single-line
   control text uses `lineHeight.control` (20px, pairs with `fontSize.sm`);
@@ -77,9 +87,6 @@ survive installation byte-identical:
 - shadow values: hex-alpha colors only (`0 1px 2px #0000000d`) — the CLI
   parses shadow shorthands separately and mangles `oklch()` inside them — and
   no lone `0` spread component;
-- inline SVG attributes with number lists (`viewBox`, `path d`) as template
-  literals — `viewBox={` + backtick + `0 0 12 12` + backtick + `}` — plain string
-  literals AND `{'...'}` both get mangled (`"0 0 12 12"` → `"0 12"`).
 
 ## Examples & docs authoring
 

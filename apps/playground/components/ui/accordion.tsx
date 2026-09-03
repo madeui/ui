@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import * as stylex from '@stylexjs/stylex';
+import { ChevronDown } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, duration, easing, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -48,20 +50,7 @@ export function AccordionTrigger({
     <BaseAccordion.Header {...stylex.props(styles.header)}>
       <BaseAccordion.Trigger {...props} {...stylex.props(styles.trigger, style)}>
         {children}
-        <svg
-          width="16"
-          height="16"
-          viewBox={`0 0 16 16`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-          {...stylex.props(styles.chevron)}
-        >
-          <path d={`m3 6 5 5 5-5`} />
-        </svg>
+        <ChevronDown {...stylex.props(icon.md, styles.chevron)} />
       </BaseAccordion.Trigger>
     </BaseAccordion.Header>
   );
@@ -133,7 +122,6 @@ const styles = stylex.create({
   },
   chevron: {
     color: colors.mutedForeground,
-    flexShrink: 0,
     marginLeft: 'auto',
     marginTop: space.s05,
     pointerEvents: 'none',

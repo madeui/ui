@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import * as stylex from '@stylexjs/stylex';
+import { Check, Minus } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, duration, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -22,23 +24,11 @@ export function Checkbox({ style, ...props }: CheckboxProps) {
       <BaseCheckbox.Indicator
         render={(indicatorProps, state) => (
           <span {...indicatorProps} {...stylex.props(styles.indicator)}>
-            <svg
-              width="12"
-              height="12"
-              viewBox={`0 0 12 12`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              {state.indeterminate ? (
-                <path d={`M2.5 6h7`} />
-              ) : (
-                <path d={`M2 6.5 4.5 9 10 3`} />
-              )}
-            </svg>
+            {state.indeterminate ? (
+              <Minus {...stylex.props(icon.sm)} />
+            ) : (
+              <Check {...stylex.props(icon.sm)} />
+            )}
           </span>
         )}
       />

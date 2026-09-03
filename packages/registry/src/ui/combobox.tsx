@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import * as stylex from '@stylexjs/stylex';
+import { Check, ChevronDown, X } from 'lucide-react';
 
-import { ring } from '@/lib/stylex-utils';
+import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -20,19 +21,7 @@ export const ComboboxCollection = BaseCombobox.Collection;
 
 function TriggerChevron() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d={`m3 6 5 5 5-5`} />
-    </svg>
+    <ChevronDown {...stylex.props(icon.md)} />
   );
 }
 
@@ -97,19 +86,7 @@ export function ComboboxInput({
             showTrigger ? styles.inputClearWithTrigger : styles.inputClearAlone
           )}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 16 16`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d={`m4 4 8 8M12 4l-8 8`} />
-          </svg>
+          <X {...stylex.props(icon.md)} />
         </BaseCombobox.Clear>
       )}
       {showTrigger && (
@@ -154,19 +131,7 @@ export function ComboboxChip({
         aria-label="Remove"
         {...stylex.props(styles.chipRemove)}
       >
-        <svg
-          width="10"
-          height="10"
-          viewBox={`0 0 10 10`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d={`M2.5 2.5l5 5M7.5 2.5l-5 5`} />
-        </svg>
+        <X {...stylex.props(icon.xs)} />
       </BaseCombobox.ChipRemove>
     </BaseCombobox.Chip>
   );
@@ -252,19 +217,7 @@ export function ComboboxItem({
       <BaseCombobox.ItemIndicator
         render={<span {...stylex.props(styles.indicator)} />}
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox={`0 0 16 16`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d={`m3 8.5 3.5 3.5L13 4.5`} />
-        </svg>
+        <Check {...stylex.props(icon.md)} />
       </BaseCombobox.ItemIndicator>
     </BaseCombobox.Item>
   );
@@ -339,11 +292,10 @@ const styles = stylex.create({
     fontSize: fontSize.sm,
     height: space.s9,
     opacity: { default: 1, ':disabled': 0.5 },
-    outline: {
-      default: 'none',
-      ':focus-visible': `${stroke.focus} solid ${colors.ring}`,
-    },
+    outlineColor: { default: 'transparent', ':focus-visible': colors.ring },
     outlineOffset: `calc(-1 * ${stroke.border})`,
+    outlineStyle: 'solid',
+    outlineWidth: stroke.focus,
     paddingLeft: space.s3,
     transitionDuration: duration.fast,
     transitionProperty: 'border-color, outline-color',
@@ -423,11 +375,10 @@ const styles = stylex.create({
     flexWrap: 'wrap',
     gap: space.s1,
     minHeight: space.s9,
-    outline: {
-      default: 'none',
-      ':focus-within': `${stroke.focus} solid ${colors.ring}`,
-    },
+    outlineColor: { default: 'transparent', ':focus-within': colors.ring },
     outlineOffset: `calc(-1 * ${stroke.border})`,
+    outlineStyle: 'solid',
+    outlineWidth: stroke.focus,
     paddingBlock: space.s1,
     paddingInline: space.s2,
     transitionDuration: duration.fast,

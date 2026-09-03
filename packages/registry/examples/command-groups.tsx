@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import * as stylex from '@stylexjs/stylex';
+import { Calendar, CreditCard, Smile, User } from 'lucide-react';
+
 import {
   Command,
   CommandEmpty,
@@ -10,91 +13,15 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-
-function CalendarIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect x="2" y="3" width="12" height="11" rx="1.5" />
-      <path d={`M2 6.5h12M5 1.5v3M11 1.5v3`} />
-    </svg>
-  );
-}
-
-function SmileIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="8" cy="8" r="6.5" />
-      <path d={`M5.5 9.5c.6.8 1.4 1.2 2.5 1.2s1.9-.4 2.5-1.2`} />
-      <path d={`M6 6h.01M10 6h.01`} />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="8" cy="5.5" r="2.5" />
-      <path d={`M2.5 14c.8-2.8 3-4.5 5.5-4.5s4.7 1.7 5.5 4.5`} />
-    </svg>
-  );
-}
-
-function CardIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect x="1.5" y="4" width="13" height="9" rx="1.5" />
-      <path d={`M1.5 7h13`} />
-    </svg>
-  );
-}
+import { icon } from '@/lib/stylex-utils';
 
 const commandGroups = [
   {
     value: 'suggestions',
     label: 'Suggestions',
     items: [
-      { value: 'calendar', label: 'Calendar', icon: <CalendarIcon /> },
-      { value: 'search-emoji', label: 'Search emoji', icon: <SmileIcon /> },
+      { value: 'calendar', label: 'Calendar', icon: <Calendar {...stylex.props(icon.md)} /> },
+      { value: 'search-emoji', label: 'Search emoji', icon: <Smile {...stylex.props(icon.md)} /> },
     ],
   },
   {
@@ -104,10 +31,15 @@ const commandGroups = [
       {
         value: 'profile',
         label: 'Profile',
-        icon: <UserIcon />,
+        icon: <User {...stylex.props(icon.md)} />,
         shortcut: '⌘P',
       },
-      { value: 'billing', label: 'Billing', icon: <CardIcon />, shortcut: '⌘B' },
+      {
+        value: 'billing',
+        label: 'Billing',
+        icon: <CreditCard {...stylex.props(icon.md)} />,
+        shortcut: '⌘B',
+      },
     ],
   },
 ];

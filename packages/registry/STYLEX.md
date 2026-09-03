@@ -125,8 +125,9 @@ If a check fails, fix it — do not explain the violation and leave it.
   code ownership as the distribution model — the component source in the consumer's project
   is the real escape hatch, and a broad `style` prop is a core, documented
   selling point. Variants remain the recommended path; the guide says so.
-- **SVG geometry attributes** (`viewBox`, `path d`, icon `width`/`height`) are
-  not CSS and stay literal.
+- **Icons come from `lucide-react`**, sized through the `icon` styles in
+  `stylex-utils` (`iconSize` scale) rather than the `size` prop. No inline SVG
+  geometry lives in components any more.
 - **Motion micro-values** inside keyframes (`scale(0.97)`) stay literal; the
   duration and timing function come from the `duration` and `easing` scales —
   never inline a `cubic-bezier(...)` in component styles.

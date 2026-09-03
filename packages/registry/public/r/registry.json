@@ -72,10 +72,12 @@
       "description": "Vertically stacked collapsible panels built on Base UI Accordion.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -220,10 +222,12 @@
       "title": "Breadcrumb",
       "description": "Path navigation with links, separators, and ellipsis.",
       "dependencies": [
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -303,10 +307,12 @@
       "description": "Checkbox built on Base UI with checked/indeterminate states.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -366,7 +372,8 @@
       "description": "Autocomplete input built on Base UI Combobox: filtering popup list, multi-select chips, select-like trigger, clear button.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -388,10 +395,12 @@
       "description": "Command palette built on Base UI Autocomplete (inline mode): input, filtered list, dialog wrapper.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
+        "@madeui/utils",
         "@madeui/dialog"
       ],
       "files": [
@@ -410,7 +419,8 @@
       "description": "Right-click menu built on Base UI Context Menu: items, checkbox/radio items, submenus, shortcuts.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -432,7 +442,8 @@
       "description": "Modal dialog built on Base UI Dialog.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -475,7 +486,8 @@
       "description": "Menu of actions built on Base UI Menu: items, groups, labels, separators.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -626,10 +638,12 @@
       "description": "One-time-code input built on Base UI OTP Field with joined slots.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -752,7 +766,8 @@
       "description": "Site navigation with animated popup panels, built on Base UI Navigation Menu.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -774,10 +789,12 @@
       "description": "Numeric input with increment/decrement buttons, built on Base UI Number Field.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -794,10 +811,12 @@
       "title": "Pagination",
       "description": "Page navigation with previous/next and page links, built on Button.",
       "dependencies": [
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
+        "@madeui/utils",
         "@madeui/button"
       ],
       "files": [
@@ -901,7 +920,8 @@
       "description": "Select built on Base UI Select with popup list and indicators.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
         "@madeui/theme",
@@ -944,10 +964,12 @@
       "description": "Side panel dialog built on Base UI Dialog. Sides: top, right, bottom, left.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -1005,10 +1027,12 @@
       "title": "Spinner",
       "description": "Loading indicator.",
       "dependencies": [
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
@@ -1108,10 +1132,12 @@
       "description": "Stacked, swipeable notifications built on Base UI Toast with an imperative toast() API.",
       "dependencies": [
         "@base-ui/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "lucide-react"
       ],
       "registryDependencies": [
-        "@madeui/theme"
+        "@madeui/theme",
+        "@madeui/utils"
       ],
       "files": [
         {
