@@ -21,6 +21,9 @@ Every component keeps the same shape:
 - All values come from tokens: colors/radius/fonts/shadows from
   `lib/tokens.stylex.ts` (themable), spacing/type/z/duration/easing scales
   from `lib/constants.stylex.ts`. No magic numbers or raw colors in styles.
+- Icons are `lucide-react`, sized with the `icon` styles from
+  `lib/stylex-utils.ts` (`{...stylex.props(icon.md)}`) — no hand-drawn SVG,
+  no `size` prop.
 - Base UI state (open/checked/highlighted/transitionStatus) is styled with
   attribute-selector condition keys — the equivalent of Tailwind's
   `data-[state=open]:` selectors, declared inside `stylex.create`:

@@ -163,7 +163,9 @@ const styles = stylex.create({
     flexDirection: 'column',
     fontFamily: font.sans,
     gap: space.s4,
-    left: '50%',
+    height: 'fit-content',
+    inset: 0,
+    margin: 'auto',
     maxWidth: `calc(100% - ${space.s8})`,
     opacity: {
       default: 1,
@@ -172,11 +174,10 @@ const styles = stylex.create({
     },
     padding: space.s4,
     position: 'fixed',
-    top: '50%',
     transform: {
-      default: 'translate(-50%, -50%) scale(1)',
-      '[data-starting-style]': 'translate(-50%, -50%) scale(0.97)',
-      '[data-ending-style]': 'translate(-50%, -50%) scale(0.97)',
+      default: 'scale(1)',
+      '[data-starting-style]': 'scale(0.97)',
+      '[data-ending-style]': 'scale(0.97)',
     },
     transitionDuration: duration.normal,
     transitionProperty: {

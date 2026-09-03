@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { Text } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,25 +10,14 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { icon } from '@/lib/stylex-utils';
 
 export default function EmptyOutline() {
   return (
     <Empty style={styles.root}>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 16 16`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d={`M2 4.5h12M2 8h12M2 11.5h7`} />
-          </svg>
+          <Text {...stylex.props(icon.md)} />
         </EmptyMedia>
         <EmptyTitle>No messages</EmptyTitle>
         <EmptyDescription>

@@ -1,30 +1,22 @@
-import * as React from 'react';
-
 import * as stylex from '@stylexjs/stylex';
+import { LoaderCircle, type LucideProps } from 'lucide-react';
+
+import { icon } from '@/lib/stylex-utils';
 
 export interface SpinnerProps
-  extends Omit<React.ComponentPropsWithoutRef<'svg'>, 'className' | 'style'> {
+  extends Omit<LucideProps, 'className' | 'style'> {
   /** StyleX styles merged last — always win over the component's own. */
   style?: stylex.StyleXStyles;
 }
 
 export function Spinner({ style, ...props }: SpinnerProps) {
   return (
-    <svg
+    <LoaderCircle
       role="status"
       aria-label="Loading"
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
       {...props}
-      {...stylex.props(styles.root, style)}
-    >
-      <path d={`M8 1.5a6.5 6.5 0 1 1-6.5 6.5`} />
-    </svg>
+      {...stylex.props(icon.md, styles.root, style)}
+    />
   );
 }
 
@@ -39,6 +31,5 @@ const styles = stylex.create({
     animationIterationCount: 'infinite',
     animationName: spin,
     animationTimingFunction: 'linear',
-    flexShrink: 0,
   },
 });

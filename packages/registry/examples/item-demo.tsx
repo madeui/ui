@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { Info } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/item';
 import { Switch } from '@/components/ui/switch';
 import { container } from '@/lib/constants.stylex';
+import { icon } from '@/lib/stylex-utils';
 
 export default function ItemDemo() {
   return (
@@ -29,18 +31,7 @@ export default function ItemDemo() {
       </Item>
       <Item variant="muted">
         <ItemMedia variant="icon">
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 16 16`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <path d={`M8 10.5V7M8 5v.01M14.5 8a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0`} />
-          </svg>
+          <Info {...stylex.props(icon.md)} />
         </ItemMedia>
         <ItemContent>
           <ItemTitle>Update available</ItemTitle>

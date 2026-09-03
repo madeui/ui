@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { EllipsisVertical } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,22 +18,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { container } from '@/lib/constants.stylex';
+import { icon } from '@/lib/stylex-utils';
 
 const members = [
   { name: 'Ada Lovelace', role: 'Owner' },
   { name: 'Grace Hopper', role: 'Admin' },
   { name: 'Margaret Hamilton', role: 'Member' },
 ];
-
-function DotsIcon() {
-  return (
-    <svg width="16" height="16" viewBox={`0 0 16 16`} fill="currentColor" aria-hidden>
-      <circle cx="8" cy="3" r="1.25" />
-      <circle cx="8" cy="8" r="1.25" />
-      <circle cx="8" cy="13" r="1.25" />
-    </svg>
-  );
-}
 
 export default function TableActions() {
   return (
@@ -55,7 +47,7 @@ export default function TableActions() {
                   <DropdownMenuTrigger
                     render={<Button variant="ghost" size="icon" aria-label="Row actions" />}
                   >
-                    <DotsIcon />
+                    <EllipsisVertical {...stylex.props(icon.md)} />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>Edit role</DropdownMenuItem>

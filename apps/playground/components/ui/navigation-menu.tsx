@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import * as stylex from '@stylexjs/stylex';
+import { ChevronDown } from 'lucide-react';
 
-import { ring } from '@/lib/stylex-utils';
+import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -80,20 +81,7 @@ export function NavigationMenuTrigger({
       {...stylex.props(styles.trigger, style)}
     >
       {children}
-      <svg
-        width="12"
-        height="12"
-        viewBox={`0 0 16 16`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-        {...stylex.props(styles.triggerChevron)}
-      >
-        <path d={`m3 6 5 5 5-5`} />
-      </svg>
+      <ChevronDown {...stylex.props(icon.xs, styles.triggerChevron)} />
     </BaseNavigationMenu.Trigger>
   );
 }

@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import * as stylex from '@stylexjs/stylex';
+import { X } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -74,18 +76,7 @@ function ToastList({
         </div>
         <BaseToast.Action {...stylex.props(styles.action)} />
         <BaseToast.Close aria-label="Close" {...stylex.props(styles.close)}>
-          <svg
-            width="12"
-            height="12"
-            viewBox={`0 0 12 12`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <path d={`m2 2 8 8M10 2l-8 8`} />
-          </svg>
+          <X {...stylex.props(icon.xs)} />
         </BaseToast.Close>
       </div>
     </BaseToast.Root>

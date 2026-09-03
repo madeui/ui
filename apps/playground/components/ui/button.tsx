@@ -70,8 +70,14 @@ const styles = stylex.create({
       ':focus-visible': `${stroke.focus} solid ${colors.ring}`,
     },
     outlineOffset: stroke.focus,
+    // Press feedback: a 1px nudge down. Skipped for popup triggers (menu,
+    // select, popover…) that open on pointerdown and would jitter.
+    transform: {
+      default: 'translateY(0)',
+      ':active:not(:disabled):not([aria-haspopup])': `translateY(${space.px})`,
+    },
     transitionDuration: duration.fast,
-    transitionProperty: 'background-color, border-color, color, opacity',
+    transitionProperty: 'background-color, border-color, color, opacity, transform',
     userSelect: 'none',
     whiteSpace: 'nowrap',
   },

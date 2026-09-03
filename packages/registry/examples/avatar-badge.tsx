@@ -1,7 +1,9 @@
 import * as stylex from '@stylexjs/stylex';
+import { Check } from 'lucide-react';
 
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { space } from '@/lib/constants.stylex';
+import { icon } from '@/lib/stylex-utils';
 
 export default function AvatarBadgeDemo() {
   return (
@@ -15,9 +17,7 @@ export default function AvatarBadgeDemo() {
         <AvatarImage src="https://github.com/github.png" alt="@github" />
         <AvatarFallback>GH</AvatarFallback>
         <AvatarBadge>
-          <svg width="8" height="8" viewBox={`0 0 8 8`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d={`M1.5 4.2 3.2 5.9 6.5 2.1`} />
-          </svg>
+          <Check {...stylex.props(icon.xxs)} />
         </AvatarBadge>
       </Avatar>
     </div>

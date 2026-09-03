@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import * as stylex from '@stylexjs/stylex';
+import { Check, ChevronRight } from 'lucide-react';
 
-import { ring } from '@/lib/stylex-utils';
+import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -91,19 +92,7 @@ export function DropdownMenuItem({
 
 function IndicatorCheck() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox={`0 0 16 16`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d={`m3 8.5 3.5 3.5L13 4.5`} />
-    </svg>
+    <Check {...stylex.props(icon.md)} />
   );
 }
 
@@ -176,20 +165,7 @@ export function DropdownMenuSubTrigger({
       )}
     >
       {children}
-      <svg
-        width="16"
-        height="16"
-        viewBox={`0 0 16 16`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-        {...stylex.props(styles.subTriggerChevron)}
-      >
-        <path d={`m6 3 5 5-5 5`} />
-      </svg>
+      <ChevronRight {...stylex.props(icon.md, styles.subTriggerChevron)} />
     </BaseMenu.SubmenuTrigger>
   );
 }
@@ -376,7 +352,6 @@ const styles = stylex.create({
   },
   subTriggerChevron: {
     color: colors.mutedForeground,
-    flexShrink: 0,
     marginLeft: 'auto',
   },
   shortcut: {

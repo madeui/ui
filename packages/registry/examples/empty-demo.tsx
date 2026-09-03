@@ -1,3 +1,6 @@
+import * as stylex from '@stylexjs/stylex';
+import { Package } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import {
   Empty,
@@ -7,25 +10,14 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { icon } from '@/lib/stylex-utils';
 
 export default function EmptyDemo() {
   return (
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 16 16`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d={`M2 5.5 8 2l6 3.5v5L8 14l-6-3.5z M8 8v6 M2 5.5 8 8l6-2.5`} />
-          </svg>
+          <Package {...stylex.props(icon.md)} />
         </EmptyMedia>
         <EmptyTitle>No projects yet</EmptyTitle>
         <EmptyDescription>

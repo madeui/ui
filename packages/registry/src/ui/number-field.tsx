@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { NumberField as BaseNumberField } from '@base-ui/react/number-field';
 import * as stylex from '@stylexjs/stylex';
+import { Minus, Plus } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
@@ -79,18 +81,7 @@ export function NumberFieldDecrement({
       {...stylex.props(styles.button, styles.decrement, style)}
     >
       {children ?? (
-        <svg
-          width="16"
-          height="16"
-          viewBox={`0 0 16 16`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          aria-hidden
-        >
-          <path d={`M4 8h8`} />
-        </svg>
+        <Minus {...stylex.props(icon.md)} />
       )}
     </BaseNumberField.Decrement>
   );
@@ -111,18 +102,7 @@ export function NumberFieldIncrement({
       {...stylex.props(styles.button, styles.increment, style)}
     >
       {children ?? (
-        <svg
-          width="16"
-          height="16"
-          viewBox={`0 0 16 16`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          aria-hidden
-        >
-          <path d={`M8 4v8M4 8h8`} />
-        </svg>
+        <Plus {...stylex.props(icon.md)} />
       )}
     </BaseNumberField.Increment>
   );
@@ -141,11 +121,10 @@ const styles = stylex.create({
     borderWidth: stroke.border,
     display: 'flex',
     height: space.s9,
-    outline: {
-      default: 'none',
-      ':focus-within': `${stroke.focus} solid ${colors.ring}`,
-    },
+    outlineColor: { default: 'transparent', ':focus-within': colors.ring },
     outlineOffset: `calc(-1 * ${stroke.border})`,
+    outlineStyle: 'solid',
+    outlineWidth: stroke.focus,
     transitionDuration: duration.fast,
     transitionProperty: 'border-color, outline-color',
     width: 'fit-content',

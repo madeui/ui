@@ -1,3 +1,6 @@
+import * as stylex from '@stylexjs/stylex';
+import { Search } from 'lucide-react';
+
 import {
   Empty,
   EmptyContent,
@@ -7,26 +10,14 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { icon } from '@/lib/stylex-utils';
 
 export default function EmptyInputGroup() {
   return (
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 16 16`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <circle cx="7" cy="7" r="5" />
-            <path d={`m13.5 13.5-3-3`} />
-          </svg>
+          <Search {...stylex.props(icon.md)} />
         </EmptyMedia>
         <EmptyTitle>No results found</EmptyTitle>
         <EmptyDescription>
@@ -37,20 +28,7 @@ export default function EmptyInputGroup() {
         <InputGroup>
           <InputGroupInput placeholder="Search…" />
           <InputGroupAddon>
-            <svg
-              width="14"
-              height="14"
-              viewBox={`0 0 14 14`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <circle cx="6" cy="6" r="4.5" />
-              <path d={`m12 12-2.5-2.5`} />
-            </svg>
+            <Search {...stylex.props(icon.sm)} />
           </InputGroupAddon>
         </InputGroup>
       </EmptyContent>

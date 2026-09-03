@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
+import { ChevronRight, Ellipsis } from 'lucide-react';
 
+import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, duration } from '@/lib/constants.stylex';
 import { colors, font } from '@/lib/tokens.stylex';
 
@@ -72,19 +74,7 @@ export function BreadcrumbSeparator({
       {...stylex.props(styles.separator, style)}
     >
       {children ?? (
-        <svg
-          width="14"
-          height="14"
-          viewBox={`0 0 16 16`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d={`m6 3 5 5-5 5`} />
-        </svg>
+        <ChevronRight {...stylex.props(icon.sm)} />
       )}
     </li>
   );
@@ -102,17 +92,7 @@ export function BreadcrumbEllipsis({
       {...props}
       {...stylex.props(styles.ellipsis, style)}
     >
-      <svg
-        width="16"
-        height="16"
-        viewBox={`0 0 16 16`}
-        fill="currentColor"
-        aria-hidden
-      >
-        <circle cx="3" cy="8" r="1.25" />
-        <circle cx="8" cy="8" r="1.25" />
-        <circle cx="13" cy="8" r="1.25" />
-      </svg>
+      <Ellipsis {...stylex.props(icon.md)} />
       <span {...stylex.props(styles.srOnly)}>More</span>
     </span>
   );

@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
 import * as stylex from '@stylexjs/stylex';
+import { Check, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 
-import { ring } from '@/lib/stylex-utils';
+import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -30,15 +31,7 @@ export function SelectTrigger({
     <BaseSelect.Trigger {...props} {...stylex.props(styles.trigger, style)}>
       {children}
       <BaseSelect.Icon {...stylex.props(styles.icon)}>
-        <svg
-          width="16"
-          height="16"
-          viewBox={`0 0 16 16`}
-          fill="currentColor"
-          aria-hidden
-        >
-          <path d={`M11 10H5l3 3.5zm0-4H5l3-3.5z`} />
-        </svg>
+        <ChevronsUpDown {...stylex.props(icon.md)} />
       </BaseSelect.Icon>
     </BaseSelect.Trigger>
   );
@@ -54,19 +47,11 @@ function ScrollArrow({ direction }: { direction: 'up' | 'down' }) {
         direction === 'up' ? styles.scrollArrowUp : styles.scrollArrowDown
       )}
     >
-      <svg
-        width="12"
-        height="12"
-        viewBox={`0 0 12 12`}
-        fill="currentColor"
-        aria-hidden
-      >
-        {direction === 'up' ? (
-          <path d={`M9 7.5H3L6 4z`} />
-        ) : (
-          <path d={`M9 4.5H3L6 8z`} />
-        )}
-      </svg>
+      {direction === 'up' ? (
+        <ChevronUp {...stylex.props(icon.xs)} />
+      ) : (
+        <ChevronDown {...stylex.props(icon.xs)} />
+      )}
     </Arrow>
   );
 }
@@ -146,19 +131,7 @@ export function SelectItem({
         {children}
       </BaseSelect.ItemText>
       <BaseSelect.ItemIndicator {...stylex.props(styles.itemIndicator)}>
-        <svg
-          width="12"
-          height="12"
-          viewBox={`0 0 12 12`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d={`M2 6.5 4.5 9 10 3`} />
-        </svg>
+        <Check {...stylex.props(icon.xs)} />
       </BaseSelect.ItemIndicator>
     </BaseSelect.Item>
   );
