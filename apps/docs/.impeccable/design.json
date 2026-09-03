@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-03T18:12:00Z",
+  "title": "Design System: madeui",
+  "extensions": {
+    "colorMeta": {
+      "background": { "role": "neutral", "displayName": "Paper", "canonical": "oklch(1 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "foreground": { "role": "neutral", "displayName": "Ink", "canonical": "oklch(0.145 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "primary": { "role": "primary", "displayName": "Ink (solid)", "canonical": "oklch(0.205 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "muted": { "role": "neutral", "displayName": "Muted Surface", "canonical": "oklch(0.97 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "muted-foreground": { "role": "neutral", "displayName": "Muted Foreground", "canonical": "oklch(0.556 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "border": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(0.922 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "ring": { "role": "neutral", "displayName": "Focus Ring", "canonical": "oklch(0.708 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(0.95 0 0)"] },
+      "destructive": { "role": "error", "displayName": "Destructive Red", "canonical": "oklch(0.577 0.245 27.325)", "tonalRamp": ["oklch(0.15 0.15 27)", "oklch(0.27 0.19 27)", "oklch(0.39 0.22 27)", "oklch(0.45 0.23 27)", "oklch(0.577 0.245 27.325)", "oklch(0.65 0.22 27)", "oklch(0.75 0.18 27)", "oklch(0.85 0.12 27)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1: Geist 700 at -0.04em, the only display-size moment." },
+      "body": { "displayName": "Body", "purpose": "Default page and in-scene UI copy, Geist through the font.sans token override." },
+      "label": { "displayName": "Label", "purpose": "Badges, pills, footer legal line, nav." },
+      "mono": { "displayName": "Mono", "purpose": "CLI install chip only." }
+    },
+    "shadows": [
+      { "name": "sm", "value": "0 1px 2px #0000000d", "purpose": "Default card elevation — a hairline lift above the page." },
+      { "name": "md", "value": "0 4px 8px -2px #0000001a", "purpose": "Popover-tier surfaces: theme menu, dropdown content." },
+      { "name": "lg", "value": "0 10px 20px -5px #00000026", "purpose": "Largest overlay tier (dialog/sheet); not used on the landing." }
+    ],
+    "motion": [
+      { "name": "duration-fast", "value": "150ms", "purpose": "Hover/press feedback: color, border-color, button scale." },
+      { "name": "duration-normal", "value": "200ms", "purpose": "Modal-tier surfaces and the scene-stage panel fade." },
+      { "name": "duration-slow", "value": "350ms", "purpose": "Hero fade-in and scene panel enter." },
+      { "name": "easing-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Default enter/exit and state-response curve; fast start, gentle settle." },
+      { "name": "easing-inOut", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "On-screen movement between two resting positions." },
+      { "name": "easing-drawer", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "iOS-like drawer curve (not used on the landing)." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "40rem" },
+      { "name": "tablet", "value": "61.25rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button — Primary (marketing)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink pill CTA — hero 'Get started', footer install actions.",
+      "html": "<button class=\"ds-btn-primary\">Get started</button>",
+      "css": ".ds-btn-primary { background: oklch(0.922 0 0); color: oklch(0.205 0 0); border: none; border-radius: 9999px; padding: 0.625rem 1.25rem; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: opacity 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 150ms cubic-bezier(0.23,1,0.32,1); transform: scale(1); } .ds-btn-primary:hover { opacity: 0.88; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.556 0 0); outline-offset: 2px; }"
+    },
+    {
+      "name": "Button — Ghost (marketing)",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Bordered, transparent pill — hero 'Browse components'.",
+      "html": "<button class=\"ds-btn-ghost\">Browse components</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: oklch(0.985 0 0); border: 1px solid oklch(0.269 0 0); border-radius: 9999px; padding: 0.625rem 1.25rem; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: border-color 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1); transform: scale(1); } .ds-btn-ghost:hover { border-color: oklch(0.708 0 0); } .ds-btn-ghost:active { transform: scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid oklch(0.556 0 0); outline-offset: 2px; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge-primary",
+      "description": "Pill status/label chip — three variants: solid (primary), muted (secondary), bordered (outline). Used for invoice status and unread counts.",
+      "html": "<div style=\"display:flex;gap:0.375rem;align-items:center\"><span class=\"ds-badge ds-badge-primary\">Overdue</span><span class=\"ds-badge ds-badge-secondary\">Paid</span><span class=\"ds-badge ds-badge-outline\">Pending</span></div>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; border-radius: 9999px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 0.75rem; font-weight: 500; line-height: 1; padding: 0.25rem 0.625rem; white-space: nowrap; } .ds-badge-primary { background: oklch(0.922 0 0); color: oklch(0.205 0 0); } .ds-badge-secondary { background: oklch(0.269 0 0); color: oklch(0.985 0 0); } .ds-badge-outline { background: transparent; color: oklch(0.985 0 0); border: 1px solid oklch(0.269 0 0); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Bordered, flatly-shadowed container — dashboard stat panels, recent-invoices table wrapper.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Plan usage</div><div class=\"ds-card-body\">Team plan, renews Oct 1.</div></div>",
+      "css": ".ds-card { background: oklch(0.205 0 0); color: oklch(0.985 0 0); border: 1px solid oklch(0.269 0 0); border-radius: 0.625rem; box-shadow: 0 1px 2px #0000000d; padding: 1.25rem; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; } .ds-card-title { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; } .ds-card-body { font-size: 0.875rem; color: oklch(0.708 0 0); }"
+    },
+    {
+      "name": "Command Chip",
+      "kind": "chip",
+      "refersTo": "cmd",
+      "description": "Copyable install-command pill: mono text, $ prompt, crossfading copy/check icon. Signature marketing element repeated in hero and shadcn-compat row.",
+      "html": "<button class=\"ds-cmd\"><span class=\"ds-cmd-prompt\">$</span><code class=\"ds-cmd-text\">npx @madeui/cli init</code><svg class=\"ds-cmd-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M5 15V5a2 2 0 0 1 2-2h10\"/></svg></button>",
+      "css": ".ds-cmd { display: inline-flex; align-items: center; gap: 0.5rem; background: oklch(0.269 0 0); color: oklch(0.985 0 0); border: 1px solid oklch(0.269 0 0); border-radius: 9999px; padding: 0.5rem 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.75rem; cursor: pointer; transition: border-color 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1); transform: scale(1); } .ds-cmd:hover { border-color: oklch(0.708 0 0); } .ds-cmd:active { transform: scale(0.97); } .ds-cmd-prompt { color: oklch(0.985 0 0); } .ds-cmd-icon { color: oklch(0.708 0 0); margin-left: 0.25rem; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search",
+      "description": "Pill-shaped docs-search trigger in the header, with a ⌘K hint.",
+      "html": "<button class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><span class=\"ds-search-label\">Search docs…</span><kbd class=\"ds-search-kbd\">⌘K</kbd></button>",
+      "css": ".ds-search { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-width: 14rem; height: 2.25rem; background: oklch(0.145 0 0); color: oklch(0.708 0 0); border: 1px solid oklch(0.269 0 0); border-radius: 9999px; padding-inline: 0.75rem; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 0.875rem; cursor: pointer; transition: color 150ms cubic-bezier(0.23,1,0.32,1), border-color 150ms cubic-bezier(0.23,1,0.32,1); } .ds-search:hover { color: oklch(0.985 0 0); border-color: oklch(0.708 0 0); } .ds-search-label { flex: 1; text-align: left; } .ds-search-kbd { font-size: 0.625rem; background: oklch(0.269 0 0); border-radius: 0.375rem; padding: 0.125rem 0.375rem; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "navLink",
+      "description": "Header primary navigation — muted at rest, ink on hover, no underline ever.",
+      "html": "<nav style=\"display:flex;gap:0.25rem\"><a href=\"#\" class=\"ds-navlink\">Docs</a><a href=\"#\" class=\"ds-navlink\">Components</a><a href=\"#\" class=\"ds-navlink\">Changelog</a></nav>",
+      "css": ".ds-navlink { color: oklch(0.708 0 0); font-size: 0.875rem; text-decoration: none; border-radius: 0.5rem; padding: 0.375rem 0.625rem; white-space: nowrap; transition: color 150ms cubic-bezier(0.23,1,0.32,1); } .ds-navlink:hover { color: oklch(0.985 0 0); }"
+    },
+    {
+      "name": "Section Rule",
+      "kind": "custom",
+      "refersTo": "rule",
+      "description": "Plain hairline section divider, full column width. Marks two structural transitions only: above the 'how it works' principles strip, and at the top of the footer.",
+      "html": "<div class=\"ds-rule\"></div>",
+      "css": ".ds-rule { width: 100%; height: 0; border-top: 1px solid oklch(0.269 0 0); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operating Instrument",
+    "overview": "madeui's landing is not a components gallery; it is one product window — a five-tab stage (Cards, Dashboard, Inbox, Team, Settings) that the visitor can actually click through. The whole page is built to feel like an instrument panel: flat, monochrome, precisely gridded, every control legible because nothing is competing for attention with color. The visual system is the argument. Because the interface has no hue accent to hide behind, every spacing, radius, and weight decision has to be exactly right — sloppy alignment would read immediately against a palette this quiet.\n\nThe page explicitly rejects the component-grid bento layout and the metric-hero template that most dev-tool landings default to. There is no decorative gradient, no illustration, no marketing screenshot standing in for the product — the stage in the hero is dozens of real registry components (Tabs, Card, Table, Button, Select, and two dozen more, down to InputOTP and Meter), rendered live across five distinct screens, each drawing its own chrome. Ink-on-paper is the whole palette: foreground and background invert per theme, and every other color in the system is a step of gray between them, plus one warm red reserved exclusively for destructive actions.",
+    "keyCharacteristics": [
+      "Pure monochrome (oklch grays only); zero hue accent anywhere in chrome or components.",
+      "A five-tab product stage as the hero's proof, not a grid of feature cards — four scenes draw their own bordered window, the fifth floats free as a card grid.",
+      "Full-radius (pill) shape for every interactive chip: buttons, badges, the version pill, the search field, the command chip.",
+      "Geist across the whole landing via a page-level theme on the font.sans token; the H1 alone adds -0.04em display tracking.",
+      "Flat surfaces with a single low, tight shadow — no colored glow, no blur-heavy elevation.",
+      "The page column is bounded by dashed layout rails; the scene stage stays inside that same column rather than breaking out of it."
+    ],
+    "rules": [
+      { "name": "The No-Hue Rule", "body": "Every token except `destructive` has chroma 0. Do not introduce a violet, blue, or brand hue accent anywhere in chrome, marketing surfaces, or component defaults — this was a deliberate reversal from an earlier violet-accent identity.", "section": "colors" },
+      { "name": "The Dark-Class Bridge Rule", "body": "Dark mode is a compiled StyleX theme applied to <html> — never a subtree wrapper — because dialogs and popovers portal to <body> and would escape a scoped theme.", "section": "colors" },
+      { "name": "The Single-Display-Moment Rule", "body": "Display size and the -0.04em tracking exist only on the H1. No other element on the page uses display-weight type; nav, buttons, and captions all read at body or label scale.", "section": "typography" },
+      { "name": "The Border-First Rule", "body": "Reach for a hairline border before a shadow. Shadow is a secondary, low-opacity signal layered on top of a bordered surface, never a replacement for the border.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every color in the system at chroma 0 except colors.destructive; the monochrome identity is the whole visual argument (see the No-Hue Rule).",
+      "Do use full radius (radius.full) for single-action marketing chips (buttons, pills, chips) and scale-step radius (md/lg/xl) for containers and in-product controls.",
+      "Do reach for shadow.sm/shadow.md only on surfaces that already have a border; never use a shadow alone to imply a raised edge.",
+      "Do keep Geist as the one family on the landing, applied through the font.sans token override rather than per-element font stacks.",
+      "Do drive all spacing from the space scale (s05...s16) and all durations from the duration scale (fast 150ms / normal 200ms / slow 350ms) — never a raw px/ms value in a component or example.",
+      "Do wrap real, notable product-screen regions in Part with an accurate name prop, so the scene-to-component mapping stays correct as scenes evolve."
+    ],
+    "donts": [
+      "Don't reintroduce a violet or any other hue accent into chrome, buttons, or focus rings — this was an explicit, committed reversal.",
+      "Don't stand in a screenshot, mockup, or static illustration for a real component; the landing's proof is that every control in the stage is the live registry component.",
+      "Don't give the destructive red a role outside the destructive button/badge variant — it must stay rare enough that its appearance alone signals danger.",
+      "Don't mix pill and scale-step radius on the same category of control; the split is by role (single-action chip vs. container), not by section.",
+      "Don't animate anything beyond opacity/color when prefers-reduced-motion: reduce is set — every transform-based transition in this system has a reduced-motion fallback.",
+      "Don't scatter the Rule (a plain hairline) at arbitrary section breaks; it marks structural transitions only — above the principles strip and at the top of the footer."
+    ]
+  }
+}
