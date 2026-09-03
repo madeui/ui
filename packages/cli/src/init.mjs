@@ -13,6 +13,7 @@ import {
   missingDependencies,
   installDependencies,
 } from './project.mjs';
+import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.mjs';
 import { patchViteConfig, patchTsconfigPaths } from './vite.mjs';
 
 const STYLEX_BABEL_PLUGIN = (aliasRoot) => `[
@@ -148,6 +149,17 @@ function ensureGlobalsCss(cwd, candidates, fallback, changed) {
     console.log(kleur.dim(`  = ${existing} already contains @stylex`));
     return existing;
   }
+  // Tailwind kept: `@import` must stay first and we cannot wrap the file in
+  // @layer base (an @import inside a block is invalid), so only add the
+  // marker after the Tailwind import.
+  const tailwindImport = /^[ \t]*@import\s+['"]tailwindcss['"];?[ \t]*\r?\n/m.exec(css);
+  if (tailwindImport) {
+    const at = tailwindImport.index + tailwindImport[0].length;
+    fs.writeFileSync(file, `${css.slice(0, at)}\n@stylex;\n${css.slice(at)}`);
+    changed.push(existing);
+    console.log(kleur.green(`  ~ ${existing}: added @stylex after the Tailwind import`));
+    return existing;
+  }
   fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n@layer base {\n${css.trimEnd()}\n}\n`);
   changed.push(existing);
   console.log(kleur.green(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`));
@@ -163,6 +175,17 @@ const FRAMEWORKS = {
     devDependencies: ['@stylexjs/babel-plugin', '@stylexjs/postcss-plugin'],
     setup(cwd, changed) {
       writeIfAbsent(cwd, 'babel.config.js', NEXT_BABEL_CONFIG, changed);
+      // Next.js reads exactly one PostCSS config; writing ours next to an
+      // existing .mjs/.cjs would make the outcome depend on lookup order.
+      const other = ['postcss.config.mjs', 'postcss.config.cjs', 'postcss.config.ts'].find((f) =>
+        fs.existsSync(path.join(cwd, f))
+      );
+      if (other) {
+        console.log(kleur.dim(`  = ${other} exists — not writing postcss.config.js`));
+        return [
+          `${other}: add the '@stylexjs/postcss-plugin' entry (see https://stylexjs.com/docs/learn/installation/nextjs):\n${NEXT_POSTCSS_CONFIG}`,
+        ];
+      }
       writeIfAbsent(cwd, 'postcss.config.js', NEXT_POSTCSS_CONFIG, changed);
       return [];
     },
@@ -195,9 +218,22 @@ export async function init(cwd, flags) {
     throw new Error('could not detect a supported framework (Next.js or Vite).');
   }
 
-  console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
   const changed = [];
-  const instructions = framework.setup(cwd, changed);
+  const instructions = [];
+
+  const tailwind = tailwindPackages(cwd);
+  if (tailwind.length > 0) {
+    if (await shouldRemoveTailwind(flags, tailwind)) {
+      instructions.push(...(await removeTailwind(cwd, tailwind, changed, { dryRun: flags.noInstall })));
+    } else {
+      instructions.push(
+        'Tailwind kept: madeui components ignore Tailwind classes; keep the reset in @layer base and @stylex after the Tailwind import.'
+      );
+    }
+  }
+
+  console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
+  instructions.push(...framework.setup(cwd, changed));
   const cssFile =
     framework.css === null
       ? null
@@ -228,7 +264,7 @@ export async function init(cwd, flags) {
   await add(cwd, ['theme', 'utils'], flags);
 
   if (instructions.length > 0) {
-    console.log(kleur.yellow('\nManual steps (could not patch safely):'));
+    console.log(kleur.yellow('\nManual steps:'));
     for (const step of instructions) console.log(`  • ${step}`);
   }
   console.log(`\nDone. Add components with: ${kleur.bold('madeui add button dialog …')}`);

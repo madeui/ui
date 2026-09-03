@@ -23,6 +23,10 @@ installs `@stylexjs/stylex` + `@base-ui/react`, copies the design tokens to
 agents follow the house rules. `add` copies components (and anything they
 depend on) into `components/ui/`.
 
+If the app was scaffolded with Tailwind, `init` offers to remove it — madeui
+uses StyleX and the two don't mix well in one build. Pass `--remove-tailwind`
+or `--keep-tailwind` to skip the question.
+
 Components are also installable with the shadcn CLI — the registry is
 shadcn-compatible:
 

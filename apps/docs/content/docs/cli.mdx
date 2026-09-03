@@ -21,6 +21,14 @@ Sets up the current app:
   Babel + PostCSS plugin on Next.js, `@stylexjs/unplugin` on Vite. Config
   files it doesn't fully understand are never rewritten; it prints the exact
   snippet to apply instead.
+- Offers to remove Tailwind when the app was scaffolded with it (the
+  `--tailwind` option of `create-next-app`, or `@tailwindcss/vite`). madeui
+  styles with StyleX, and running both means two CSS pipelines and a PostCSS
+  config `init` can't own. Removal uninstalls the Tailwind packages, deletes
+  or edits the PostCSS / Vite plugin wiring and any `tailwind.config.*`, and
+  strips Tailwind at-rules (`@import "tailwindcss"`, `@theme`, `@plugin`,
+  `@custom-variant`, …) from your stylesheets. Utility classes already in
+  your JSX are left for you to restyle with StyleX.
 - Installs `@stylexjs/stylex` and `@base-ui/react`.
 - Ensures the global CSS has the `@stylex` marker with a `base` reset layer
   declared before it (unlayered CSS would outrank StyleX).
@@ -34,7 +42,9 @@ Sets up the current app:
 | Option | Description |
 | --- | --- |
 | `--registry <url\|dir>` | Registry to use (hosted URL or a local directory). |
-| `--no-install` | Print dependency installs instead of running them. |
+| `--remove-tailwind` | Strip Tailwind without asking (for scripts and agents; without a TTY `init` keeps Tailwind). |
+| `--keep-tailwind` | Leave Tailwind in place without asking. `init` then adds `@stylex` after the Tailwind import and prints the PostCSS entry to merge by hand. |
+| `--no-install` | Print dependency installs (and uninstalls) instead of running them. |
 
 ## add
 
