@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import kleur from 'kleur';
 
@@ -52,11 +53,23 @@ module.exports = {
         parserOpts: { plugins: ['typescript', 'jsx'] },
         plugins: babelConfig.plugins,
       },
-      useCSSLayers: true,
+      // StyleX declares the layer order itself: base first, then its own
+      // priority layers — so the reset below loses to every component style.
+      useCSSLayers: { before: ['base'] },
     },
   },
 };
 `;
+
+// Browser reset with Tailwind Preflight's coverage (see reset.css): an app
+// moving off Tailwind keeps the baseline it rendered under, and components
+// get the border-box sizing they rely on. Lives in @layer base so it loses
+// to every StyleX rule. Research: docs/research/stylex-css-reset.md.
+const RESET_MARKER = '/* madeui reset */';
+const RESET_CSS = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), 'reset.css'),
+  'utf8'
+);
 
 // The reset layer MUST be declared before @stylex: with useCSSLayers, any
 // unlayered global CSS outranks every StyleX rule and silently zeroes
@@ -65,14 +78,15 @@ const GLOBALS_CSS = `@layer base;
 
 @stylex;
 
-@layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+${RESET_CSS}`;
+
+/** True when the stylesheet already carries our reset or a universal border-box rule. */
+function hasReset(css) {
+  return (
+    css.includes(RESET_MARKER) ||
+    /(^|[}\s,])\*\s*(,[^{]*)?\{[^}]*box-sizing\s*:\s*border-box/m.test(css)
+  );
 }
-`;
 
 const AGENTS_MD = `# UI components (madeui)
 
@@ -160,9 +174,39 @@ function ensureGlobalsCss(cwd, candidates, fallback, changed) {
     console.log(kleur.green(`  ~ ${existing}: added @stylex after the Tailwind import`));
     return existing;
   }
-  fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n@layer base {\n${css.trimEnd()}\n}\n`);
+  // Our reset goes before the user's rules so, inside the same layer, theirs
+  // win by source order.
+  const reset = hasReset(css) ? '' : `${RESET_CSS}\n`;
+  fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n${reset}@layer base {\n${css.trimEnd()}\n}\n`);
   changed.push(existing);
-  console.log(kleur.green(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`));
+  console.log(
+    kleur.green(
+      `  ~ ${existing}: prepended @stylex${reset ? ' + reset' : ''}, wrapped existing CSS in @layer base`
+    )
+  );
+  return existing;
+}
+
+/**
+ * Vite: the unplugin injects StyleX CSS (unlayered) into the app's CSS asset
+ * itself, so there is no marker to place — only the reset is needed, and a
+ * layered reset always loses to the unlayered component styles.
+ */
+function ensureViteCss(cwd, candidates, fallback, changed) {
+  const existing = candidates.find((f) => fs.existsSync(path.join(cwd, f)));
+  if (!existing) {
+    writeIfAbsent(cwd, fallback, RESET_CSS, changed);
+    return fallback;
+  }
+  const file = path.join(cwd, existing);
+  const css = fs.readFileSync(file, 'utf8');
+  if (hasReset(css)) {
+    console.log(kleur.dim(`  = ${existing} already has a reset`));
+    return existing;
+  }
+  fs.writeFileSync(file, `${RESET_CSS}\n${css}`);
+  changed.push(existing);
+  console.log(kleur.green(`  ~ ${existing}: prepended reset`));
   return existing;
 }
 
@@ -194,9 +238,10 @@ const FRAMEWORKS = {
     label: 'Vite + React',
     paths: { ui: 'src/components/ui', lib: 'src/lib' },
     // The official @stylexjs/unplugin extracts and injects the CSS itself —
-    // no @stylex marker, no PostCSS config, and (with unlayered output) no
-    // reset-layer concern in the user's global CSS.
-    css: null,
+    // no @stylex marker, no PostCSS config. The app's root stylesheet still
+    // needs the reset (create-vite's index.css has no border-box rule).
+    cssCandidates: ['src/index.css', 'src/main.css', 'src/global.css', 'src/globals.css', 'src/App.css'],
+    cssFallback: 'src/index.css',
     devDependencies: ['@stylexjs/unplugin'],
     setup(cwd, changed) {
       return [
@@ -235,8 +280,8 @@ export async function init(cwd, flags) {
   console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
   instructions.push(...framework.setup(cwd, changed));
   const cssFile =
-    framework.css === null
-      ? null
+    name === 'vite'
+      ? ensureViteCss(cwd, framework.cssCandidates, framework.cssFallback, changed)
       : ensureGlobalsCss(cwd, framework.cssCandidates, framework.cssFallback, changed);
   writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
 
@@ -245,7 +290,7 @@ export async function init(cwd, flags) {
     ...DEFAULT_CONFIG,
     ...(flags.registry ? { registry: flags.registry } : {}),
     paths: framework.paths,
-    ...(cssFile ? { css: cssFile } : {}),
+    css: cssFile,
   };
   if (!existingConfig) {
     saveConfig(cwd, config);

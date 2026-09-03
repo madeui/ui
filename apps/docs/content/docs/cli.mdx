@@ -30,8 +30,12 @@ Sets up the current app:
   `@custom-variant`, …) from your stylesheets. Utility classes already in
   your JSX are left for you to restyle with StyleX.
 - Installs `@stylexjs/stylex` and `@base-ui/react`.
-- Ensures the global CSS has the `@stylex` marker with a `base` reset layer
-  declared before it (unlayered CSS would outrank StyleX).
+- Ensures the global CSS has the `@stylex` marker with a `base` layer
+  declared before it (unlayered CSS would outrank StyleX), and adds a browser
+  reset in that layer when the file has none. The reset has the same coverage
+  as Tailwind Preflight, so an app that drops Tailwind keeps its baseline; a
+  Vite template never had one. See the
+  [manual setup](/docs/installation#nextjs-manual) for details.
 - Copies the design tokens (`lib/tokens.stylex.ts`, `lib/constants.stylex.ts`,
   `lib/themes.ts`) and utilities (`lib/stylex-utils.ts`).
 - Appends a component-conventions section to `AGENTS.md` so coding agents
