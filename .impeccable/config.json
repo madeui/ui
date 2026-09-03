@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-09-03T15:16:34.123Z",
+        "reason": "Brand commitment: the madeui wordmark is outlined from Geist 700 (apps/docs/landing/brand.ts) and the pre-existing landing already loaded Geist from Google Fonts; recorded in PRODUCT.md Brand Commitments"
+      }
+    ]
+  }
+}

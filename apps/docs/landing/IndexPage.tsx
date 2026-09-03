@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
-import * as stylex from "@stylexjs/stylex";
+import * as stylex from '@stylexjs/stylex';
 
+import { Kbd } from '@/components/ui/kbd';
 import {
   space,
   fontSize,
@@ -13,49 +14,20 @@ import {
   duration,
   easing,
   stroke,
-} from "@/lib/constants.stylex";
-import { colors, font, radius, shadow } from "@/lib/tokens.stylex";
+} from '@/lib/constants.stylex';
+import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
-import ApiKeyCard from "./ApiKeyCard";
-import BackupCard from "./BackupCard";
-import { WORDMARK_PATH } from "./brand";
-import ComposeCard from "./ComposeCard";
-import FocusCard from "./FocusCard";
-import KitchenSink from "./KitchenSink";
-import ReviewerCard from "./ReviewerCard";
-import RsvpCard from "./RsvpCard";
-import ShortcutsCard from "./ShortcutsCard";
+import Footer from './Footer';
+import { ArrowRightIcon, CheckIcon, CopyIcon, GitHubIcon, MoonIcon, SearchIcon, SunIcon } from './icons';
+import { Lockup } from './Lockup';
+import { Rule } from './Rule';
+import Scenes from './scenes/Scenes';
 
-function Lockup() {
-  return (
-    <svg viewBox={`0 0 99 28`} width="99" height="28" aria-hidden>
-      {/* Glyph: three placed components and one snapping into its slot.
-          Fitted by its true bounding box (the tilted slot overshoots the
-          64-grid), so it fills the lockup's full 28-unit cell. */}
-      <g transform={`scale(0.47417) translate(-6, 1.05)`} fill="currentColor">
-        <rect x="6" y="6" width="24" height="24" rx="7" />
-        <rect x="6" y="34" width="24" height="24" rx="7" />
-        <rect x="34" y="34" width="24" height="24" rx="7" />
-        <rect
-          x="38"
-          y="2"
-          width="24"
-          height="24"
-          rx="7"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeDasharray={`5 4`}
-          strokeLinecap="round"
-          transform={`rotate(8 50 14)`}
-        />
-      </g>
-      <g transform={`translate(34,21) scale(0.185)`} fill="currentColor">
-        <path d={WORDMARK_PATH} />
-      </g>
-    </svg>
-  );
-}
+// Geist is the brand face on marketing surfaces; the components inherit it
+// through the `font.sans` token so every control in the scenes matches.
+const geist = stylex.createTheme(font, {
+  sans: "'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+});
 
 function ThemeMenu() {
   const [open, setOpen] = React.useState(false);
@@ -64,21 +36,21 @@ function ThemeMenu() {
   // Follow the resolved theme the shell stamps on <html> (data-theme).
   React.useEffect(() => {
     const html = document.documentElement;
-    const sync = () => setDark(html.dataset.theme === "dark");
+    const sync = () => setDark(html.dataset.theme === 'dark');
     sync();
     const mo = new MutationObserver(sync);
-    mo.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+    mo.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
     return () => mo.disconnect();
   }, []);
 
   React.useEffect(() => {
     if (!open) return;
     const close = () => setOpen(false);
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
   }, [open]);
 
-  const pick = (mode: "light" | "dark" | "system") => {
+  const pick = (mode: 'light' | 'dark' | 'system') => {
     (window as unknown as { __setTheme?: (m: string) => void }).__setTheme?.(mode);
     setOpen(false);
   };
@@ -89,48 +61,18 @@ function ThemeMenu() {
         type="button"
         aria-label="Theme"
         aria-haspopup="menu"
-        {...stylex.props(styles.themeBtn)}
+        aria-expanded={open}
+        {...stylex.props(styles.iconBtn)}
         onClick={(e) => {
           e.stopPropagation();
           setOpen((o) => !o);
         }}
       >
-        {dark ? (
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 24 24`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d={`M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z`} />
-          </svg>
-        ) : (
-          <svg
-            width="16"
-            height="16"
-            viewBox={`0 0 24 24`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <circle cx="12" cy="12" r="4" />
-            <path
-              d={`M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4`}
-            />
-          </svg>
-        )}
+        {dark ? <MoonIcon size={16} /> : <SunIcon size={16} />}
       </button>
       {open && (
         <div role="menu" {...stylex.props(styles.themeMenu)}>
-          {(["light", "dark", "system"] as const).map((mode) => (
+          {(['light', 'dark', 'system'] as const).map((mode) => (
             <button
               key={mode}
               type="button"
@@ -138,12 +80,45 @@ function ThemeMenu() {
               {...stylex.props(styles.themeItem)}
               onClick={() => pick(mode)}
             >
-              {mode === "light" ? "Light" : mode === "dark" ? "Dark" : "System"}
+              {mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System'}
             </button>
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+// Opens the docs' own search dialog (Blume's <blume-search> element, rendered
+// by the Astro shell). The dialog carries its own ⌘K / "/" handlers, so this
+// button is the pointer path; the shortcut hint tells the rest.
+function SearchTrigger() {
+  const [modifier, setModifier] = React.useState('⌘');
+
+  React.useEffect(() => {
+    if (!/mac|iphone|ipad|ipod/iu.test(navigator.platform)) setModifier('Ctrl');
+  }, []);
+
+  const open = () => {
+    const el = document.querySelector('blume-search') as
+      | (HTMLElement & { open?: () => void })
+      | null;
+    if (el?.open) {
+      el.open();
+      return;
+    }
+    document.querySelector<HTMLElement>('[data-blume-search-open]')?.click();
+  };
+
+  return (
+    <button type="button" onClick={open} aria-label="Search docs" {...stylex.props(styles.search)}>
+      <SearchIcon size={16} />
+      <span {...stylex.props(styles.searchLabel)}>Search docs…</span>
+      <span {...stylex.props(styles.searchKbd)}>
+        <Kbd>{modifier}</Kbd>
+        <Kbd>K</Kbd>
+      </span>
+    </button>
   );
 }
 
@@ -179,93 +154,92 @@ function CopyCommand({ command, compact }: { command: string; compact?: boolean 
       </span>
       <code {...stylex.props(styles.cmdText)}>{command}</code>
       <span aria-hidden {...stylex.props(styles.cmdIcons)}>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          {...stylex.props(styles.cmdIcon, copied && styles.cmdIconOut)}
-        >
-          <rect x="9" y="9" width="12" height="12" rx="2" />
-          <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-        </svg>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <CopyIcon size={16} {...stylex.props(styles.cmdIcon, copied && styles.cmdIconOut)} />
+        <CheckIcon
+          size={16}
           {...stylex.props(styles.cmdIcon, styles.cmdCheck, copied && styles.cmdIconIn)}
-        >
-          <path d="m4 12.5 5.2 5.2L20 7" />
-        </svg>
+        />
       </span>
       <span role="status" aria-live="polite" {...stylex.props(styles.srOnly)}>
-        {copied ? "Copied" : ""}
+        {copied ? 'Copied' : ''}
       </span>
     </button>
   );
 }
 
+const principles = [
+  {
+    title: 'Source you own',
+    body: 'Components land in components/ui as plain TSX. Change anything; there is no package to fork and no override API to learn.',
+  },
+  {
+    title: 'Tokens, not literals',
+    body: 'Color, space, type, radius, and motion come from typed scales in lib/. A value off the scale does not compile, so nothing drifts.',
+  },
+  {
+    title: 'Base UI underneath',
+    body: 'Focus, keyboard, and positioning from headless primitives. Every state is a data attribute you style in place.',
+  },
+];
+
 export default function IndexPage() {
-  // Merges the StyleX cell styles with the one global utility class the
-  // astro shell provides (break-inside — see the compiler-bug note below).
-  const cellProps = (extra?: stylex.StyleXStyles) => {
-    const sx = stylex.props(styles.cell, extra);
-    return { ...sx, className: `${sx.className ?? ''} bento-cell` };
-  };
   return (
-    <div {...stylex.props(styles.page)}>
+    <div {...stylex.props(geist, styles.page)}>
       <div {...stylex.props(styles.wrap)}>
         <header {...stylex.props(styles.header)}>
-          <a href="/" aria-label="madeui" {...stylex.props(styles.lockup)}>
-            <Lockup />
-          </a>
-          <nav {...stylex.props(styles.nav)}>
-            <a href="/docs" {...stylex.props(styles.navLink)}>
-              Docs
+          <div {...stylex.props(styles.headerStart)}>
+            <a href="/" aria-label="madeui" {...stylex.props(styles.lockup)}>
+              <Lockup height={28} />
             </a>
-            <a href="/docs/components/accordion" {...stylex.props(styles.navLink, styles.navSecondary)}>
-              Components
-            </a>
-            <a href="/changelog" {...stylex.props(styles.navLink, styles.navSecondary)}>
-              Changelog
-            </a>
-            <a href="https://github.com/madeui/ui" {...stylex.props(styles.navLink)}>
-              GitHub
+            <nav aria-label="Primary" {...stylex.props(styles.nav)}>
+              <a href="/docs" {...stylex.props(styles.navLink)}>
+                Docs
+              </a>
+              <a href="/docs/components/accordion" {...stylex.props(styles.navLink, styles.navSecondary)}>
+                Components
+              </a>
+              <a href="/changelog" {...stylex.props(styles.navLink, styles.navSecondary)}>
+                Changelog
+              </a>
+            </nav>
+          </div>
+          <div {...stylex.props(styles.headerEnd)}>
+            <SearchTrigger />
+            <a
+              href="https://github.com/madeui/ui"
+              aria-label="madeui on GitHub"
+              rel="noreferrer"
+              target="_blank"
+              {...stylex.props(styles.iconBtn)}
+            >
+              <GitHubIcon size={16} />
             </a>
             <ThemeMenu />
-          </nav>
+          </div>
         </header>
 
         <section {...stylex.props(styles.hero)}>
+          <div aria-hidden {...stylex.props(styles.heroDots)} />
           <a href="/changelog" {...stylex.props(styles.pill)}>
-            <span {...stylex.props(styles.pillVersion)}>v1.0.0</span> First release{" "}
-            <span aria-hidden>→</span>
+            <span {...stylex.props(styles.pillVersion)}>v1.0.0</span> First release
+            <ArrowRightIcon size={12} />
           </a>
           <h1 {...stylex.props(styles.h1)}>
-            Components, made yours
+            UI you own, down to the token
             <i {...stylex.props(styles.dot)} />
           </h1>
           <p {...stylex.props(styles.sub)}>
-            Copied into your project as <b {...stylex.props(styles.subStrong)}>editable source</b>,
-            styled with compile-time <b {...stylex.props(styles.subStrong)}>StyleX tokens</b>, built
-            on headless <b {...stylex.props(styles.subStrong)}>Base UI</b> — and constrained enough
-            that your AI agent can't break it.
+            madeui copies <b {...stylex.props(styles.subStrong)}>Base UI</b> components into your
+            project as editable source and styles them with compile-time{' '}
+            <b {...stylex.props(styles.subStrong)}>StyleX tokens</b>. Off-scale values don't
+            compile, so the result stays consistent, for you and for your agent.
           </p>
           <div {...stylex.props(styles.cta)}>
             <a href="/docs/installation" {...stylex.props(styles.btn, styles.btnSolid)}>
-              Get Started
+              Get started
             </a>
             <a href="/docs/components/accordion" {...stylex.props(styles.btn, styles.btnGhost)}>
-              View Components
+              Browse components
             </a>
           </div>
           <div {...stylex.props(styles.cmdline)}>
@@ -273,52 +247,30 @@ export default function IndexPage() {
           </div>
         </section>
 
-        <section {...stylex.props(styles.bento)} aria-label="Live component previews">
-          <div {...cellProps(styles.sink)}>
-            <KitchenSink />
-          </div>
-          <div {...cellProps()}>
-            <ApiKeyCard />
-          </div>
-          <div {...cellProps()}>
-            <ComposeCard />
-          </div>
-          <div {...cellProps()}>
-            <BackupCard />
-          </div>
-          <div {...cellProps()}>
-            <RsvpCard />
-          </div>
-          <div {...cellProps()}>
-            <FocusCard />
-          </div>
-          <div {...cellProps()}>
-            <ReviewerCard />
-          </div>
-          <div {...cellProps()}>
-            <ShortcutsCard />
-          </div>
+        <section aria-label="Example screens built from madeui components" {...stylex.props(styles.stage)}>
+          <Scenes />
+          <p {...stylex.props(styles.caption)}>
+            Every control above is the real component, running from the same source you
+            would install.
+          </p>
+        </section>
+
+        <Rule style={styles.principlesRule} />
+        <section aria-label="How it works" {...stylex.props(styles.principles)}>
+          {principles.map((p) => (
+            <div key={p.title} {...stylex.props(styles.principle)}>
+              <h2 {...stylex.props(styles.principleTitle)}>{p.title}</h2>
+              <p {...stylex.props(styles.principleBody)}>{p.body}</p>
+            </div>
+          ))}
         </section>
 
         <div {...stylex.props(styles.compat)}>
-          <span>Every preview above is the real component. shadcn CLI works too:</span>
+          <span>Already on the shadcn CLI? The registry is compatible:</span>
           <CopyCommand command="npx shadcn@latest add @madeui/button" compact />
         </div>
 
-        <footer {...stylex.props(styles.footer)}>
-          <span>MIT © madeui</span>
-          <div {...stylex.props(styles.footerLinks)}>
-            <a href="/docs" {...stylex.props(styles.footerLink)}>
-              Docs
-            </a>
-            <a href="/changelog" {...stylex.props(styles.footerLink)}>
-              Changelog
-            </a>
-            <a href="https://github.com/madeui/ui" {...stylex.props(styles.footerLink)}>
-              GitHub
-            </a>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
@@ -328,206 +280,279 @@ const appear = stylex.keyframes({
   to: { opacity: 1 },
 });
 
-const HOVER = "@media (hover: hover) and (pointer: fine)" as const;
-const MOBILE = "@media (max-width: 36rem)" as const;
+const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
+const TABLET = '@media (max-width: 61.25rem)' as const;
+const MOBILE = '@media (max-width: 40rem)' as const;
+const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
 
 const styles = stylex.create({
   page: {
-    // The chip's m and the theme menu shadow read the page ground through
-    // this var (defined here, themed by the color tokens).
-    "--madeui-page-bg": colors.background,
     backgroundColor: colors.background,
     color: colors.foreground,
     fontFamily: font.sans,
     lineHeight: lineHeight.normal,
-    minHeight: "100dvh",
+    minHeight: '100dvh',
   },
+  // Two dashed rails run the full height of the page at the column edges:
+  // the layout guide left visible. Phones drop them.
   wrap: {
-    marginInline: "auto",
-    maxWidth: "75rem",
+    borderInlineColor: colors.border,
+    borderInlineStyle: 'dashed',
+    borderInlineWidth: { default: stroke.border, [MOBILE]: 0 },
+    marginInline: 'auto',
+    maxWidth: '80rem',
     paddingInline: { default: space.s6, [MOBILE]: space.s4 },
   },
   header: {
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
+    alignItems: 'center',
+    display: 'flex',
+    gap: space.s3,
+    justifyContent: 'space-between',
     paddingBlock: space.s4,
+  },
+  headerStart: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: space.s5,
+    minWidth: 0,
+  },
+  headerEnd: {
+    alignItems: 'center',
+    display: 'flex',
+    flexShrink: 0,
+    gap: space.s1,
   },
   lockup: {
     color: colors.foreground,
-    display: "inline-flex",
-    textDecoration: "none",
+    display: 'inline-flex',
+    flexShrink: 0,
+    textDecoration: 'none',
   },
   nav: {
-    alignItems: "center",
-    display: "flex",
-    // Without this the links compress past their text and overlap on
-    // narrow screens instead of the row simply getting tighter.
+    alignItems: 'center',
+    display: 'flex',
     flexShrink: 0,
     gap: space.s05,
   },
-  // Docs and GitHub carry the header on phones; Components and Changelog
-  // are one tap away from either, and both sit in the footer.
+  // Docs carries the header on phones; Components and Changelog are one tap
+  // away from it and both sit in the footer.
   navSecondary: {
-    display: { default: null, [MOBILE]: "none" },
+    display: { default: null, [MOBILE]: 'none' },
   },
   navLink: {
     borderRadius: radius.md,
-    whiteSpace: "nowrap",
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ":hover": colors.foreground },
+      [HOVER]: { default: null, ':hover': colors.foreground },
     },
     fontSize: fontSize.sm,
     paddingBlock: space.s15,
     paddingInline: space.s25,
-    textDecoration: "none",
+    textDecoration: 'none',
     transitionDuration: duration.fast,
-    transitionProperty: "color",
+    transitionProperty: 'color',
+    whiteSpace: 'nowrap',
   },
-  theme: {
-    marginLeft: space.s15,
-    position: "relative",
-  },
-  themeBtn: {
-    alignItems: "center",
-    backgroundColor: { default: "transparent", [HOVER]: { default: null, ":hover": colors.muted } },
-    borderRadius: radius.md,
-    borderStyle: "none",
+  search: {
+    alignItems: 'center',
+    backgroundColor: colors.background,
+    borderColor: {
+      default: colors.border,
+      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+    },
+    borderRadius: radius.full,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ":hover": colors.foreground },
+      [HOVER]: { default: null, ':hover': colors.foreground },
     },
-    cursor: "pointer",
-    display: "flex",
-    height: space.s8,
-    justifyContent: "center",
-    outline: { default: "none", ":focus-visible": `${stroke.focus} solid ${colors.ring}` },
-    padding: 0,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    fontFamily: font.sans,
+    fontSize: fontSize.sm,
+    gap: space.s2,
+    height: space.s9,
+    marginRight: space.s1,
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    outlineOffset: stroke.focus,
+    paddingInline: { default: space.s3, [MOBILE]: 0 },
+    justifyContent: 'center',
+    // A null condition emits no rule in StyleX 0.19, so the tablet reset is
+    // an explicit 0.
+    minWidth: { default: '14rem', [TABLET]: 0 },
+    width: { default: null, [MOBILE]: space.s9 },
     transitionDuration: duration.fast,
-    transitionProperty: "color, background-color",
-    width: space.s8,
+    transitionProperty: 'color, border-color',
+  },
+  searchLabel: {
+    display: { default: null, [MOBILE]: 'none' },
+    flex: 1,
+    textAlign: 'left',
+  },
+  searchKbd: {
+    display: { default: 'inline-flex', [MOBILE]: 'none' },
+    gap: space.s05,
+  },
+  iconBtn: {
+    alignItems: 'center',
+    backgroundColor: { default: 'transparent', [HOVER]: { default: null, ':hover': colors.muted } },
+    borderRadius: radius.md,
+    borderStyle: 'none',
+    color: {
+      default: colors.mutedForeground,
+      [HOVER]: { default: null, ':hover': colors.foreground },
+    },
+    cursor: 'pointer',
+    display: 'inline-flex',
+    height: space.s9,
+    justifyContent: 'center',
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
+    padding: 0,
+    textDecoration: 'none',
+    transitionDuration: duration.fast,
+    transitionProperty: 'color, background-color',
+    width: space.s9,
+  },
+  theme: {
+    position: 'relative',
   },
   themeMenu: {
     backgroundColor: colors.popover,
     borderColor: colors.border,
     borderRadius: radius.lg,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: stroke.border,
     boxShadow: shadow.md,
-    display: "flex",
-    flexDirection: "column",
-    minWidth: "7.5rem",
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: '7.5rem',
     padding: space.s1,
-    position: "absolute",
+    position: 'absolute',
     right: 0,
     top: `calc(100% + ${space.s15})`,
     zIndex: z.popup,
   },
   themeItem: {
-    backgroundColor: { default: "transparent", [HOVER]: { default: null, ":hover": colors.muted } },
+    backgroundColor: { default: 'transparent', [HOVER]: { default: null, ':hover': colors.muted } },
     borderRadius: radius.md,
-    borderStyle: "none",
+    borderStyle: 'none',
     color: colors.foreground,
-    cursor: "pointer",
+    cursor: 'pointer',
     fontFamily: font.sans,
     fontSize: fontSize.sm,
-    outline: { default: "none", ":focus-visible": `${stroke.focus} solid ${colors.ring}` },
+    outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     paddingBlock: space.s15,
     paddingInline: space.s25,
-    textAlign: "left",
+    textAlign: 'left',
   },
 
   hero: {
-    animationDuration: duration.slow,
-    animationFillMode: "forwards",
+    animationDuration: { default: duration.slow, [REDUCED]: '0s' },
+    animationFillMode: 'forwards',
     animationName: appear,
     animationTimingFunction: easing.out,
+    isolation: 'isolate',
     opacity: 0,
     paddingBlock: {
-      default: `${space.s16} ${space.s12}`,
-      [MOBILE]: `${space.s10} ${space.s9}`,
+      default: `${space.s12} ${space.s10}`,
+      [MOBILE]: `${space.s8} ${space.s8}`,
     },
-    textAlign: "center",
+    position: 'relative',
+    textAlign: 'center',
+  },
+  // A dot grid on the token spacing, faded to nothing at the edges: the
+  // components' own layout grid showing through behind the headline.
+  heroDots: {
+    backgroundImage: `radial-gradient(${colors.border} ${stroke.border}, transparent ${stroke.border})`,
+    backgroundPosition: 'center',
+    backgroundSize: `${space.s6} ${space.s6}`,
+    inset: 0,
+    maskImage: 'radial-gradient(ellipse 60% 70% at 50% 45%, black 30%, transparent 100%)',
+    pointerEvents: 'none',
+    position: 'absolute',
+    zIndex: -1,
   },
   pill: {
-    alignItems: "center",
+    alignItems: 'center',
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ":hover": colors.mutedForeground },
+      [HOVER]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: stroke.border,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ":hover": colors.foreground },
+      [HOVER]: { default: null, ':hover': colors.foreground },
     },
-    display: "inline-flex",
+    display: 'inline-flex',
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     gap: space.s15,
     paddingBlock: space.s1,
     paddingInline: space.s3,
-    textDecoration: "none",
+    textDecoration: 'none',
     transitionDuration: duration.fast,
-    transitionProperty: "color, border-color",
+    transitionProperty: 'color, border-color',
   },
   pillVersion: {
     color: colors.foreground,
   },
   h1: {
+    fontFamily: font.sans,
     // Display scale — a marketing size with no place on the control type scale.
-    fontSize: "clamp(2.375rem, 5.6vw, 3.75rem)",
+    fontSize: 'clamp(2.375rem, 5.4vw, 3.75rem)',
     fontWeight: fontWeight.bold,
-    letterSpacing: "-0.04em",
+    letterSpacing: '-0.04em',
     lineHeight: lineHeight.tight,
     marginBlock: `${space.s5} 0`,
-    marginInline: "auto",
-    maxWidth: "20ch",
-    textWrap: "balance",
+    marginInline: 'auto',
+    maxWidth: '18ch',
+    textWrap: 'balance',
   },
   dot: {
     backgroundColor: colors.foreground,
     borderRadius: radius.full,
-    display: "inline-block",
-    height: "0.12em",
-    marginLeft: "0.04em",
-    width: "0.12em",
+    display: 'inline-block',
+    height: '0.12em',
+    marginLeft: '0.04em',
+    width: '0.12em',
   },
   sub: {
     color: colors.mutedForeground,
     fontSize: fontSize.base,
-    marginBlock: `${space.s4} 0`,
-    marginInline: "auto",
-    maxWidth: "62ch",
+    marginBlock: `${space.s5} 0`,
+    marginInline: 'auto',
+    maxWidth: '58ch',
+    textWrap: 'pretty',
   },
   subStrong: {
     color: colors.foreground,
     fontWeight: fontWeight.medium,
   },
   cta: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     gap: space.s25,
-    justifyContent: "center",
+    justifyContent: 'center',
     marginTop: space.s7,
   },
   btn: {
     borderRadius: radius.full,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: stroke.border,
-    cursor: "pointer",
+    cursor: 'pointer',
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
     paddingBlock: space.s25,
     paddingInline: space.s5,
-    textDecoration: "none",
-    transform: { default: "scale(1)", ":active": "scale(0.97)" },
+    textDecoration: 'none',
+    transform: { default: 'scale(1)', ':active': 'scale(0.97)' },
     transitionDuration: duration.fast,
     transitionProperty: {
-      default: "transform, opacity, border-color",
-      "@media (prefers-reduced-motion: reduce)": "opacity, border-color",
+      default: 'transform, opacity, border-color',
+      [REDUCED]: 'opacity, border-color',
     },
     transitionTimingFunction: easing.out,
   },
@@ -535,46 +560,42 @@ const styles = stylex.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     color: colors.primaryForeground,
-    opacity: { default: 1, [HOVER]: { default: null, ":hover": 0.88 } },
+    opacity: { default: 1, [HOVER]: { default: null, ':hover': 0.88 } },
   },
   btnGhost: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ":hover": colors.mutedForeground },
+      [HOVER]: { default: null, ':hover': colors.mutedForeground },
     },
     color: colors.foreground,
   },
   cmdline: {
     marginTop: space.s5,
   },
-  // A real surface: the bare mono line read as text floating on the page,
-  // and it never looked like something you could click.
   cmd: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.muted,
-    // muted and accent are the same value in both themes, so the hover
-    // signal has to come from the border.
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ":hover": colors.mutedForeground },
+      [HOVER]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: stroke.border,
     color: colors.foreground,
-    cursor: "pointer",
-    display: "inline-flex",
+    cursor: 'pointer',
+    display: 'inline-flex',
     fontFamily: font.mono,
     fontSize: fontSize.xs,
     gap: space.s2,
     paddingBlock: space.s2,
     paddingInline: space.s4,
-    transform: { default: "scale(1)", ":active": "scale(0.97)" },
+    transform: { default: 'scale(1)', ':active': 'scale(0.97)' },
     transitionDuration: duration.fast,
     transitionProperty: {
-      default: "transform, border-color",
-      "@media (prefers-reduced-motion: reduce)": "border-color",
+      default: 'transform, border-color',
+      [REDUCED]: 'border-color',
     },
     transitionTimingFunction: easing.out,
   },
@@ -592,111 +613,103 @@ const styles = stylex.create({
   // width change that would shift the command text.
   cmdIcons: {
     color: colors.mutedForeground,
-    display: "inline-block",
-    height: "14px",
+    display: 'inline-block',
+    height: space.s4,
     marginLeft: space.s1,
-    position: "relative",
-    width: "14px",
+    position: 'relative',
+    width: space.s4,
   },
   cmdIcon: {
     insetInlineStart: 0,
     opacity: 1,
-    position: "absolute",
+    position: 'absolute',
     top: 0,
-    transform: "scale(1)",
+    transform: 'scale(1)',
     transitionDuration: duration.fast,
     transitionProperty: {
-      default: "transform, opacity",
-      "@media (prefers-reduced-motion: reduce)": "opacity",
+      default: 'transform, opacity',
+      [REDUCED]: 'opacity',
     },
     transitionTimingFunction: easing.out,
   },
   cmdIconOut: {
     opacity: 0,
-    transform: "scale(0.8)",
+    transform: 'scale(0.8)',
   },
   cmdCheck: {
     color: colors.foreground,
     opacity: 0,
-    transform: "scale(0.8)",
+    transform: 'scale(0.8)',
   },
   cmdIconIn: {
     opacity: 1,
-    transform: "scale(1)",
+    transform: 'scale(1)',
   },
   srOnly: {
     borderWidth: 0,
-    clipPath: "inset(50%)",
-    height: "1px",
-    overflow: "hidden",
-    position: "absolute",
-    whiteSpace: "nowrap",
-    width: "1px",
+    clipPath: 'inset(50%)',
+    height: '1px',
+    overflow: 'hidden',
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    width: '1px',
   },
 
-  bento: {
-    columnGap: space.s4,
-    columnCount: {
-      default: 3,
-      '@media (max-width: 61.25rem)': 2,
-      '@media (max-width: 40rem)': 1,
+  stage: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: space.s4,
+  },
+  caption: {
+    color: colors.mutedForeground,
+    fontSize: fontSize.sm,
+    margin: 0,
+    textAlign: 'center',
+  },
+
+  principlesRule: {
+    marginTop: space.s16,
+  },
+  principles: {
+    display: 'grid',
+    gap: { default: space.s10, [MOBILE]: space.s7 },
+    gridTemplateColumns: {
+      default: 'repeat(3, minmax(0, 1fr))',
+      [MOBILE]: 'minmax(0, 1fr)',
     },
-    paddingBottom: space.s6,
+    paddingTop: space.s10,
   },
-  // break-inside lives in the astro shell's global block ("bento-cell") —
-  // StyleX 0.19 emits an empty value for it (compiler bug).
-  cell: {
-    marginBottom: space.s4,
+  principle: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: space.s2,
   },
-  sink: {
-    backgroundColor: colors.card,
-    borderColor: colors.border,
-    borderRadius: radius.xl,
-    borderStyle: "solid",
-    borderWidth: stroke.border,
-    paddingBlock: space.s5,
-    paddingInline: space.s4,
+  principleTitle: {
+    fontFamily: font.sans,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    letterSpacing: '-0.01em',
+    lineHeight: lineHeight.tight,
+    margin: 0,
+  },
+  principleBody: {
+    color: colors.mutedForeground,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.normal,
+    margin: 0,
+    maxWidth: '42ch',
+    textWrap: 'pretty',
   },
 
   compat: {
-    alignItems: "center",
-    borderTopColor: colors.border,
-    borderTopStyle: "solid",
-    borderTopWidth: stroke.border,
+    alignItems: 'center',
     color: colors.mutedForeground,
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     fontSize: fontSize.sm,
-    gap: `${space.s25} ${space.s7}`,
-    justifyContent: "center",
-    marginTop: space.s10,
-    paddingBlock: space.s5,
-    textAlign: "center",
-  },
-
-  footer: {
-    borderTopColor: colors.border,
-    borderTopStyle: "solid",
-    borderTopWidth: stroke.border,
-    color: colors.mutedForeground,
-    display: "flex",
-    flexWrap: "wrap",
-    fontSize: fontSize.xs,
-    gap: space.s4,
-    justifyContent: "space-between",
-    paddingBlock: `${space.s5} ${space.s12}`,
-  },
-  footerLinks: {
-    display: "flex",
-    gap: space.s5,
-  },
-  footerLink: {
-    color: {
-      default: colors.mutedForeground,
-      [HOVER]: { default: null, ":hover": colors.foreground },
-    },
-    textDecoration: "none",
-    transitionDuration: duration.fast,
-    transitionProperty: "color",
+    gap: `${space.s25} ${space.s5}`,
+    justifyContent: 'center',
+    marginTop: space.s12,
+    textAlign: 'center',
   },
 });

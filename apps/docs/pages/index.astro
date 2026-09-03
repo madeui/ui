@@ -1,8 +1,18 @@
 ---
 // madeui landing — thin shell; the page itself is a StyleX-styled React
 // component (landing/IndexPage.tsx), same pipeline as the docs previews.
+//
+// The docs' search dialog is Blume's <Search> (a custom element with its own
+// ⌘K / "/" handlers and the Orama index). It ships with Blume's Tailwind
+// stylesheet, so this page imports that theme too; StyleX rules are unlayered
+// and win wherever both set a property. The `--blume-*` variables are pointed
+// at madeui's own tokens below so the dialog is painted in the page's palette.
 import * as stylex from '@stylexjs/stylex';
+import data from 'blume:data';
+import Search from 'blume/components/layout/Search.astro';
+import 'blume:theme';
 
+import { colors } from '@/lib/tokens.stylex';
 import { darkTheme } from '@/lib/themes';
 
 import IndexPage from '../landing/IndexPage.tsx';
@@ -10,16 +20,46 @@ import IndexPage from '../landing/IndexPage.tsx';
 // StyleX dark-theme classes, applied to <html> before paint by the inline
 // script below (same bridge the docs previews use).
 const darkClasses = stylex.props(darkTheme).className ?? '';
+
+// Blume's dialog reads these; each resolves to the StyleX token so light and
+// dark follow the page. `html:root[...]` outranks Blume's `:root[data-theme]`.
+const geist =
+  "'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const bridge = `
+html:root:not([data-theme]), html:root[data-theme] {
+  --blume-background: ${colors.background};
+  --blume-foreground: ${colors.foreground};
+  --blume-muted: ${colors.muted};
+  --blume-muted-foreground: ${colors.mutedForeground};
+  --blume-border: ${colors.border};
+  --blume-accent: ${colors.foreground};
+  --blume-accent-foreground: ${colors.background};
+  --blume-font-body-src: ${geist};
+  --blume-font-display-src: ${geist};
+}
+/* Minimal ground: components assume border-box; everything else is StyleX
+   in landing/. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+/* Blume's base layer restyles headings (display face, -0.05em); the landing's
+   headings set their own type, component headings inherit. */
+body h1, body h2, body h3, body h4, body h5, body h6 {
+  font-family: inherit;
+  letter-spacing: normal;
+}
+/* The landing header has its own trigger; keep Blume's dialog only. */
+.madeui-search [data-blume-search-open] { display: none; }
+`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>madeui — Components, made yours</title>
+    <title>madeui — UI you own, down to the token</title>
     <meta
       name="description"
-      content="Base UI + StyleX components you own. Copied into your project as editable source. Agent-friendly by design."
+      content="Base UI + StyleX components you own. Copied into your project as editable source, styled with compile-time tokens. Agent-friendly by design."
     />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -59,16 +99,12 @@ const darkClasses = stylex.props(darkTheme).className ?? '';
         };
       })();
     </script>
-    <style is:global>
-      /* Minimal ground: components assume border-box; everything else is
-         StyleX in landing/IndexPage.tsx. */
-      *, *::before, *::after { box-sizing: border-box; }
-      body { margin: 0; }
-      /* StyleX 0.19 emits an empty value for break-inside — one utility. */
-      .bento-cell { break-inside: avoid; }
-    </style>
+    <style is:inline set:html={bridge}></style>
   </head>
   <body>
     <IndexPage client:load />
+    <div class="madeui-search">
+      <Search navigation={data.navigation} />
+    </div>
   </body>
 </html>
