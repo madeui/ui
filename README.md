@@ -47,6 +47,11 @@ apps/docs/           # documentation site (also serves the registry)
 apps/playground/     # Next.js smoke-test app
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, the development flow,
+and how releases work.
+
 ## License
 
 [MIT](./LICENSE)

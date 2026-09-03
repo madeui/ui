@@ -1,6 +1,6 @@
 // Generates shadcn-compatible registry JSON from the component sources.
 // Output: packages/registry/public/r/<item>.json + registry.json index.
-// Registry JSON is always generated, never hand-edited (see CLAUDE.md).
+// Registry JSON is always generated, never hand-edited (see AGENTS.md).
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

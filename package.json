@@ -6,9 +6,16 @@
     "docs:dev": "pnpm --filter @madeui/docs dev",
     "docs:build": "pnpm --filter @madeui/docs build",
     "playground:dev": "pnpm --filter playground dev",
-    "playground:build": "pnpm --filter playground build"
+    "playground:build": "pnpm --filter playground build",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.1"
   }
 }
