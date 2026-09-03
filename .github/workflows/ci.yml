@@ -59,3 +59,33 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @madeui/docs build
+
+  changeset:
+    name: CLI changes carry a changeset
+    # Only meaningful on PRs; the Version Packages PR consumes changesets
+    # by design, so it is exempt.
+    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: packages/cli changed → a .changeset/*.md must be added
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          changed="$(git diff --name-only "origin/$BASE...HEAD")"
+          if ! printf '%s\n' "$changed" | grep -q '^packages/cli/'; then
+            echo "No CLI changes; nothing to check."
+            exit 0
+          fi
+          if printf '%s\n' "$changed" | grep -v '^\.changeset/README\.md$' | grep -q '^\.changeset/.*\.md$'; then
+            echo "CLI changes and a changeset found."
+            exit 0
+          fi
+          {
+            echo "This PR changes packages/cli but adds no changeset."
+            echo "Run 'pnpm changeset', pick @madeui/cli and a bump level,"
+            echo "write the release note, and commit the generated .changeset/*.md file."
+          } >&2
+          exit 1
