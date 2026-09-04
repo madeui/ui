@@ -105,12 +105,14 @@ async function runPackageManager(cwd, pm, args, { dryRun, label }) {
     console.log(kleur.dim(`  (skipped) ${command}`));
     return;
   }
-  const spinner = ora({ text: `${label}  ${kleur.dim(command)}`, indent: 2 }).start();
+  // Keep the spinner text short: a line that wraps in a narrow terminal
+  // cannot be cleared, and every frame lands on a new line.
+  const spinner = ora(`  ${label}`).start();
   try {
     await execa(pm, args, { cwd, stdio: 'pipe', env: { ...process.env, CI: '1' } });
-    spinner.succeed(`${label.replace(/^\w+/, (v) => ({ installing: 'installed', removing: 'removed' })[v] ?? v)}`);
+    spinner.succeed(`  ${label.replace(/^\w+/, (v) => ({ installing: 'installed', removing: 'removed' })[v] ?? v)}`);
   } catch (err) {
-    spinner.fail(`${command} failed`);
+    spinner.fail(`  ${label} failed: ${command}`);
     const output = [err.stdout, err.stderr].filter(Boolean).join('\n').trim();
     if (output) console.error(kleur.dim(output));
     throw new Error(`${command} exited with ${err.exitCode ?? 'an error'}`);
