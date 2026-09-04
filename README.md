@@ -10,10 +10,11 @@ atomic CSS).
   chips, Command palette, Drawer, Toast, plus Autocomplete, Meter, Number
   Field, Toolbar, and Checkbox Group
 - **You own the source** — no package to depend on; edit anything
-- **Type-safe, token-bound styles** — every color, space, type, and motion
-  value comes from a typed design-token scale; out-of-bounds styling doesn't
-  compile. That constraint is also what makes the library work well with AI
-  agents: they can read the real source and can't invent one-off styles
+- **Typed, token-bound styles** — every color, space, type, and motion
+  value comes from a typed design-token scale. Tokens are imports, not
+  strings: a token that doesn't exist is a type error. The house rules
+  (tokens over literals, no magic numbers) live in the repo, and `init`
+  writes them into `AGENTS.md` so coding agents follow them too
 - **Consistent API** — `variant`, `size`, and a `style` prop merged last on
   every component
 - **Dark mode as a theme object** — one `stylex.createTheme`, no

@@ -174,7 +174,7 @@ const principles = [
   },
   {
     title: 'Tokens, not literals',
-    body: 'Color, space, type, radius, and motion come from typed scales in lib/. A value off the scale does not compile, so nothing drifts.',
+    body: 'Color, space, type, radius, and motion come from typed scales in lib/. Tokens are imports, not strings: a name that does not exist is a type error, and a rename reaches every use.',
   },
   {
     title: 'Base UI underneath',
@@ -231,8 +231,8 @@ export default function IndexPage() {
           <p {...stylex.props(styles.sub)}>
             madeui copies <b {...stylex.props(styles.subStrong)}>Base UI</b> components into your
             project as editable source and styles them with compile-time{' '}
-            <b {...stylex.props(styles.subStrong)}>StyleX tokens</b>. Off-scale values don't
-            compile, so the result stays consistent, for you and for your agent.
+            <b {...stylex.props(styles.subStrong)}>StyleX tokens</b>. The rules live in your
+            repo, where you and your agent both read them.
           </p>
           <div {...stylex.props(styles.cta)}>
             <a href="/docs/installation" {...stylex.props(styles.btn, styles.btnSolid)}>
