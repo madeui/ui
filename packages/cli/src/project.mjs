@@ -99,6 +99,17 @@ export async function uninstallDependencies(cwd, deps, { dryRun = false } = {}) 
  * noise next to ours, so it is captured and only shown when the command
  * fails. Piped stdio also keeps npm's post-install prompts from stalling.
  */
+// ora renders on stderr and divides by the stream's column count to know how
+// many lines to clear. A PTY that reports zero columns (some CI runners and
+// agent-driven terminals) turns that into an endless loop that blocks the
+// event loop, so the package manager's exit is never observed and the CLI
+// hangs forever. Render plain lines there instead.
+export function createSpinner(options) {
+  const stream = options.stream ?? process.stderr;
+  const isEnabled = stream.isTTY && (stream.columns ?? 80) > 0 ? undefined : false;
+  return ora({ ...options, isEnabled });
+}
+
 async function runPackageManager(cwd, pm, args, { dryRun, label }) {
   const command = `${pm} ${args.join(' ')}`;
   if (dryRun) {
@@ -107,7 +118,7 @@ async function runPackageManager(cwd, pm, args, { dryRun, label }) {
   }
   // Keep the spinner text short: a line that wraps in a narrow terminal
   // cannot be cleared, and every frame lands on a new line.
-  const spinner = ora({ text: label, indent: 2 }).start();
+  const spinner = createSpinner({ text: label, indent: 2 }).start();
   try {
     await execa(pm, args, { cwd, stdio: 'pipe', env: { ...process.env, CI: '1' } });
     spinner.succeed(`${label.replace(/^\w+/, (v) => ({ installing: 'installed', removing: 'removed' })[v] ?? v)}`);

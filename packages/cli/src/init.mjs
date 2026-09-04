@@ -18,23 +18,29 @@ import {
 import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.mjs';
 import { patchViteConfig, patchTsconfigPaths } from './vite.mjs';
 
-const STYLEX_BABEL_PLUGIN = (aliasRoot) => `[
+// The alias root is process.cwd(), not __dirname: Turbopack evaluates
+// postcss.config.mjs (which imports this file) inside its own bundle, where
+// __dirname is the virtual '/ROOT/' and '@/lib/tokens.stylex' would resolve
+// nowhere. Next runs from the project root, so cwd is right in every loader.
+const NEXT_BABEL_CONFIG = `const path = require('path');
+
+// Project root. Not __dirname: when Turbopack loads postcss.config.mjs it
+// bundles this file too, and __dirname becomes the virtual '/ROOT/'.
+const root = process.cwd();
+
+module.exports = {
+  presets: ['next/babel'],
+  plugins: [
+    [
       '@stylexjs/babel-plugin',
       {
         dev: process.env.NODE_ENV !== 'production',
         runtimeInjection: false,
         treeshakeCompensation: true,
-        aliases: { '@/*': [path.join(__dirname, ${aliasRoot})] },
+        aliases: { '@/*': [path.join(root, '*')] },
         unstable_moduleResolution: { type: 'commonJS' },
       },
-    ]`;
-
-const NEXT_BABEL_CONFIG = `const path = require('path');
-
-module.exports = {
-  presets: ['next/babel'],
-  plugins: [
-    ${STYLEX_BABEL_PLUGIN("'*'")},
+    ],
   ],
 };
 `;
