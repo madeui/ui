@@ -1,5 +1,13 @@
 # @madeui/cli
 
+## 1.1.1
+
+### Patch Changes
+
+- [#13](https://github.com/madeui/ui/pull/13) [`ffbe5de`](https://github.com/madeui/ui/commit/ffbe5de6134b7bdccdd0dec81bd915dd5ecd19db) Thanks [@emretfn](https://github.com/emretfn)! - Fix the Next.js setup under Turbopack: `init` now anchors the StyleX `@/*` alias at `process.cwd()` instead of `__dirname`. Turbopack evaluates `postcss.config.mjs` (and the `babel.config.js` it imports) inside its own bundle, where `__dirname` is a virtual `/ROOT/`, so every `import ... from '@/lib/tokens.stylex'` in an added component failed with "Could not resolve the path to the imported file". If you ran `init` 1.1.0, change the `aliases` line in `babel.config.js` to `path.join(process.cwd(), '*')`.
+  
+  Spinners no longer hang the CLI on terminals that report zero columns (some CI runners and agent-driven PTYs); they fall back to plain lines there.
+
 ## 1.1.0
 
 ### Minor Changes
