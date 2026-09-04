@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import kleur from 'kleur';
 
@@ -10,9 +11,11 @@ import {
   loadConfig,
   saveConfig,
   readPackageJson,
+  cliCommand,
   missingDependencies,
   installDependencies,
 } from './project.mjs';
+import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.mjs';
 import { patchViteConfig, patchTsconfigPaths } from './vite.mjs';
 
 const STYLEX_BABEL_PLUGIN = (aliasRoot) => `[
@@ -36,9 +39,11 @@ module.exports = {
 };
 `;
 
-const NEXT_POSTCSS_CONFIG = `const babelConfig = require('./babel.config');
+// ESM like create-next-app's own postcss.config.mjs. babel.config.js stays
+// CommonJS: Next's Babel loader require()s it and rejects .mjs/.cjs.
+const NEXT_POSTCSS_CONFIG = `import babelConfig from './babel.config.js';
 
-module.exports = {
+const config = {
   plugins: {
     '@stylexjs/postcss-plugin': {
       include: [
@@ -51,11 +56,25 @@ module.exports = {
         parserOpts: { plugins: ['typescript', 'jsx'] },
         plugins: babelConfig.plugins,
       },
-      useCSSLayers: true,
+      // StyleX declares the layer order itself: base first, then its own
+      // priority layers — so the reset below loses to every component style.
+      useCSSLayers: { before: ['base'] },
     },
   },
 };
+
+export default config;
 `;
+
+// Browser reset with Tailwind Preflight's coverage (see reset.css): an app
+// moving off Tailwind keeps the baseline it rendered under, and components
+// get the border-box sizing they rely on. Lives in @layer base so it loses
+// to every StyleX rule. Research: docs/research/stylex-css-reset.md.
+const RESET_MARKER = '/* madeui reset */';
+const RESET_CSS = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), 'reset.css'),
+  'utf8'
+);
 
 // The reset layer MUST be declared before @stylex: with useCSSLayers, any
 // unlayered global CSS outranks every StyleX rule and silently zeroes
@@ -64,22 +83,30 @@ const GLOBALS_CSS = `@layer base;
 
 @stylex;
 
-@layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-}
-`;
+${RESET_CSS}`;
 
-const AGENTS_MD = `# UI components (madeui)
+/** True when the stylesheet already carries our reset or a universal border-box rule. */
+function hasReset(css) {
+  return (
+    css.includes(RESET_MARKER) ||
+    /(^|[}\s,])\*\s*(,[^{]*)?\{[^}]*box-sizing\s*:\s*border-box/m.test(css)
+  );
+}
+
+// Appended to the app's AGENTS.md between markers, the way `next dev` adds
+// its own block, so an existing file (create-next-app writes one) still
+// gets the conventions. Once present the block is left alone: the file is
+// the user's.
+const AGENTS_MARKER = 'madeui-agent-rules';
+const AGENTS_MD = `<!-- BEGIN:${AGENTS_MARKER} -->
+
+## UI components (madeui)
 
 The components under the configured \`ui\` path (see madeui.json) are owned by
-this project (installed via \`madeui add <name>\`, edit freely). They wrap
+this project (installed via \`npx @madeui/cli add <name>\`, edit freely). They wrap
 Base UI primitives and are styled with StyleX (compile-time CSS).
 
-## Rules
+### Rules
 
 - Tokens over literals: colors/radius/fonts/shadows come from
   \`tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
@@ -103,12 +130,51 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 - Global CSS: keep resets inside \`@layer base\` (declared before \`@stylex\`);
   unlayered CSS overrides all StyleX rules.
 
-## Adding a variant
+### Adding a variant
 
 1. Add the variant name to the component's type union.
 2. Add a named style object in its \`stylex.create\` variants map using tokens.
 3. Never fork a component for a one-off — pass \`style\` for layout-level tweaks.
+
+<!-- END:${AGENTS_MARKER} -->
 `;
+
+function ensureAgentsMd(cwd, changed) {
+  const file = path.join(cwd, 'AGENTS.md');
+  if (!fs.existsSync(file)) {
+    writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
+    return;
+  }
+  const current = fs.readFileSync(file, 'utf8');
+  if (current.includes(`BEGIN:${AGENTS_MARKER}`)) {
+    console.log(kleur.dim('  = AGENTS.md already has the madeui section'));
+    return;
+  }
+  fs.writeFileSync(file, `${current.trimEnd()}\n\n${AGENTS_MD}`);
+  changed.push('AGENTS.md');
+  console.log(kleur.green('  ~ AGENTS.md: appended the madeui section'));
+}
+
+/**
+ * Claude Code reads CLAUDE.md, not AGENTS.md. create-next-app writes a
+ * CLAUDE.md that is just `@AGENTS.md`; do the same when it is missing, and
+ * add the import line when an existing file does not reference AGENTS.md.
+ */
+function ensureClaudeMd(cwd, changed) {
+  const file = path.join(cwd, 'CLAUDE.md');
+  if (!fs.existsSync(file)) {
+    writeIfAbsent(cwd, 'CLAUDE.md', '@AGENTS.md\n', changed);
+    return;
+  }
+  const current = fs.readFileSync(file, 'utf8');
+  if (/AGENTS\.md/.test(current)) {
+    console.log(kleur.dim('  = CLAUDE.md already references AGENTS.md'));
+    return;
+  }
+  fs.writeFileSync(file, `${current.trimEnd()}\n\n@AGENTS.md\n`);
+  changed.push('CLAUDE.md');
+  console.log(kleur.green('  ~ CLAUDE.md: added @AGENTS.md'));
+}
 
 function detectFramework(cwd) {
   const pkg = readPackageJson(cwd);
@@ -148,9 +214,50 @@ function ensureGlobalsCss(cwd, candidates, fallback, changed) {
     console.log(kleur.dim(`  = ${existing} already contains @stylex`));
     return existing;
   }
-  fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n@layer base {\n${css.trimEnd()}\n}\n`);
+  // Tailwind kept: `@import` must stay first and we cannot wrap the file in
+  // @layer base (an @import inside a block is invalid), so only add the
+  // marker after the Tailwind import.
+  const tailwindImport = /^[ \t]*@import\s+['"]tailwindcss['"];?[ \t]*\r?\n/m.exec(css);
+  if (tailwindImport) {
+    const at = tailwindImport.index + tailwindImport[0].length;
+    fs.writeFileSync(file, `${css.slice(0, at)}\n@stylex;\n${css.slice(at)}`);
+    changed.push(existing);
+    console.log(kleur.green(`  ~ ${existing}: added @stylex after the Tailwind import`));
+    return existing;
+  }
+  // Our reset goes before the user's rules so, inside the same layer, theirs
+  // win by source order.
+  const reset = hasReset(css) ? '' : `${RESET_CSS}\n`;
+  fs.writeFileSync(file, `@layer base;\n\n@stylex;\n\n${reset}@layer base {\n${css.trimEnd()}\n}\n`);
   changed.push(existing);
-  console.log(kleur.green(`  ~ ${existing}: prepended @stylex, wrapped existing CSS in @layer base`));
+  console.log(
+    kleur.green(
+      `  ~ ${existing}: prepended @stylex${reset ? ' + reset' : ''}, wrapped existing CSS in @layer base`
+    )
+  );
+  return existing;
+}
+
+/**
+ * Vite: the unplugin injects StyleX CSS (unlayered) into the app's CSS asset
+ * itself, so there is no marker to place — only the reset is needed, and a
+ * layered reset always loses to the unlayered component styles.
+ */
+function ensureViteCss(cwd, candidates, fallback, changed) {
+  const existing = candidates.find((f) => fs.existsSync(path.join(cwd, f)));
+  if (!existing) {
+    writeIfAbsent(cwd, fallback, RESET_CSS, changed);
+    return fallback;
+  }
+  const file = path.join(cwd, existing);
+  const css = fs.readFileSync(file, 'utf8');
+  if (hasReset(css)) {
+    console.log(kleur.dim(`  = ${existing} already has a reset`));
+    return existing;
+  }
+  fs.writeFileSync(file, `${RESET_CSS}\n${css}`);
+  changed.push(existing);
+  console.log(kleur.green(`  ~ ${existing}: prepended reset`));
   return existing;
 }
 
@@ -163,7 +270,19 @@ const FRAMEWORKS = {
     devDependencies: ['@stylexjs/babel-plugin', '@stylexjs/postcss-plugin'],
     setup(cwd, changed) {
       writeIfAbsent(cwd, 'babel.config.js', NEXT_BABEL_CONFIG, changed);
-      writeIfAbsent(cwd, 'postcss.config.js', NEXT_POSTCSS_CONFIG, changed);
+      // Next.js reads exactly one PostCSS config, and .js wins over .mjs in
+      // its lookup; writing ours next to another one would make the outcome
+      // depend on that order.
+      const other = ['postcss.config.mjs', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.ts'].find(
+        (f) => fs.existsSync(path.join(cwd, f))
+      );
+      if (other) {
+        console.log(kleur.dim(`  = ${other} exists — not writing postcss.config.mjs`));
+        return [
+          `${other}: add the '@stylexjs/postcss-plugin' entry (see https://stylexjs.com/docs/learn/installation/nextjs):\n${NEXT_POSTCSS_CONFIG}`,
+        ];
+      }
+      writeIfAbsent(cwd, 'postcss.config.mjs', NEXT_POSTCSS_CONFIG, changed);
       return [];
     },
   },
@@ -171,9 +290,10 @@ const FRAMEWORKS = {
     label: 'Vite + React',
     paths: { ui: 'src/components/ui', lib: 'src/lib' },
     // The official @stylexjs/unplugin extracts and injects the CSS itself —
-    // no @stylex marker, no PostCSS config, and (with unlayered output) no
-    // reset-layer concern in the user's global CSS.
-    css: null,
+    // no @stylex marker, no PostCSS config. The app's root stylesheet still
+    // needs the reset (create-vite's index.css has no border-box rule).
+    cssCandidates: ['src/index.css', 'src/main.css', 'src/global.css', 'src/globals.css', 'src/App.css'],
+    cssFallback: 'src/index.css',
     devDependencies: ['@stylexjs/unplugin'],
     setup(cwd, changed) {
       return [
@@ -195,21 +315,35 @@ export async function init(cwd, flags) {
     throw new Error('could not detect a supported framework (Next.js or Vite).');
   }
 
-  console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
   const changed = [];
-  const instructions = framework.setup(cwd, changed);
+  const instructions = [];
+
+  const tailwind = tailwindPackages(cwd);
+  if (tailwind.length > 0) {
+    if (await shouldRemoveTailwind(flags, tailwind)) {
+      instructions.push(...(await removeTailwind(cwd, tailwind, changed, { dryRun: flags.noInstall })));
+    } else {
+      instructions.push(
+        'Tailwind kept: madeui components ignore Tailwind classes; keep the reset in @layer base and @stylex after the Tailwind import.'
+      );
+    }
+  }
+
+  console.log(kleur.bold(`Setting up StyleX for ${framework.label}:`));
+  instructions.push(...framework.setup(cwd, changed));
   const cssFile =
-    framework.css === null
-      ? null
+    name === 'vite'
+      ? ensureViteCss(cwd, framework.cssCandidates, framework.cssFallback, changed)
       : ensureGlobalsCss(cwd, framework.cssCandidates, framework.cssFallback, changed);
-  writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
+  ensureAgentsMd(cwd, changed);
+  ensureClaudeMd(cwd, changed);
 
   const existingConfig = loadConfig(cwd);
   const config = existingConfig ?? {
     ...DEFAULT_CONFIG,
     ...(flags.registry ? { registry: flags.registry } : {}),
     paths: framework.paths,
-    ...(cssFile ? { css: cssFile } : {}),
+    css: cssFile,
   };
   if (!existingConfig) {
     saveConfig(cwd, config);
@@ -219,7 +353,7 @@ export async function init(cwd, flags) {
   const missing = missingDependencies(cwd, ['@stylexjs/stylex']);
   const missingDev = missingDependencies(cwd, framework.devDependencies);
   if (missing.length + missingDev.length > 0) {
-    console.log(kleur.bold('installing dependencies:'));
+    console.log(kleur.bold('dependencies:'));
     await installDependencies(cwd, missing, { dryRun: flags.noInstall });
     await installDependencies(cwd, missingDev, { dev: true, dryRun: flags.noInstall });
   }
@@ -228,8 +362,8 @@ export async function init(cwd, flags) {
   await add(cwd, ['theme', 'utils'], flags);
 
   if (instructions.length > 0) {
-    console.log(kleur.yellow('\nManual steps (could not patch safely):'));
+    console.log(kleur.yellow('\nManual steps:'));
     for (const step of instructions) console.log(`  • ${step}`);
   }
-  console.log(`\nDone. Add components with: ${kleur.bold('madeui add button dialog …')}`);
+  console.log(`\nDone. Add components with: ${kleur.bold(`${cliCommand(cwd, 'add')} button dialog …`)}`);
 }

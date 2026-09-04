@@ -29,6 +29,8 @@ program
   .command('init')
   .description('set up the StyleX build, tokens, and AGENTS.md in this app')
   .option('--registry <url|dir>', 'registry to use')
+  .option('--remove-tailwind', 'strip Tailwind (packages, PostCSS/Vite wiring, CSS at-rules) without asking')
+  .option('--keep-tailwind', 'leave Tailwind in place without asking')
   .option('--no-install', 'print dependency installs instead of running them')
   .action((opts) => init(process.cwd(), normalize(opts)));
 
@@ -60,7 +62,12 @@ program
 // Commander's --no-install arrives as `install: false`; flip it into the
 // affirmative flag the commands use.
 function normalize(opts) {
-  return { ...opts, noInstall: opts.install === false };
+  return {
+    ...opts,
+    noInstall: opts.install === false,
+    // undefined → ask; true/false → decided by flag.
+    removeTailwind: opts.removeTailwind ? true : opts.keepTailwind ? false : undefined,
+  };
 }
 
 program.parseAsync().catch((err) => {

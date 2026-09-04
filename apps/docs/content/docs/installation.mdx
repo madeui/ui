@@ -23,6 +23,10 @@ installs `@stylexjs/stylex` + `@base-ui/react`, copies the design tokens to
 agents follow the house rules. `add` copies components (and anything they
 depend on) into `components/ui/`.
 
+If the app was scaffolded with Tailwind, `init` offers to remove it — madeui
+uses StyleX and the two don't mix well in one build. Pass `--remove-tailwind`
+or `--keep-tailwind` to skip the question.
+
 Components are also installable with the shadcn CLI — the registry is
 shadcn-compatible:
 
@@ -62,12 +66,14 @@ module.exports = {
 };
 ```
 
-`postcss.config.js`:
+`postcss.config.mjs` (ESM, like the file `create-next-app` writes; the Babel
+config above has to stay a CommonJS `.js` file because Next's Babel loader
+does not load `.mjs`):
 
 ```js
-const babelConfig = require('./babel.config');
+import babelConfig from './babel.config.js';
 
-module.exports = {
+const config = {
   plugins: {
     '@stylexjs/postcss-plugin': {
       include: [
@@ -80,28 +86,38 @@ module.exports = {
         parserOpts: { plugins: ['typescript', 'jsx'] },
         plugins: babelConfig.plugins,
       },
-      useCSSLayers: true,
+      // StyleX declares the layer order itself: base, then its own layers.
+      useCSSLayers: { before: ['base'] },
     },
   },
 };
+
+export default config;
 ```
 
 `app/globals.css` — the `@stylex` marker is where the generated CSS lands.
-**Declare the `base` layer before it**: with `useCSSLayers`, any unlayered
-global CSS would outrank every StyleX rule and silently zero component
-paddings:
+**Keep global CSS in `@layer base`, declared before the marker**: with
+`useCSSLayers`, any unlayered CSS outranks every StyleX rule and silently
+zeroes component paddings. Start the file with the layer statement, the
+marker, and a browser reset in that layer. `init` writes
+[`reset.css`](https://github.com/madeui/ui/blob/main/packages/cli/src/reset.css),
+which has the same coverage as Tailwind Preflight (border-box sizing, zero
+user-agent margins, form controls inheriting fonts, and so on), so an app
+moving off Tailwind keeps the baseline it rendered under. Copy it, or write
+your own inside `@layer base`:
 
 ```css
 @layer base;
 
 @stylex;
 
+/* madeui reset */
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  /* contents of reset.css */
+}
+
+@layer base {
+  /* your own global styles */
 }
 ```
 
@@ -146,6 +162,13 @@ export default defineConfig({
 Make sure the app imports at least one CSS file from its root (e.g.
 `import './index.css'` in `main.tsx`) — the plugin appends the generated CSS
 to the app's CSS bundle.
+
+`src/index.css` — add the same
+[`reset.css`](https://github.com/madeui/ui/blob/main/packages/cli/src/reset.css)
+block `init` writes (the Vite template has no `box-sizing: border-box` rule,
+so inputs and buttons would grow by their borders). The StyleX output is
+unlayered on Vite, so the `@layer base` reset always loses to component
+styles.
 
 ## Path aliases
 
