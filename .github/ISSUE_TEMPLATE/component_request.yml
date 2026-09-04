@@ -1,0 +1,25 @@
+name: Component request
+description: A component, variant, or prop you need.
+title: "[request] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Component
+      description: New component, or an existing one that needs a variant / prop.
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use case
+      description: What you're building and why the current components don't cover it.
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: Optional. Props, variants, sizes; a Base UI primitive it could build on.
+      render: tsx

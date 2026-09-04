@@ -1,0 +1,52 @@
+name: Bug report
+description: Something renders wrong, throws, or the CLI misbehaves.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Component
+        - CLI (init / add / list)
+        - Registry / install
+        - Docs site
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: If it's a component, which one (e.g. `dialog`).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got. Paste errors as text.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Minimal steps, a repo link, or the component source you edited.
+      placeholder: |
+        npx create-next-app@latest app
+        npx @madeui/cli init
+        npx @madeui/cli add dialog
+        …
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Framework and versions. `npx @madeui/cli --version` for the CLI.
+      placeholder: |
+        Next.js 16.3 / Vite 7
+        React 19.2
+        @madeui/cli 1.1.0, @stylexjs/stylex 0.19
+        Node 22, pnpm 11, macOS
+    validations:
+      required: true
