@@ -74,7 +74,7 @@
       "name": "Command Chip",
       "kind": "chip",
       "refersTo": "cmd",
-      "description": "Copyable install-command pill: mono text, $ prompt, crossfading copy/check icon. Signature marketing element repeated in hero and shadcn-compat row.",
+      "description": "Copyable install-command pill: mono text, $ prompt, crossfading copy/check icon. Signature marketing element in the hero.",
       "html": "<button class=\"ds-cmd\"><span class=\"ds-cmd-prompt\">$</span><code class=\"ds-cmd-text\">npx @madeui/cli init</code><svg class=\"ds-cmd-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M5 15V5a2 2 0 0 1 2-2h10\"/></svg></button>",
       "css": ".ds-cmd { display: inline-flex; align-items: center; gap: 0.5rem; background: oklch(0.269 0 0); color: oklch(0.985 0 0); border: 1px solid oklch(0.269 0 0); border-radius: 9999px; padding: 0.5rem 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.75rem; cursor: pointer; transition: border-color 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1); transform: scale(1); } .ds-cmd:hover { border-color: oklch(0.708 0 0); } .ds-cmd:active { transform: scale(0.97); } .ds-cmd-prompt { color: oklch(0.985 0 0); } .ds-cmd-icon { color: oklch(0.708 0 0); margin-left: 0.25rem; }"
     },
