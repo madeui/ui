@@ -49,6 +49,10 @@ npm install -D @stylexjs/babel-plugin @stylexjs/postcss-plugin
 ```js
 const path = require('path');
 
+// Project root. Not __dirname: when Turbopack loads postcss.config.mjs it
+// bundles this file too, and __dirname becomes the virtual '/ROOT/'.
+const root = process.cwd();
+
 module.exports = {
   presets: ['next/babel'],
   plugins: [
@@ -58,7 +62,7 @@ module.exports = {
         dev: process.env.NODE_ENV !== 'production',
         runtimeInjection: false,
         treeshakeCompensation: true,
-        aliases: { '@/*': [path.join(__dirname, '*')] },
+        aliases: { '@/*': [path.join(root, '*')] },
         unstable_moduleResolution: { type: 'commonJS' },
       },
     ],

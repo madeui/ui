@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import { createTwoFilesPatch } from 'diff';
 import kleur from 'kleur';
-import ora from 'ora';
 import prompts from 'prompts';
 
 import { resolveItems } from './registry.mjs';
@@ -11,6 +10,7 @@ import {
   loadConfig,
   resolveTarget,
   cliCommand,
+  createSpinner,
   missingDependencies,
   installDependencies,
 } from './project.mjs';
@@ -45,7 +45,7 @@ export async function add(cwd, names, flags) {
   }
   const registry = flags.registry ?? config.registry;
 
-  const spinner = ora(`resolving ${names.join(', ')}`).start();
+  const spinner = createSpinner({ text: `resolving ${names.join(', ')}` }).start();
   let items;
   try {
     items = await resolveItems(registry, names);
