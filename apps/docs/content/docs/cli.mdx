@@ -1,13 +1,12 @@
 ---
 title: CLI
-description: "madeui init, add, and list — plus shadcn CLI compatibility."
+description: "madeui init, add, and list."
 sidebar:
   order: 4
 ---
 
 The `madeui` CLI sets up the StyleX build and copies components into your
-project. The registry is also shadcn-compatible, so `npx shadcn@latest add
-@madeui/<name>` works for installs once your build is set up.
+project.
 
 ## init
 
@@ -78,15 +77,3 @@ npx @madeui/cli list
 ```
 
 Lists every item in the configured registry with its description.
-
-## Using the shadcn CLI
-
-Every component page's Install block has a shadcn tab with the equivalent command:
-
-```bash
-npx shadcn@latest add @madeui/button
-```
-
-The shadcn CLI handles the copy + npm dependencies; it does not set up the
-StyleX build — run `madeui init` (or the [manual setup](/docs/installation)) once
-first.

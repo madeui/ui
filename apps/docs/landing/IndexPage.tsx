@@ -125,7 +125,7 @@ function SearchTrigger() {
 // One copyable command. The copy button is the whole chip: nothing else on
 // it is interactive, so a 40px-wide icon target would just be a smaller
 // version of the same action.
-function CopyCommand({ command, compact }: { command: string; compact?: boolean }) {
+function CopyCommand({ command }: { command: string }) {
   const [copied, setCopied] = React.useState(false);
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -147,7 +147,7 @@ function CopyCommand({ command, compact }: { command: string; compact?: boolean 
       type="button"
       onClick={copy}
       aria-label={`Copy ${command}`}
-      {...stylex.props(styles.cmd, compact && styles.cmdCompact)}
+      {...stylex.props(styles.cmd)}
     >
       <span aria-hidden {...stylex.props(styles.cmdPrompt)}>
         $
@@ -264,11 +264,6 @@ export default function IndexPage() {
             </div>
           ))}
         </section>
-
-        <div {...stylex.props(styles.compat)}>
-          <span>Already on the shadcn CLI? The registry is compatible:</span>
-          <CopyCommand command="npx shadcn@latest add @madeui/button" compact />
-        </div>
 
         <Footer />
       </div>
@@ -599,10 +594,6 @@ const styles = stylex.create({
     },
     transitionTimingFunction: easing.out,
   },
-  cmdCompact: {
-    paddingBlock: space.s05,
-    paddingInline: space.s25,
-  },
   cmdPrompt: {
     color: colors.foreground,
   },
@@ -699,17 +690,5 @@ const styles = stylex.create({
     margin: 0,
     maxWidth: '42ch',
     textWrap: 'pretty',
-  },
-
-  compat: {
-    alignItems: 'center',
-    color: colors.mutedForeground,
-    display: 'flex',
-    flexWrap: 'wrap',
-    fontSize: fontSize.sm,
-    gap: `${space.s25} ${space.s5}`,
-    justifyContent: 'center',
-    marginTop: space.s12,
-    textAlign: 'center',
   },
 });

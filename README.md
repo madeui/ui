@@ -1,10 +1,10 @@
 # madeui
 
-**Components, made yours.** An open-source UI library following the shadcn
-code-ownership model — components are copied into your project as editable
-source — built on [Base UI](https://base-ui.com) (headless behavior and
-accessibility) and [StyleX](https://stylexjs.com) (compile-time atomic CSS)
-instead of Radix + Tailwind.
+**Components, made yours.** An open-source UI library you own the source
+of — components are copied into your project as editable files, not
+installed as a package — built on [Base UI](https://base-ui.com) (headless
+behavior and accessibility) and [StyleX](https://stylexjs.com) (compile-time
+atomic CSS).
 
 - **54 components** — Button and Dialog through Combobox with multi-select
   chips, Command palette, Drawer, Toast, plus Autocomplete, Meter, Number
@@ -26,12 +26,8 @@ npx @madeui/cli init   # wires the StyleX build (Next.js or Vite), copies tokens
 npx @madeui/cli add button dialog select
 ```
 
-The registry is shadcn-compatible, so once the build is set up this works
-too:
-
-```bash
-npx shadcn@latest add @madeui/button
-```
+Requires React 19 and Node 20+, on Next.js 15+ (App Router) or Vite with
+`@vitejs/plugin-react`.
 
 ## Docs
 
