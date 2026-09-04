@@ -155,6 +155,27 @@ function ensureAgentsMd(cwd, changed) {
   console.log(kleur.green('  ~ AGENTS.md: appended the madeui section'));
 }
 
+/**
+ * Claude Code reads CLAUDE.md, not AGENTS.md. create-next-app writes a
+ * CLAUDE.md that is just `@AGENTS.md`; do the same when it is missing, and
+ * add the import line when an existing file does not reference AGENTS.md.
+ */
+function ensureClaudeMd(cwd, changed) {
+  const file = path.join(cwd, 'CLAUDE.md');
+  if (!fs.existsSync(file)) {
+    writeIfAbsent(cwd, 'CLAUDE.md', '@AGENTS.md\n', changed);
+    return;
+  }
+  const current = fs.readFileSync(file, 'utf8');
+  if (/AGENTS\.md/.test(current)) {
+    console.log(kleur.dim('  = CLAUDE.md already references AGENTS.md'));
+    return;
+  }
+  fs.writeFileSync(file, `${current.trimEnd()}\n\n@AGENTS.md\n`);
+  changed.push('CLAUDE.md');
+  console.log(kleur.green('  ~ CLAUDE.md: added @AGENTS.md'));
+}
+
 function detectFramework(cwd) {
   const pkg = readPackageJson(cwd);
   const deps = { ...pkg?.dependencies, ...pkg?.devDependencies };
@@ -315,6 +336,7 @@ export async function init(cwd, flags) {
       ? ensureViteCss(cwd, framework.cssCandidates, framework.cssFallback, changed)
       : ensureGlobalsCss(cwd, framework.cssCandidates, framework.cssFallback, changed);
   ensureAgentsMd(cwd, changed);
+  ensureClaudeMd(cwd, changed);
 
   const existingConfig = loadConfig(cwd);
   const config = existingConfig ?? {
