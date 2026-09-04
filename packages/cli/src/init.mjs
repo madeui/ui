@@ -38,9 +38,11 @@ module.exports = {
 };
 `;
 
-const NEXT_POSTCSS_CONFIG = `const babelConfig = require('./babel.config');
+// ESM like create-next-app's own postcss.config.mjs. babel.config.js stays
+// CommonJS: Next's Babel loader require()s it and rejects .mjs/.cjs.
+const NEXT_POSTCSS_CONFIG = `import babelConfig from './babel.config.js';
 
-module.exports = {
+const config = {
   plugins: {
     '@stylexjs/postcss-plugin': {
       include: [
@@ -59,6 +61,8 @@ module.exports = {
     },
   },
 };
+
+export default config;
 `;
 
 // Browser reset with Tailwind Preflight's coverage (see reset.css): an app
@@ -219,18 +223,19 @@ const FRAMEWORKS = {
     devDependencies: ['@stylexjs/babel-plugin', '@stylexjs/postcss-plugin'],
     setup(cwd, changed) {
       writeIfAbsent(cwd, 'babel.config.js', NEXT_BABEL_CONFIG, changed);
-      // Next.js reads exactly one PostCSS config; writing ours next to an
-      // existing .mjs/.cjs would make the outcome depend on lookup order.
-      const other = ['postcss.config.mjs', 'postcss.config.cjs', 'postcss.config.ts'].find((f) =>
-        fs.existsSync(path.join(cwd, f))
+      // Next.js reads exactly one PostCSS config, and .js wins over .mjs in
+      // its lookup; writing ours next to another one would make the outcome
+      // depend on that order.
+      const other = ['postcss.config.mjs', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.ts'].find(
+        (f) => fs.existsSync(path.join(cwd, f))
       );
       if (other) {
-        console.log(kleur.dim(`  = ${other} exists — not writing postcss.config.js`));
+        console.log(kleur.dim(`  = ${other} exists — not writing postcss.config.mjs`));
         return [
           `${other}: add the '@stylexjs/postcss-plugin' entry (see https://stylexjs.com/docs/learn/installation/nextjs):\n${NEXT_POSTCSS_CONFIG}`,
         ];
       }
-      writeIfAbsent(cwd, 'postcss.config.js', NEXT_POSTCSS_CONFIG, changed);
+      writeIfAbsent(cwd, 'postcss.config.mjs', NEXT_POSTCSS_CONFIG, changed);
       return [];
     },
   },

@@ -66,12 +66,14 @@ module.exports = {
 };
 ```
 
-`postcss.config.js`:
+`postcss.config.mjs` (ESM, like the file `create-next-app` writes; the Babel
+config above has to stay a CommonJS `.js` file because Next's Babel loader
+does not load `.mjs`):
 
 ```js
-const babelConfig = require('./babel.config');
+import babelConfig from './babel.config.js';
 
-module.exports = {
+const config = {
   plugins: {
     '@stylexjs/postcss-plugin': {
       include: [
@@ -89,6 +91,8 @@ module.exports = {
     },
   },
 };
+
+export default config;
 ```
 
 `app/globals.css` — the `@stylex` marker is where the generated CSS lands.

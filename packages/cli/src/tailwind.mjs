@@ -136,7 +136,7 @@ function removePostcssPlugin(cwd, changed) {
       continue;
     }
     // Nothing else configured → the whole file only existed for Tailwind and
-    // would shadow the postcss.config.js that init writes for StyleX.
+    // would shadow the postcss.config.mjs that init writes for StyleX.
     if (/plugins\s*:\s*\{\s*\}/.test(stripped) || /plugins\s*:\s*\[\s*\]/.test(stripped)) {
       fs.unlinkSync(file);
       changed.push(name);
@@ -147,7 +147,7 @@ function removePostcssPlugin(cwd, changed) {
     changed.push(name);
     console.log(kleur.green(`  ~ ${name}: removed the Tailwind plugin`));
     instructions.push(
-      `${name} still configures other PostCSS plugins — merge the '@stylexjs/postcss-plugin' entry from postcss.config.js into it and delete postcss.config.js (Next.js must see a single PostCSS config).`
+      `${name} still configures other PostCSS plugins — merge the '@stylexjs/postcss-plugin' entry printed below into it (Next.js must see a single PostCSS config).`
     );
   }
   return instructions;
