@@ -92,13 +92,20 @@ function hasReset(css) {
   );
 }
 
-const AGENTS_MD = `# UI components (madeui)
+// Appended to the app's AGENTS.md between markers, the way `next dev` adds
+// its own block, so an existing file (create-next-app writes one) still
+// gets the conventions. Once present the block is left alone: the file is
+// the user's.
+const AGENTS_MARKER = 'madeui-agent-rules';
+const AGENTS_MD = `<!-- BEGIN:${AGENTS_MARKER} -->
+
+## UI components (madeui)
 
 The components under the configured \`ui\` path (see madeui.json) are owned by
 this project (installed via \`madeui add <name>\`, edit freely). They wrap
 Base UI primitives and are styled with StyleX (compile-time CSS).
 
-## Rules
+### Rules
 
 - Tokens over literals: colors/radius/fonts/shadows come from
   \`tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
@@ -122,12 +129,30 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 - Global CSS: keep resets inside \`@layer base\` (declared before \`@stylex\`);
   unlayered CSS overrides all StyleX rules.
 
-## Adding a variant
+### Adding a variant
 
 1. Add the variant name to the component's type union.
 2. Add a named style object in its \`stylex.create\` variants map using tokens.
 3. Never fork a component for a one-off — pass \`style\` for layout-level tweaks.
+
+<!-- END:${AGENTS_MARKER} -->
 `;
+
+function ensureAgentsMd(cwd, changed) {
+  const file = path.join(cwd, 'AGENTS.md');
+  if (!fs.existsSync(file)) {
+    writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
+    return;
+  }
+  const current = fs.readFileSync(file, 'utf8');
+  if (current.includes(`BEGIN:${AGENTS_MARKER}`)) {
+    console.log(kleur.dim('  = AGENTS.md already has the madeui section'));
+    return;
+  }
+  fs.writeFileSync(file, `${current.trimEnd()}\n\n${AGENTS_MD}`);
+  changed.push('AGENTS.md');
+  console.log(kleur.green('  ~ AGENTS.md: appended the madeui section'));
+}
 
 function detectFramework(cwd) {
   const pkg = readPackageJson(cwd);
@@ -288,7 +313,7 @@ export async function init(cwd, flags) {
     name === 'vite'
       ? ensureViteCss(cwd, framework.cssCandidates, framework.cssFallback, changed)
       : ensureGlobalsCss(cwd, framework.cssCandidates, framework.cssFallback, changed);
-  writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
+  ensureAgentsMd(cwd, changed);
 
   const existingConfig = loadConfig(cwd);
   const config = existingConfig ?? {
