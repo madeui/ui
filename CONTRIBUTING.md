@@ -121,6 +121,23 @@ entry goes up; the entry announces them.
 Do not edit the Version Packages PR by hand. It is regenerated on every push
 to `main`. Fix the wording in the changeset file instead.
 
+### Trying a CLI change before it merges (snapshot)
+
+The same workflow can publish a throwaway build of any branch: GitHub →
+Actions → Release → "Run workflow", pick the branch, keep the dist-tag
+`beta` (or name your own, never `latest`). It publishes
+`@madeui/cli@0.0.0-beta-<timestamp>` under that dist-tag, with no git tag,
+no changelog, and `latest` untouched. Install it in a test app with:
+
+```bash
+npx @madeui/cli@beta init
+```
+
+The branch needs a changeset for `@madeui/cli` (it always does on the CLI
+track); without one there is nothing to version and nothing is published.
+Snapshots are not releases: they never appear in `CHANGELOG.md` or on the
+Releases page.
+
 ## Commits and pull requests
 
 - Conventional commits: `feat(scope): …`, `fix(scope): …`, `docs: …`,

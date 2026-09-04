@@ -11,6 +11,13 @@ name: Release
 #   3. Merging that PR runs `changeset publish`: npm publish + git tag
 #      `@madeui/cli@x.y.z` + a GitHub release with the changelog entry.
 #
+# Snapshot (try a PR before it merges): Actions → Release → "Run workflow",
+# pick the branch. Publishes `@madeui/cli@0.0.0-<tag>-<timestamp>` under the
+# npm dist-tag given as input (default `beta`), with no git tag, no GitHub
+# release, and `latest` untouched. Install it with `npx @madeui/cli@beta`.
+# The branch must carry a changeset for @madeui/cli, otherwise there is
+# nothing to version and nothing is published.
+#
 # npm auth comes from OIDC (trusted publishing), configured for @madeui/cli
 # on npmjs.com against this workflow file — no NPM_TOKEN lives in this repo.
 # pnpm 11 talks to the registry natively (`info` and `publish`, OIDC
@@ -22,6 +29,12 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: npm dist-tag for the snapshot (never `latest`)
+        default: beta
+        required: true
 
 # One release run at a time; a second push waits instead of racing the
 # Version Packages PR update.
@@ -35,7 +48,7 @@ permissions:
 jobs:
   release:
     name: Version Packages PR or publish @madeui/cli
-    if: github.repository == 'madeui/ui'
+    if: github.repository == 'madeui/ui' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -60,3 +73,42 @@ jobs:
           pr-title: 'chore(release): version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  snapshot:
+    name: Publish a snapshot of @madeui/cli
+    if: github.repository == 'madeui/ui' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Refuse to snapshot onto `latest`
+        if: inputs.tag == 'latest'
+        run: echo "::error::snapshots must not use the latest dist-tag" && exit 1
+
+      # Rewrites packages/cli/package.json to 0.0.0-<tag>-<timestamp> from the
+      # changesets on this branch. Nothing is committed.
+      - name: Version the snapshot
+        run: pnpm changeset version --snapshot ${{ inputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish under the dist-tag
+        run: pnpm changeset publish --tag ${{ inputs.tag }} --no-git-tag
+
+      - name: Report the version
+        run: |
+          version=$(node -p "require('./packages/cli/package.json').version")
+          echo "Published @madeui/cli@$version (dist-tag ${{ inputs.tag }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "Try it: npx @madeui/cli@${{ inputs.tag }} init" >> "$GITHUB_STEP_SUMMARY"
