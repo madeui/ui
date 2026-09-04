@@ -107,6 +107,21 @@ jobs:
       - name: Publish under the dist-tag
         run: pnpm changeset publish --tag ${{ inputs.tag }} --no-git-tag
 
+      # The dist-tag moves before the version itself is fetchable from npm's
+      # CDN, so `npx @madeui/cli@beta` right after publish fails with
+      # ETARGET. Stay yellow until the version resolves.
+      - name: Wait until the version is installable
+        run: |
+          version=$(node -p "require('./packages/cli/package.json').version")
+          for i in $(seq 1 36); do
+            if npm view "@madeui/cli@$version" version >/dev/null 2>&1; then
+              echo "@madeui/cli@$version is installable"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::warning::@madeui/cli@$version not resolvable after 3 minutes; it may still be replicating"
+
       - name: Report the version
         run: |
           version=$(node -p "require('./packages/cli/package.json').version")
