@@ -10,6 +10,7 @@ import { resolveItems } from './registry.mjs';
 import {
   loadConfig,
   resolveTarget,
+  cliCommand,
   missingDependencies,
   installDependencies,
 } from './project.mjs';
@@ -39,7 +40,7 @@ export async function add(cwd, names, flags) {
   const config = loadConfig(cwd);
   if (!config) {
     throw new Error(
-      "no madeui.json found — run `madeui init` first (or create one with a `registry` field)."
+      `no madeui.json found — run \`${cliCommand(cwd, 'init')}\` first (or create one with a \`registry\` field).`
     );
   }
   const registry = flags.registry ?? config.registry;

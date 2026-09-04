@@ -9,3 +9,5 @@
 Also fixes `init` on a Tailwind Next.js app when Tailwind is kept: it no longer writes a second `postcss.config.js` next to the existing `postcss.config.mjs`, and it inserts `@stylex` after `@import "tailwindcss"` instead of wrapping the import in `@layer base` (invalid CSS).
 
 `init` now appends its agent conventions to an existing `AGENTS.md` (between `<!-- BEGIN:madeui-agent-rules -->` markers, the way `next dev` adds its own block) instead of skipping the file; `create-next-app` writes one, so before this the conventions never landed.
+
+Command hints (`init`'s closing line, `add`'s "run init first" error) now spell out the real invocation for the project's package manager (`npx @madeui/cli add …`, `pnpm dlx …`, `yarn dlx …`, `bunx …`) instead of a bare `madeui add`, and pin the version when running a prerelease snapshot.

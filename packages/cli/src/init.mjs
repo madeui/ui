@@ -11,6 +11,7 @@ import {
   loadConfig,
   saveConfig,
   readPackageJson,
+  cliCommand,
   missingDependencies,
   installDependencies,
 } from './project.mjs';
@@ -102,7 +103,7 @@ const AGENTS_MD = `<!-- BEGIN:${AGENTS_MARKER} -->
 ## UI components (madeui)
 
 The components under the configured \`ui\` path (see madeui.json) are owned by
-this project (installed via \`madeui add <name>\`, edit freely). They wrap
+this project (installed via \`npx @madeui/cli add <name>\`, edit freely). They wrap
 Base UI primitives and are styled with StyleX (compile-time CSS).
 
 ### Rules
@@ -342,5 +343,5 @@ export async function init(cwd, flags) {
     console.log(kleur.yellow('\nManual steps:'));
     for (const step of instructions) console.log(`  • ${step}`);
   }
-  console.log(`\nDone. Add components with: ${kleur.bold('madeui add button dialog …')}`);
+  console.log(`\nDone. Add components with: ${kleur.bold(`${cliCommand(cwd, 'add')} button dialog …`)}`);
 }
