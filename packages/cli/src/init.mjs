@@ -353,7 +353,7 @@ export async function init(cwd, flags) {
   const missing = missingDependencies(cwd, ['@stylexjs/stylex']);
   const missingDev = missingDependencies(cwd, framework.devDependencies);
   if (missing.length + missingDev.length > 0) {
-    console.log(kleur.bold('installing dependencies:'));
+    console.log(kleur.bold('dependencies:'));
     await installDependencies(cwd, missing, { dryRun: flags.noInstall });
     await installDependencies(cwd, missingDev, { dev: true, dryRun: flags.noInstall });
   }

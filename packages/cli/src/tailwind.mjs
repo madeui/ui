@@ -1,11 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { execa } from 'execa';
 import kleur from 'kleur';
 import prompts from 'prompts';
 
-import { detectPackageManager, readPackageJson } from './project.mjs';
+import { readPackageJson, uninstallDependencies } from './project.mjs';
 
 /**
  * Tailwind removal for `init`. madeui components are styled with StyleX;
@@ -93,21 +92,6 @@ export async function removeTailwind(cwd, packages, changed, { dryRun = false } 
     'Tailwind utility classes in your components (className="flex …") no longer do anything — restyle those with StyleX.'
   );
   return instructions;
-}
-
-// ---------------------------------------------------------------------------
-// package.json
-
-async function uninstallDependencies(cwd, deps, { dryRun }) {
-  if (deps.length === 0) return;
-  const pm = detectPackageManager(cwd);
-  const args = [pm === 'npm' ? 'uninstall' : 'remove', ...deps];
-  if (dryRun) {
-    console.log(kleur.dim(`  (skipped) ${pm} ${args.join(' ')}`));
-    return;
-  }
-  console.log(kleur.dim(`  $ ${pm} ${args.join(' ')}`));
-  await execa(pm, args, { cwd, stdio: 'inherit' });
 }
 
 // ---------------------------------------------------------------------------
