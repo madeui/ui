@@ -12,11 +12,27 @@ requirement: agents and humans rely on the same shape everywhere.
   `DialogContent`, ... Pass-through parts (no styling) are re-exported directly.
 - Simple elements with no Base UI primitive (Badge, Card, Alert, Textarea) wrap
   native elements.
+- **External dependencies.** A component may build on a third-party package
+  when Base UI has no primitive and the behavior is not worth re-implementing
+  (Calendar → react-day-picker, Carousel → Embla, Resizable →
+  react-resizable-panels, Chart → TanStack Charts). Register the package in
+  `EXTERNAL_DEPENDENCIES` in `scripts/build-registry.mjs` (pinned exactly
+  when the upstream is pre-1.0) and state it on the docs page right after the
+  install command ("Installs `x` alongside the component."). Never import the
+  package's CSS; style its slots with StyleX.
+- **Slot components instead of compound parts** when the third-party component
+  cannot be composed in JSX (react-day-picker): export our styled slot
+  renderers (`CalendarDayButton`, ...) and document how users pass their own
+  through the library's `components` prop. A component whose only job is to
+  map tokens onto a library's CSS custom properties is a *theme bridge*
+  (`ChartContainer`).
 
 ## Props
 
-- `variant?: '...'` and `size?: 'sm' | 'md' | 'lg'` where applicable; defaults
-  `variant="primary"`-equivalent and `size="md"`.
+- `variant?: '...'` and `size?: 'sm' | 'md' | 'lg'` where a meaningful axis
+  exists; defaults `variant="primary"`-equivalent and `size="md"`. Do not add
+  a `variant` with no visual meaning just to satisfy the shape — say in the
+  docs API reference that the component has none.
 - Every styled component accepts `style?: StyleXStyles`, merged LAST via
   `stylex.props(styles.x, variants[variant], style)` — caller overrides always
   win. Native `className`/`style` are omitted from the public props

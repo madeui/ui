@@ -1,0 +1,102 @@
+---
+title: Calendar
+description: "A month grid for picking one day, several days, or a range."
+---
+
+<Component path="calendar-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add calendar
+```
+
+Installs `react-day-picker` and `date-fns` alongside the component.
+
+## Usage
+
+```tsx
+import { Calendar } from '@/components/ui/calendar';
+```
+
+```tsx
+const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+<Calendar mode="single" selected={date} onSelect={setDate} />
+```
+
+## Range
+
+<Component path="calendar-range" />
+
+## Multiple
+
+<Component path="calendar-multiple" />
+
+## Dropdown caption
+
+`captionLayout="dropdown"` swaps the caption for month and year selects, rendered with this library's [Select](/docs/components/select). `startMonth` / `endMonth` bound the navigable years.
+
+<Component path="calendar-dropdown" />
+
+## Disabled days
+
+Any react-day-picker matcher works — here weekends and every day before today.
+
+<Component path="calendar-disabled" />
+
+## Week numbers
+
+<Component path="calendar-week-numbers" />
+
+## Small
+
+<Component path="calendar-sizes" />
+
+## Locale
+
+Pass a `date-fns` locale; weekday names, the caption, and the dropdown labels follow it.
+
+<Component path="calendar-locale" />
+
+## API reference
+
+Built on [react-day-picker](https://daypicker.dev). The table below covers the props this library adds or changes — every other prop (`mode`, `selected`, `onSelect`, `disabled`, `numberOfMonths`, `startMonth`, `locale`, `formatters`, …) is forwarded to `DayPicker`; see the [react-day-picker API reference](https://daypicker.dev/api) for the full list.
+
+### Calendar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md'` | `'md'` | Day cell size: `md` is 32px cells, `sm` is 28px. |
+| `showOutsideDays` | `boolean` | `true` | Changed default — days of the adjacent months fill the grid. |
+| `captionLayout` | `'label' \| 'dropdown' \| 'dropdown-months' \| 'dropdown-years'` | `'label'` | Dropdown variants render the month / year pickers as `Select`. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last on the root — always win over the component's own styles. |
+
+Every slot is styled through react-day-picker's `classNames` prop with StyleX classes; your own `classNames` are merged last, so a key you pass replaces ours for that slot.
+
+### Slots
+
+The interactive parts are exported slot components. Pass your own through react-day-picker's `components` prop to replace one; the rest of the calendar keeps its styling.
+
+| Slot | Component | Renders |
+| --- | --- | --- |
+| `DayButton` | `CalendarDayButton` | The `<button>` in each day cell, styled from the day's modifiers (`selected`, `today`, `outside`, `disabled`, `range_middle`). |
+| `Chevron` | `CalendarChevron` | The nav and dropdown chevrons (lucide icons). |
+| `WeekNumber` | `CalendarWeekNumber` | The row header when `showWeekNumber` is on. |
+| `Dropdown` | `CalendarDropdown` | The month / year picker for the dropdown caption layouts, built on `Select`. |
+
+```tsx
+import { Calendar, CalendarDayButton } from '@/components/ui/calendar';
+
+function DayWithTitle(props: React.ComponentProps<typeof CalendarDayButton>) {
+  return <CalendarDayButton {...props} title={props.day.date.toDateString()} />;
+}
+
+<Calendar components={{ DayButton: DayWithTitle }} />
+```
+
+Slot components own their styling, so the `classNames` keys for those slots (`day_button`, `chevron`, `week_number`, `dropdown`) have no effect — override the component instead.
+
+### Styling
+
+`Calendar` accepts `style` (`StyleXStyles`, merged last so caller overrides always win). The slot components take react-day-picker's slot props; they do not accept `style`.

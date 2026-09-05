@@ -1,0 +1,158 @@
+---
+title: Chart
+description: "Charts built on TanStack Charts: a themed container, a tooltip body, and an HTML legend around the library's own Chart component."
+---
+
+<Component path="chart-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add chart
+```
+
+Installs `@tanstack/charts` alongside the component.
+
+<Callout type="warning" title="Alpha">
+TanStack Charts is pre-1.0 and its minor releases may contain breaking changes. The registry pins the exact version the component was tested with (`0.16.0`) — upgrade deliberately, and re-run your charts after every bump.
+</Callout>
+
+## Usage
+
+```tsx
+import {
+  Chart,
+  ChartContainer,
+  ChartLegend,
+  ChartTooltipContent,
+  useChartLegend,
+} from '@/components/ui/chart';
+```
+
+```tsx
+'use client';
+
+import { barY, defineChart } from '@tanstack/charts';
+import { scaleBand } from '@tanstack/charts/scales/band';
+import { scaleLinear } from '@tanstack/charts/scales/linear';
+import { tooltip } from '@tanstack/charts/tooltip';
+
+const definition = defineChart({
+  marks: [barY(rows, { x: 'month', y: 'revenue' })],
+  scales: {
+    x: { scale: () => scaleBand().padding(0.3) },
+    y: { scale: scaleLinear, nice: true, grid: true },
+  },
+  tooltip,
+});
+
+<ChartContainer>
+  <Chart
+    definition={definition}
+    height={240}
+    ariaLabel="Monthly revenue"
+    renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
+  />
+</ChartContainer>;
+```
+
+`Chart` mounts the chart with a layout effect, so in the Next.js App Router any file that renders it must be a client component (`'use client'` at the top). Create definitions at module scope or inside `useMemo`: the definition's identity is what tells the chart to update.
+
+## Composition
+
+```tsx
+<ChartContainer>
+  <Chart renderTooltipBody={(context) => <ChartTooltipContent {...context} />} />
+  <ChartLegend />
+</ChartContainer>
+```
+
+## Line
+
+`z` splits rows into series. With no explicit color scale, each series takes the next slot of the palette the container provides (`colors.chart1` … `chart6`).
+
+<Component path="chart-line" />
+
+## Stacked area
+
+<Component path="chart-area" />
+
+## Donut
+
+Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `radialArc` paints them.
+
+<Component path="chart-pie" />
+
+## Legend
+
+`useChartLegend` reads the chart's resolved color scale through `onRender` and returns the items for `ChartLegend`. Items keep their identity until the domain or its colors change, so the legend does not re-render on every chart paint.
+
+<Component path="chart-legend" />
+
+## Tooltip formatter
+
+`formatter` receives the row's formatted value, its label, and the chart point behind it — read the raw `yValue` from the point when formatting numbers.
+
+<Component path="chart-tooltip" />
+
+## Sparkline
+
+`guides: false` and `margin: 0` let the plot fill its box; `pointer: false` and `keyboard: false` turn off focus for a purely decorative chart.
+
+<Component path="chart-sparkline" />
+
+## API reference
+
+Built on [TanStack Charts](https://tanstack.com/charts). `Chart` is the library's React component (the tooltip-capable entry from `@tanstack/charts/react/tooltip`) re-exported unchanged, so every prop — `definition`, `ariaLabel`, `height`, `aspectRatio`, `width`, `initialWidth`, `onRender`, `renderTooltipBody`, the focus callbacks — is documented in the [TanStack Charts React reference](https://tanstack.com/charts/latest/docs/framework/react/reference/chart). Definitions, marks, scales, and the `tooltip` extension are the library's API as well.
+
+No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to `Chart`'s own `height`, `aspectRatio`, and `width` props.
+
+### ChartContainer
+
+A `div` that acts as the theme bridge: it maps the design tokens onto the CSS custom properties TanStack Charts reads (the six palette slots, tooltip chrome, focus and crosshair fills) and sets the inherited `color` that axes, ticks, and gridlines derive from. Wrap every `Chart` in one. It is a column flex box with `min-width: 0`, so the chart stays responsive and a `ChartLegend` placed after it stacks below the plot.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+All native `div` props are forwarded.
+
+### ChartTooltipContent
+
+Body for `Chart`'s `renderTooltipBody`. Spread the render context straight in: `renderTooltipBody={(context) => <ChartTooltipContent {...context} />}`. The chart keeps ownership of focus, anchoring, placement, pinning, and dismissal; this renders the title and one swatch + label + value row per focused series.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `ChartTooltipContent \| string` | — | The tooltip model from the render context (required). |
+| `points` | `readonly ChartPoint[]` | `[]` | Focused points from the render context, matched to rows by index. |
+| `indicator` | `'dot' \| 'line'` | `'dot'` | Swatch shape next to each row. |
+| `formatter` | `(value: string, name: string, point?: ChartPoint) => ReactNode` | — | Replaces a row's formatted value. |
+| `hideLabel` | `boolean` | `false` | Omits the title (the shared axis value on grouped focus). |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`defaultBody`, `pinned`, and `dismiss` from the render context are accepted and ignored so the context can be spread without picking fields.
+
+### ChartLegend
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `{ label: ReactNode; color: string; key?: string }[]` | — | Legend entries (required). `color` is any CSS color, including the palette references the chart resolves. |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` | Horizontal alignment of the row. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+All native `div` props are forwarded.
+
+### useChartLegend
+
+```ts
+const { items, onRender } = useChartLegend();
+```
+
+| Value | Type | Description |
+| --- | --- | --- |
+| `items` | `readonly ChartLegendItem[]` | One entry per value of the chart's resolved color domain, colored with the scale's own mapping. |
+| `onRender` | `(context) => void` | Pass to `<Chart onRender={onRender} />`. Compares the domain by value and only produces new `items` when it changes. |
+
+### Styling
+
+`ChartContainer`, `ChartTooltipContent`, `ChartLegend` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render. `Chart` takes the library's own `className` / `style` (plain CSS) — prefer styling the container.

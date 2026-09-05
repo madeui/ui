@@ -1,0 +1,136 @@
+---
+title: Carousel
+description: "A slide carousel with previous/next buttons and dots, horizontal or vertical."
+---
+
+<Component path="carousel-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add carousel
+```
+
+Installs `embla-carousel-react` alongside the component.
+
+## Usage
+
+```tsx
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+```
+
+```tsx
+<Carousel>
+  <CarouselContent>
+    <CarouselItem>…</CarouselItem>
+    <CarouselItem>…</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+```
+
+## Composition
+
+```tsx
+<Carousel>
+  <CarouselContent>
+    <CarouselItem />
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+  <CarouselDots />
+</Carousel>
+```
+
+## Sizes
+
+Set `flexBasis` on `CarouselItem` through `style` to show several slides per view.
+
+<Component path="carousel-sizes" />
+
+## Spacing
+
+The default gap is a negative margin on `CarouselContent` paid back as padding on each `CarouselItem`. Override both together: `marginLeft` and `paddingLeft` for horizontal carousels, `marginTop` and `paddingTop` for vertical ones.
+
+<Component path="carousel-spacing" />
+
+## Orientation
+
+Vertical carousels need a fixed `height` on `CarouselContent`; ArrowUp/ArrowDown replace ArrowLeft/ArrowRight.
+
+<Component path="carousel-orientation" />
+
+## Dots
+
+<Component path="carousel-dots" />
+
+## API
+
+Pass `setApi` to get the Embla instance and subscribe to its events.
+
+<Component path="carousel-api" />
+
+## Autoplay
+
+Autoplay is an Embla plugin from a separate package, `embla-carousel-autoplay`, that you install yourself and pass through `plugins`.
+
+```bash
+npm install embla-carousel-autoplay
+```
+
+<Component path="carousel-autoplay" />
+
+## Loop
+
+<Component path="carousel-loop" />
+
+## API reference
+
+Built on [Embla Carousel](https://www.embla-carousel.com/). `opts` and `plugins` are passed straight to Embla — see the [Embla options](https://www.embla-carousel.com/api/options/) and [plugins](https://www.embla-carousel.com/plugins/) references. The carousel has no `variant` or `size` of its own; the navigation buttons take `Button`'s.
+
+The root is a `region` with `aria-roledescription="carousel"`; each item is a `group` with `aria-roledescription="slide"`. Arrow keys on the root scroll to the previous/next slide.
+
+### Carousel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `opts` | `CarouselOptions` | — | Embla options (`loop`, `align`, `dragFree`, …). `axis` is derived from `orientation`. |
+| `plugins` | `CarouselPlugins` | — | Embla plugins, e.g. `Autoplay()`. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `setApi` | `(api: CarouselApi) => void` | — | Receives the Embla API once the carousel has initialised. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`CarouselApi` is Embla's carousel instance type, exported for `setApi` callbacks and `useState<CarouselApi>()`. `useCarousel()` exposes the same context the parts use: `api`, `orientation`, `scrollPrev`, `scrollNext`, `scrollTo`, `canScrollPrev`, `canScrollNext`, `selectedIndex`, `snapCount`.
+
+### CarouselPrevious, CarouselNext
+
+Render `Button` and accept all of its props. They are disabled when there is nothing to scroll to.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `ButtonVariant` | `'outline'` |  |
+| `size` | `ButtonSize` | `'iconSm'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### CarouselDots
+
+One button per scroll snap, labelled "Go to slide N"; the active dot has `aria-current="true"`. Accepts all native `div` props.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### Slide size and spacing
+
+`CarouselItem` defaults to `flexBasis: 100%` (one slide per view); pass a smaller `flexBasis` through `style` for more. The gap comes from a negative `marginLeft` (horizontal) / `marginTop` (vertical) on `CarouselContent` matched by `paddingLeft` / `paddingTop` on each `CarouselItem` — override both with the same value to change it. `CarouselContent`'s `style` and other props land on the inner slide track, which is also where a vertical carousel gets its fixed `height`.
+
+### Styling
+
+`Carousel`, `CarouselContent`, `CarouselItem`, `CarouselPrevious`, `CarouselNext`, `CarouselDots` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render.

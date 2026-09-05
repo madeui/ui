@@ -12,10 +12,16 @@
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@stylexjs/stylex": "^0.19.0",
+    "@tanstack/charts": "0.16.0",
+    "date-fns": "^4.4.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^1.39.0",
     "next": "16.3.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-day-picker": "^10.0.1",
+    "react-dom": "19.2.8",
+    "react-resizable-panels": "^4.12.3"
   },
   "devDependencies": {
     "@stylexjs/babel-plugin": "^0.19.0",

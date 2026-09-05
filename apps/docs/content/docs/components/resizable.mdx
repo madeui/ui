@@ -1,0 +1,84 @@
+---
+title: Resizable
+description: "Accessible resizable panel groups and layouts with keyboard support."
+---
+
+<Component path="resizable-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add resizable
+```
+
+Installs `react-resizable-panels` alongside the component.
+
+## Usage
+
+```tsx
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+```
+
+## Composition
+
+```tsx
+<ResizablePanelGroup>
+  <ResizablePanel />
+  <ResizableHandle />
+  <ResizablePanel />
+</ResizablePanelGroup>
+```
+
+The group fills its parent (width and height 100%), so size the wrapper. Sizes are percentages when passed as strings (`"30%"`) and pixels when passed as numbers (`200`).
+
+## Vertical
+
+<Component path="resizable-vertical" />
+
+## Handle
+
+`withHandle` renders a grip on the line.
+
+<Component path="resizable-handle" />
+
+## Nested
+
+<Component path="resizable-nested" />
+
+## Collapsible
+
+A `collapsible` panel snaps to `collapsedSize` when dragged below its `minSize`. Double-clicking a handle restores the default sizes.
+
+<Component path="resizable-collapsible" />
+
+## Persisted layout
+
+`useDefaultLayout` saves the layout under an `id` and restores it on the next visit. Give each panel a stable `id`.
+
+<Component path="resizable-persisted" />
+
+## API reference
+
+Built on [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels) v4: `ResizablePanelGroup` wraps `Group`, `ResizablePanel` wraps `Panel`, and `ResizableHandle` wraps `Separator`. The tables below cover the props this library adds or changes — every other prop (`defaultSize`, `minSize`, `maxSize`, `collapsible`, `onLayoutChanged`, `panelRef`, …) is forwarded to the underlying part; see the [react-resizable-panels docs](https://react-resizable-panels.vercel.app/) for the full list. `useDefaultLayout` is re-exported unchanged.
+
+### ResizablePanelGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. The library sets `width`, `height`, `display`, `flex-direction`, and `overflow` inline. |
+
+### ResizableHandle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `withHandle` | `boolean` | `false` | Render a centered grip pill on the line. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### Styling
+
+`ResizablePanelGroup`, `ResizablePanel`, `ResizableHandle` accept `style` (`StyleXStyles`, merged last so caller overrides always win). `ResizablePanel` styles land on the panel's content box, which the library gives `overflow: auto`.

@@ -281,6 +281,30 @@
     },
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "Month calendar built on react-day-picker: single, multiple, and range selection; dropdown month/year navigation. Sizes: sm, md.",
+      "dependencies": [
+        "@stylexjs/stylex",
+        "lucide-react",
+        "react-day-picker@^10"
+      ],
+      "registryDependencies": [
+        "@madeui/theme",
+        "@madeui/utils",
+        "@madeui/select"
+      ],
+      "files": [
+        {
+          "path": "ui/calendar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/calendar.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
@@ -296,6 +320,51 @@
           "path": "ui/card.tsx",
           "type": "registry:ui",
           "target": "components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "description": "Slide carousel built on Embla: content, items, previous/next buttons, dots; horizontal or vertical.",
+      "dependencies": [
+        "@stylexjs/stylex",
+        "lucide-react",
+        "embla-carousel-react@^8"
+      ],
+      "registryDependencies": [
+        "@madeui/theme",
+        "@madeui/utils",
+        "@madeui/button"
+      ],
+      "files": [
+        {
+          "path": "ui/carousel.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/carousel.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "Charts built on TanStack Charts (alpha, pinned): themed container, tooltip body, and HTML legend.",
+      "dependencies": [
+        "@stylexjs/stylex",
+        "@tanstack/charts@0.16.0"
+      ],
+      "registryDependencies": [
+        "@madeui/theme"
+      ],
+      "files": [
+        {
+          "path": "ui/chart.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/chart.tsx"
         }
       ]
     },
@@ -431,6 +500,33 @@
           "path": "ui/context-menu.tsx",
           "type": "registry:ui",
           "target": "components/ui/context-menu.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "date-picker",
+      "type": "registry:ui",
+      "title": "Date Picker",
+      "description": "Date picker composing Popover, Button, and Calendar: single or range mode, formatted value, presets.",
+      "dependencies": [
+        "@stylexjs/stylex",
+        "lucide-react",
+        "react-day-picker@^10",
+        "date-fns@^4"
+      ],
+      "registryDependencies": [
+        "@madeui/theme",
+        "@madeui/utils",
+        "@madeui/button",
+        "@madeui/calendar",
+        "@madeui/popover"
+      ],
+      "files": [
+        {
+          "path": "ui/date-picker.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/date-picker.tsx"
         }
       ]
     },
@@ -888,6 +984,29 @@
           "path": "ui/radio-group.tsx",
           "type": "registry:ui",
           "target": "components/ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "description": "Resizable panel groups built on react-resizable-panels: horizontal or vertical, optional handle grip.",
+      "dependencies": [
+        "@stylexjs/stylex",
+        "lucide-react",
+        "react-resizable-panels@^4"
+      ],
+      "registryDependencies": [
+        "@madeui/theme",
+        "@madeui/utils"
+      ],
+      "files": [
+        {
+          "path": "ui/resizable.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/resizable.tsx"
         }
       ]
     },
