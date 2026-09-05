@@ -13,17 +13,23 @@ export default function ResizableNested() {
     <div {...stylex.props(styles.frame)}>
       <ResizablePanelGroup>
         <ResizablePanel defaultSize="50%" minSize="20%">
-          <div {...stylex.props(styles.content)}>One</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>One</span>
+          </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="50%" minSize="20%">
           <ResizablePanelGroup orientation="vertical">
             <ResizablePanel defaultSize="25%" minSize="20%">
-              <div {...stylex.props(styles.content)}>Two</div>
+              <div {...stylex.props(styles.content)}>
+                <span {...stylex.props(styles.label)}>Two</span>
+              </div>
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize="75%" minSize="20%">
-              <div {...stylex.props(styles.content)}>Three</div>
+              <div {...stylex.props(styles.content)}>
+                <span {...stylex.props(styles.label)}>Three</span>
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
@@ -45,7 +51,7 @@ const styles = stylex.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: colors.muted,
+    backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
     fontFamily: font.sans,
@@ -54,5 +60,13 @@ const styles = stylex.create({
     height: '100%',
     justifyContent: 'center',
     padding: space.s6,
+  },
+  // Panels get narrow as the handle moves; a one-word label truncates
+  // instead of spilling across the divider.
+  label: {
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 });

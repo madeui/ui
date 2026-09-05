@@ -8,7 +8,13 @@ import { tooltip } from '@tanstack/charts/tooltip';
 
 import { container } from '@/lib/constants.stylex';
 
-import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  Chart,
+  ChartContainer,
+  ChartTooltipContent,
+  chartAxis,
+  chartTheme,
+} from '@/components/ui/chart';
 
 const revenue = [
   { month: 'Jan', stream: 'Subscriptions', amount: 42100 },
@@ -34,14 +40,18 @@ const currency = new Intl.NumberFormat('en-US', {
 const definition = defineChart({
   marks: [lineY(revenue, { x: 'month', y: 'amount', z: 'stream', strokeWidth: 2 })],
   scales: {
-    x: { scale: () => scalePoint().padding(0.2) },
+    x: { scale: () => scalePoint().padding(0.2), axis: chartAxis },
     y: {
       scale: scaleLinear,
       nice: true,
       grid: true,
-      axis: { ticks: { format: (value) => currency.format(Number(value)) } },
+      axis: {
+        ...chartAxis,
+        ticks: { ...chartAxis.ticks, format: (value) => currency.format(Number(value)) },
+      },
     },
   },
+  theme: chartTheme,
   focus: 'group-x',
   tooltip,
 });

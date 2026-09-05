@@ -13,6 +13,8 @@ import {
   ChartContainer,
   ChartLegend,
   ChartTooltipContent,
+  chartAxis,
+  chartTheme,
   useChartLegend,
 } from '@/components/ui/chart';
 
@@ -34,9 +36,15 @@ const sales = [
 const definition = defineChart({
   marks: [barY(sales, { x: 'quarter', y: 'sales', color: 'region', layout: group({ padding: 0.15 }) })],
   scales: {
-    x: { scale: () => scaleBand().padding(0.25) },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Sales' } },
+    x: { scale: () => scaleBand().padding(0.25), axis: chartAxis },
+    y: {
+      scale: scaleLinear,
+      nice: true,
+      grid: true,
+      axis: { ...chartAxis, label: 'Sales' },
+    },
   },
+  theme: chartTheme,
   color: { domain: ['Europe', 'Americas', 'Asia'] },
   focus: 'group-x',
   tooltip,

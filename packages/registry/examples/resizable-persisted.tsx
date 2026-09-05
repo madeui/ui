@@ -65,7 +65,7 @@ const styles = stylex.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: colors.muted,
+    backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
     fontFamily: font.sans,

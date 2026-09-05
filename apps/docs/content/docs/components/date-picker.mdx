@@ -45,7 +45,9 @@ import {
 
 ## Range
 
-The popover stays open until both ends of the range are chosen.
+The popover stays open until both ends of the range are chosen. Two months sit
+side by side on wide screens; below `640px` the calendar falls back to a single
+month so the popup still fits the viewport.
 
 <Component path="date-picker-range" />
 
@@ -55,7 +57,9 @@ The popover stays open until both ends of the range are chosen.
 
 ## Presets
 
-Children of `DatePickerContent` render above the calendar; here a row of buttons sets the controlled value.
+Children of `DatePickerContent` render above the calendar; here a row of buttons
+sets the controlled value. A preset is a complete choice, so the example also
+controls `open` and closes the popover after the click.
 
 <Component path="date-picker-presets" />
 
@@ -79,7 +83,7 @@ Composes [Popover](/docs/components/popover), [Button](/docs/components/button),
 | `value` | `Date \| undefined` (single) / `DateRange \| undefined` (range) | — | Controlled value. |
 | `defaultValue` | same as `value` | — | Uncontrolled initial value. |
 | `onValueChange` | `(value) => void` | — | Called with the new value on every selection. |
-| `format` | `string` | `'PPP'` | `date-fns` format string used by `DatePickerValue`. |
+| `format` | `string` | `'PPP'` / `'PP'` (range) | `date-fns` format string used by `DatePickerValue`. A range prints two dates, so it defaults to the shorter form. |
 | `locale` | `Locale` | — | `date-fns` locale, applied to the formatted value and the calendar. |
 | `placeholder` | `string` | `'Pick a date'` / `'Pick a date range'` | Shown while nothing is selected. |
 | `disabled` | `boolean` | `false` | Disables the trigger. |
@@ -108,8 +112,23 @@ A `<span>` with the formatted selection (range: `from – to`, or `from` alone w
 | `side` / `sideOffset` / `align` / `alignOffset` | — | `align="start"` | Popover positioning. |
 | `size` | `'sm' \| 'md'` | `'md'` | Calendar cell size. |
 | `style` | `StyleXStyles` | — | Merged last on the popup. |
+| `numberOfMonths` | `number` | `1` | Months shown side by side. Clamped to one below `640px`, where a wider strip would not fit. |
+| `autoFocus` | `boolean` | `true` | The calendar takes focus on open (the selected day, else today) so the arrow keys work straight away. |
 | `resetOnSelect` | `boolean` | `true` | Range mode: a click on a complete range starts a new one instead of extending it. |
-| any other `Calendar` prop | — | — | `captionLayout`, `numberOfMonths`, `disabled`, `startMonth`, `endMonth`, `showWeekNumber`, `min`, `max`, … are forwarded to `Calendar`. |
+| any other `Calendar` prop | — | — | `captionLayout`, `disabled`, `startMonth`, `endMonth`, `showWeekNumber`, `min`, `max`, … are forwarded to `Calendar`. |
+
+### Popup width
+
+The popup is as wide as the calendar asks for, clamped on both sides:
+
+- Never narrower than the trigger. A single month is narrower than the default
+  trigger, so the popup stretches to `--anchor-width` and the calendar sits
+  centred inside it.
+- Never wider than `--available-width`, the room the viewport leaves next to
+  the trigger. A two-month calendar is free to outgrow the trigger.
+
+Set a width on the popup with `style` to override the rule, and on the trigger
+to change what the popup matches.
 
 ### Styling
 

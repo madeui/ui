@@ -33,7 +33,11 @@ import {
 </ResizablePanelGroup>
 ```
 
-The group fills its parent (width and height 100%), so size the wrapper. Sizes are percentages when passed as strings (`"30%"`) and pixels when passed as numbers (`200`).
+The group fills its parent (width and height 100%), so size the wrapper. Sizes are percentages when passed as strings (`"30%"`) and pixels when passed as numbers (`200`); other CSS units work as strings too (`"12rem"`, `"50vh"`).
+
+## Keyboard
+
+The handle is focusable. Arrow keys move it in 5% steps along the group's axis, `Home` and `End` jump to the neighbouring panel's minimum and maximum, `Enter` collapses or expands a `collapsible` panel, and `F6` cycles between the handles of a group.
 
 ## Vertical
 
@@ -70,6 +74,7 @@ Built on [react-resizable-panels](https://github.com/bvaughn/react-resizable-pan
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
+| `resizeTargetMinimumSize` | `{ coarse: number; fine: number }` | `{ coarse: 24, fine: 10 }` | Size in CSS pixels of the pointer target around each handle. The handle draws a 1px line; this is what the pointer actually has to hit. `coarse` is 24 so a touch drag meets the WCAG 2.2 minimum target size. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. The library sets `width`, `height`, `display`, `flex-direction`, and `overflow` inline. |
 
 ### ResizableHandle
@@ -77,6 +82,7 @@ Built on [react-resizable-panels](https://github.com/bvaughn/react-resizable-pan
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `withHandle` | `boolean` | `false` | Render a centered grip pill on the line. |
+| `aria-label` | `string` | `'Resize panels'` | Accessible name for the handle, which is focusable and announced as a splitter. Override it when a group has several handles that need telling apart. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
 ### Styling

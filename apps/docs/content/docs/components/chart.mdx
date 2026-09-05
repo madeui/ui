@@ -25,6 +25,8 @@ import {
   ChartContainer,
   ChartLegend,
   ChartTooltipContent,
+  chartAxis,
+  chartTheme,
   useChartLegend,
 } from '@/components/ui/chart';
 ```
@@ -40,9 +42,10 @@ import { tooltip } from '@tanstack/charts/tooltip';
 const definition = defineChart({
   marks: [barY(rows, { x: 'month', y: 'revenue' })],
   scales: {
-    x: { scale: () => scaleBand().padding(0.3) },
-    y: { scale: scaleLinear, nice: true, grid: true },
+    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartAxis },
   },
+  theme: chartTheme,
   tooltip,
 });
 
@@ -55,6 +58,8 @@ const definition = defineChart({
   />
 </ChartContainer>;
 ```
+
+`chartTheme` and `chartAxis` are what make a chart look like the rest of the library — pass `theme: chartTheme` on the definition and `axis: chartAxis` on every scale that draws an axis.
 
 `Chart` mounts the chart with a layout effect, so in the Next.js App Router any file that renders it must be a client component (`'use client'` at the top). Create definitions at module scope or inside `useMemo`: the definition's identity is what tells the chart to update.
 
@@ -97,19 +102,45 @@ Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `
 
 ## Sparkline
 
-`guides: false` and `margin: 0` let the plot fill its box; `pointer: false` and `keyboard: false` turn off focus for a purely decorative chart.
+`guides: false` and `margin: 0` let the plot fill its box; `pointer: false` and `keyboard: false` turn off focus for a purely decorative chart. The scale spans the data rather than starting at zero — a sparkline reads as shape, and a zero baseline flattens it.
 
 <Component path="chart-sparkline" />
 
 ## API reference
 
-Built on [TanStack Charts](https://tanstack.com/charts). `Chart` is the library's React component (the tooltip-capable entry from `@tanstack/charts/react/tooltip`) re-exported unchanged, so every prop — `definition`, `ariaLabel`, `height`, `aspectRatio`, `width`, `initialWidth`, `onRender`, `renderTooltipBody`, the focus callbacks — is documented in the [TanStack Charts React reference](https://tanstack.com/charts/latest/docs/framework/react/reference/chart). Definitions, marks, scales, and the `tooltip` extension are the library's API as well.
+Built on [TanStack Charts](https://tanstack.com/charts). `Chart` takes the props of the library's React component (the tooltip-capable entry from `@tanstack/charts/react/tooltip`) — `definition`, `ariaLabel`, `height`, `aspectRatio`, `width`, `initialWidth`, `onRender`, `renderTooltipBody`, the focus callbacks — all documented in the [TanStack Charts React reference](https://tanstack.com/charts/latest/docs/framework/react/reference/chart). Definitions, marks, scales, and the `tooltip` extension are the library's API as well.
 
 No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to `Chart`'s own `height`, `aspectRatio`, and `width` props.
 
+### Chart
+
+Two behaviors are added on top of the library's component.
+
+The chart surface carries the focus-visible ring. The library renders the plot as an `<svg>` with `tabindex`, which the browser rings with its own outline on every click; `Chart` supplies a `renderSvg` that puts the house ring on that element instead, so the ring appears on keyboard focus only. Passing your own `renderSvg` replaces it.
+
+The chart is revealed once the browser has measured it. A server cannot measure the container, so its markup is laid out at `initialWidth` (640 by default) and the browser scales that scene to fit until the chart mounts — the plot paints small and then jumps to size. `Chart` renders hidden until its first client-side layout effect, by which point the chart has re-rendered at the measured width, so the first painted frame is the final one. The host keeps its box while hidden, so nothing moves. Charts need scripting for pointer, keyboard, and tooltip behavior either way, but a chart that must be visible without it should set `initialWidth` to the layout's usual width and render the library's component directly.
+
+### chartTheme
+
+Scene colors for `defineChart({ theme })`: gridlines, axis text, and focus guides in the design tokens instead of the library's defaults. The library paints each role at a fixed opacity, so `grid` is `colors.foreground` at the 11% the library applies, which lands on `colors.border`.
+
+### chartAxis
+
+Axis presentation for a scale's `axis` option: the gridlines carry the structure, so the domain line and tick stubs are off, and tick labels sit at the caption size in `colors.mutedForeground`. Spread it when an axis needs more, and spread `chartAxis.ticks` too when that axis sets its own `count` or `format`:
+
+```tsx
+axis: {
+  ...chartAxis,
+  label: 'Revenue',
+  ticks: { ...chartAxis.ticks, format: (value) => currency.format(Number(value)) },
+}
+```
+
+The axis title is the one guide the library does not expose a style hook for: it renders one step below the tick labels at weight 600.
+
 ### ChartContainer
 
-A `div` that acts as the theme bridge: it maps the design tokens onto the CSS custom properties TanStack Charts reads (the six palette slots, tooltip chrome, focus and crosshair fills) and sets the inherited `color` that axes, ticks, and gridlines derive from. Wrap every `Chart` in one. It is a column flex box with `min-width: 0`, so the chart stays responsive and a `ChartLegend` placed after it stacks below the plot.
+A `div` that acts as the theme bridge: it maps the design tokens onto the CSS custom properties TanStack Charts reads (the six palette slots, the tooltip chrome, the focus and crosshair fills) and sets the font and color the scene inherits. Wrap every `Chart` in one. It is a column flex box with `min-width: 0`, so the chart stays responsive and a `ChartLegend` placed after it stacks below the plot.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -156,3 +187,5 @@ const { items, onRender } = useChartLegend();
 ### Styling
 
 `ChartContainer`, `ChartTooltipContent`, `ChartLegend` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render. `Chart` takes the library's own `className` / `style` (plain CSS) — prefer styling the container.
+
+The scene itself is painted by the library, not by CSS, so its colors come from `chartTheme` and the six palette slots `ChartContainer` maps onto the library's custom properties. Mark styling — stroke widths, fill opacities, bar insets, curves — belongs on the marks in the definition.

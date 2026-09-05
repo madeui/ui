@@ -9,7 +9,7 @@ import { space, fontSize, fontWeight, lineHeight, container } from '@/lib/consta
 import { colors } from '@/lib/tokens.stylex';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Chart, ChartContainer } from '@/components/ui/chart';
+import { Chart, ChartContainer, chartTheme } from '@/components/ui/chart';
 
 const activeUsers = [
   { day: 1, users: 1180 },
@@ -28,17 +28,27 @@ const activeUsers = [
   { day: 14, users: 1690 },
 ];
 
+// A sparkline reads as shape, not magnitude, so the scale spans the data
+// rather than starting at zero — anchoring at zero flattens a 43% rise into a
+// straight line. The tenth-of-a-range padding keeps the stroke off the edges,
+// which `margin: 0` would otherwise clip, and the area fills to that floor.
+const users = activeUsers.map((point) => point.users);
+const padding = (Math.max(...users) - Math.min(...users)) / 10;
+const floor = Math.min(...users) - padding;
+const ceiling = Math.max(...users) + padding;
+
 // No guides, zero margin, and no focus or keyboard behavior: the plot fills
 // the box and reads as decoration next to the number that carries the value.
 const definition = defineChart({
   marks: [
-    areaY(activeUsers, { x: 'day', y: 'users', fillOpacity: 0.15 }),
+    areaY(activeUsers, { x: 'day', y: 'users', y1: floor, fillOpacity: 0.15 }),
     lineY(activeUsers, { x: 'day', y: 'users', strokeWidth: 2 }),
   ],
   scales: {
     x: { scale: scalePoint },
-    y: { scale: scaleLinear },
+    y: { scale: () => scaleLinear().domain([floor, ceiling]) },
   },
+  theme: chartTheme,
   guides: false,
   margin: 0,
   pointer: false,

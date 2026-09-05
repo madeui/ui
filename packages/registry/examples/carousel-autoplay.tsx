@@ -18,12 +18,35 @@ import { container, fontSize, fontWeight } from '@/lib/constants.stylex';
 export default function CarouselAutoplay() {
   // One plugin instance for the component's lifetime; it pauses while the
   // pointer is over the carousel and keeps going after button clicks.
-  const autoplay = React.useRef(
-    Autoplay({ delay: 2000, stopOnMouseEnter: true, stopOnInteraction: false })
+  // `rootNode` moves Autoplay's mouse listeners from the scroll viewport up
+  // to the carousel root, so hovering the previous/next buttons — which sit
+  // outside the viewport — pauses it too.
+  const [autoplay] = React.useState(() =>
+    Autoplay({
+      delay: 2000,
+      rootNode: (emblaRoot) => emblaRoot.parentElement,
+      stopOnFocusIn: true,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    })
   );
 
   return (
-    <Carousel opts={{ loop: true }} plugins={[autoplay.current]} style={styles.carousel}>
+    <Carousel
+      opts={{ loop: true }}
+      plugins={[autoplay]}
+      style={styles.carousel}
+      // Autoplay's own `stopOnFocusIn` reacts to focus landing on a slide, so
+      // the previous/next buttons would never pause it and a keyboard user
+      // could not stop the slides. Pause on any focus inside the carousel and
+      // resume when focus leaves, unless the pointer is still over it —
+      // Autoplay restarts that case itself on mouse leave.
+      onFocus={() => autoplay.stop()}
+      onBlur={(event) => {
+        if (event.currentTarget.contains(event.relatedTarget)) return;
+        if (!event.currentTarget.matches(':hover')) autoplay.play();
+      }}
+    >
       <CarouselContent>
         {Array.from({ length: 5 }, (_, index) => (
           <CarouselItem key={index}>

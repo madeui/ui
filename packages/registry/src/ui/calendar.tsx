@@ -75,23 +75,42 @@ export function Calendar({
   captionLayout = 'label',
   classNames: userClassNames,
   components: userComponents,
-  navLayout,
+  navLayout = 'around',
+  hideNavigation,
   ...props
 }: CalendarProps) {
+  // `around` puts each chevron inside its own month, so we can pin them to
+  // that month's caption row instead of floating one bar over the whole
+  // months strip — the chevrons stay aligned with their grid when the strip
+  // wraps, and nothing overlaps the caption.
+  const pinnedNav = navLayout === 'around' && !hideNavigation;
+
   const classNames = React.useMemo(
     () => ({
       root: cx(styles.root, style),
       months: cx(styles.months),
       month: cx(styles.month),
-      nav: cx(navLayout === 'after' ? styles.navAfter : styles.nav, cellHeights[size]),
-      button_previous: cx(styles.navButton, cellSizes[size]),
-      button_next: cx(styles.navButton, cellSizes[size]),
-      month_caption: cx(styles.monthCaption, captionSizes[size]),
-      caption_label: cx(styles.captionLabel),
+      nav: cx(styles.nav, cellHeights[size]),
+      button_previous: cx(
+        styles.navButton,
+        cellSizes[size],
+        pinnedNav && styles.navButtonStart
+      ),
+      button_next: cx(
+        styles.navButton,
+        cellSizes[size],
+        pinnedNav && styles.navButtonEnd
+      ),
+      month_caption: cx(
+        styles.monthCaption,
+        cellHeights[size],
+        pinnedNav && navGutters[size]
+      ),
+      caption_label: cx(styles.captionLabel, textSizes[size]),
       dropdowns: cx(styles.dropdowns),
       month_grid: cx(styles.monthGrid),
       weekday: cx(styles.gridHeader, cellSizes[size]),
-      week_number_header: cx(styles.weekNumberHeader, cellSizes[size]),
+      week_number_header: cx(styles.gridHeader, cellSizes[size]),
       day: cx(styles.day, cellSizes[size]),
       range_start: cx(styles.rangeStart),
       range_middle: cx(styles.rangeMiddle),
@@ -100,7 +119,7 @@ export function Calendar({
       footer: cx(styles.footer),
       ...userClassNames,
     }),
-    [size, style, navLayout, userClassNames]
+    [size, style, pinnedNav, userClassNames]
   );
 
   const components = React.useMemo(
@@ -122,6 +141,7 @@ export function Calendar({
         showOutsideDays={showOutsideDays}
         captionLayout={captionLayout}
         navLayout={navLayout}
+        hideNavigation={hideNavigation}
         {...props}
         classNames={classNames}
         components={components}
@@ -157,7 +177,7 @@ export function CalendarDayButton({
       {...stylex.props(
         styles.dayButton,
         cellSizes[size],
-        dayButtonSizes[size],
+        textSizes[size],
         modifiers.outside && styles.dayButtonOutside,
         modifiers.today && styles.dayButtonToday,
         modifiers.range_middle && styles.dayButtonRangeMiddle,
@@ -233,11 +253,32 @@ export function CalendarDropdown({
     >
       <SelectTrigger
         aria-label={ariaLabel}
-        style={[styles.dropdownTrigger, cellHeights[size]]}
+        style={[styles.dropdownTrigger, cellHeights[size], textSizes[size]]}
       >
-        <SelectValue />
+        {/* Every label is stacked in one grid cell, all but the selected one
+            hidden: the trigger is then always as wide as the longest month
+            name in the active locale, so nothing truncates and the caption
+            does not resize as the months change. */}
+        <span {...stylex.props(styles.dropdownSizer)}>
+          <span {...stylex.props(styles.dropdownLabel)}>
+            <SelectValue />
+          </span>
+          {options.map((option) => (
+            <span
+              key={option.value}
+              aria-hidden
+              {...stylex.props(styles.dropdownLabel, styles.dropdownGhost)}
+            >
+              {option.label}
+            </span>
+          ))}
+        </span>
       </SelectTrigger>
-      <SelectContent align="start" alignItemWithTrigger={false}>
+      <SelectContent
+        align="start"
+        alignItemWithTrigger={false}
+        style={styles.dropdownPopup}
+      >
         {options.map((option) => (
           <SelectItem
             key={option.value}
@@ -262,13 +303,16 @@ const cellHeights = stylex.create({
   md: { height: space.s8 },
 });
 
-// Caption keeps the absolutely positioned nav buttons clear on both sides.
-const captionSizes = stylex.create({
-  sm: { height: space.s7, paddingInline: space.s7 },
-  md: { height: space.s8, paddingInline: space.s8 },
+// Room the caption leaves at both ends for the pinned nav buttons — one cell
+// wide, so the caption content clears them at every size.
+const navGutters = stylex.create({
+  sm: { paddingInline: space.s7 },
+  md: { paddingInline: space.s8 },
 });
 
-const dayButtonSizes = stylex.create({
+// One text scale for everything that reads as calendar body copy: the day
+// numbers, the caption label, and the dropdown triggers.
+const textSizes = stylex.create({
   sm: { fontSize: fontSize.xs },
   md: { fontSize: fontSize.sm },
 });
@@ -280,31 +324,29 @@ const styles = stylex.create({
     fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.control,
+    // Never wider than whatever the calendar is dropped into (a popover, a
+    // narrow card): the months strip below wraps instead of overflowing.
+    maxWidth: '100%',
     padding: space.s3,
-    position: 'relative',
   },
+  // Months wrap when they no longer fit side by side; the wrapped rows stay
+  // centred under the container rather than hugging its start edge.
   months: {
     display: 'flex',
     flexWrap: 'wrap',
     gap: space.s4,
-    position: 'relative',
+    justifyContent: 'center',
   },
   month: {
     display: 'flex',
     flexDirection: 'column',
     gap: space.s3,
+    // Anchors the two nav buttons to this month's caption row.
+    position: 'relative',
   },
-  // Previous/next float over the caption row, one at each end of the months
-  // strip (the caption reserves the room through its inline padding).
+  // Only rendered for `navLayout="after"`: both chevrons in a row under the
+  // caption. The `around` layout pins them individually (navButtonStart/End).
   nav: {
-    alignItems: 'center',
-    display: 'flex',
-    insetInline: 0,
-    justifyContent: 'space-between',
-    position: 'absolute',
-    top: 0,
-  },
-  navAfter: {
     alignItems: 'center',
     display: 'flex',
     gap: space.s1,
@@ -336,15 +378,26 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: 'background-color, color',
   },
+  // Pinned to the caption row of the month they belong to. Absolute, and the
+  // caption is not positioned, so the chevrons stay on top of it and stay
+  // clickable.
+  navButtonStart: {
+    insetInlineStart: 0,
+    position: 'absolute',
+    top: 0,
+  },
+  navButtonEnd: {
+    insetInlineEnd: 0,
+    position: 'absolute',
+    top: 0,
+  },
   monthCaption: {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
-    position: 'relative',
     width: '100%',
   },
   captionLabel: {
-    fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     lineHeight: lineHeight.control,
     userSelect: 'none',
@@ -354,17 +407,40 @@ const styles = stylex.create({
     display: 'flex',
     gap: space.s1,
     justifyContent: 'center',
-    position: 'relative',
   },
   dropdownTrigger: {
+    // Content-width, and never squeezed by the caption: the month name has to
+    // fit whatever the grid below happens to be wide.
+    flexShrink: 0,
     fontWeight: fontWeight.medium,
     gap: space.s1,
     minWidth: null,
     paddingInline: space.s2,
   },
+  // One grid cell holding every label; the widest one sets the width.
+  dropdownSizer: {
+    alignItems: 'center',
+    display: 'grid',
+  },
+  dropdownLabel: {
+    gridColumnStart: 1,
+    gridRowStart: 1,
+  },
+  dropdownGhost: {
+    visibility: 'hidden',
+  },
+  // The popup pads and indents its items, so anchor width alone would clip
+  // the very labels the trigger was widened to fit.
+  dropdownPopup: {
+    maxWidth: 'var(--available-width)',
+    minWidth: 'var(--anchor-width)',
+    width: 'auto',
+  },
   monthGrid: {
     borderCollapse: 'collapse',
     borderSpacing: 0,
+    // Keeps the grid centred when the caption (dropdowns) is the wider row.
+    marginInline: 'auto',
   },
   // Weekday column headers and week-number row headers share one look.
   gridHeader: {
@@ -374,9 +450,6 @@ const styles = stylex.create({
     padding: 0,
     textAlign: 'center',
     userSelect: 'none',
-  },
-  weekNumberHeader: {
-    padding: 0,
   },
   day: {
     padding: 0,

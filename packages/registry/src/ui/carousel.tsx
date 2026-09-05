@@ -111,6 +111,14 @@ export function Carousel({
   const handleKeyDownCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
     onKeyDownCapture?.(event);
     if (event.defaultPrevented) return;
+    // Slides can hold form controls; leave their own arrow-key handling alone.
+    if (
+      (event.target as HTMLElement | null)?.closest(
+        'input, textarea, select, [contenteditable]:not([contenteditable="false"])'
+      )
+    ) {
+      return;
+    }
     const prevKey = orientation === 'horizontal' ? 'ArrowLeft' : 'ArrowUp';
     const nextKey = orientation === 'horizontal' ? 'ArrowRight' : 'ArrowDown';
     if (event.key === prevKey) {
@@ -140,6 +148,7 @@ export function Carousel({
       <div
         role="region"
         aria-roledescription="carousel"
+        aria-label="Carousel"
         {...props}
         onKeyDownCapture={handleKeyDownCapture}
         {...stylex.props(styles.root, style)}
@@ -249,9 +258,9 @@ export function CarouselDots({ style, ...props }: DivProps & StyleProp) {
             aria-label={`Go to slide ${index + 1}`}
             aria-current={active ? 'true' : undefined}
             onClick={() => scrollTo(index)}
-            {...stylex.props(styles.dotButton)}
+            {...stylex.props(styles.dotButton, active && styles.dotButtonActive)}
           >
-            <span {...stylex.props(styles.dot, active && styles.dotActive)} />
+            <span {...stylex.props(styles.dot)} />
           </button>
         );
       })}
@@ -285,18 +294,32 @@ const styles = stylex.create({
   },
   dots: {
     display: 'flex',
-    gap: space.s2,
+    // Enough snaps to fill the width wrap onto a second row rather than
+    // squashing into ovals.
+    flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: space.s4,
+    // The row is empty until Embla reports its snap count on mount; reserving
+    // the button height keeps the first paint from shifting the page.
+    minHeight: space.s6,
   },
+  // The button is the pointer/touch target (24px); the dot inside it is the
+  // visual. No `gap` on the row — the padding around each dot already spaces
+  // them. Colour lives here, not on the dot, so hovering anywhere in the
+  // target lights it up; the dot just paints `currentColor`.
   dotButton: {
     alignItems: 'center',
     backgroundColor: 'transparent',
     borderRadius: radius.full,
     borderStyle: 'none',
+    color: {
+      default: colors.border,
+      ':hover': colors.mutedForeground,
+    },
     cursor: 'pointer',
     display: 'inline-flex',
-    height: space.s4,
+    flexShrink: 0,
+    height: space.s6,
     justifyContent: 'center',
     outline: {
       default: 'none',
@@ -304,24 +327,21 @@ const styles = stylex.create({
     },
     outlineOffset: stroke.focus,
     padding: 0,
-    width: space.s4,
+    width: space.s6,
   },
-  dot: {
-    backgroundColor: {
-      default: colors.border,
-      ':hover': colors.mutedForeground,
-    },
-    borderRadius: radius.full,
-    height: space.s2,
-    transitionDuration: duration.fast,
-    transitionProperty: 'background-color',
-    width: space.s2,
-  },
-  dotActive: {
-    backgroundColor: {
+  dotButtonActive: {
+    color: {
       default: colors.primary,
       ':hover': colors.primary,
     },
+  },
+  dot: {
+    backgroundColor: 'currentColor',
+    borderRadius: radius.full,
+    height: space.s2,
+    transitionDuration: duration.fast,
+    transitionProperty: 'color',
+    width: space.s2,
   },
 });
 
@@ -347,29 +367,44 @@ const itemOrientations = stylex.create({
   },
 });
 
-// Nav buttons sit outside the viewport, centred on the cross axis. `translate`
-// (not `transform`) so Button's own press-nudge transform still applies.
+// Nav buttons are centred on the cross axis and sit outside the viewport from
+// 640px up. Below that the gutter does not exist — the carousel is usually as
+// wide as the screen — so they overlay the first/last edge of the slide
+// instead of hanging off the page. `translate` (not `transform`) so Button's
+// own press-nudge transform still applies.
 const previousPositions = stylex.create({
   horizontal: {
-    left: `calc(-1 * ${space.s12})`,
+    left: {
+      default: space.s2,
+      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+    },
     top: '50%',
     translate: '0 -50%',
   },
   vertical: {
     left: '50%',
-    top: `calc(-1 * ${space.s12})`,
+    top: {
+      default: space.s2,
+      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+    },
     translate: '-50% 0',
   },
 });
 
 const nextPositions = stylex.create({
   horizontal: {
-    right: `calc(-1 * ${space.s12})`,
+    right: {
+      default: space.s2,
+      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+    },
     top: '50%',
     translate: '0 -50%',
   },
   vertical: {
-    bottom: `calc(-1 * ${space.s12})`,
+    bottom: {
+      default: space.s2,
+      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+    },
     left: '50%',
     translate: '-50% 0',
   },

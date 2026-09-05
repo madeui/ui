@@ -8,7 +8,13 @@ import { tooltip } from '@tanstack/charts/tooltip';
 
 import { container } from '@/lib/constants.stylex';
 
-import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  Chart,
+  ChartContainer,
+  ChartTooltipContent,
+  chartAxis,
+  chartTheme,
+} from '@/components/ui/chart';
 
 const signups = [
   { month: 'Jan', plan: 'Free', signups: 420 },
@@ -38,9 +44,15 @@ const definition = defineChart({
     }),
   ],
   scales: {
-    x: { scale: () => scalePoint().padding(0.1) },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Sign-ups' } },
+    x: { scale: () => scalePoint().padding(0.1), axis: chartAxis },
+    y: {
+      scale: scaleLinear,
+      nice: true,
+      grid: true,
+      axis: { ...chartAxis, label: 'Sign-ups' },
+    },
   },
+  theme: chartTheme,
   focus: 'group-x',
   tooltip,
 });

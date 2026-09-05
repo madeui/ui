@@ -18,7 +18,9 @@ export default function ResizableCollapsible() {
           defaultSize="30%"
           minSize="20%"
         >
-          <div {...stylex.props(styles.content)}>Sidebar</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>Sidebar</span>
+          </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="70%" minSize="40%">
@@ -42,7 +44,7 @@ const styles = stylex.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: colors.muted,
+    backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
     fontFamily: font.sans,
@@ -52,5 +54,13 @@ const styles = stylex.create({
     justifyContent: 'center',
     padding: space.s6,
     textAlign: 'center',
+  },
+  // Panels get narrow as the handle moves; a one-word label truncates
+  // instead of spilling across the divider.
+  label: {
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 });

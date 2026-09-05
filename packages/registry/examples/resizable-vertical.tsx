@@ -13,11 +13,15 @@ export default function ResizableVertical() {
     <div {...stylex.props(styles.frame)}>
       <ResizablePanelGroup orientation="vertical">
         <ResizablePanel defaultSize="30%" minSize="20%">
-          <div {...stylex.props(styles.content)}>Header</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>Header</span>
+          </div>
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize="70%" minSize="20%">
-          <div {...stylex.props(styles.content)}>Content</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>Content</span>
+          </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
@@ -37,7 +41,7 @@ const styles = stylex.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: colors.muted,
+    backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
     fontFamily: font.sans,
@@ -46,5 +50,13 @@ const styles = stylex.create({
     height: '100%',
     justifyContent: 'center',
     padding: space.s6,
+  },
+  // Panels get narrow as the handle moves; a one-word label truncates
+  // instead of spilling across the divider.
+  label: {
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 });

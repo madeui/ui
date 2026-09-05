@@ -18,7 +18,7 @@ export default function DatePickerRange() {
   });
 
   return (
-    <DatePicker mode="range" value={range} onValueChange={setRange} format="PP">
+    <DatePicker mode="range" value={range} onValueChange={setRange}>
       <DatePickerTrigger />
       <DatePickerContent numberOfMonths={2} />
     </DatePicker>

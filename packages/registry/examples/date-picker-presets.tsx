@@ -21,9 +21,15 @@ const presets = [
 
 export default function DatePickerPresets() {
   const [date, setDate] = React.useState<Date | undefined>();
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <DatePicker value={date} onValueChange={setDate}>
+    <DatePicker
+      open={open}
+      onOpenChange={setOpen}
+      value={date}
+      onValueChange={setDate}
+    >
       <DatePickerTrigger />
       <DatePickerContent>
         <div {...stylex.props(styles.presets)}>
@@ -32,7 +38,12 @@ export default function DatePickerPresets() {
               key={label}
               variant="outline"
               size="xs"
-              onClick={() => setDate(addDays(new Date(), days))}
+              onClick={() => {
+                setDate(addDays(new Date(), days));
+                // A preset is a complete choice, so it closes the popover the
+                // same way picking a day in the calendar does.
+                setOpen(false);
+              }}
             >
               {label}
             </Button>

@@ -16,10 +16,14 @@ import {
 import { container, fontSize, fontWeight, space } from '@/lib/constants.stylex';
 import { colors } from '@/lib/tokens.stylex';
 
+const SLIDES = [1, 2, 3, 4, 5];
+
 export default function CarouselApiExample() {
   const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  // Seeded from the slide list so the first paint reads "Slide 1 of 5"
+  // instead of "Slide 0 of 0"; Embla corrects both once it has measured.
+  const [current, setCurrent] = React.useState(1);
+  const [count, setCount] = React.useState(SLIDES.length);
 
   React.useEffect(() => {
     if (!api) return;
@@ -40,10 +44,10 @@ export default function CarouselApiExample() {
     <div {...stylex.props(styles.root)}>
       <Carousel setApi={setApi}>
         <CarouselContent>
-          {Array.from({ length: 5 }, (_, index) => (
-            <CarouselItem key={index}>
+          {SLIDES.map((slide) => (
+            <CarouselItem key={slide}>
               <Card style={styles.slide}>
-                <span {...stylex.props(styles.number)}>{index + 1}</span>
+                <span {...stylex.props(styles.number)}>{slide}</span>
               </Card>
             </CarouselItem>
           ))}

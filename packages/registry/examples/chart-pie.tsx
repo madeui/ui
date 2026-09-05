@@ -7,7 +7,7 @@ import { tooltip } from '@tanstack/charts/tooltip';
 
 import { container } from '@/lib/constants.stylex';
 
-import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import { Chart, ChartContainer, ChartTooltipContent, chartTheme } from '@/components/ui/chart';
 
 const browsers = [
   { browser: 'Chrome', share: 62 },
@@ -37,6 +37,7 @@ const definition = defineChart({
     }),
   ],
   scales: { x: null, y: null },
+  theme: chartTheme,
   // Polar points carry angle and radius, so the tooltip names its own rows.
   tooltip: {
     use: tooltip,

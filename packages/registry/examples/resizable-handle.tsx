@@ -13,11 +13,15 @@ export default function ResizableWithHandle() {
     <div {...stylex.props(styles.frame)}>
       <ResizablePanelGroup>
         <ResizablePanel defaultSize="25%" minSize="15%">
-          <div {...stylex.props(styles.content)}>Sidebar</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>Sidebar</span>
+          </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="75%" minSize="30%">
-          <div {...stylex.props(styles.content)}>Content</div>
+          <div {...stylex.props(styles.content)}>
+            <span {...stylex.props(styles.label)}>Content</span>
+          </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
@@ -37,7 +41,7 @@ const styles = stylex.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: colors.muted,
+    backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
     fontFamily: font.sans,
@@ -46,5 +50,13 @@ const styles = stylex.create({
     height: '100%',
     justifyContent: 'center',
     padding: space.s6,
+  },
+  // Panels get narrow as the handle moves; a one-word label truncates
+  // instead of spilling across the divider.
+  label: {
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 });

@@ -85,6 +85,8 @@ Autoplay is an Embla plugin from a separate package, `embla-carousel-autoplay`, 
 npm install embla-carousel-autoplay
 ```
 
+Autoplay attaches its mouse listeners to the scroll viewport, which does not contain the previous/next buttons. Pass `rootNode: (emblaRoot) => emblaRoot.parentElement` so hovering the buttons pauses it too. Its `stopOnFocusIn` only reacts to focus landing on a slide, so pause and resume from `onFocus`/`onBlur` on `Carousel` as well — without that a keyboard user has no way to stop the slides.
+
 <Component path="carousel-autoplay" />
 
 ## Loop
@@ -95,7 +97,13 @@ npm install embla-carousel-autoplay
 
 Built on [Embla Carousel](https://www.embla-carousel.com/). `opts` and `plugins` are passed straight to Embla — see the [Embla options](https://www.embla-carousel.com/api/options/) and [plugins](https://www.embla-carousel.com/plugins/) references. The carousel has no `variant` or `size` of its own; the navigation buttons take `Button`'s.
 
-The root is a `region` with `aria-roledescription="carousel"`; each item is a `group` with `aria-roledescription="slide"`. Arrow keys on the root scroll to the previous/next slide.
+The root is a `region` with `aria-roledescription="carousel"` and a default `aria-label` of "Carousel" — override it with your own `aria-label` when a page holds more than one. Each item is a `group` with `aria-roledescription="slide"`; give slides an `aria-label` such as `"1 of 5"` when their content does not name them.
+
+Arrow keys scroll to the previous/next slide while focus is inside the carousel. They are ignored when the focused element is an input, textarea, select, or `contenteditable`, so form controls on a slide keep their own arrow-key behaviour.
+
+### Button placement
+
+`CarouselPrevious` and `CarouselNext` sit in the gutter outside the viewport from 640px up, and overlay the leading/trailing edge of the track below that, where there is no gutter to hang in. Leave `space.s12` of room on the sides (horizontal) or above and below (vertical) at the wider sizes — the vertical example does this with `marginBlock`. Override `left`/`right`/`top`/`bottom` through `style` to place them somewhere else.
 
 ### Carousel
 
@@ -121,7 +129,7 @@ Render `Button` and accept all of its props. They are disabled when there is not
 
 ### CarouselDots
 
-One button per scroll snap, labelled "Go to slide N"; the active dot has `aria-current="true"`. Accepts all native `div` props.
+One button per scroll snap, labelled "Go to slide N"; the active dot has `aria-current="true"`. Each dot is an 8px mark inside a 24px pointer target. The row reserves its height so it does not shift the page when Embla reports the snap count on mount. Accepts all native `div` props.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |

@@ -37,6 +37,8 @@ const [date, setDate] = React.useState<Date | undefined>(new Date());
 
 `captionLayout="dropdown"` swaps the caption for month and year selects, rendered with this library's [Select](/docs/components/select). `startMonth` / `endMonth` bound the navigable years.
 
+Each trigger is sized to the longest label in the active locale, so month names are never truncated and the caption keeps its width as you move through the year.
+
 <Component path="calendar-dropdown" />
 
 ## Disabled days
@@ -70,9 +72,10 @@ Built on [react-day-picker](https://daypicker.dev). The table below covers the p
 | `size` | `'sm' \| 'md'` | `'md'` | Day cell size: `md` is 32px cells, `sm` is 28px. |
 | `showOutsideDays` | `boolean` | `true` | Changed default — days of the adjacent months fill the grid. |
 | `captionLayout` | `'label' \| 'dropdown' \| 'dropdown-months' \| 'dropdown-years'` | `'label'` | Dropdown variants render the month / year pickers as `Select`. |
+| `navLayout` | `'around' \| 'after'` | `'around'` | Changed default — each chevron is pinned to the caption row of its own month, so they stay aligned when the months wrap. `'after'` puts both chevrons in a row under the caption. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last on the root — always win over the component's own styles. |
 
-Every slot is styled through react-day-picker's `classNames` prop with StyleX classes; your own `classNames` are merged last, so a key you pass replaces ours for that slot.
+Every slot is styled through react-day-picker's `classNames` prop with StyleX classes; your own `classNames` are merged last, so a key you pass replaces ours for that slot. The `nav` key only applies to `navLayout="after"` — the `around` default styles `button_previous` and `button_next` directly.
 
 ### Slots
 

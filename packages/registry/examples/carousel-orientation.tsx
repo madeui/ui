@@ -29,9 +29,10 @@ export default function CarouselOrientation() {
 }
 
 const styles = stylex.create({
-  // Room for the previous/next buttons, which sit above and below the track.
+  // Room for the previous/next buttons, which sit above and below the track
+  // from 640px up. Narrower than that they overlay the track and need none.
   carousel: {
-    marginBlock: space.s12,
+    marginBlock: { default: 0, '@media (min-width: 640px)': space.s12 },
     maxWidth: container.md,
     width: '100%',
   },

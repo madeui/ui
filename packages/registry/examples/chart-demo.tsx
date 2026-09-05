@@ -8,7 +8,13 @@ import { tooltip } from '@tanstack/charts/tooltip';
 
 import { container } from '@/lib/constants.stylex';
 
-import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  Chart,
+  ChartContainer,
+  ChartTooltipContent,
+  chartAxis,
+  chartTheme,
+} from '@/components/ui/chart';
 
 const revenue = [
   { month: 'Jan', revenue: 18600 },
@@ -23,9 +29,15 @@ const revenue = [
 const definition = defineChart({
   marks: [barY(revenue, { x: 'month', y: 'revenue' })],
   scales: {
-    x: { scale: () => scaleBand().padding(0.3) },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Revenue' } },
+    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
+    y: {
+      scale: scaleLinear,
+      nice: true,
+      grid: true,
+      axis: { ...chartAxis, label: 'Revenue' },
+    },
   },
+  theme: chartTheme,
   // Row order and labels of the single-point tooltip; `'y'` reuses the axis label.
   tooltip: { use: tooltip, items: [{ channel: 'x', label: 'Month' }, 'y'] },
 });

@@ -31,16 +31,31 @@ export interface ResizablePanelGroupProps
   style?: stylex.StyleXStyles;
 }
 
+// The handle draws a 1px line; the library widens the *pointer* target around
+// it to this many CSS pixels. Its own default for coarse pointers (20) is
+// under the 24px floor of WCAG 2.2 "Target Size (Minimum)", so a touch drag
+// on the line is easy to miss. Module-level so the object identity is stable
+// across renders. Override per group with `resizeTargetMinimumSize`.
+const resizeTarget = { coarse: 24, fine: 10 };
+
 /**
  * Fills its parent (width and height 100%) and lays the panels out as a flex
  * row (`horizontal`) or column (`vertical`); size the parent to size the group.
  */
 export function ResizablePanelGroup({
   orientation = 'horizontal',
+  resizeTargetMinimumSize = resizeTarget,
   style,
   ...props
 }: ResizablePanelGroupProps) {
-  return <Group orientation={orientation} {...props} {...stylex.props(style)} />;
+  return (
+    <Group
+      orientation={orientation}
+      resizeTargetMinimumSize={resizeTargetMinimumSize}
+      {...props}
+      {...stylex.props(style)}
+    />
+  );
 }
 
 export interface ResizablePanelProps
@@ -69,7 +84,11 @@ export function ResizableHandle({
   ...props
 }: ResizableHandleProps) {
   return (
-    <Separator {...props} {...stylex.props(styles.separator, style)}>
+    <Separator
+      aria-label="Resize panels"
+      {...props}
+      {...stylex.props(styles.separator, style)}
+    >
       {withHandle ? (
         <div {...stylex.props(styles.grip)}>
           <GripVertical {...stylex.props(icon.xs)} />
@@ -120,11 +139,16 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: 'background-color',
     transitionTimingFunction: easing.out,
+    // A pointer press on the line is a drag, never a text selection: without
+    // this the browser starts selecting the neighbouring panel's text.
+    userSelect: 'none',
     width: {
       default: stroke.border,
       '[aria-orientation="horizontal"]': '100%',
     },
   },
+  // 16x24 around a 12px icon: the pill's 1px border needs room, and a smaller
+  // box would let the grip paint over its own edge.
   grip: {
     alignItems: 'center',
     backgroundColor: colors.border,
@@ -135,9 +159,9 @@ const styles = stylex.create({
     color: colors.foreground,
     display: 'flex',
     flexShrink: 0,
-    height: space.s4,
+    height: space.s6,
     justifyContent: 'center',
     transform: 'rotate(var(--grip-rotation, 0deg))',
-    width: space.s3,
+    width: space.s4,
   },
 });

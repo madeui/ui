@@ -85,15 +85,16 @@ function useDatePicker(part: string) {
   return context;
 }
 
-// Controlled / uncontrolled state in one hook: the controlled value wins
-// whenever it is passed, the internal state carries the uncontrolled case.
+// Controlled / uncontrolled state in one hook. `isControlled` is passed in
+// rather than derived from `controlled !== undefined`, because `undefined` is
+// a real controlled value here — an empty selection.
 function useControlled<T>(
+  isControlled: boolean,
   controlled: T | undefined,
   defaultValue: T | undefined,
   onChange?: (next: T) => void
 ) {
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue);
-  const isControlled = controlled !== undefined;
   const value = isControlled ? controlled : uncontrolled;
   const set = React.useCallback(
     (next: T) => {
@@ -116,7 +117,9 @@ export function DatePicker(props: DatePickerProps) {
     value: valueProp,
     defaultValue,
     onValueChange,
-    format = 'PPP',
+    // A range prints two dates side by side, so it defaults to the shorter
+    // `PP` ("Sep 5, 2026") — `PPP` twice overruns the trigger.
+    format = mode === 'range' ? 'PP' : 'PPP',
     locale,
     disabled = false,
     placeholder = mode === 'range' ? 'Pick a date range' : 'Pick a date',
@@ -127,11 +130,16 @@ export function DatePicker(props: DatePickerProps) {
   } = props;
 
   const [value, setValue] = useControlled<DatePickerValueType>(
+    'value' in props,
     valueProp,
     defaultValue,
     onValueChange as ((next: DatePickerValueType) => void) | undefined
   );
-  const [open, setOpen] = useControlled<boolean>(openProp, defaultOpen ?? false);
+  const [open, setOpen] = useControlled<boolean>(
+    openProp !== undefined,
+    openProp,
+    defaultOpen ?? false
+  );
 
   const context = React.useMemo<DatePickerContextValue>(
     () => ({
@@ -244,6 +252,27 @@ export interface DatePickerContentProps
   children?: React.ReactNode;
 }
 
+// Months sit side by side, so more than one needs room the small viewports do
+// not have: below this breakpoint the calendar drops back to a single month
+// instead of wrapping the strip or pushing the popup past the screen edge.
+const MULTI_MONTH_QUERY = '(min-width: 640px)';
+
+function subscribeToMultiMonth(onChange: () => void) {
+  const query = window.matchMedia(MULTI_MONTH_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+// Server render assumes the wide layout; the popup only mounts on open, which
+// is always after hydration, so the first painted popup is already correct.
+function useFitsMultipleMonths() {
+  return React.useSyncExternalStore(
+    subscribeToMultiMonth,
+    () => window.matchMedia(MULTI_MONTH_QUERY).matches,
+    () => true
+  );
+}
+
 /**
  * PopoverContent with the wired Calendar. `children` render before the
  * calendar in a column; every other prop goes to the Calendar.
@@ -257,6 +286,10 @@ export function DatePickerContent({
   size,
   children,
   defaultMonth,
+  numberOfMonths,
+  // The calendar takes focus on open (the selected day, else today), so the
+  // arrow keys work straight away instead of after tabbing past the nav.
+  autoFocus = true,
   // A click on a complete range starts a new one instead of stretching it;
   // otherwise every click after the first pick would close the popover.
   resetOnSelect = true,
@@ -264,9 +297,12 @@ export function DatePickerContent({
 }: DatePickerContentProps) {
   const { mode, value, setValue, setOpen, locale } =
     useDatePicker('DatePickerContent');
+  const fitsMultipleMonths = useFitsMultipleMonths();
 
   const shared = {
     ...calendarProps,
+    autoFocus,
+    numberOfMonths: fitsMultipleMonths ? numberOfMonths : 1,
     size,
     locale,
     style: styles.calendar,
@@ -304,6 +340,10 @@ export function DatePickerContent({
       sideOffset={sideOffset}
       align={align}
       alignOffset={alignOffset}
+      // The calendar takes focus itself (see `autoFocus`); without this Base
+      // UI would move focus to the first tabbable element, the nav button.
+      // With `autoFocus={false}` its default focus handling stays in charge.
+      initialFocus={!autoFocus}
       style={[styles.content, style]}
     >
       {children}
@@ -329,14 +369,26 @@ const styles = stylex.create({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+  // Sizing rule: the popup is as wide as the calendar asks for, but never
+  // narrower than the trigger (`--anchor-width`) and never wider than the
+  // room the viewport leaves (`--available-width`), so a two-month calendar
+  // is free to outgrow the trigger while a one-month one lines up with it.
   content: {
     display: 'flex',
     flexDirection: 'column',
     gap: space.s3,
+    maxHeight: 'var(--available-height)',
+    maxWidth: 'var(--available-width)',
+    minWidth: 'var(--anchor-width)',
+    overflow: 'auto',
     padding: space.s3,
     width: 'auto',
   },
+  // Centred rather than stretched: the calendar keeps its natural width, so
+  // the nav chevrons stay on the edges of the month grid when the popup is
+  // wider than the calendar.
   calendar: {
+    alignSelf: 'center',
     padding: 0,
   },
 });
