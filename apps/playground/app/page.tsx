@@ -68,6 +68,30 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  DatePicker,
+  DatePickerContent,
+  DatePickerTrigger,
+} from '@/components/ui/date-picker';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import { barY, defineChart } from '@tanstack/charts';
+import { scaleBand } from '@tanstack/charts/scales/band';
+import { scaleLinear } from '@tanstack/charts/scales/linear';
+import { tooltip } from '@tanstack/charts/tooltip';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
@@ -310,6 +334,24 @@ function ToastButton() {
     </Button>
   );
 }
+
+// Chart definition at module scope: its identity is the chart's update boundary.
+const revenue = [
+  { month: 'Jan', revenue: 18600 },
+  { month: 'Feb', revenue: 30500 },
+  { month: 'Mar', revenue: 23700 },
+  { month: 'Apr', revenue: 7300 },
+  { month: 'May', revenue: 20900 },
+  { month: 'Jun', revenue: 21400 },
+];
+const revenueChart = defineChart({
+  marks: [barY(revenue, { x: 'month', y: 'revenue' })],
+  scales: {
+    x: { scale: () => scaleBand().padding(0.3) },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Revenue' } },
+  },
+  tooltip: { use: tooltip, items: [{ channel: 'x', label: 'Month' }, 'y'] },
+});
 
 export default function Home() {
   const [dark, setDark] = useState(false);
@@ -959,6 +1001,56 @@ export default function Home() {
             </ScrollArea>
           </div>
         </section>
+        <section {...stylex.props(styles.row)} data-section="external">
+          <Calendar mode="single" defaultMonth={new Date(2026, 8, 1)} />
+          <div {...stylex.props(styles.col)}>
+            <DatePicker>
+              <DatePickerTrigger />
+              <DatePickerContent />
+            </DatePicker>
+            <DatePicker mode="range" placeholder="Pick a date range">
+              <DatePickerTrigger />
+              <DatePickerContent numberOfMonths={2} />
+            </DatePicker>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="external-2">
+          <div {...stylex.props(styles.resizableFrame)}>
+            <ResizablePanelGroup>
+              <ResizablePanel defaultSize="50%" minSize="20%">
+                <div {...stylex.props(styles.panelContent)}>One</div>
+              </ResizablePanel>
+              <ResizableHandle withHandle />
+              <ResizablePanel defaultSize="50%" minSize="20%">
+                <div {...stylex.props(styles.panelContent)}>Two</div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+          <Carousel style={styles.carousel}>
+            <CarouselContent>
+              {Array.from({ length: 5 }, (_, index) => (
+                <CarouselItem key={index}>
+                  <div {...stylex.props(styles.slide)}>{index + 1}</div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+            <CarouselDots />
+          </Carousel>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="external-3">
+          <ChartContainer style={styles.chart}>
+            <Chart
+              definition={revenueChart}
+              height={240}
+              ariaLabel="Monthly revenue, January to June"
+              renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
+            />
+          </ChartContainer>
+        </section>
       </main>
       <Toaster />
     </ToastProvider>
@@ -966,6 +1058,41 @@ export default function Home() {
 }
 
 const styles = stylex.create({
+  resizableFrame: {
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
+    height: container.xs,
+    overflow: 'hidden',
+    width: container.lg,
+  },
+  panelContent: {
+    alignItems: 'center',
+    backgroundColor: colors.muted,
+    display: 'flex',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    height: '100%',
+    justifyContent: 'center',
+  },
+  carousel: {
+    marginInline: space.s12,
+    width: container.sm,
+  },
+  slide: {
+    alignItems: 'center',
+    aspectRatio: '1',
+    backgroundColor: colors.muted,
+    borderRadius: radius.lg,
+    display: 'flex',
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
+    justifyContent: 'center',
+  },
+  chart: {
+    maxWidth: container.xxl,
+  },
   headerActions: {
     display: 'flex',
     gap: space.s2,

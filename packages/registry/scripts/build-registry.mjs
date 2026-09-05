@@ -72,8 +72,18 @@ const DESCRIPTIONS = {
     'Small status descriptor. Variants: primary, secondary, outline, ghost, destructive.',
   button:
     'Button built on Base UI. Variants: primary, secondary, outline, ghost, destructive. Sizes: xs, sm, md, lg, icon, iconXs, iconSm, iconLg.',
+  calendar:
+    'Month calendar built on react-day-picker: single, multiple, and range selection; dropdown month/year navigation. Sizes: sm, md.',
   card:
     'Content container with header, action, content, and footer sections. Sizes: md, sm.',
+  carousel:
+    'Slide carousel built on Embla: content, items, previous/next buttons, dots; horizontal or vertical.',
+  chart:
+    'Charts built on TanStack Charts (alpha, pinned): themed container, tooltip body, and HTML legend.',
+  'date-picker':
+    'Date picker composing Popover, Button, and Calendar: single or range mode, formatted value, presets.',
+  resizable:
+    'Resizable panel groups built on react-resizable-panels: horizontal or vertical, optional handle grip.',
   checkbox: 'Checkbox built on Base UI with checked/indeterminate states.',
   dialog: 'Modal dialog built on Base UI Dialog.',
   'dropdown-menu':
@@ -89,6 +99,17 @@ const DESCRIPTIONS = {
   toast:
     'Stacked, swipeable notifications built on Base UI Toast with an imperative toast() API.',
   tooltip: 'Text label on hover/focus, built on Base UI Tooltip.',
+};
+
+// Third-party packages a component may import, mapped to the dependency spec
+// the CLI installs. Detected from `from '<pkg>'` / `from '<pkg>/...'` imports.
+// Pinned exactly where the upstream is pre-1.0 (breaking minors).
+const EXTERNAL_DEPENDENCIES = {
+  'react-day-picker': 'react-day-picker@^10',
+  'date-fns': 'date-fns@^4',
+  'embla-carousel-react': 'embla-carousel-react@^8',
+  'react-resizable-panels': 'react-resizable-panels@^4',
+  '@tanstack/charts': '@tanstack/charts@0.16.0',
 };
 
 const read = (path) => readFile(join(root, path), 'utf8');
@@ -118,6 +139,11 @@ const uiItem = async (name) => {
   }
   if (content.includes("from 'lucide-react'")) {
     dependencies.push('lucide-react');
+  }
+  for (const [pkg, spec] of Object.entries(EXTERNAL_DEPENDENCIES)) {
+    if (content.includes(`from '${pkg}'`) || content.includes(`from '${pkg}/`)) {
+      dependencies.push(spec);
+    }
   }
   const registryDependencies = ['@madeui/theme'];
   if (content.includes("'@/lib/stylex-utils'")) {

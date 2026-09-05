@@ -6,12 +6,18 @@
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@stylexjs/stylex": "^0.19.0",
+    "@tanstack/charts": "0.16.0",
+    "date-fns": "^4.4.0",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^1.39.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-day-picker": "^10.0.1",
+    "react-dom": "^19.0.0",
+    "react-resizable-panels": "^4.12.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
+    "embla-carousel-autoplay": "^8.6.0",
     "typescript": "^5.6.0"
   }
 }

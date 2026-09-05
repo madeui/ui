@@ -6,9 +6,10 @@ installed as a package — built on [Base UI](https://base-ui.com) (headless
 behavior and accessibility) and [StyleX](https://stylexjs.com) (compile-time
 atomic CSS).
 
-- **54 components** — Button and Dialog through Combobox with multi-select
+- **59 components** — Button and Dialog through Combobox with multi-select
   chips, Command palette, Drawer, Toast, plus Autocomplete, Meter, Number
-  Field, Toolbar, and Checkbox Group
+  Field, Toolbar, Checkbox Group, Calendar, Date Picker, Carousel,
+  Resizable, and Chart
 - **You own the source** — no package to depend on; edit anything
 - **Typed, token-bound styles** — every color, space, type, and motion
   value comes from a typed design-token scale. Tokens are imports, not

@@ -1,0 +1,135 @@
+---
+title: Date Picker
+description: "A button that opens a calendar in a popover, for one date or a range."
+---
+
+<Component path="date-picker-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add date-picker
+```
+
+Installs `react-day-picker` and `date-fns` alongside the component, plus the `calendar`, `button`, and `popover` components it composes.
+
+## Usage
+
+```tsx
+import {
+  DatePicker,
+  DatePickerContent,
+  DatePickerTrigger,
+} from '@/components/ui/date-picker';
+```
+
+```tsx
+<DatePicker>
+  <DatePickerTrigger />
+  <DatePickerContent />
+</DatePicker>
+```
+
+## Composition
+
+```tsx
+<DatePicker>
+  <DatePickerTrigger>
+    <DatePickerValue />
+  </DatePickerTrigger>
+  <DatePickerContent>
+    {/* optional presets / controls, rendered above the calendar */}
+  </DatePickerContent>
+</DatePicker>
+```
+
+## Range
+
+The popover stays open until both ends of the range are chosen. Two months sit
+side by side on wide screens; below `640px` the calendar falls back to a single
+month so the popup still fits the viewport.
+
+<Component path="date-picker-range" />
+
+## Dropdown caption
+
+<Component path="date-picker-dropdown" />
+
+## Presets
+
+Children of `DatePickerContent` render above the calendar; here a row of buttons
+sets the controlled value. A preset is a complete choice, so the example also
+controls `open` and closes the popover after the click.
+
+<Component path="date-picker-presets" />
+
+## Form
+
+<Component path="date-picker-form" />
+
+## Disabled
+
+<Component path="date-picker-disabled" />
+
+## API reference
+
+Composes [Popover](/docs/components/popover), [Button](/docs/components/button), and [Calendar](/docs/components/calendar). The selection state lives in `DatePicker`; the tables below cover the props each part adds — everything else is forwarded to the part it wraps.
+
+### DatePicker (Root)
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mode` | `'single' \| 'range'` | `'single'` | Selection mode. Decides the value type of the props below. |
+| `value` | `Date \| undefined` (single) / `DateRange \| undefined` (range) | — | Controlled value. |
+| `defaultValue` | same as `value` | — | Uncontrolled initial value. |
+| `onValueChange` | `(value) => void` | — | Called with the new value on every selection. |
+| `format` | `string` | `'PPP'` / `'PP'` (range) | `date-fns` format string used by `DatePickerValue`. A range prints two dates, so it defaults to the shorter form. |
+| `locale` | `Locale` | — | `date-fns` locale, applied to the formatted value and the calendar. |
+| `placeholder` | `string` | `'Pick a date'` / `'Pick a date range'` | Shown while nothing is selected. |
+| `disabled` | `boolean` | `false` | Disables the trigger. |
+| `open` / `defaultOpen` / `onOpenChange` | — | — | Forwarded to the Popover root. The popover closes itself after a single date is chosen, or once a range is complete. |
+
+### DatePickerTrigger
+
+Renders this library's `Button` as the popover trigger, with a leading calendar icon. Children default to `<DatePickerValue />`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `ButtonVariant` | `'outline'` |  |
+| `size` | `ButtonSize` | `'md'` |  |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+### DatePickerValue
+
+A `<span>` with the formatted selection (range: `from – to`, or `from` alone while incomplete) or the placeholder. Muted while empty. Accepts `style` and all native `span` props.
+
+### DatePickerContent
+
+`PopoverContent` with the wired `Calendar` (`mode`, `selected`, `onSelect`, `locale`, and `defaultMonth` come from the root). `children` render above the calendar in a column.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` / `sideOffset` / `align` / `alignOffset` | — | `align="start"` | Popover positioning. |
+| `size` | `'sm' \| 'md'` | `'md'` | Calendar cell size. |
+| `style` | `StyleXStyles` | — | Merged last on the popup. |
+| `numberOfMonths` | `number` | `1` | Months shown side by side. Clamped to one below `640px`, where a wider strip would not fit. |
+| `autoFocus` | `boolean` | `true` | The calendar takes focus on open (the selected day, else today) so the arrow keys work straight away. |
+| `resetOnSelect` | `boolean` | `true` | Range mode: a click on a complete range starts a new one instead of extending it. |
+| any other `Calendar` prop | — | — | `captionLayout`, `disabled`, `startMonth`, `endMonth`, `showWeekNumber`, `min`, `max`, … are forwarded to `Calendar`. |
+
+### Popup width
+
+The popup is as wide as the calendar asks for, clamped on both sides:
+
+- Never narrower than the trigger. A single month is narrower than the default
+  trigger, so the popup stretches to `--anchor-width` and the calendar sits
+  centred inside it.
+- Never wider than `--available-width`, the room the viewport leaves next to
+  the trigger. A two-month calendar is free to outgrow the trigger.
+
+Set a width on the popup with `style` to override the rule, and on the trigger
+to change what the popup matches.
+
+### Styling
+
+`DatePickerTrigger`, `DatePickerValue`, and `DatePickerContent` accept `style` (`StyleXStyles`, merged last so caller overrides always win).

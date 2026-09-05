@@ -29,6 +29,14 @@ export const colors = stylex.defineVars({
   input: 'oklch(0.922 0 0)',
   ring: 'oklch(0.708 0 0)',
   overlay: 'oklch(0% 0 0deg / 50%)',
+  // Categorical series palette for charts (chart.tsx maps these onto the
+  // chart library's palette variables). Six slots, in assignment order.
+  chart1: 'oklch(0.646 0.222 41.116)',
+  chart2: 'oklch(0.6 0.118 184.704)',
+  chart3: 'oklch(0.398 0.07 227.392)',
+  chart4: 'oklch(0.828 0.189 84.429)',
+  chart5: 'oklch(0.769 0.188 70.08)',
+  chart6: 'oklch(0.55 0.2 300)',
 });
 
 export const radius = stylex.defineVars({
