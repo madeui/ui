@@ -13,6 +13,8 @@ import {
   ChartContainer,
   ChartTooltipContent,
   chartAxis,
+  chartCurve,
+  chartGridAxis,
   chartTheme,
 } from '@/components/ui/chart';
 
@@ -32,19 +34,22 @@ const visitors = [
 ];
 
 // `z` splits the rows into series; with no explicit color scale, each series
-// takes the next slot of the palette the container provides.
+// takes the next slot of the palette the container provides. No per-point dots:
+// grouped focus marks the hovered month on every line, which is the only place
+// a dot carries information.
 const definition = defineChart({
   marks: [
-    lineY(visitors, { x: 'month', y: 'visitors', z: 'device', strokeWidth: 2, points: true }),
+    lineY(visitors, {
+      x: 'month',
+      y: 'visitors',
+      z: 'device',
+      strokeWidth: 2,
+      curve: chartCurve,
+    }),
   ],
   scales: {
     x: { scale: () => scalePoint().padding(0.2), axis: chartAxis },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      grid: true,
-      axis: { ...chartAxis, label: 'Visitors' },
-    },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
   },
   theme: chartTheme,
   focus: 'group-x',
@@ -56,7 +61,7 @@ export default function ChartLine() {
     <ChartContainer style={styles.chart}>
       <Chart
         definition={definition}
-        height={240}
+        aspectRatio={16 / 9}
         ariaLabel="Monthly visitors by device"
         renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
       />

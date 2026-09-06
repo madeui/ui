@@ -13,6 +13,7 @@ import {
   ChartContainer,
   ChartTooltipContent,
   chartAxis,
+  chartGridAxis,
   chartTheme,
 } from '@/components/ui/chart';
 
@@ -26,20 +27,26 @@ const revenue = [
 ];
 
 // Module-scope definition: its identity is the chart's update boundary.
+// `radius` is a corner radius in scene pixels and rounds all four corners of
+// the bar, so it stays small enough not to lift the bar off the baseline.
 const definition = defineChart({
-  marks: [barY(revenue, { x: 'month', y: 'revenue' })],
+  marks: [barY(revenue, { x: 'month', y: 'revenue', radius: 4 })],
   scales: {
     x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      grid: true,
-      axis: { ...chartAxis, label: 'Revenue' },
-    },
+    // `chartGridAxis` keeps the scale and its gridlines and drops the visible
+    // axis: the grid already carries the magnitude, and the tooltip carries
+    // the value.
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
   },
   theme: chartTheme,
-  // Row order and labels of the single-point tooltip; `'y'` reuses the axis label.
-  tooltip: { use: tooltip, items: [{ channel: 'x', label: 'Month' }, 'y'] },
+  // Row order and labels of the single-point tooltip.
+  tooltip: {
+    use: tooltip,
+    items: [
+      { channel: 'x', label: 'Month' },
+      { channel: 'y', label: 'Revenue' },
+    ],
+  },
 });
 
 export default function ChartDemo() {
@@ -47,7 +54,7 @@ export default function ChartDemo() {
     <ChartContainer style={styles.chart}>
       <Chart
         definition={definition}
-        height={240}
+        aspectRatio={16 / 9}
         ariaLabel="Monthly revenue, January to June"
         renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
       />

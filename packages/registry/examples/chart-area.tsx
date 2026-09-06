@@ -13,6 +13,8 @@ import {
   ChartContainer,
   ChartTooltipContent,
   chartAxis,
+  chartCurve,
+  chartGridAxis,
   chartTheme,
 } from '@/components/ui/chart';
 
@@ -32,7 +34,10 @@ const signups = [
 ];
 
 // `stack()` pins the series order so layers never swap between updates; the
-// tooltip reports each layer's own value, not the cumulative edge.
+// tooltip reports each layer's own value, not the cumulative edge. Each layer
+// is its palette color at 40%: `stroke` is left off because the library
+// strokes the layer's closed path, which would draw an edge down both sides
+// and along the bottom as well as over the top.
 const definition = defineChart({
   marks: [
     areaY(signups, {
@@ -40,17 +45,13 @@ const definition = defineChart({
       y: 'signups',
       color: 'plan',
       layout: stack({ order: ['Free', 'Pro'] }),
-      fillOpacity: 0.7,
+      curve: chartCurve,
+      fillOpacity: 0.4,
     }),
   ],
   scales: {
     x: { scale: () => scalePoint().padding(0.1), axis: chartAxis },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      grid: true,
-      axis: { ...chartAxis, label: 'Sign-ups' },
-    },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
   },
   theme: chartTheme,
   focus: 'group-x',
@@ -62,7 +63,7 @@ export default function ChartArea() {
     <ChartContainer style={styles.chart}>
       <Chart
         definition={definition}
-        height={240}
+        aspectRatio={16 / 9}
         ariaLabel="Monthly sign-ups by plan, stacked"
         renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
       />

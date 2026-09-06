@@ -5,6 +5,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type {
   ChartAxisPresentationOptions,
+  ChartCurve,
   ChartKey,
   ChartPoint,
   ChartScene,
@@ -14,6 +15,7 @@ import type {
   ChartValue,
   RenderChartSvgOptions,
   ResolvedColorScale,
+  SceneNode,
 } from '@tanstack/charts';
 import {
   Chart as BaseChart,
@@ -50,51 +52,44 @@ export interface ChartProps<
 
 /**
  * TanStack Charts' React component (the tooltip-capable entry, so
- * `renderTooltipBody` is available) with two house behaviors added: the
- * surface carries the focus-visible ring, and the chart is revealed once the
- * browser has measured its container. Create definitions at module scope or
- * inside `useMemo` — definition identity is the update boundary.
+ * `renderTooltipBody` is available) with the house surface: the `<svg>` carries
+ * the focus-visible ring and the gridlines are restyled to the house hairline.
+ * Create definitions at module scope or inside `useMemo` — definition identity
+ * is the update boundary.
+ *
+ * Size a chart with `aspectRatio` rather than `height`. The server cannot
+ * measure the container, so it lays the scene out at `initialWidth` (640) and
+ * gives the `<svg>` a `viewBox` of that size; the browser then fits that box
+ * into the host. With `aspectRatio` the host box has the same ratio as the
+ * `viewBox`, so the server-rendered chart fills it and only its scale differs
+ * from the hydrated one. A fixed `height` makes the two ratios disagree and the
+ * scene is letterboxed inside the host until the chart mounts. Set
+ * `initialWidth` to the layout's usual width to shrink the remaining
+ * difference to nothing.
  */
 export function Chart<
   TDatum,
   TXValue extends ChartValue = ChartValue,
   TYValue extends ChartValue = ChartValue,
->({ renderSvg, style, ...props }: ChartProps<TDatum, TXValue, TYValue>) {
-  // A server cannot measure the container, so its SVG is laid out at
-  // `initialWidth` and the browser scales that scene to fit until the chart
-  // mounts — the "paints small, then grows" first frame. The chart re-renders
-  // at the measured width in a layout effect, so revealing it on mount makes
-  // the first painted frame the final one. The host div keeps its box while
-  // hidden, so nothing shifts. Charts need scripting either way: without it
-  // there is no pointer, keyboard, or tooltip behavior.
-  const [measured, setMeasured] = React.useState(false);
-  useIsomorphicLayoutEffect(() => setMeasured(true), []);
-
+>({ renderSvg, ...props }: ChartProps<TDatum, TXValue, TYValue>) {
   return (
     <BaseChart
       {...(props as ChartProps<TDatum, TXValue, TYValue>)}
       renderSvg={renderSvg ?? renderChartSurface}
-      style={measured ? style : { ...style, visibility: 'hidden' }}
     />
   );
 }
 
-// `useLayoutEffect` commits before the browser paints, which is what keeps the
-// reveal from costing a frame; on the server React skips it and warns, so the
-// environment picks the effect. The branch is constant per environment, so the
-// hook order never changes between renders.
-const useIsomorphicLayoutEffect =
-  typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
-
 // The surface is markup the library serializes, not a React element, so its
-// styles ride the class name `renderChartSvg` puts on the `<svg>`.
+// styles ride the class name `renderChartSvg` puts on the `<svg>`, and its
+// scene is restyled on the way to the serializer.
 function renderChartSurface<
   TDatum,
   TXValue extends ChartValue,
   TYValue extends ChartValue,
 >(scene: ChartScene<TDatum, TXValue, TYValue>, options: RenderChartSvgOptions) {
   const { className } = stylex.props(styles.surface);
-  return renderChartSvg(scene as ChartScene, {
+  return renderChartSvg(withHouseGrid(scene as ChartScene), {
     ...options,
     className: options.className ? `${options.className} ${className}` : className,
   });
@@ -104,14 +99,47 @@ function renderChartSurface<
 
 // The scene is a numeric space in SVG user units, so scene-side sizes mirror
 // the CSS scale at the 16px root. Themeable tokens resolve to `var()` and
-// cannot be used here — only `defineConsts` scales can.
+// cannot be used for sizes here — only `defineConsts` scales can. Colors are
+// the exception: they are serialized as SVG paint attributes, which resolve
+// `var()` the same way CSS does.
 const scenePx = (rem: string) => Number.parseFloat(rem) * 16;
+// The stroke scale is written in pixels already, so it converts one to one.
+const strokePx = (px: string) => Number.parseFloat(px);
+
+// Gridlines are painted from `theme.grid` at a fixed 11% opacity and stroke
+// width 1, and `grid` on a scale is a plain boolean — the library has no hook
+// for their dash or weight. `renderSvg` hands over the whole scene before it is
+// serialized, though, and `SceneStyle` is public, so the grid group is restyled
+// here: one dashed hairline in `colors.border`, at full opacity so the token is
+// the color that lands rather than a fraction of it. The grid group is the
+// scene's first node.
+const houseGrid = {
+  stroke: colors.border,
+  strokeOpacity: 1,
+  strokeWidth: strokePx(stroke.border),
+  // The spacing scale has no 3px step, so the dash is the 4px one.
+  strokeDasharray: `${scenePx(space.s1)} ${scenePx(space.s1)}`,
+};
+
+function withHouseGrid(scene: ChartScene): ChartScene {
+  const index = scene.nodes.findIndex(
+    (node) => node.className === 'ts-chart__grid',
+  );
+  const grid = scene.nodes[index];
+  if (!grid || grid.kind !== 'group') return scene;
+  const nodes: SceneNode[] = [...scene.nodes];
+  nodes[index] = { ...grid, style: { ...grid.style, ...houseGrid } };
+  return { ...scene, nodes };
+}
 
 /**
  * Scene colors for `defineChart({ theme })`. The library paints each role at a
  * fixed opacity — 11% for gridlines, 68% for tick labels — so `grid` takes
  * `colors.foreground`, which at 11% lands on `colors.border`, and the tick
  * labels reach `colors.mutedForeground` through `chartAxis`'s `opacity: 1`.
+ * `Chart`'s own surface renderer restyles the gridlines to `colors.border`
+ * outright; this value is what a chart falls back to when `renderSvg` is
+ * replaced.
  */
 export const chartTheme: Partial<ChartTheme> = {
   foreground: colors.foreground,
@@ -123,13 +151,104 @@ export const chartTheme: Partial<ChartTheme> = {
  * Axis presentation for `scales.<id>.axis`: the gridlines carry the structure,
  * so the domain line and tick stubs are off and the tick labels sit at the
  * caption size in `colors.mutedForeground`. Spread it and add `label`; keep
- * `ticks` spread too when an axis needs its own `count` or `format`.
+ * `ticks` spread too when an axis needs its own `count` or `format`. Hide an
+ * axis entirely with `axis: false`, which keeps the scale and its grid.
  */
 export const chartAxis: ChartAxisPresentationOptions = {
   line: false,
   ticks: { size: 0, padding: scenePx(space.s2) },
   tickLabels: { fontSize: scenePx(fontSize.xs), opacity: 1 },
 };
+
+/**
+ * Axis presentation for a scale whose gridlines are all that should show:
+ * no domain line, no tick stubs, no labels, and four bands of grid. `axis:
+ * false` hides an axis too, but it leaves the tick count to the plot height,
+ * which on a tall chart draws about twice as many lines as the eye needs to
+ * read a magnitude. Spread it to change the count.
+ */
+export const chartGridAxis: ChartAxisPresentationOptions = {
+  line: false,
+  ticks: { count: 4, size: 0 },
+  tickLabels: false,
+};
+
+/**
+ * Monotone cubic interpolation for a mark's `curve`, as `lineY`, `areaY`, and
+ * the other curve-taking marks want it. The library's only curve adapter,
+ * `d3Curve`, needs a `d3-shape` curve factory and so a dependency this
+ * component does not carry; this is the same Fritsch–Carlson construction,
+ * which smooths the path without letting it overshoot a data point.
+ */
+export const chartCurve: ChartCurve = {
+  line: (points) => (points.length ? `M${point(points[0])}${curveTo(points)}` : ''),
+  area: (top, bottom) => {
+    if (!top.length) return '';
+    const back = [...bottom].reverse();
+    return `M${point(top[0])}${curveTo(top)}L${point(back[0])}${curveTo(back)}Z`;
+  },
+};
+
+type CurvePoint = readonly [number, number];
+
+const point = (value: CurvePoint | undefined) =>
+  value ? `${value[0]},${value[1]}` : '';
+
+// Cubic segments whose end tangents are the Fritsch–Carlson slopes: the
+// average of the neighbouring secants, flattened to zero at a local extreme and
+// clamped to three times the secant so a segment never leaves the interval its
+// two points span.
+function curveTo(points: readonly CurvePoint[]) {
+  const slopes = tangents(points);
+  let path = '';
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const [x0, y0] = points[index] as CurvePoint;
+    const [x1, y1] = points[index + 1] as CurvePoint;
+    const third = (x1 - x0) / 3;
+    const a = `${x0 + third},${y0 + (slopes[index] as number) * third}`;
+    const b = `${x1 - third},${y1 - (slopes[index + 1] as number) * third}`;
+    path += `C${a} ${b} ${x1},${y1}`;
+  }
+  return path;
+}
+
+function tangents(points: readonly CurvePoint[]) {
+  const count = points.length;
+  const slopes = new Array<number>(count).fill(0);
+  if (count < 2) return slopes;
+
+  const secants = new Array<number>(count - 1).fill(0);
+  for (let index = 0; index < count - 1; index += 1) {
+    const [x0, y0] = points[index] as CurvePoint;
+    const [x1, y1] = points[index + 1] as CurvePoint;
+    secants[index] = x1 === x0 ? 0 : (y1 - y0) / (x1 - x0);
+  }
+
+  slopes[0] = secants[0] as number;
+  slopes[count - 1] = secants[count - 2] as number;
+  for (let index = 1; index < count - 1; index += 1) {
+    const before = secants[index - 1] as number;
+    const after = secants[index] as number;
+    slopes[index] = before * after <= 0 ? 0 : (before + after) / 2;
+  }
+
+  for (let index = 0; index < count - 1; index += 1) {
+    const secant = secants[index] as number;
+    if (secant === 0) {
+      slopes[index] = 0;
+      slopes[index + 1] = 0;
+      continue;
+    }
+    const a = (slopes[index] as number) / secant;
+    const b = (slopes[index + 1] as number) / secant;
+    const excess = a * a + b * b;
+    if (excess <= 9) continue;
+    const scale = 3 / Math.sqrt(excess);
+    slopes[index] = scale * a * secant;
+    slopes[index + 1] = scale * b * secant;
+  }
+  return slopes;
+}
 
 /**
  * Theme bridge: maps the design tokens onto the CSS custom properties TanStack
@@ -321,13 +440,13 @@ const styles = stylex.create({
     '--ts-chart-crosshair-label-halo': colors.background,
     // The tooltip is the library's own element, so its chrome is written as
     // custom properties rather than composed styles. The shadow carries the
-    // edge the way `ring({ shadow: shadow.md })` does on Popover and Select,
+    // edge the way `ring({ shadow: shadow.lg })` does on Popover and Select,
     // which is why the border itself is off.
     '--ts-chart-tooltip-background': colors.popover,
     '--ts-chart-tooltip-color': colors.popoverForeground,
     '--ts-chart-tooltip-border': 'none',
     '--ts-chart-tooltip-border-radius': radius.md,
-    '--ts-chart-tooltip-shadow': `0 0 0 ${stroke.border} ${colors.border}, ${shadow.md}`,
+    '--ts-chart-tooltip-shadow': `0 0 0 ${stroke.border} ${colors.border}, ${shadow.lg}`,
     '--ts-chart-tooltip-padding': `${space.s2} ${space.s25}`,
     '--ts-chart-tooltip-font': `${fontWeight.medium} ${fontSize.xs}/${lineHeight.snug} ${font.sans}`,
     // Scene text is rendered with `font-family: inherit`, and anything the
@@ -337,18 +456,23 @@ const styles = stylex.create({
     flexDirection: 'column',
     fontFamily: font.sans,
     fontSize: fontSize.xs,
-    gap: space.s3,
     minWidth: 0,
     width: '100%',
   },
   // Applied to the `<svg>` the library serializes: it carries `tabindex`, so
-  // without this the browser paints its own focus ring on every click.
+  // without this the browser paints its own focus ring on every click. The box
+  // sizing repeats the library's own `width`/`height` attributes so the
+  // server-rendered surface still fills its host under a CSS reset that gives
+  // `svg` an intrinsic size.
   surface: {
+    display: 'block',
+    height: '100%',
     outline: {
       default: 'none',
       ':focus-visible': `${stroke.focus} solid ${colors.ring}`,
     },
     outlineOffset: stroke.focus,
+    width: '100%',
   },
   tooltip: {
     display: 'flex',
@@ -367,7 +491,7 @@ const styles = stylex.create({
   tooltipRows: {
     display: 'flex',
     flexDirection: 'column',
-    gap: space.s1,
+    gap: space.s15,
   },
   tooltipRow: {
     alignItems: 'center',
@@ -400,6 +524,7 @@ const styles = stylex.create({
     fontWeight: fontWeight.medium,
     gap: space.s4,
     lineHeight: lineHeight.snug,
+    paddingBlockStart: space.s3,
   },
   legendItem: {
     alignItems: 'center',
@@ -409,15 +534,19 @@ const styles = stylex.create({
 });
 
 const indicators = stylex.create({
+  // A dot rather than a rounded square: the radius scale starts at 6px, which
+  // is already past half of an 8px swatch, so a square swatch would need a
+  // 2px radius token this scale does not have.
   dot: {
     borderRadius: radius.full,
     height: iconSize.xxs,
     width: iconSize.xxs,
   },
+  // A bar as tall as its row, for tooltips whose rows carry a series stroke.
   line: {
-    borderRadius: radius.full,
-    height: space.s3,
-    width: space.s05,
+    alignSelf: 'stretch',
+    borderRadius: radius.sm,
+    width: space.s1,
   },
 });
 

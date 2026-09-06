@@ -337,9 +337,14 @@ const styles = stylex.create({
     gap: space.s4,
     justifyContent: 'center',
   },
+  // Grows when the root is given more room than its content (a popover as
+  // wide as its trigger): the grid spreads its columns and the nav chevrons
+  // ride the caption row out to the edges. Inline-block roots are content
+  // width, so this changes nothing there.
   month: {
     display: 'flex',
     flexDirection: 'column',
+    flexGrow: 1,
     gap: space.s3,
     // Anchors the two nav buttons to this month's caption row.
     position: 'relative',
@@ -441,6 +446,8 @@ const styles = stylex.create({
     borderSpacing: 0,
     // Keeps the grid centred when the caption (dropdowns) is the wider row.
     marginInline: 'auto',
+    // Fills the month so a stretched month spreads its columns evenly.
+    width: '100%',
   },
   // Weekday column headers and week-number row headers share one look.
   gridHeader: {

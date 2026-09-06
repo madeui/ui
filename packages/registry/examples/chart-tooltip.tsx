@@ -13,6 +13,7 @@ import {
   ChartContainer,
   ChartTooltipContent,
   chartAxis,
+  chartCurve,
   chartTheme,
 } from '@/components/ui/chart';
 
@@ -38,7 +39,15 @@ const currency = new Intl.NumberFormat('en-US', {
 });
 
 const definition = defineChart({
-  marks: [lineY(revenue, { x: 'month', y: 'amount', z: 'stream', strokeWidth: 2 })],
+  marks: [
+    lineY(revenue, {
+      x: 'month',
+      y: 'amount',
+      z: 'stream',
+      strokeWidth: 2,
+      curve: chartCurve,
+    }),
+  ],
   scales: {
     x: { scale: () => scalePoint().padding(0.2), axis: chartAxis },
     y: {
@@ -61,7 +70,7 @@ export default function ChartTooltip() {
     <ChartContainer style={styles.chart}>
       <Chart
         definition={definition}
-        height={240}
+        aspectRatio={16 / 9}
         ariaLabel="Monthly revenue by stream"
         renderTooltipBody={(context) => (
           <ChartTooltipContent

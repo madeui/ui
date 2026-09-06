@@ -9,7 +9,7 @@ import { space, fontSize, fontWeight, lineHeight, container } from '@/lib/consta
 import { colors } from '@/lib/tokens.stylex';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Chart, ChartContainer, chartTheme } from '@/components/ui/chart';
+import { Chart, ChartContainer, chartCurve, chartTheme } from '@/components/ui/chart';
 
 const activeUsers = [
   { day: 1, users: 1180 },
@@ -39,10 +39,32 @@ const ceiling = Math.max(...users) + padding;
 
 // No guides, zero margin, and no focus or keyboard behavior: the plot fills
 // the box and reads as decoration next to the number that carries the value.
+// The fill is a top-down gradient of the series color: `gradients` puts the
+// `<linearGradient>` in the scene's defs and a mark reaches it by id.
 const definition = defineChart({
+  gradients: [
+    {
+      id: 'sparkline',
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 1,
+      stops: [
+        { offset: 0, color: colors.chart1, opacity: 0.8 },
+        { offset: 1, color: colors.chart1, opacity: 0.1 },
+      ],
+    },
+  ],
   marks: [
-    areaY(activeUsers, { x: 'day', y: 'users', y1: floor, fillOpacity: 0.15 }),
-    lineY(activeUsers, { x: 'day', y: 'users', strokeWidth: 2 }),
+    areaY(activeUsers, {
+      x: 'day',
+      y: 'users',
+      y1: floor,
+      curve: chartCurve,
+      fill: 'url(#sparkline)',
+      fillOpacity: 1,
+    }),
+    lineY(activeUsers, { x: 'day', y: 'users', strokeWidth: 2, curve: chartCurve }),
   ],
   scales: {
     x: { scale: scalePoint },
@@ -64,7 +86,11 @@ export default function ChartSparkline() {
       </CardHeader>
       <CardContent>
         <ChartContainer>
-          <Chart definition={definition} height={48} ariaLabel="Active users over the last 14 days" />
+          <Chart
+            definition={definition}
+            aspectRatio={6}
+            ariaLabel="Active users over the last 14 days"
+          />
         </ChartContainer>
         <p {...stylex.props(styles.caption)}>Up 43% over 14 days</p>
       </CardContent>

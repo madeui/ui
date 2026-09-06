@@ -26,6 +26,8 @@ import {
   ChartLegend,
   ChartTooltipContent,
   chartAxis,
+  chartCurve,
+  chartGridAxis,
   chartTheme,
   useChartLegend,
 } from '@/components/ui/chart';
@@ -40,10 +42,10 @@ import { scaleLinear } from '@tanstack/charts/scales/linear';
 import { tooltip } from '@tanstack/charts/tooltip';
 
 const definition = defineChart({
-  marks: [barY(rows, { x: 'month', y: 'revenue' })],
+  marks: [barY(rows, { x: 'month', y: 'revenue', radius: 4 })],
   scales: {
     x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: chartAxis },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
   },
   theme: chartTheme,
   tooltip,
@@ -52,14 +54,16 @@ const definition = defineChart({
 <ChartContainer>
   <Chart
     definition={definition}
-    height={240}
+    aspectRatio={16 / 9}
     ariaLabel="Monthly revenue"
     renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
   />
 </ChartContainer>;
 ```
 
-`chartTheme` and `chartAxis` are what make a chart look like the rest of the library — pass `theme: chartTheme` on the definition and `axis: chartAxis` on every scale that draws an axis.
+`chartTheme`, `chartAxis`, and `chartGridAxis` are what make a chart look like the rest of the library — pass `theme: chartTheme` on the definition, `axis: chartAxis` on every scale that draws a labelled axis, and `axis: chartGridAxis` on the ones that only contribute gridlines.
+
+Size a chart with `aspectRatio` rather than `height`. The server renders the whole chart, and only `aspectRatio` gives that markup a box of the same shape as the scene it laid out, so the chart is on screen and correctly proportioned before any script runs. [First paint](#first-paint) has the details.
 
 `Chart` mounts the chart with a layout effect, so in the Next.js App Router any file that renders it must be a client component (`'use client'` at the top). Create definitions at module scope or inside `useMemo`: the definition's identity is what tells the chart to update.
 
@@ -72,19 +76,32 @@ const definition = defineChart({
 </ChartContainer>
 ```
 
+## First paint
+
+A server cannot measure the container, so the library lays the scene out at `initialWidth` (640 by default) and gives the `<svg>` a `viewBox` of that size with `width="100%" height="100%"`. The browser then fits that box into the host, and what the fit does depends on how the host was sized:
+
+- **`aspectRatio`** sizes the host to the same ratio the scene was laid out at, so the server-rendered chart fills it edge to edge. Hydration re-renders the scene at the measured width, which changes the scale of the text and the gridlines but leaves every mark where it already was.
+- **A fixed `height`** gives the host a ratio the scene does not share, so the browser letterboxes the scene inside it: the plot paints small and centred, then jumps to size when the chart mounts.
+
+Prefer `aspectRatio` everywhere, and pass `initialWidth` as well when the layout has a usual width — the closer it is to the real one, the less the first paint differs from the settled one.
+
+None of this needs scripting to be visible. A chart still needs it for pointer, keyboard, and tooltip behaviour, but the plot itself is server-rendered markup and shows without it.
+
 ## Line
 
-`z` splits rows into series. With no explicit color scale, each series takes the next slot of the palette the container provides (`colors.chart1` … `chart6`).
+`z` splits rows into series. With no explicit color scale, each series takes the next slot of the palette the container provides (`colors.chart1` … `chart6`). `curve: chartCurve` smooths the path, and the points stay undotted: grouped focus marks the hovered value on every line, which is the only place a dot carries information.
 
 <Component path="chart-line" />
 
 ## Stacked area
 
+Each layer is its palette color at 40%. A `stroke` on `areaY` outlines the layer's closed path, down both sides and along the bottom as well as over the top, so an edge only on the top of a band is not something the mark can draw.
+
 <Component path="chart-area" />
 
 ## Donut
 
-Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `radialArc` paints them.
+Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `radialArc` paints them. `stroke: colors.background` separates the slices, and the centre total is HTML stacked over the plot — the library paints no centre label.
 
 <Component path="chart-pie" />
 
@@ -104,25 +121,31 @@ Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `
 
 `guides: false` and `margin: 0` let the plot fill its box; `pointer: false` and `keyboard: false` turn off focus for a purely decorative chart. The scale spans the data rather than starting at zero — a sparkline reads as shape, and a zero baseline flattens it.
 
+The fill is a gradient: `gradients` on the definition puts a `<linearGradient>` in the scene's defs and a mark reaches it with `fill: 'url(#id)'`. Keep gradient fills to marks whose points are never named in a tooltip or a legend — the library takes a point's color from its resolved fill, so `url(#id)` would reach the swatch, which cannot paint it.
+
 <Component path="chart-sparkline" />
 
 ## API reference
 
 Built on [TanStack Charts](https://tanstack.com/charts). `Chart` takes the props of the library's React component (the tooltip-capable entry from `@tanstack/charts/react/tooltip`) — `definition`, `ariaLabel`, `height`, `aspectRatio`, `width`, `initialWidth`, `onRender`, `renderTooltipBody`, the focus callbacks — all documented in the [TanStack Charts React reference](https://tanstack.com/charts/latest/docs/framework/react/reference/chart). Definitions, marks, scales, and the `tooltip` extension are the library's API as well.
 
-No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to `Chart`'s own `height`, `aspectRatio`, and `width` props.
+No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to `Chart`'s own `aspectRatio`, `height`, and `width` props.
 
 ### Chart
 
-Two behaviors are added on top of the library's component.
+`Chart` supplies one `renderSvg`, which does two things the library has no other hook for.
 
-The chart surface carries the focus-visible ring. The library renders the plot as an `<svg>` with `tabindex`, which the browser rings with its own outline on every click; `Chart` supplies a `renderSvg` that puts the house ring on that element instead, so the ring appears on keyboard focus only. Passing your own `renderSvg` replaces it.
+The chart surface carries the focus-visible ring. The library renders the plot as an `<svg>` with `tabindex`, which the browser rings with its own outline on every click; the house ring goes on that element instead, so the ring appears on keyboard focus only.
 
-The chart is revealed once the browser has measured it. A server cannot measure the container, so its markup is laid out at `initialWidth` (640 by default) and the browser scales that scene to fit until the chart mounts — the plot paints small and then jumps to size. `Chart` renders hidden until its first client-side layout effect, by which point the chart has re-rendered at the measured width, so the first painted frame is the final one. The host keeps its box while hidden, so nothing moves. Charts need scripting for pointer, keyboard, and tooltip behavior either way, but a chart that must be visible without it should set `initialWidth` to the layout's usual width and render the library's component directly.
+The gridlines are restyled. The library paints them from `theme.grid` at a fixed 11% opacity and stroke width 1, and a scale's `grid` is a plain boolean, so their weight and dash have no option. `renderSvg` receives the scene before it is serialized, and its node styles are public, so the grid group is given `colors.border` at full opacity as a dashed hairline on the way through.
+
+Passing your own `renderSvg` replaces both.
+
+Sizing is the library's own: see [First paint](#first-paint) for why `aspectRatio` is the one to reach for.
 
 ### chartTheme
 
-Scene colors for `defineChart({ theme })`: gridlines, axis text, and focus guides in the design tokens instead of the library's defaults. The library paints each role at a fixed opacity, so `grid` is `colors.foreground` at the 11% the library applies, which lands on `colors.border`.
+Scene colors for `defineChart({ theme })`: gridlines, axis text, and focus guides in the design tokens instead of the library's defaults. The library paints each role at a fixed opacity, so `grid` is `colors.foreground` at the 11% the library applies, which lands on `colors.border` — the value a chart falls back to when `renderSvg` is replaced and the gridlines are not restyled.
 
 ### chartAxis
 
@@ -137,6 +160,26 @@ axis: {
 ```
 
 The axis title is the one guide the library does not expose a style hook for: it renders one step below the tick labels at weight 600.
+
+### chartGridAxis
+
+Axis presentation for a scale whose gridlines are all that should show: no domain line, no tick stubs, no labels, and four bands of grid. A value axis behind a mark usually reads better this way, with the tooltip carrying the number.
+
+`axis: false` also hides an axis, but it leaves the tick count to the plot height, which on a tall chart draws about twice as many gridlines as the eye needs. Spread `chartGridAxis` to change the count:
+
+```tsx
+axis: { ...chartGridAxis, ticks: { ...chartGridAxis.ticks, count: 6 } }
+```
+
+### chartCurve
+
+Monotone cubic interpolation for a mark's `curve`, on `lineY`, `areaY`, and the other curve-taking marks. It smooths the path without letting it overshoot a data point.
+
+```tsx
+lineY(rows, { x: 'month', y: 'visitors', strokeWidth: 2, curve: chartCurve })
+```
+
+The library's own curve adapter, `d3Curve`, takes a `d3-shape` curve factory, which is a dependency this component does not install; `chartCurve` is the same construction with no dependency.
 
 ### ChartContainer
 
@@ -188,4 +231,4 @@ const { items, onRender } = useChartLegend();
 
 `ChartContainer`, `ChartTooltipContent`, `ChartLegend` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render. `Chart` takes the library's own `className` / `style` (plain CSS) — prefer styling the container.
 
-The scene itself is painted by the library, not by CSS, so its colors come from `chartTheme` and the six palette slots `ChartContainer` maps onto the library's custom properties. Mark styling — stroke widths, fill opacities, bar insets, curves — belongs on the marks in the definition.
+The scene itself is painted by the library, not by CSS, so its colors come from `chartTheme` and the six palette slots `ChartContainer` maps onto the library's custom properties. Mark styling — stroke widths, fill opacities, bar radii and insets, curves — belongs on the marks in the definition, and scene sizes there are plain numbers in SVG user units rather than tokens.

@@ -384,11 +384,11 @@ const styles = stylex.create({
     padding: space.s3,
     width: 'auto',
   },
-  // Centred rather than stretched: the calendar keeps its natural width, so
-  // the nav chevrons stay on the edges of the month grid when the popup is
-  // wider than the calendar.
+  // Block, not inline: the calendar fills the popup, so a one-month picker
+  // spreads its day columns across the full trigger width and the nav
+  // chevrons sit on the popup's edges.
   calendar: {
-    alignSelf: 'center',
+    display: 'block',
     padding: 0,
   },
 });

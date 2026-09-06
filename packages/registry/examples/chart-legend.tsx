@@ -14,6 +14,7 @@ import {
   ChartLegend,
   ChartTooltipContent,
   chartAxis,
+  chartGridAxis,
   chartTheme,
   useChartLegend,
 } from '@/components/ui/chart';
@@ -34,15 +35,18 @@ const sales = [
 ];
 
 const definition = defineChart({
-  marks: [barY(sales, { x: 'quarter', y: 'sales', color: 'region', layout: group({ padding: 0.15 }) })],
+  marks: [
+    barY(sales, {
+      x: 'quarter',
+      y: 'sales',
+      color: 'region',
+      layout: group({ padding: 0.15 }),
+      radius: 4,
+    }),
+  ],
   scales: {
-    x: { scale: () => scaleBand().padding(0.25), axis: chartAxis },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      grid: true,
-      axis: { ...chartAxis, label: 'Sales' },
-    },
+    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
+    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
   },
   theme: chartTheme,
   color: { domain: ['Europe', 'Americas', 'Asia'] },
@@ -59,7 +63,7 @@ export default function ChartLegendExample() {
     <ChartContainer style={styles.chart}>
       <Chart
         definition={definition}
-        height={240}
+        aspectRatio={16 / 9}
         ariaLabel="Quarterly sales by region"
         onRender={onRender}
         renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
