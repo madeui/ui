@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded-by: 0003-chart-builds-on-recharts.md
 date: 2026-09-05
 ---
 
@@ -19,3 +20,9 @@ library upgrade is a deliberate bump of the pin plus a docs changelog entry.
 
 - Users who raise the pin themselves may hit breaking changes; the docs say so.
 - Requires React 19, which the library already requires.
+
+## Superseded
+
+Superseded on 2026-09-09 by
+[0003](./0003-chart-builds-on-recharts.md): the churn was the deciding factor
+and it did not settle. See that record for the trade we took instead.

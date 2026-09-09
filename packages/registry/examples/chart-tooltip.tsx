@@ -1,36 +1,31 @@
 'use client';
 
 import * as stylex from '@stylexjs/stylex';
-import { defineChart, lineY } from '@tanstack/charts';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { scalePoint } from '@tanstack/charts/scales/point';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
-import { container } from '@/lib/constants.stylex';
+import { container, fontSize } from '@/lib/constants.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 import {
-  Chart,
   ChartContainer,
+  ChartTooltip,
   ChartTooltipContent,
-  chartAxis,
-  chartCurve,
-  chartTheme,
+  type ChartConfig,
 } from '@/components/ui/chart';
 
 const revenue = [
-  { month: 'Jan', stream: 'Subscriptions', amount: 42100 },
-  { month: 'Jan', stream: 'Services', amount: 18300 },
-  { month: 'Feb', stream: 'Subscriptions', amount: 44800 },
-  { month: 'Feb', stream: 'Services', amount: 21900 },
-  { month: 'Mar', stream: 'Subscriptions', amount: 47600 },
-  { month: 'Mar', stream: 'Services', amount: 19700 },
-  { month: 'Apr', stream: 'Subscriptions', amount: 51200 },
-  { month: 'Apr', stream: 'Services', amount: 24400 },
-  { month: 'May', stream: 'Subscriptions', amount: 53900 },
-  { month: 'May', stream: 'Services', amount: 26100 },
-  { month: 'Jun', stream: 'Subscriptions', amount: 58300 },
-  { month: 'Jun', stream: 'Services', amount: 27800 },
+  { month: 'Jan', subscriptions: 42100, services: 18300 },
+  { month: 'Feb', subscriptions: 44800, services: 21900 },
+  { month: 'Mar', subscriptions: 47600, services: 19700 },
+  { month: 'Apr', subscriptions: 51200, services: 24400 },
+  { month: 'May', subscriptions: 53900, services: 26100 },
+  { month: 'Jun', subscriptions: 58300, services: 27800 },
 ];
+
+const chartConfig = {
+  subscriptions: { label: 'Subscriptions', color: colors.chart1 },
+  services: { label: 'Services', color: colors.chart2 },
+} satisfies ChartConfig;
 
 const currency = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -38,52 +33,43 @@ const currency = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const definition = defineChart({
-  marks: [
-    lineY(revenue, {
-      x: 'month',
-      y: 'amount',
-      z: 'stream',
-      strokeWidth: 2,
-      curve: chartCurve,
-    }),
-  ],
-  scales: {
-    x: { scale: () => scalePoint().padding(0.2), axis: chartAxis },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      grid: true,
-      axis: {
-        ...chartAxis,
-        ticks: { ...chartAxis.ticks, format: (value) => currency.format(Number(value)) },
-      },
-    },
-  },
-  theme: chartTheme,
-  focus: 'group-x',
-  tooltip,
-});
-
-export default function ChartTooltip() {
+export default function ChartTooltipExample() {
   return (
-    <ChartContainer style={styles.chart}>
-      <Chart
-        definition={definition}
-        aspectRatio={16 / 9}
-        ariaLabel="Monthly revenue by stream"
-        renderTooltipBody={(context) => (
-          <ChartTooltipContent
-            {...context}
-            indicator="line"
-            // Grouped focus: each row's point is the series at that month, so
-            // the raw `yValue` is what gets formatted.
-            formatter={(value, _name, point) =>
-              typeof point?.yValue === 'number' ? currency.format(point.yValue) : value
-            }
-          />
-        )}
-      />
+    <ChartContainer config={chartConfig} style={styles.chart}>
+      <LineChart accessibilityLayer data={revenue} margin={{ left: 12, right: 12 }}>
+        <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+        />
+        <ChartTooltip
+          cursor={{ stroke: colors.border }}
+          content={
+            <ChartTooltipContent
+              indicator="line"
+              labelFormatter={(month) => `${month} 2026`}
+              formatter={(value) => currency.format(Number(value))}
+            />
+          }
+        />
+        <Line
+          dataKey="subscriptions"
+          type="monotone"
+          stroke={chartConfig.subscriptions.color}
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          dataKey="services"
+          type="monotone"
+          stroke={chartConfig.services.color}
+          strokeWidth={2}
+          dot={false}
+        />
+      </LineChart>
     </ChartContainer>
   );
 }

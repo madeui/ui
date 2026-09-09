@@ -15,7 +15,7 @@ requirement: agents and humans rely on the same shape everywhere.
 - **External dependencies.** A component may build on a third-party package
   when Base UI has no primitive and the behavior is not worth re-implementing
   (Calendar → react-day-picker, Carousel → Embla, Resizable →
-  react-resizable-panels, Chart → TanStack Charts). Register the package in
+  react-resizable-panels, Chart → Recharts). Register the package in
   `EXTERNAL_DEPENDENCIES` in `scripts/build-registry.mjs` (pinned exactly
   when the upstream is pre-1.0) and state it on the docs page right after the
   install command ("Installs `x` alongside the component."). Never import the
@@ -23,9 +23,10 @@ requirement: agents and humans rely on the same shape everywhere.
 - **Slot components instead of compound parts** when the third-party component
   cannot be composed in JSX (react-day-picker): export our styled slot
   renderers (`CalendarDayButton`, ...) and document how users pass their own
-  through the library's `components` prop. A component whose only job is to
-  map tokens onto a library's CSS custom properties is a *theme bridge*
-  (`ChartContainer`).
+  through the library's `components` prop. Where the library is already
+  composable (Recharts), compose its own elements directly and add only the
+  parts it has no opinion about — for Chart, a config object plus the container,
+  tooltip, and legend bodies that read from it.
 
 ## Props
 

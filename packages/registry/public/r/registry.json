@@ -352,10 +352,10 @@
       "name": "chart",
       "type": "registry:ui",
       "title": "Chart",
-      "description": "Charts built on TanStack Charts (alpha, pinned): themed container, tooltip body, and HTML legend.",
+      "description": "Charts built on Recharts: a config-driven container plus tooltip and legend bodies. Client-rendered.",
       "dependencies": [
         "@stylexjs/stylex",
-        "@tanstack/charts@0.16.0"
+        "recharts@^3"
       ],
       "registryDependencies": [
         "@madeui/theme"

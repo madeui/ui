@@ -1,70 +1,69 @@
 'use client';
 
 import * as stylex from '@stylexjs/stylex';
-import { defineChart, lineY } from '@tanstack/charts';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { scalePoint } from '@tanstack/charts/scales/point';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
-import { container } from '@/lib/constants.stylex';
+import { container, fontSize } from '@/lib/constants.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 import {
-  Chart,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
   ChartTooltipContent,
-  chartAxis,
-  chartCurve,
-  chartGridAxis,
-  chartTheme,
+  type ChartConfig,
 } from '@/components/ui/chart';
 
 const visitors = [
-  { month: 'Jan', device: 'Desktop', visitors: 186 },
-  { month: 'Jan', device: 'Mobile', visitors: 80 },
-  { month: 'Feb', device: 'Desktop', visitors: 305 },
-  { month: 'Feb', device: 'Mobile', visitors: 200 },
-  { month: 'Mar', device: 'Desktop', visitors: 237 },
-  { month: 'Mar', device: 'Mobile', visitors: 120 },
-  { month: 'Apr', device: 'Desktop', visitors: 73 },
-  { month: 'Apr', device: 'Mobile', visitors: 190 },
-  { month: 'May', device: 'Desktop', visitors: 209 },
-  { month: 'May', device: 'Mobile', visitors: 130 },
-  { month: 'Jun', device: 'Desktop', visitors: 214 },
-  { month: 'Jun', device: 'Mobile', visitors: 140 },
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+  { month: 'Apr', desktop: 173, mobile: 190 },
+  { month: 'May', desktop: 209, mobile: 130 },
+  { month: 'Jun', desktop: 214, mobile: 140 },
 ];
 
-// `z` splits the rows into series; with no explicit color scale, each series
-// takes the next slot of the palette the container provides. No per-point dots:
-// grouped focus marks the hovered month on every line, which is the only place
-// a dot carries information.
-const definition = defineChart({
-  marks: [
-    lineY(visitors, {
-      x: 'month',
-      y: 'visitors',
-      z: 'device',
-      strokeWidth: 2,
-      curve: chartCurve,
-    }),
-  ],
-  scales: {
-    x: { scale: () => scalePoint().padding(0.2), axis: chartAxis },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
-  },
-  theme: chartTheme,
-  focus: 'group-x',
-  tooltip,
-});
+// Two series, so the config carries two entries and the legend names both.
+const chartConfig = {
+  desktop: { label: 'Desktop', color: colors.chart1 },
+  mobile: { label: 'Mobile', color: colors.chart2 },
+} satisfies ChartConfig;
 
 export default function ChartLine() {
   return (
-    <ChartContainer style={styles.chart}>
-      <Chart
-        definition={definition}
-        aspectRatio={16 / 9}
-        ariaLabel="Monthly visitors by device"
-        renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
-      />
+    <ChartContainer config={chartConfig} style={styles.chart}>
+      <LineChart accessibilityLayer data={visitors} margin={{ left: 12, right: 12 }}>
+        <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+        />
+        <ChartTooltip
+          cursor={{ stroke: colors.border }}
+          content={<ChartTooltipContent />}
+        />
+        <ChartLegend itemSorter={null} content={<ChartLegendContent />} />
+        {/* No per-point dots: the tooltip already marks the hovered month on
+            every line, which is the only place a dot carries information. */}
+        <Line
+          dataKey="desktop"
+          type="monotone"
+          stroke={chartConfig.desktop.color}
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          dataKey="mobile"
+          type="monotone"
+          stroke={chartConfig.mobile.color}
+          strokeWidth={2}
+          dot={false}
+        />
+      </LineChart>
     </ChartContainer>
   );
 }

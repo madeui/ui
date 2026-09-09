@@ -1,6 +1,6 @@
 ---
 title: Chart
-description: "Charts built on TanStack Charts: a themed container, a tooltip body, and an HTML legend around the library's own Chart component."
+description: "Charts built on Recharts: a config-driven container plus tooltip and legend bodies, styled with the design tokens."
 ---
 
 <Component path="chart-demo" />
@@ -11,224 +11,217 @@ description: "Charts built on TanStack Charts: a themed container, a tooltip bod
 npx @madeui/cli add chart
 ```
 
-Installs `@tanstack/charts` alongside the component.
+Installs `recharts` alongside the component.
 
-<Callout type="warning" title="Alpha">
-TanStack Charts is pre-1.0 and its minor releases may contain breaking changes. The registry pins the exact version the component was tested with (`0.16.0`) — upgrade deliberately, and re-run your charts after every bump.
+<Callout type="info" title="Charts render in the browser">
+Recharts measures its container before it can lay a plot out, so a chart is empty until it mounts on the client. `ChartContainer` reserves the box with `aspect-ratio`, so the space is held from the first paint and nothing on the page moves when the plot arrives. In the Next.js App Router, any file that renders a chart needs `'use client'` at the top.
 </Callout>
 
 ## Usage
 
 ```tsx
 import {
-  Chart,
   ChartContainer,
   ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
   ChartTooltipContent,
-  chartAxis,
-  chartCurve,
-  chartGridAxis,
-  chartTheme,
-  useChartLegend,
+  useChart,
+  type ChartConfig,
 } from '@/components/ui/chart';
 ```
 
 ```tsx
 'use client';
 
-import { barY, defineChart } from '@tanstack/charts';
-import { scaleBand } from '@tanstack/charts/scales/band';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
-const definition = defineChart({
-  marks: [barY(rows, { x: 'month', y: 'revenue', radius: 4 })],
-  scales: {
-    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
-  },
-  theme: chartTheme,
-  tooltip,
-});
+import { colors } from '@/lib/tokens.stylex';
 
-<ChartContainer>
-  <Chart
-    definition={definition}
-    aspectRatio={16 / 9}
-    ariaLabel="Monthly revenue"
-    renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
-  />
+const chartConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
+
+<ChartContainer config={chartConfig}>
+  <BarChart accessibilityLayer data={rows}>
+    <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <Bar dataKey="revenue" fill={chartConfig.revenue.color} radius={[4, 4, 0, 0]} />
+  </BarChart>
 </ChartContainer>;
 ```
 
-`chartTheme`, `chartAxis`, and `chartGridAxis` are what make a chart look like the rest of the library — pass `theme: chartTheme` on the definition, `axis: chartAxis` on every scale that draws a labelled axis, and `axis: chartGridAxis` on the ones that only contribute gridlines.
+The config is the one place a series is named and colored. `ChartTooltipContent` and `ChartLegendContent` read the label and the swatch color out of it, and the mark is filled from the same entry — so a series never drifts between the plot and the chrome. Keys are the series' `dataKey`; on a pie or a radial bar, where every slice comes from one series, they are the values of its `nameKey` instead.
 
-Size a chart with `aspectRatio` rather than `height`. The server renders the whole chart, and only `aspectRatio` gives that markup a box of the same shape as the scene it laid out, so the chart is on screen and correctly proportioned before any script runs. [First paint](#first-paint) has the details.
-
-`Chart` mounts the chart with a layout effect, so in the Next.js App Router any file that renders it must be a client component (`'use client'` at the top). Create definitions at module scope or inside `useMemo`: the definition's identity is what tells the chart to update.
+Marks, axes, grids, and the chart element itself are Recharts' own components, composed directly. Nothing here wraps them.
 
 ## Composition
 
 ```tsx
-<ChartContainer>
-  <Chart renderTooltipBody={(context) => <ChartTooltipContent {...context} />} />
-  <ChartLegend />
+<ChartContainer config={chartConfig}>
+  <BarChart>
+    <CartesianGrid />
+    <XAxis />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Bar />
+  </BarChart>
 </ChartContainer>
 ```
 
-## First paint
+## Sizing
 
-A server cannot measure the container, so the library lays the scene out at `initialWidth` (640 by default) and gives the `<svg>` a `viewBox` of that size with `width="100%" height="100%"`. The browser then fits that box into the host, and what the fit does depends on how the host was sized:
+`ChartContainer` is a full-width box with an `aspect-ratio` of 16 / 9 and no height of its own. Change the ratio through `style`; a square suits a donut or a radar, and a wide, flat one suits a sparkline.
 
-- **`aspectRatio`** sizes the host to the same ratio the scene was laid out at, so the server-rendered chart fills it edge to edge. Hydration re-renders the scene at the measured width, which changes the scale of the text and the gridlines but leaves every mark where it already was.
-- **A fixed `height`** gives the host a ratio the scene does not share, so the browser letterboxes the scene inside it: the plot paints small and centred, then jumps to size when the chart mounts.
+```tsx
+const styles = stylex.create({
+  chart: { aspectRatio: '1', maxWidth: container.md },
+});
 
-Prefer `aspectRatio` everywhere, and pass `initialWidth` as well when the layout has a usual width — the closer it is to the real one, the less the first paint differs from the settled one.
+<ChartContainer config={chartConfig} style={styles.chart}>
+```
 
-None of this needs scripting to be visible. A chart still needs it for pointer, keyboard, and tooltip behaviour, but the plot itself is server-rendered markup and shows without it.
+Reach for a fixed `height` only when the surrounding layout already fixes one. A ratio keeps the plot proportionate at every width, and it is what reserves the box before the chart mounts.
 
 ## Line
 
-`z` splits rows into series. With no explicit color scale, each series takes the next slot of the palette the container provides (`colors.chart1` … `chart6`). `curve: chartCurve` smooths the path, and the points stay undotted: grouped focus marks the hovered value on every line, which is the only place a dot carries information.
+Two series, so the config carries two entries and a legend names both. `type="monotone"` smooths the path without letting it overshoot a data point, and the points stay undotted: the tooltip already marks the hovered month on every line, which is the only place a dot carries information.
 
 <Component path="chart-line" />
 
 ## Stacked area
 
-Each layer is its palette color at 40%. A `stroke` on `areaY` outlines the layer's closed path, down both sides and along the bottom as well as over the top, so an edge only on the top of a band is not something the mark can draw.
+A shared `stackId` stacks the layers and pins their order, so they never swap between updates. The fills are translucent; the stroke keeps each band's top edge legible where two of them meet.
 
 <Component path="chart-area" />
 
 ## Donut
 
-Polar marks come from `@tanstack/charts/polar`; `pie` allocates the angles and `radialArc` paints them. `stroke: colors.background` separates the slices, and the centre total is HTML stacked over the plot — the library paints no centre label.
+`innerRadius` opens the hole, and a `<Cell>` per row takes its fill from the config. A stroke in the surface color separates the slices, so the ring reads as one shape cut into parts. The centre total is a `<Label>`, which scales with the plot and never covers a slice.
 
 <Component path="chart-pie" />
 
+## Radar
+
+`PolarGrid` and `PolarAngleAxis` draw the web and its labels. Two overlapping shapes need light fills and a visible outline — the outline is what carries the comparison.
+
+<Component path="chart-radar" />
+
+## Radial
+
+One ring per category, longest first. A radial bar's length is harder to compare than a straight one, so the order does the work a shared baseline does on a bar chart, and `background` traces the full ring so each bar reads as a share of it.
+
+<Component path="chart-radial" />
+
 ## Legend
 
-`useChartLegend` reads the chart's resolved color scale through `onRender` and returns the items for `ChartLegend`. Items keep their identity until the domain or its colors change, so the legend does not re-render on every chart paint.
+`ChartLegend` is the chart's legend; `ChartLegendContent` is its body, and it takes each entry's label and swatch color from the config. `verticalAlign` reaches the body, which pads on the side facing the plot.
 
 <Component path="chart-legend" />
 
-## Tooltip formatter
+## Tooltip
 
-`formatter` receives the row's formatted value, its label, and the chart point behind it — read the raw `yValue` from the point when formatting numbers.
+`labelFormatter` rewrites the title, `formatter` rewrites a row's value, and `indicator="line"` swaps the dot for a bar as tall as its row — the shape to reach for when the rows carry a series stroke.
 
 <Component path="chart-tooltip" />
 
 ## Sparkline
 
-`guides: false` and `margin: 0` let the plot fill its box; `pointer: false` and `keyboard: false` turn off focus for a purely decorative chart. The scale spans the data rather than starting at zero — a sparkline reads as shape, and a zero baseline flattens it.
-
-The fill is a gradient: `gradients` on the definition puts a `<linearGradient>` in the scene's defs and a mark reaches it with `fill: 'url(#id)'`. Keep gradient fills to marks whose points are never named in a tooltip or a legend — the library takes a point's color from its resolved fill, so `url(#id)` would reach the swatch, which cannot paint it.
+No axes, no grid, no tooltip: the plot is decoration next to the number that carries the value, and a zero margin lets it fill the box edge to edge. The scale spans the data rather than starting at zero — a sparkline reads as shape, and a zero baseline flattens it. A hidden `<YAxis>` is what carries that domain when no axis is drawn.
 
 <Component path="chart-sparkline" />
 
 ## API reference
 
-Built on [TanStack Charts](https://tanstack.com/charts). `Chart` takes the props of the library's React component (the tooltip-capable entry from `@tanstack/charts/react/tooltip`) — `definition`, `ariaLabel`, `height`, `aspectRatio`, `width`, `initialWidth`, `onRender`, `renderTooltipBody`, the focus callbacks — all documented in the [TanStack Charts React reference](https://tanstack.com/charts/latest/docs/framework/react/reference/chart). Definitions, marks, scales, and the `tooltip` extension are the library's API as well.
+Built on [Recharts](https://recharts.org). The chart element, marks, axes, grids, and cursors are Recharts' own components, composed directly and documented in the [Recharts API reference](https://recharts.org/en-US/api); this component adds the config, the container, and the tooltip and legend bodies.
 
-No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to `Chart`'s own `aspectRatio`, `height`, and `width` props.
+No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to the container's aspect ratio.
 
-### Chart
+Pass `accessibilityLayer` on the chart element. It makes the plot focusable and steps through the data with the arrow keys, moving the tooltip with the keyboard focus, and it announces each point to a screen reader.
 
-`Chart` supplies one `renderSvg`, which does two things the library has no other hook for.
+The focus ring on a chart is the browser's own, not the ring the rest of the library draws: the focusable element is the `<svg>` Recharts renders, which no part here owns, and StyleX styles only elements it puts a class on. It is a visible keyboard focus indicator, so it is left as it is rather than replaced with something that would have to reach across a component boundary to work.
 
-The chart surface carries the focus-visible ring. The library renders the plot as an `<svg>` with `tabindex`, which the browser rings with its own outline on every click; the house ring goes on that element instead, so the ring appears on keyboard focus only.
+### ChartConfig
 
-The gridlines are restyled. The library paints them from `theme.grid` at a fixed 11% opacity and stroke width 1, and a scale's `grid` is a plain boolean, so their weight and dash have no option. `renderSvg` receives the scene before it is serialized, and its node styles are public, so the grid group is given `colors.border` at full opacity as a dashed hairline on the way through.
+One entry per series, keyed by `dataKey` — or, where every mark comes from one series, by the values of its `nameKey`.
 
-Passing your own `renderSvg` replaces both.
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | `ReactNode` | Printed by the tooltip and the legend. |
+| `color` | `string` | The series color. Use the `chart1` … `chart6` tokens, which are themed for light and dark. |
+| `icon` | `ComponentType` | Rendered in the legend in place of the swatch. |
 
-Sizing is the library's own: see [First paint](#first-paint) for why `aspectRatio` is the one to reach for.
-
-### chartTheme
-
-Scene colors for `defineChart({ theme })`: gridlines, axis text, and focus guides in the design tokens instead of the library's defaults. The library paints each role at a fixed opacity, so `grid` is `colors.foreground` at the 11% the library applies, which lands on `colors.border` — the value a chart falls back to when `renderSvg` is replaced and the gridlines are not restyled.
-
-### chartAxis
-
-Axis presentation for a scale's `axis` option: the gridlines carry the structure, so the domain line and tick stubs are off, and tick labels sit at the caption size in `colors.mutedForeground`. Spread it when an axis needs more, and spread `chartAxis.ticks` too when that axis sets its own `count` or `format`:
-
-```tsx
-axis: {
-  ...chartAxis,
-  label: 'Revenue',
-  ticks: { ...chartAxis.ticks, format: (value) => currency.format(Number(value)) },
-}
-```
-
-The axis title is the one guide the library does not expose a style hook for: it renders one step below the tick labels at weight 600.
-
-### chartGridAxis
-
-Axis presentation for a scale whose gridlines are all that should show: no domain line, no tick stubs, no labels, and four bands of grid. A value axis behind a mark usually reads better this way, with the tooltip carrying the number.
-
-`axis: false` also hides an axis, but it leaves the tick count to the plot height, which on a tall chart draws about twice as many gridlines as the eye needs. Spread `chartGridAxis` to change the count:
-
-```tsx
-axis: { ...chartGridAxis, ticks: { ...chartGridAxis.ticks, count: 6 } }
-```
-
-### chartCurve
-
-Monotone cubic interpolation for a mark's `curve`, on `lineY`, `areaY`, and the other curve-taking marks. It smooths the path without letting it overshoot a data point.
-
-```tsx
-lineY(rows, { x: 'month', y: 'visitors', strokeWidth: 2, curve: chartCurve })
-```
-
-The library's own curve adapter, `d3Curve`, takes a `d3-shape` curve factory, which is a dependency this component does not install; `chartCurve` is the same construction with no dependency.
+The color lives here and is read back where the mark is declared — `fill={chartConfig.revenue.color}` — so one value reaches the plot, the tooltip, and the legend.
 
 ### ChartContainer
 
-A `div` that acts as the theme bridge: it maps the design tokens onto the CSS custom properties TanStack Charts reads (the six palette slots, the tooltip chrome, the focus and crosshair fills) and sets the font and color the scene inherits. Wrap every `Chart` in one. It is a column flex box with `min-width: 0`, so the chart stays responsive and a `ChartLegend` placed after it stacks below the plot.
+Provides the config to the tooltip and legend bodies, sets the font and color the chart's text inherits, and measures the plot. Its single child is the chart element.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+| `config` | `ChartConfig` | — | Series labels and colors (required). |
+| `children` | `ReactElement` | — | The chart element, e.g. `<BarChart>` (required). |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. Override `aspectRatio` here. |
 
 All native `div` props are forwarded.
+
+### ChartTooltip
+
+Recharts' `Tooltip`, re-exported. Give it a body with `content={<ChartTooltipContent />}`, and set `cursor` to a token so the hover marker matches the theme: `cursor={{ fill: colors.accent }}` for bars, `cursor={{ stroke: colors.border }}` for lines and areas, `cursor={false}` where none is wanted.
 
 ### ChartTooltipContent
 
-Body for `Chart`'s `renderTooltipBody`. Spread the render context straight in: `renderTooltipBody={(context) => <ChartTooltipContent {...context} />}`. The chart keeps ownership of focus, anchoring, placement, pinning, and dismissal; this renders the title and one swatch + label + value row per focused series.
-
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `content` | `ChartTooltipContent \| string` | — | The tooltip model from the render context (required). |
-| `points` | `readonly ChartPoint[]` | `[]` | Focused points from the render context, matched to rows by index. |
 | `indicator` | `'dot' \| 'line'` | `'dot'` | Swatch shape next to each row. |
-| `formatter` | `(value: string, name: string, point?: ChartPoint) => ReactNode` | — | Replaces a row's formatted value. |
-| `hideLabel` | `boolean` | `false` | Omits the title (the shared axis value on grouped focus). |
+| `hideLabel` | `boolean` | `false` | Omits the title. |
+| `hideIndicator` | `boolean` | `false` | Omits the swatches. |
+| `labelKey` | `string` | — | Config key for the title, when the axis value is not one. |
+| `nameKey` | `string` | — | Config key for every row's label, when the `dataKey` is not one. |
+| `formatter` | `(value, name, item, index, payload) => ReactNode` | — | Replaces a row's value. |
+| `labelFormatter` | `(label, payload) => ReactNode` | — | Replaces the title. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-`defaultBody`, `pinned`, and `dismiss` from the render context are accepted and ignored so the context can be spread without picking fields.
+`active`, `payload`, and `label` are injected by `ChartTooltip`; you do not pass them.
 
 ### ChartLegend
 
+Recharts' `Legend`, re-exported. Give it a body with `content={<ChartLegendContent />}`.
+
+### ChartLegendContent
+
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `{ label: ReactNode; color: string; key?: string }[]` | — | Legend entries (required). `color` is any CSS color, including the palette references the chart resolves. |
-| `align` | `'start' \| 'center' \| 'end'` | `'center'` | Horizontal alignment of the row. |
+| `hideIcon` | `boolean` | `false` | Omits the swatches. |
+| `nameKey` | `string` | — | Config key for every entry's label, when the `dataKey` is not one. |
 | `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
 
-All native `div` props are forwarded.
+`payload` and `verticalAlign` are injected by `ChartLegend`.
 
-### useChartLegend
+### useChart
 
 ```ts
-const { items, onRender } = useChartLegend();
+const { config } = useChart();
 ```
 
-| Value | Type | Description |
-| --- | --- | --- |
-| `items` | `readonly ChartLegendItem[]` | One entry per value of the chart's resolved color domain, colored with the scale's own mapping. |
-| `onRender` | `(context) => void` | Pass to `<Chart onRender={onRender} />`. Compares the domain by value and only produces new `items` when it changes. |
+The config of the nearest `ChartContainer`, for a tooltip or legend body of your own. Throws outside one.
 
 ### Styling
 
-`ChartContainer`, `ChartTooltipContent`, `ChartLegend` accept `style` (`StyleXStyles`, merged last so caller overrides always win) plus all native props of the element they render. `Chart` takes the library's own `className` / `style` (plain CSS) — prefer styling the container.
+`ChartContainer`, `ChartTooltipContent`, and `ChartLegendContent` accept `style` (`StyleXStyles`, merged last so caller overrides always win).
 
-The scene itself is painted by the library, not by CSS, so its colors come from `chartTheme` and the six palette slots `ChartContainer` maps onto the library's custom properties. Mark styling — stroke widths, fill opacities, bar radii and insets, curves — belongs on the marks in the definition, and scene sizes there are plain numbers in SVG user units rather than tokens.
+The plot itself is painted by Recharts as SVG, so its colors and geometry are props on the marks and guides rather than CSS. Tokens work there directly — they compile to `var()`, which SVG paint resolves the same way CSS does:
+
+```tsx
+<CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+<XAxis
+  dataKey="month"
+  tickLine={false}
+  axisLine={false}
+  tickMargin={8}
+  tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+/>
+```
+
+Sizes on a mark — `strokeWidth`, `radius`, `tickMargin`, `cornerRadius` — are plain numbers in SVG user units, not tokens.

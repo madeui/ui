@@ -1,15 +1,13 @@
 'use client';
 
 import * as stylex from '@stylexjs/stylex';
-import { areaY, defineChart, lineY } from '@tanstack/charts';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { scalePoint } from '@tanstack/charts/scales/point';
+import { Area, AreaChart, YAxis } from 'recharts';
 
 import { space, fontSize, fontWeight, lineHeight, container } from '@/lib/constants.stylex';
 import { colors } from '@/lib/tokens.stylex';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Chart, ChartContainer, chartCurve, chartTheme } from '@/components/ui/chart';
+import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
 
 const activeUsers = [
   { day: 1, users: 1180 },
@@ -28,54 +26,19 @@ const activeUsers = [
   { day: 14, users: 1690 },
 ];
 
+const chartConfig = {
+  users: { label: 'Active users', color: colors.chart1 },
+} satisfies ChartConfig;
+
 // A sparkline reads as shape, not magnitude, so the scale spans the data
-// rather than starting at zero — anchoring at zero flattens a 43% rise into a
-// straight line. The tenth-of-a-range padding keeps the stroke off the edges,
-// which `margin: 0` would otherwise clip, and the area fills to that floor.
+// rather than starting at zero — a zero baseline flattens a 43% rise into a
+// straight line. The tenth-of-a-range padding keeps the stroke off the edges.
 const users = activeUsers.map((point) => point.users);
 const padding = (Math.max(...users) - Math.min(...users)) / 10;
-const floor = Math.min(...users) - padding;
-const ceiling = Math.max(...users) + padding;
-
-// No guides, zero margin, and no focus or keyboard behavior: the plot fills
-// the box and reads as decoration next to the number that carries the value.
-// The fill is a top-down gradient of the series color: `gradients` puts the
-// `<linearGradient>` in the scene's defs and a mark reaches it by id.
-const definition = defineChart({
-  gradients: [
-    {
-      id: 'sparkline',
-      x1: 0,
-      y1: 0,
-      x2: 0,
-      y2: 1,
-      stops: [
-        { offset: 0, color: colors.chart1, opacity: 0.8 },
-        { offset: 1, color: colors.chart1, opacity: 0.1 },
-      ],
-    },
-  ],
-  marks: [
-    areaY(activeUsers, {
-      x: 'day',
-      y: 'users',
-      y1: floor,
-      curve: chartCurve,
-      fill: 'url(#sparkline)',
-      fillOpacity: 1,
-    }),
-    lineY(activeUsers, { x: 'day', y: 'users', strokeWidth: 2, curve: chartCurve }),
-  ],
-  scales: {
-    x: { scale: scalePoint },
-    y: { scale: () => scaleLinear().domain([floor, ceiling]) },
-  },
-  theme: chartTheme,
-  guides: false,
-  margin: 0,
-  pointer: false,
-  keyboard: false,
-});
+const domain: [number, number] = [
+  Math.min(...users) - padding,
+  Math.max(...users) + padding,
+];
 
 export default function ChartSparkline() {
   return (
@@ -85,12 +48,32 @@ export default function ChartSparkline() {
         <CardTitle style={styles.value}>1,690</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer>
-          <Chart
-            definition={definition}
-            aspectRatio={6}
-            ariaLabel="Active users over the last 14 days"
-          />
+        {/* No axes, no grid, no tooltip: the plot is decoration next to the
+            number that carries the value. The margin is only what keeps the
+            stroke off the edges it would otherwise be clipped by. */}
+        <ChartContainer config={chartConfig} style={styles.chart}>
+          <AreaChart
+            data={activeUsers}
+            margin={{ top: 2, right: 2, bottom: 0, left: 2 }}
+          >
+            <defs>
+              <linearGradient id="sparkline-users" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={chartConfig.users.color} stopOpacity={0.8} />
+                <stop offset="100%" stopColor={chartConfig.users.color} stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+            {/* A hidden axis is what carries the domain when none is drawn. */}
+            <YAxis hide domain={domain} />
+            <Area
+              dataKey="users"
+              type="monotone"
+              baseValue={domain[0]}
+              stroke={chartConfig.users.color}
+              strokeWidth={2}
+              fill="url(#sparkline-users)"
+              isAnimationActive={false}
+            />
+          </AreaChart>
         </ChartContainer>
         <p {...stylex.props(styles.caption)}>Up 43% over 14 days</p>
       </CardContent>
@@ -101,6 +84,9 @@ export default function ChartSparkline() {
 const styles = stylex.create({
   card: {
     width: container.md,
+  },
+  chart: {
+    aspectRatio: '4',
   },
   value: {
     fontSize: fontSize.xl,

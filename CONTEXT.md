@@ -36,10 +36,13 @@ An npm package other than Base UI, StyleX, and lucide that a component
 imports. Declared on the registry item and installed by the CLI.
 _Avoid_: third-party dep, peer
 
-**Theme bridge**:
-A part whose only job is to map madeui tokens onto the CSS custom properties a
-third-party renderer reads (`ChartContainer`).
-_Avoid_: wrapper, theme provider
+**Chart config**:
+The object a chart is described by: one entry per series, keyed by its
+`dataKey`, carrying the series' label and its color token. `ChartContainer`
+provides it through context; the tooltip and legend bodies read labels and
+swatch colors out of it, and the mark is filled from the same entry, so one
+value reaches the plot and the chrome.
+_Avoid_: theme bridge, chart theme, series map
 
 **Token**:
 A themable design value from `lib/tokens.stylex.ts` (colors, radius, font,

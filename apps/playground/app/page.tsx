@@ -77,7 +77,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Chart, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart';
 import {
   DatePicker,
   DatePickerContent,
@@ -88,10 +93,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { barY, defineChart } from '@tanstack/charts';
-import { scaleBand } from '@tanstack/charts/scales/band';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
@@ -335,7 +337,6 @@ function ToastButton() {
   );
 }
 
-// Chart definition at module scope: its identity is the chart's update boundary.
 const revenue = [
   { month: 'Jan', revenue: 18600 },
   { month: 'Feb', revenue: 30500 },
@@ -344,14 +345,10 @@ const revenue = [
   { month: 'May', revenue: 20900 },
   { month: 'Jun', revenue: 21400 },
 ];
-const revenueChart = defineChart({
-  marks: [barY(revenue, { x: 'month', y: 'revenue' })],
-  scales: {
-    x: { scale: () => scaleBand().padding(0.3) },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Revenue' } },
-  },
-  tooltip: { use: tooltip, items: [{ channel: 'x', label: 'Month' }, 'y'] },
-});
+// Config at module scope: it is the container's context value.
+const revenueConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
 
 export default function Home() {
   const [dark, setDark] = useState(false);
@@ -1042,13 +1039,30 @@ export default function Home() {
         </section>
 
         <section {...stylex.props(styles.row)} data-section="external-3">
-          <ChartContainer style={styles.chart}>
-            <Chart
-              definition={revenueChart}
-              height={240}
-              ariaLabel="Monthly revenue, January to June"
-              renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
-            />
+          <ChartContainer config={revenueConfig} style={styles.chart}>
+            <BarChart accessibilityLayer data={revenue}>
+              <CartesianGrid
+                vertical={false}
+                stroke={colors.border}
+                strokeDasharray="4 4"
+              />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+              />
+              <ChartTooltip
+                cursor={{ fill: colors.accent }}
+                content={<ChartTooltipContent />}
+              />
+              <Bar
+                dataKey="revenue"
+                fill={revenueConfig.revenue.color}
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
           </ChartContainer>
         </section>
       </main>

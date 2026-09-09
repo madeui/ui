@@ -1,20 +1,16 @@
 'use client';
 
 import * as stylex from '@stylexjs/stylex';
-import { barY, defineChart } from '@tanstack/charts';
-import { scaleBand } from '@tanstack/charts/scales/band';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
-import { container } from '@/lib/constants.stylex';
+import { container, fontSize } from '@/lib/constants.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 import {
-  Chart,
   ChartContainer,
+  ChartTooltip,
   ChartTooltipContent,
-  chartAxis,
-  chartGridAxis,
-  chartTheme,
+  type ChartConfig,
 } from '@/components/ui/chart';
 
 const revenue = [
@@ -26,38 +22,32 @@ const revenue = [
   { month: 'Jun', revenue: 21400 },
 ];
 
-// Module-scope definition: its identity is the chart's update boundary.
-// `radius` is a corner radius in scene pixels and rounds all four corners of
-// the bar, so it stays small enough not to lift the bar off the baseline.
-const definition = defineChart({
-  marks: [barY(revenue, { x: 'month', y: 'revenue', radius: 4 })],
-  scales: {
-    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
-    // `chartGridAxis` keeps the scale and its gridlines and drops the visible
-    // axis: the grid already carries the magnitude, and the tooltip carries
-    // the value.
-    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
-  },
-  theme: chartTheme,
-  // Row order and labels of the single-point tooltip.
-  tooltip: {
-    use: tooltip,
-    items: [
-      { channel: 'x', label: 'Month' },
-      { channel: 'y', label: 'Revenue' },
-    ],
-  },
-});
+// The config is the single source for the series label and its color: the
+// tooltip reads the label from here, and the mark below is filled from the
+// same entry.
+const chartConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
 
 export default function ChartDemo() {
   return (
-    <ChartContainer style={styles.chart}>
-      <Chart
-        definition={definition}
-        aspectRatio={16 / 9}
-        ariaLabel="Monthly revenue, January to June"
-        renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
-      />
+    <ChartContainer config={chartConfig} style={styles.chart}>
+      <BarChart accessibilityLayer data={revenue} margin={{ left: 12, right: 12 }}>
+        <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+        />
+        <ChartTooltip
+          cursor={{ fill: colors.accent }}
+          content={<ChartTooltipContent />}
+        />
+        {/* Rounded only at the data end, so the bar stays anchored to the baseline. */}
+        <Bar dataKey="revenue" fill={chartConfig.revenue.color} radius={[4, 4, 0, 0]} />
+      </BarChart>
     </ChartContainer>
   );
 }

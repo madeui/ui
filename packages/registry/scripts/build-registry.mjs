@@ -79,7 +79,7 @@ const DESCRIPTIONS = {
   carousel:
     'Slide carousel built on Embla: content, items, previous/next buttons, dots; horizontal or vertical.',
   chart:
-    'Charts built on TanStack Charts (alpha, pinned): themed container, tooltip body, and HTML legend.',
+    'Charts built on Recharts: a config-driven container plus tooltip and legend bodies. Client-rendered.',
   'date-picker':
     'Date picker composing Popover, Button, and Calendar: single or range mode, formatted value, presets.',
   resizable:
@@ -109,7 +109,7 @@ const EXTERNAL_DEPENDENCIES = {
   'date-fns': 'date-fns@^4',
   'embla-carousel-react': 'embla-carousel-react@^8',
   'react-resizable-panels': 'react-resizable-panels@^4',
-  '@tanstack/charts': '@tanstack/charts@0.16.0',
+  recharts: 'recharts@^3',
 };
 
 const read = (path) => readFile(join(root, path), 'utf8');

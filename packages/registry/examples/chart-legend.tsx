@@ -1,74 +1,60 @@
 'use client';
 
 import * as stylex from '@stylexjs/stylex';
-import { barY, defineChart, group } from '@tanstack/charts';
-import { scaleBand } from '@tanstack/charts/scales/band';
-import { scaleLinear } from '@tanstack/charts/scales/linear';
-import { tooltip } from '@tanstack/charts/tooltip';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
-import { container } from '@/lib/constants.stylex';
+import { container, fontSize } from '@/lib/constants.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 import {
-  Chart,
   ChartContainer,
   ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
   ChartTooltipContent,
-  chartAxis,
-  chartGridAxis,
-  chartTheme,
-  useChartLegend,
+  type ChartConfig,
 } from '@/components/ui/chart';
 
 const sales = [
-  { quarter: 'Q1', region: 'Europe', sales: 120 },
-  { quarter: 'Q1', region: 'Americas', sales: 98 },
-  { quarter: 'Q1', region: 'Asia', sales: 64 },
-  { quarter: 'Q2', region: 'Europe', sales: 135 },
-  { quarter: 'Q2', region: 'Americas', sales: 110 },
-  { quarter: 'Q2', region: 'Asia', sales: 82 },
-  { quarter: 'Q3', region: 'Europe', sales: 128 },
-  { quarter: 'Q3', region: 'Americas', sales: 125 },
-  { quarter: 'Q3', region: 'Asia', sales: 97 },
-  { quarter: 'Q4', region: 'Europe', sales: 150 },
-  { quarter: 'Q4', region: 'Americas', sales: 140 },
-  { quarter: 'Q4', region: 'Asia', sales: 115 },
+  { quarter: 'Q1', europe: 120, americas: 98, asia: 64 },
+  { quarter: 'Q2', europe: 135, americas: 110, asia: 82 },
+  { quarter: 'Q3', europe: 128, americas: 125, asia: 97 },
+  { quarter: 'Q4', europe: 150, americas: 140, asia: 115 },
 ];
 
-const definition = defineChart({
-  marks: [
-    barY(sales, {
-      x: 'quarter',
-      y: 'sales',
-      color: 'region',
-      layout: group({ padding: 0.15 }),
-      radius: 4,
-    }),
-  ],
-  scales: {
-    x: { scale: () => scaleBand().padding(0.3), axis: chartAxis },
-    y: { scale: scaleLinear, nice: true, grid: true, axis: chartGridAxis },
-  },
-  theme: chartTheme,
-  color: { domain: ['Europe', 'Americas', 'Asia'] },
-  focus: 'group-x',
-  tooltip,
-});
+const chartConfig = {
+  europe: { label: 'Europe', color: colors.chart1 },
+  americas: { label: 'Americas', color: colors.chart2 },
+  asia: { label: 'Asia', color: colors.chart3 },
+} satisfies ChartConfig;
 
 export default function ChartLegendExample() {
-  // Reads the resolved color scale after each render; items keep their
-  // identity until the domain or its colors change.
-  const { items, onRender } = useChartLegend();
-
   return (
-    <ChartContainer style={styles.chart}>
-      <Chart
-        definition={definition}
-        aspectRatio={16 / 9}
-        ariaLabel="Quarterly sales by region"
-        onRender={onRender}
-        renderTooltipBody={(context) => <ChartTooltipContent {...context} />}
-      />
-      <ChartLegend items={items} />
+    <ChartContainer config={chartConfig} style={styles.chart}>
+      <BarChart accessibilityLayer data={sales} margin={{ left: 12, right: 12 }}>
+        <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+        <XAxis
+          dataKey="quarter"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+        />
+        <ChartTooltip
+          cursor={{ fill: colors.accent }}
+          content={<ChartTooltipContent />}
+        />
+        {/* `verticalAlign` reaches the body, which pads on the side facing the
+            plot; the entries take their label and color from the config. */}
+        <ChartLegend
+          itemSorter={null}
+          verticalAlign="top"
+          content={<ChartLegendContent />}
+        />
+        <Bar dataKey="europe" fill={chartConfig.europe.color} radius={[4, 4, 0, 0]} />
+        <Bar dataKey="americas" fill={chartConfig.americas.color} radius={[4, 4, 0, 0]} />
+        <Bar dataKey="asia" fill={chartConfig.asia.color} radius={[4, 4, 0, 0]} />
+      </BarChart>
     </ChartContainer>
   );
 }
