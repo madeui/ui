@@ -202,6 +202,12 @@ export default defineConfig({
   content: { root: 'content' },
   // Absolute origin for sitemap, canonicals, and the changelog RSS feed.
   deployment: { site: 'https://madeui.com' },
+  // Vercel Web Analytics: first-party script served from our own domain,
+  // injected by Blume in production builds only (never under `blume dev`).
+  // No key — it reports to the project it is deployed under, which means it
+  // only collects anything once Web Analytics is enabled for the project in
+  // the Vercel dashboard.
+  analytics: { vercel: true },
   navigation: {
     // href lands on the generated timeline index; without it the tab would
     // resolve to the newest entry (the changelog index isn't a content page).
