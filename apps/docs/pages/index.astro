@@ -9,6 +9,7 @@
 // at madeui's own tokens below so the dialog is painted in the page's palette.
 import * as stylex from '@stylexjs/stylex';
 import data from 'blume:data';
+import Analytics from 'blume/components/layout/Analytics.astro';
 import Search from 'blume/components/layout/Search.astro';
 import 'blume:theme';
 
@@ -100,6 +101,10 @@ body h1, body h2, body h3, body h4, body h5, body h6 {
       })();
     </script>
     <style is:inline set:html={bridge}></style>
+    {/* This page writes its own <html>, so Blume's RootLayout never runs
+        here — analytics has to be rendered by hand or the landing page is
+        the one page that goes uncounted. Prod-only gating lives inside. */}
+    <Analytics analytics={data.config.analytics} />
   </head>
   <body>
     <IndexPage client:load />
