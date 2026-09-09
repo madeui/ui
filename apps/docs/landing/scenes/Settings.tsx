@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import * as stylex from '@stylexjs/stylex';
 
 import {
@@ -10,7 +12,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
+import {
+  DatePicker,
+  DatePickerContent,
+  DatePickerTrigger,
+} from '@/components/ui/date-picker';
 import {
   Field,
   FieldContent,
@@ -47,6 +55,10 @@ import { colors, radius } from '@/lib/tokens.stylex';
 
 import { Part } from './Part';
 
+// Fixed, not `new Date()`: the scene is server-rendered and then hydrated,
+// and a date that moves between the two is a hydration mismatch.
+const billingStart = new Date(2026, 8, 1);
+
 const densities = [
   { label: 'Comfortable', value: 'comfortable' },
   { label: 'Compact', value: 'compact' },
@@ -59,6 +71,8 @@ const notifications = [
 ];
 
 export default function Settings() {
+  const [invoiceRun, setInvoiceRun] = React.useState<Date | undefined>(billingStart);
+
   return (
     <div {...stylex.props(styles.screen)}>
       <header {...stylex.props(styles.heading)}>
@@ -72,11 +86,12 @@ export default function Settings() {
             <TabsTrigger value="general" style={styles.tab}>General</TabsTrigger>
             <TabsTrigger value="notifications" style={styles.tab}>Notifications</TabsTrigger>
             <TabsTrigger value="appearance" style={styles.tab}>Appearance</TabsTrigger>
+            <TabsTrigger value="billing" style={styles.tab}>Billing</TabsTrigger>
             <TabsTrigger value="danger" style={styles.tab}>Danger zone</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" style={styles.section}>
-            <Part name={['field', 'input', 'textarea']}>
+            <Part name={['field', 'input', 'textarea', 'date-picker']}>
               <FieldSet>
                 <FieldLegend>Profile</FieldLegend>
                 <FieldGroup>
@@ -88,6 +103,14 @@ export default function Settings() {
                     <FieldLabel htmlFor="settings-slug">URL</FieldLabel>
                     <Input id="settings-slug" defaultValue="acme" />
                     <FieldDescription>app.example.com/acme</FieldDescription>
+                  </Field>
+                  <Field>
+                    <FieldLabel>Billing period starts</FieldLabel>
+                    <DatePicker defaultValue={billingStart}>
+                      <DatePickerTrigger />
+                      <DatePickerContent />
+                    </DatePicker>
+                    <FieldDescription>Invoices go out on this day each month.</FieldDescription>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="settings-bio">Description</FieldLabel>
@@ -184,6 +207,28 @@ export default function Settings() {
                 </FieldContent>
                 <Switch aria-label="Reduce motion" />
               </Field>
+            </Part>
+          </TabsContent>
+
+          <TabsContent value="billing" style={styles.section}>
+            <Part name="calendar">
+              <FieldSet>
+                <FieldLegend>Invoice run</FieldLegend>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel>Next run</FieldLabel>
+                    <Calendar
+                      mode="single"
+                      selected={invoiceRun}
+                      onSelect={setInvoiceRun}
+                      style={styles.calendar}
+                    />
+                    <FieldDescription>
+                      Invoices for the period are generated on this day.
+                    </FieldDescription>
+                  </Field>
+                </FieldGroup>
+              </FieldSet>
             </Part>
           </TabsContent>
 
@@ -288,6 +333,11 @@ const styles = stylex.create({
     maxWidth: container.xxl,
     minWidth: 0,
     width: '100%',
+  },
+  // The calendar root fills its box; a settings field is not a popup, so
+  // it is held to a control's width instead of the panel's.
+  calendar: {
+    maxWidth: container.md,
   },
   row: {
     display: 'flex',

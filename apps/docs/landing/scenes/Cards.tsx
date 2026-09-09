@@ -4,6 +4,12 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/u
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import {
   Card,
   CardContent,
   CardDescription,
@@ -18,7 +24,6 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Label } from '@/components/ui/label';
-import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
@@ -42,6 +47,12 @@ const plans = [
   { value: 'starter', label: 'Starter', price: 'Free' },
   { value: 'team', label: 'Team', price: '$12 / seat' },
   { value: 'business', label: 'Business', price: '$29 / seat' },
+];
+
+const tips = [
+  { title: 'Bulk actions', body: 'Select several invoices and send them in one go.' },
+  { title: 'Saved views', body: 'Keep a filter as a view and share it with the team.' },
+  { title: 'Export presets', body: 'Reuse the column set your accountant asks for.' },
 ];
 
 const access = [
@@ -178,21 +189,27 @@ export default function Cards() {
         </Card>
       </Part>
 
-      <Part name="meter" style={styles.storage}>
+      <Part name="carousel" style={styles.tips}>
         <Card size="sm" style={styles.card}>
           <CardHeader>
-            <CardTitle>Storage</CardTitle>
-            <CardDescription>Attachments and exports.</CardDescription>
+            <CardTitle>What&rsquo;s new</CardTitle>
+            <CardDescription>Three things worth a minute.</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Meter value={24} max={64} locale="en-US">
-              <MeterLabel>Used</MeterLabel>
-              <MeterValue>{(_, value) => `${value} of 64 GB`}</MeterValue>
-            </Meter>
+          <CardContent style={styles.fill}>
+            {/* Dots only: the cell is too narrow for side buttons, and the
+                slides are read in order anyway. */}
+            <Carousel style={styles.carousel}>
+              <CarouselContent>
+                {tips.map((tip) => (
+                  <CarouselItem key={tip.title}>
+                    <span {...stylex.props(styles.tipTitle)}>{tip.title}</span>
+                    <p {...stylex.props(styles.tipBody)}>{tip.body}</p>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselDots />
+            </Carousel>
           </CardContent>
-          <CardFooter style={styles.footer}>
-            <Button variant="outline">Manage storage</Button>
-          </CardFooter>
         </Card>
       </Part>
 
@@ -346,11 +363,31 @@ const styles = stylex.create({
   rate: { gridArea: cell('1 / 2 / 3 / 3') },
   plan: { gridArea: cell('1 / 3 / 3 / 4') },
   notify: { gridArea: cell('1 / 4 / 2 / 5') },
-  storage: { gridArea: cell('2 / 1 / 3 / 2') },
+  tips: { gridArea: cell('2 / 1 / 3 / 2') },
   budget: { gridArea: cell('2 / 4 / 4 / 5') },
   share: { gridArea: cell('3 / 1 / 4 / 2') },
   alerts: { gridArea: cell('3 / 2 / 4 / 3') },
   keys: { gridArea: cell('3 / 3 / 4 / 4') },
+  fill: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  carousel: {
+    width: '100%',
+  },
+  tipTitle: {
+    display: 'block',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+  },
+  tipBody: {
+    color: colors.mutedForeground,
+    fontSize: fontSize.sm,
+    margin: 0,
+    marginBlockStart: space.s1,
+  },
   card: {
     height: '100%',
     width: '100%',

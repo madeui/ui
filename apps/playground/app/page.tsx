@@ -68,6 +68,32 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart';
+import {
+  DatePicker,
+  DatePickerContent,
+  DatePickerTrigger,
+} from '@/components/ui/date-picker';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 import { NumberField, NumberFieldGroup } from '@/components/ui/number-field';
@@ -310,6 +336,19 @@ function ToastButton() {
     </Button>
   );
 }
+
+const revenue = [
+  { month: 'Jan', revenue: 18600 },
+  { month: 'Feb', revenue: 30500 },
+  { month: 'Mar', revenue: 23700 },
+  { month: 'Apr', revenue: 7300 },
+  { month: 'May', revenue: 20900 },
+  { month: 'Jun', revenue: 21400 },
+];
+// Config at module scope: it is the container's context value.
+const revenueConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
 
 export default function Home() {
   const [dark, setDark] = useState(false);
@@ -959,6 +998,73 @@ export default function Home() {
             </ScrollArea>
           </div>
         </section>
+        <section {...stylex.props(styles.row)} data-section="external">
+          <Calendar mode="single" defaultMonth={new Date(2026, 8, 1)} />
+          <div {...stylex.props(styles.col)}>
+            <DatePicker>
+              <DatePickerTrigger />
+              <DatePickerContent />
+            </DatePicker>
+            <DatePicker mode="range" placeholder="Pick a date range">
+              <DatePickerTrigger />
+              <DatePickerContent numberOfMonths={2} />
+            </DatePicker>
+          </div>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="external-2">
+          <div {...stylex.props(styles.resizableFrame)}>
+            <ResizablePanelGroup>
+              <ResizablePanel defaultSize="50%" minSize="20%">
+                <div {...stylex.props(styles.panelContent)}>One</div>
+              </ResizablePanel>
+              <ResizableHandle withHandle />
+              <ResizablePanel defaultSize="50%" minSize="20%">
+                <div {...stylex.props(styles.panelContent)}>Two</div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+          <Carousel style={styles.carousel}>
+            <CarouselContent>
+              {Array.from({ length: 5 }, (_, index) => (
+                <CarouselItem key={index}>
+                  <div {...stylex.props(styles.slide)}>{index + 1}</div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+            <CarouselDots />
+          </Carousel>
+        </section>
+
+        <section {...stylex.props(styles.row)} data-section="external-3">
+          <ChartContainer config={revenueConfig} style={styles.chart}>
+            <BarChart accessibilityLayer data={revenue}>
+              <CartesianGrid
+                vertical={false}
+                stroke={colors.border}
+                strokeDasharray="4 4"
+              />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+              />
+              <ChartTooltip
+                cursor={{ fill: colors.accent }}
+                content={<ChartTooltipContent />}
+              />
+              <Bar
+                dataKey="revenue"
+                fill={revenueConfig.revenue.color}
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ChartContainer>
+        </section>
       </main>
       <Toaster />
     </ToastProvider>
@@ -966,6 +1072,41 @@ export default function Home() {
 }
 
 const styles = stylex.create({
+  resizableFrame: {
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
+    height: container.xs,
+    overflow: 'hidden',
+    width: container.lg,
+  },
+  panelContent: {
+    alignItems: 'center',
+    backgroundColor: colors.muted,
+    display: 'flex',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    height: '100%',
+    justifyContent: 'center',
+  },
+  carousel: {
+    marginInline: space.s12,
+    width: container.sm,
+  },
+  slide: {
+    alignItems: 'center',
+    aspectRatio: '1',
+    backgroundColor: colors.muted,
+    borderRadius: radius.lg,
+    display: 'flex',
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
+    justifyContent: 'center',
+  },
+  chart: {
+    maxWidth: container.xxl,
+  },
   headerActions: {
     display: 'flex',
     gap: space.s2,

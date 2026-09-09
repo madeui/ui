@@ -1,0 +1,230 @@
+---
+title: Chart
+description: "Charts built on Recharts: a config-driven container plus tooltip and legend bodies, styled with the design tokens."
+sidebar:
+  badge: New
+---
+
+<Component path="chart-demo" />
+
+## Install
+
+```bash
+npx @madeui/cli add chart
+```
+
+Installs `recharts` alongside the component.
+
+<Callout type="info" title="Charts render in the browser">
+Recharts measures its container before it can lay a plot out, so a chart is empty until it mounts on the client. `ChartContainer` reserves the box with `aspect-ratio`, so the space is held from the first paint and nothing on the page moves when the plot arrives. In the Next.js App Router, any file that renders a chart needs `'use client'` at the top.
+</Callout>
+
+## Usage
+
+```tsx
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  useChart,
+  type ChartConfig,
+} from '@/components/ui/chart';
+```
+
+```tsx
+'use client';
+
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+
+import { colors } from '@/lib/tokens.stylex';
+
+const chartConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
+
+<ChartContainer config={chartConfig}>
+  <BarChart accessibilityLayer data={rows}>
+    <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Bar dataKey="revenue" fill={chartConfig.revenue.color} radius={[4, 4, 0, 0]} />
+  </BarChart>
+</ChartContainer>;
+```
+
+The config is the one place a series is named and colored. `ChartTooltipContent` and `ChartLegendContent` read the label and the swatch color out of it, and the mark is filled from the same entry — so a series never drifts between the plot and the chrome. Keys are the series' `dataKey`; on a pie or a radial bar, where every slice comes from one series, they are the values of its `nameKey` instead.
+
+Marks, axes, grids, and the chart element itself are Recharts' own components, composed directly. Nothing here wraps them.
+
+## Composition
+
+```tsx
+<ChartContainer config={chartConfig}>
+  <BarChart>
+    <CartesianGrid />
+    <XAxis />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Bar />
+  </BarChart>
+</ChartContainer>
+```
+
+## Sizing
+
+`ChartContainer` is a full-width box with an `aspect-ratio` of 16 / 9 and no height of its own. Change the ratio through `style`; a square suits a donut or a radar, and a wide, flat one suits a sparkline.
+
+```tsx
+const styles = stylex.create({
+  chart: { aspectRatio: '1', maxWidth: container.md },
+});
+
+<ChartContainer config={chartConfig} style={styles.chart}>
+```
+
+Reach for a fixed `height` only when the surrounding layout already fixes one. A ratio keeps the plot proportionate at every width, and it is what reserves the box before the chart mounts.
+
+## Line
+
+Two series, so the config carries two entries and a legend names both. `type="monotone"` smooths the path without letting it overshoot a data point, and the points stay undotted: the tooltip already marks the hovered month on every line, which is the only place a dot carries information.
+
+<Component path="chart-line" />
+
+## Stacked area
+
+A shared `stackId` stacks the layers and pins their order, so they never swap between updates. The fills are translucent; the stroke keeps each band's top edge legible where two of them meet.
+
+<Component path="chart-area" />
+
+## Donut
+
+`innerRadius` opens the hole, and a `<Cell>` per row takes its fill from the config. A stroke in the surface color separates the slices, so the ring reads as one shape cut into parts. The centre total is a `<Label>`, which scales with the plot and never covers a slice.
+
+<Component path="chart-pie" />
+
+## Radar
+
+`PolarGrid` and `PolarAngleAxis` draw the web and its labels. Two overlapping shapes need light fills and a visible outline — the outline is what carries the comparison.
+
+<Component path="chart-radar" />
+
+## Radial
+
+One ring per category, longest first. A radial bar's length is harder to compare than a straight one, so the order does the work a shared baseline does on a bar chart, and `background` traces the full ring so each bar reads as a share of it.
+
+<Component path="chart-radial" />
+
+## Legend
+
+`ChartLegend` is the chart's legend; `ChartLegendContent` is its body, and it takes each entry's label and swatch color from the config. `verticalAlign` reaches the body, which pads on the side facing the plot.
+
+<Component path="chart-legend" />
+
+## Tooltip
+
+`labelFormatter` rewrites the title, `formatter` rewrites a row's value, and `indicator="line"` swaps the dot for a bar as tall as its row — the shape to reach for when the rows carry a series stroke.
+
+<Component path="chart-tooltip" />
+
+## Sparkline
+
+No axes, no grid, no tooltip: the plot is decoration next to the number that carries the value, and a zero margin lets it fill the box edge to edge. The scale spans the data rather than starting at zero — a sparkline reads as shape, and a zero baseline flattens it. A hidden `<YAxis>` is what carries that domain when no axis is drawn.
+
+<Component path="chart-sparkline" />
+
+## API reference
+
+Built on [Recharts](https://recharts.org). The chart element, marks, axes, grids, and cursors are Recharts' own components, composed directly and documented in the [Recharts API reference](https://recharts.org/en-US/api); this component adds the config, the container, and the tooltip and legend bodies.
+
+No part takes `variant` or `size`: a chart has no meaningful preset axis, and sizing belongs to the container's aspect ratio.
+
+Pass `accessibilityLayer` on the chart element. It makes the plot focusable and steps through the data with the arrow keys, moving the tooltip with the keyboard focus, and it announces each point to a screen reader.
+
+The focus ring on a chart is the browser's own, not the ring the rest of the library draws: the focusable element is the `<svg>` Recharts renders, which no part here owns, and StyleX styles only elements it puts a class on. It is a visible keyboard focus indicator, so it is left as it is rather than replaced with something that would have to reach across a component boundary to work.
+
+### ChartConfig
+
+One entry per series, keyed by `dataKey` — or, where every mark comes from one series, by the values of its `nameKey`.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | `ReactNode` | Printed by the tooltip and the legend. |
+| `color` | `string` | The series color. Use the `chart1` … `chart6` tokens, which are themed for light and dark. |
+| `icon` | `ComponentType` | Rendered in the legend in place of the swatch. |
+
+The color lives here and is read back where the mark is declared — `fill={chartConfig.revenue.color}` — so one value reaches the plot, the tooltip, and the legend.
+
+### ChartContainer
+
+Provides the config to the tooltip and legend bodies, sets the font and color the chart's text inherits, and measures the plot. Its single child is the chart element.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `config` | `ChartConfig` | — | Series labels and colors (required). |
+| `children` | `ReactElement` | — | The chart element, e.g. `<BarChart>` (required). |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. Override `aspectRatio` here. |
+
+All native `div` props are forwarded.
+
+### ChartTooltip
+
+Recharts' `Tooltip`, re-exported. Give it a body with `content={<ChartTooltipContent />}`, and set `cursor` to a token so the hover marker matches the theme: `cursor={{ fill: colors.accent }}` for bars, `cursor={{ stroke: colors.border }}` for lines and areas, `cursor={false}` where none is wanted.
+
+### ChartTooltipContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `indicator` | `'dot' \| 'line'` | `'dot'` | Swatch shape next to each row. |
+| `hideLabel` | `boolean` | `false` | Omits the title. |
+| `hideIndicator` | `boolean` | `false` | Omits the swatches. |
+| `labelKey` | `string` | — | Config key for the title, when the axis value is not one. |
+| `nameKey` | `string` | — | Config key for every row's label, when the `dataKey` is not one. |
+| `formatter` | `(value, name, item, index, payload) => ReactNode` | — | Replaces a row's value. |
+| `labelFormatter` | `(label, payload) => ReactNode` | — | Replaces the title. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`active`, `payload`, and `label` are injected by `ChartTooltip`; you do not pass them.
+
+### ChartLegend
+
+Recharts' `Legend`, re-exported. Give it a body with `content={<ChartLegendContent />}`.
+
+### ChartLegendContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hideIcon` | `boolean` | `false` | Omits the swatches. |
+| `nameKey` | `string` | — | Config key for every entry's label, when the `dataKey` is not one. |
+| `style` | `StyleXStyles` | — | StyleX styles merged last — always win over the component's own styles. |
+
+`payload` and `verticalAlign` are injected by `ChartLegend`.
+
+### useChart
+
+```ts
+const { config } = useChart();
+```
+
+The config of the nearest `ChartContainer`, for a tooltip or legend body of your own. Throws outside one.
+
+### Styling
+
+`ChartContainer`, `ChartTooltipContent`, and `ChartLegendContent` accept `style` (`StyleXStyles`, merged last so caller overrides always win).
+
+The plot itself is painted by Recharts as SVG, so its colors and geometry are props on the marks and guides rather than CSS. Tokens work there directly — they compile to `var()`, which SVG paint resolves the same way CSS does:
+
+```tsx
+<CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
+<XAxis
+  dataKey="month"
+  tickLine={false}
+  axisLine={false}
+  tickMargin={8}
+  tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+/>
+```
+
+Sizes on a mark — `strokeWidth`, `radius`, `tickMargin`, `cornerRadius` — are plain numbers in SVG user units, not tokens.

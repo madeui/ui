@@ -11,6 +11,11 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -29,6 +34,26 @@ import {
   TrashIcon,
 } from '../icons';
 import { Part } from './Part';
+
+// The panel group lays itself out from its `orientation` prop, not from CSS,
+// so the phone layout has to be a value rather than a media query: side by
+// side would leave the mail list about 120px wide. Same pattern as the date
+// picker's month count.
+const NARROW_QUERY = '(max-width: 40rem)';
+
+function subscribeToNarrow(onChange: () => void) {
+  const query = window.matchMedia(NARROW_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+function useIsNarrow() {
+  return React.useSyncExternalStore(
+    subscribeToNarrow,
+    () => window.matchMedia(NARROW_QUERY).matches,
+    () => false
+  );
+}
 
 const folders = [
   { label: 'Inbox', icon: InboxIcon, count: 12, active: true },
@@ -118,6 +143,7 @@ const messages = [
 export default function Inbox() {
   const [selectedId, setSelectedId] = React.useState('m1');
   const selected = messages.find((m) => m.id === selectedId) ?? messages[0];
+  const narrow = useIsNarrow();
 
   return (
     <TooltipProvider>
@@ -145,128 +171,263 @@ export default function Inbox() {
           </div>
         </Part>
 
-        <Part name={["input-group", "scroll-area", "avatar"]} style={styles.list}>
-          <div {...stylex.props(styles.listInner)}>
-            <div {...stylex.props(styles.listHead)}>
-              <h3 {...stylex.props(styles.listTitle)}>
-                Inbox <Badge variant="secondary">12</Badge>
-              </h3>
-              <InputGroup>
-                <InputGroupAddon>
-                  <SearchIcon size={16} />
-                </InputGroupAddon>
-                <InputGroupInput placeholder="Search mail" aria-label="Search mail" />
-              </InputGroup>
-            </div>
-            <ScrollArea style={styles.scroll}>
-              <ul {...stylex.props(styles.rows)} aria-label="Messages">
-                {messages.map((m) => {
-                  const isSelected = m.id === selectedId;
-                  return (
-                    <li key={m.id}>
-                      <button
-                        type="button"
-                        aria-pressed={isSelected}
-                        onClick={() => setSelectedId(m.id)}
-                        {...stylex.props(styles.row, isSelected && styles.rowSelected)}
-                      >
-                        <Avatar size="sm">
-                          <AvatarFallback>{m.initials}</AvatarFallback>
-                        </Avatar>
-                        <span {...stylex.props(styles.rowText)}>
-                          <span {...stylex.props(styles.rowTop)}>
-                            <span {...stylex.props(styles.rowFrom, m.unread && styles.unread)}>
-                              {m.from}
-                            </span>
-                            <span {...stylex.props(styles.rowTime)}>{m.time}</span>
-                          </span>
-                          <span {...stylex.props(styles.rowSubject, m.unread && styles.unread)}>
-                            {m.subject}
-                          </span>
-                          <span {...stylex.props(styles.rowSnippet)}>{m.snippet}</span>
-                        </span>
-                        {m.unread && <i aria-label="Unread" {...stylex.props(styles.dot)} />}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </ScrollArea>
-          </div>
-        </Part>
-
-        <div {...stylex.props(styles.reading)}>
-          <article {...stylex.props(styles.readingInner)} aria-live="polite">
-            <header {...stylex.props(styles.readingHead)}>
-              <h3 {...stylex.props(styles.subject)}>{selected.subject}</h3>
-              <Part name={['button-group', 'tooltip']}>
-              <ButtonGroup>
-                <Tooltip>
-                  <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Archive" />}>
-                    <ArchiveIcon size={16} />
-                  </TooltipTrigger>
-                  <TooltipContent>Archive</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Snooze" />}>
-                    <ClockIcon size={16} />
-                  </TooltipTrigger>
-                  <TooltipContent>Snooze</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Delete" />}>
-                    <TrashIcon size={16} />
-                  </TooltipTrigger>
-                  <TooltipContent>Delete</TooltipContent>
-                </Tooltip>
-              </ButtonGroup>
-              </Part>
-            </header>
-            <div {...stylex.props(styles.sender)}>
-              <Avatar size="sm">
-                <AvatarFallback>{selected.initials}</AvatarFallback>
-              </Avatar>
-              <span {...stylex.props(styles.senderText)}>
-                <span {...stylex.props(styles.senderName)}>{selected.from}</span>
-                <span {...stylex.props(styles.senderEmail)}>{selected.email}</span>
-              </span>
-              <span {...stylex.props(styles.senderTime)}>{selected.time}</span>
-            </div>
-            <Separator />
-            <div {...stylex.props(styles.body)}>
-              {selected.body.map((paragraph) => (
-                <p key={paragraph} {...stylex.props(styles.paragraph)}>
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-            <Part name={['textarea', 'kbd', 'button']}>
-            <div {...stylex.props(styles.reply)}>
-              <Textarea
-                rows={3}
-                placeholder={`Reply to ${selected.from.split(' ')[0]}…`}
-                aria-label="Reply"
-              />
-              <div {...stylex.props(styles.replyBar)}>
-                <Button variant="ghost" size="sm">
-                  <PaperclipIcon size={16} />
-                  Attach
-                </Button>
-                <span {...stylex.props(styles.replyActions)}>
-                  <KbdGroup>
-                    <Kbd>⌘</Kbd>
-                    <Kbd>↵</Kbd>
-                  </KbdGroup>
-                  <Button size="sm">
-                    <SendIcon size={16} />
-                    Send
-                  </Button>
-                </span>
+        {/* A split the mail client actually has: drag the divider, or focus
+            it and use the arrow keys. On a phone there is no room to trade
+            between two panes, so they simply stack. */}
+        {narrow ? (
+          <div {...stylex.props(styles.stack)}>
+          <Part name={["input-group", "scroll-area", "avatar", "resizable"]} style={styles.list}>
+            <div {...stylex.props(styles.listInner)}>
+              <div {...stylex.props(styles.listHead)}>
+                <h3 {...stylex.props(styles.listTitle)}>
+                  Inbox <Badge variant="secondary">12</Badge>
+                </h3>
+                <InputGroup>
+                  <InputGroupAddon>
+                    <SearchIcon size={16} />
+                  </InputGroupAddon>
+                  <InputGroupInput placeholder="Search mail" aria-label="Search mail" />
+                </InputGroup>
               </div>
+              <ScrollArea style={styles.scroll}>
+                <ul {...stylex.props(styles.rows)} aria-label="Messages">
+                  {messages.map((m) => {
+                    const isSelected = m.id === selectedId;
+                    return (
+                      <li key={m.id}>
+                        <button
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => setSelectedId(m.id)}
+                          {...stylex.props(styles.row, isSelected && styles.rowSelected)}
+                        >
+                          <Avatar size="sm">
+                            <AvatarFallback>{m.initials}</AvatarFallback>
+                          </Avatar>
+                          <span {...stylex.props(styles.rowText)}>
+                            <span {...stylex.props(styles.rowTop)}>
+                              <span {...stylex.props(styles.rowFrom, m.unread && styles.unread)}>
+                                {m.from}
+                              </span>
+                              <span {...stylex.props(styles.rowTime)}>{m.time}</span>
+                            </span>
+                            <span {...stylex.props(styles.rowSubject, m.unread && styles.unread)}>
+                              {m.subject}
+                            </span>
+                            <span {...stylex.props(styles.rowSnippet)}>{m.snippet}</span>
+                          </span>
+                          {m.unread && <i aria-label="Unread" {...stylex.props(styles.dot)} />}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </ScrollArea>
             </div>
+          </Part>
+          <div {...stylex.props(styles.reading)}>
+            <article {...stylex.props(styles.readingInner)} aria-live="polite">
+              <header {...stylex.props(styles.readingHead)}>
+                <h3 {...stylex.props(styles.subject)}>{selected.subject}</h3>
+                <Part name={['button-group', 'tooltip']}>
+                <ButtonGroup>
+                  <Tooltip>
+                    <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Archive" />}>
+                      <ArchiveIcon size={16} />
+                    </TooltipTrigger>
+                    <TooltipContent>Archive</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Snooze" />}>
+                      <ClockIcon size={16} />
+                    </TooltipTrigger>
+                    <TooltipContent>Snooze</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Delete" />}>
+                      <TrashIcon size={16} />
+                    </TooltipTrigger>
+                    <TooltipContent>Delete</TooltipContent>
+                  </Tooltip>
+                </ButtonGroup>
+                </Part>
+              </header>
+              <div {...stylex.props(styles.sender)}>
+                <Avatar size="sm">
+                  <AvatarFallback>{selected.initials}</AvatarFallback>
+                </Avatar>
+                <span {...stylex.props(styles.senderText)}>
+                  <span {...stylex.props(styles.senderName)}>{selected.from}</span>
+                  <span {...stylex.props(styles.senderEmail)}>{selected.email}</span>
+                </span>
+                <span {...stylex.props(styles.senderTime)}>{selected.time}</span>
+              </div>
+              <Separator />
+              <div {...stylex.props(styles.body)}>
+                {selected.body.map((paragraph) => (
+                  <p key={paragraph} {...stylex.props(styles.paragraph)}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <Part name={['textarea', 'kbd', 'button']}>
+              <div {...stylex.props(styles.reply)}>
+                <Textarea
+                  rows={3}
+                  placeholder={`Reply to ${selected.from.split(' ')[0]}…`}
+                  aria-label="Reply"
+                />
+                <div {...stylex.props(styles.replyBar)}>
+                  <Button variant="ghost" size="sm">
+                    <PaperclipIcon size={16} />
+                    Attach
+                  </Button>
+                  <span {...stylex.props(styles.replyActions)}>
+                    <KbdGroup>
+                      <Kbd>⌘</Kbd>
+                      <Kbd>↵</Kbd>
+                    </KbdGroup>
+                    <Button size="sm">
+                      <SendIcon size={16} />
+                      Send
+                    </Button>
+                  </span>
+                </div>
+              </div>
+              </Part>
+            </article>
+          </div>
+          </div>
+        ) : (
+          <ResizablePanelGroup style={styles.split}>
+            <ResizablePanel defaultSize="34%" minSize="24%" maxSize="52%">
+            <Part name={["input-group", "scroll-area", "avatar", "resizable"]} style={styles.list}>
+              <div {...stylex.props(styles.listInner)}>
+                <div {...stylex.props(styles.listHead)}>
+                  <h3 {...stylex.props(styles.listTitle)}>
+                    Inbox <Badge variant="secondary">12</Badge>
+                  </h3>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <SearchIcon size={16} />
+                    </InputGroupAddon>
+                    <InputGroupInput placeholder="Search mail" aria-label="Search mail" />
+                  </InputGroup>
+                </div>
+                <ScrollArea style={styles.scroll}>
+                  <ul {...stylex.props(styles.rows)} aria-label="Messages">
+                    {messages.map((m) => {
+                      const isSelected = m.id === selectedId;
+                      return (
+                        <li key={m.id}>
+                          <button
+                            type="button"
+                            aria-pressed={isSelected}
+                            onClick={() => setSelectedId(m.id)}
+                            {...stylex.props(styles.row, isSelected && styles.rowSelected)}
+                          >
+                            <Avatar size="sm">
+                              <AvatarFallback>{m.initials}</AvatarFallback>
+                            </Avatar>
+                            <span {...stylex.props(styles.rowText)}>
+                              <span {...stylex.props(styles.rowTop)}>
+                                <span {...stylex.props(styles.rowFrom, m.unread && styles.unread)}>
+                                  {m.from}
+                                </span>
+                                <span {...stylex.props(styles.rowTime)}>{m.time}</span>
+                              </span>
+                              <span {...stylex.props(styles.rowSubject, m.unread && styles.unread)}>
+                                {m.subject}
+                              </span>
+                              <span {...stylex.props(styles.rowSnippet)}>{m.snippet}</span>
+                            </span>
+                            {m.unread && <i aria-label="Unread" {...stylex.props(styles.dot)} />}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </ScrollArea>
+              </div>
             </Part>
-          </article>
-        </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize="66%" minSize="30%">
+            <div {...stylex.props(styles.reading)}>
+              <article {...stylex.props(styles.readingInner)} aria-live="polite">
+                <header {...stylex.props(styles.readingHead)}>
+                  <h3 {...stylex.props(styles.subject)}>{selected.subject}</h3>
+                  <Part name={['button-group', 'tooltip']}>
+                  <ButtonGroup>
+                    <Tooltip>
+                      <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Archive" />}>
+                        <ArchiveIcon size={16} />
+                      </TooltipTrigger>
+                      <TooltipContent>Archive</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Snooze" />}>
+                        <ClockIcon size={16} />
+                      </TooltipTrigger>
+                      <TooltipContent>Snooze</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger render={<Button variant="outline" size="iconSm" aria-label="Delete" />}>
+                        <TrashIcon size={16} />
+                      </TooltipTrigger>
+                      <TooltipContent>Delete</TooltipContent>
+                    </Tooltip>
+                  </ButtonGroup>
+                  </Part>
+                </header>
+                <div {...stylex.props(styles.sender)}>
+                  <Avatar size="sm">
+                    <AvatarFallback>{selected.initials}</AvatarFallback>
+                  </Avatar>
+                  <span {...stylex.props(styles.senderText)}>
+                    <span {...stylex.props(styles.senderName)}>{selected.from}</span>
+                    <span {...stylex.props(styles.senderEmail)}>{selected.email}</span>
+                  </span>
+                  <span {...stylex.props(styles.senderTime)}>{selected.time}</span>
+                </div>
+                <Separator />
+                <div {...stylex.props(styles.body)}>
+                  {selected.body.map((paragraph) => (
+                    <p key={paragraph} {...stylex.props(styles.paragraph)}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+                <Part name={['textarea', 'kbd', 'button']}>
+                <div {...stylex.props(styles.reply)}>
+                  <Textarea
+                    rows={3}
+                    placeholder={`Reply to ${selected.from.split(' ')[0]}…`}
+                    aria-label="Reply"
+                  />
+                  <div {...stylex.props(styles.replyBar)}>
+                    <Button variant="ghost" size="sm">
+                      <PaperclipIcon size={16} />
+                      Attach
+                    </Button>
+                    <span {...stylex.props(styles.replyActions)}>
+                      <KbdGroup>
+                        <Kbd>⌘</Kbd>
+                        <Kbd>↵</Kbd>
+                      </KbdGroup>
+                      <Button size="sm">
+                        <SendIcon size={16} />
+                        Send
+                      </Button>
+                    </span>
+                  </div>
+                </div>
+                </Part>
+              </article>
+            </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )}
       </div>
     </TooltipProvider>
   );
@@ -326,19 +487,38 @@ const styles = stylex.create({
     fontSize: fontSize.xs,
     fontVariantNumeric: 'tabular-nums',
   },
+  // Direction comes from the group's `orientation` prop, never from here.
+  // Below the stage's fixed height the scene is auto-height, and a panel
+  // group distributes a height it is given rather than one it derives, so
+  // it gets an explicit one there.
+  split: {
+    flex: 1,
+    // `min-height`, not `height`: the group is a flex item with a zero basis,
+    // which wins over a height, and a minimum is also what pushes the
+    // auto-height ancestors open below the stage's fixed height.
+    minHeight: { default: 0, [TABLET]: container.xxl },
+    minWidth: 0,
+  },
+  // Stacked panes on a phone: the list keeps a definite height so the
+  // message it does not show is scrolled to rather than cut.
+  stack: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    minHeight: 0,
+  },
+  // Above the phone layout the resize handle draws the divider; below it
+  // there is no handle, so the list carries its own bottom edge.
   list: {
+    borderBottomColor: colors.border,
+    borderBottomStyle: 'solid',
+    borderBottomWidth: { default: 0, [MOBILE]: stroke.border },
     borderRadius: 0,
-    borderRightColor: colors.border,
-    borderRightStyle: 'solid',
     display: 'flex',
     flexDirection: 'column',
-    flexShrink: 0,
+    height: { default: '100%', [MOBILE]: container.lg },
     minHeight: 0,
-    width: { default: container.lg, [TABLET]: container.md, [MOBILE]: '100%' },
-    borderBottomColor: { default: null, [MOBILE]: colors.border },
-    borderBottomStyle: { default: null, [MOBILE]: 'solid' },
-    borderBottomWidth: { default: null, [MOBILE]: stroke.border },
-    borderRightWidth: { default: stroke.border, [MOBILE]: 0 },
+    width: '100%',
   },
   // Grid rows give the scroll area a definite height (a flexed child would
   // not), which the scroll viewport's 100% height resolves against.
@@ -463,6 +643,7 @@ const styles = stylex.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    height: '100%',
     minHeight: 0,
     minWidth: 0,
   },

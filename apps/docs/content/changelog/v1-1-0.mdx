@@ -1,0 +1,36 @@
+---
+title: v1.1.0
+type: changelog
+date: 2026-09-09
+changelog:
+  version: 1.1.0
+  category: Release
+---
+
+Five components that needed behavior we were not going to re-implement:
+date grids, touch carousels, panel resizing, chart layout. Each one names
+the package it installs on its docs page, and `madeui add` installs it for
+you.
+
+- **Calendar** — a month grid for one day, several days, or a range, with
+  dropdown month and year navigation. Two sizes. Built on `react-day-picker`,
+  styled slot by slot, so the day buttons and chevrons are your components
+- **Date Picker** — the calendar in a popover behind a button, single or
+  range, with a formatted value and preset shortcuts
+- **Carousel** — slides with previous/next buttons and dots, horizontal or
+  vertical, on `embla-carousel-react`. Autoplay is a documented recipe rather
+  than a prop
+- **Resizable** — panel groups you drag or resize from the keyboard, with an
+  optional handle grip, on `react-resizable-panels`. Layout persistence is a
+  documented recipe
+- **Chart** — bar, line, area, donut, radar, radial and sparkline, on
+  `recharts`. A `ChartConfig` object names and colors each series once, and
+  the tooltip and legend read from it. Recharts' own elements are composed
+  directly, so its API stays its API
+
+Charts are laid out in the browser, so `ChartContainer` reserves its box with
+an aspect ratio and the plot arrives without moving the page. The component's
+docs page says so where you will read it.
+
+Also in this release: six themed `chart1`–`chart6` color tokens for
+categorical series, in light and dark.

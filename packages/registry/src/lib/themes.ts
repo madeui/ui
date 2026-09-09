@@ -25,6 +25,12 @@ export const darkTheme = stylex.createTheme(colors, {
   input: 'oklch(0.325 0 0)',
   ring: 'oklch(0.556 0 0)',
   overlay: 'oklch(0% 0 0deg / 70%)',
+  chart1: 'oklch(0.488 0.243 264.376)',
+  chart2: 'oklch(0.696 0.17 162.48)',
+  chart3: 'oklch(0.769 0.188 70.08)',
+  chart4: 'oklch(0.627 0.265 303.9)',
+  chart5: 'oklch(0.645 0.246 16.439)',
+  chart6: 'oklch(0.7 0.15 200)',
 });
 
 // Themes are static by design — StyleX resolves `createTheme` at compile
