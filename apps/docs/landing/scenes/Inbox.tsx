@@ -11,6 +11,11 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -145,7 +150,11 @@ export default function Inbox() {
           </div>
         </Part>
 
-        <Part name={["input-group", "scroll-area", "avatar"]} style={styles.list}>
+        {/* The split a mail client actually has: drag the divider, or focus
+            it and use the arrow keys. */}
+        <ResizablePanelGroup style={styles.split}>
+        <ResizablePanel defaultSize="34%" minSize="24%" maxSize="52%">
+        <Part name={["input-group", "scroll-area", "avatar", "resizable"]} style={styles.list}>
           <div {...stylex.props(styles.listInner)}>
             <div {...stylex.props(styles.listHead)}>
               <h3 {...stylex.props(styles.listTitle)}>
@@ -194,7 +203,9 @@ export default function Inbox() {
             </ScrollArea>
           </div>
         </Part>
-
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize="66%" minSize="30%">
         <div {...stylex.props(styles.reading)}>
           <article {...stylex.props(styles.readingInner)} aria-live="polite">
             <header {...stylex.props(styles.readingHead)}>
@@ -267,6 +278,8 @@ export default function Inbox() {
             </Part>
           </article>
         </div>
+        </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </TooltipProvider>
   );
@@ -326,15 +339,23 @@ const styles = stylex.create({
     fontSize: fontSize.xs,
     fontVariantNumeric: 'tabular-nums',
   },
+  // The resizable panel sets the width above mobile; below it the group
+  // stacks and the list is full width with an edge underneath.
+  split: {
+    flex: 1,
+    flexDirection: { default: 'row', [MOBILE]: 'column' },
+    minHeight: 0,
+    minWidth: 0,
+  },
   list: {
     borderRadius: 0,
     borderRightColor: colors.border,
     borderRightStyle: 'solid',
     display: 'flex',
     flexDirection: 'column',
-    flexShrink: 0,
+    height: '100%',
     minHeight: 0,
-    width: { default: container.lg, [TABLET]: container.md, [MOBILE]: '100%' },
+    width: { default: '100%', [MOBILE]: '100%' },
     borderBottomColor: { default: null, [MOBILE]: colors.border },
     borderBottomStyle: { default: null, [MOBILE]: 'solid' },
     borderBottomWidth: { default: null, [MOBILE]: stroke.border },
@@ -463,6 +484,7 @@ const styles = stylex.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    height: '100%',
     minHeight: 0,
     minWidth: 0,
   },

@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -28,14 +35,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemMedia,
-  ItemTitle,
-} from '@/components/ui/item';
 import { Meter, MeterLabel, MeterValue } from '@/components/ui/meter';
 import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
 import {
@@ -70,6 +69,21 @@ import {
 } from '../icons';
 import { Part } from './Part';
 
+// The last bar is the Revenue stat above it, and the step up from the one
+// before is that stat's +12.4%.
+const revenue = [
+  { month: 'Apr', revenue: 34100 },
+  { month: 'May', revenue: 36800 },
+  { month: 'Jun', revenue: 39400 },
+  { month: 'Jul', revenue: 41200 },
+  { month: 'Aug', revenue: 42960 },
+  { month: 'Sep', revenue: 48290 },
+];
+
+const revenueConfig = {
+  revenue: { label: 'Revenue', color: colors.chart1 },
+} satisfies ChartConfig;
+
 const sections = [
   { label: 'Overview', icon: HomeIcon, active: true },
   { label: 'Invoices', icon: ReceiptIcon, count: 23 },
@@ -96,6 +110,8 @@ const invoices = [
   { id: 'INV-2040', customer: 'Lumen Studio', initials: 'LS', amount: '$1,150.00', status: 'Pending' },
   { id: 'INV-2039', customer: 'Harbor & Co.', initials: 'HC', amount: '$980.00', status: 'Overdue' },
   { id: 'INV-2038', customer: 'Quill Labs', initials: 'QL', amount: '$4,400.00', status: 'Paid' },
+  { id: 'INV-2037', customer: 'Vale Interiors', initials: 'VI', amount: '$2,750.00', status: 'Paid' },
+  { id: 'INV-2036', customer: 'Orbit Freight', initials: 'OF', amount: '$1,880.00', status: 'Pending' },
 ];
 
 const statusTone = {
@@ -103,11 +119,6 @@ const statusTone = {
   Pending: 'outline',
   Overdue: 'primary',
 } as const;
-
-const activity = [
-  { who: 'JB', title: 'Jonas Berg paid INV-2041', when: '12 min ago' },
-  { who: 'PN', title: 'Priya Natarajan invited Leo Castellano', when: '1 h ago' },
-];
 
 export default function Dashboard() {
   return (
@@ -228,7 +239,7 @@ export default function Dashboard() {
           <Card style={styles.fill}>
             <CardHeader>
               <CardTitle>Recent invoices</CardTitle>
-              <CardDescription>Four most recent, all customers.</CardDescription>
+              <CardDescription>Six most recent, all customers.</CardDescription>
               <CardAction>
                 <Button variant="ghost" size="sm">
                   View all
@@ -290,7 +301,7 @@ export default function Dashboard() {
                     <TableCell style={styles.wide} />
                     <TableCell>Total</TableCell>
                     <TableCell style={styles.wide} />
-                    <TableCell style={[styles.right, styles.tabular]}>$9,730.00</TableCell>
+                    <TableCell style={[styles.right, styles.tabular]}>$14,360.00</TableCell>
                     <TableCell style={styles.wide} />
                   </TableRow>
                 </TableFooter>
@@ -300,6 +311,45 @@ export default function Dashboard() {
         </Part>
 
         <div {...stylex.props(styles.column)}>
+          <Part name="chart" grow>
+            <Card style={styles.fill}>
+              <CardHeader>
+                <CardTitle>Revenue</CardTitle>
+                <CardDescription>Last six months.</CardDescription>
+              </CardHeader>
+              <CardContent style={styles.chartBody}>
+                <ChartContainer config={revenueConfig} style={styles.chart}>
+                  <BarChart
+                    accessibilityLayer
+                    data={revenue}
+                    margin={{ top: 8, left: 12, right: 12 }}
+                  >
+                    <CartesianGrid
+                      vertical={false}
+                      stroke={colors.border}
+                      strokeDasharray="4 4"
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      tick={{ fill: colors.mutedForeground, fontSize: fontSize.xs }}
+                    />
+                    <ChartTooltip
+                      cursor={{ fill: colors.accent }}
+                      content={<ChartTooltipContent />}
+                    />
+                    <Bar
+                      dataKey="revenue"
+                      fill={revenueConfig.revenue.color}
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </Part>
           <Part name={['meter', 'progress']}>
             <Card>
               <CardHeader>
@@ -316,30 +366,6 @@ export default function Dashboard() {
                     <ProgressValue />
                   </Progress>
                 </div>
-              </CardContent>
-            </Card>
-          </Part>
-          <Part name="item" grow>
-            <Card style={styles.fill}>
-              <CardHeader>
-                <CardTitle>Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ItemGroup>
-                  {activity.map((entry) => (
-                    <Item key={entry.title} size="sm">
-                      <ItemMedia>
-                        <Avatar size="sm">
-                          <AvatarFallback>{entry.who}</AvatarFallback>
-                        </Avatar>
-                      </ItemMedia>
-                      <ItemContent>
-                        <ItemTitle>{entry.title}</ItemTitle>
-                        <ItemDescription>{entry.when}</ItemDescription>
-                      </ItemContent>
-                    </Item>
-                  ))}
-                </ItemGroup>
               </CardContent>
             </Card>
           </Part>
@@ -505,6 +531,19 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: space.s4,
+  },
+  chartBody: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    minHeight: 0,
+  },
+  // The screen has a fixed height and clips rather than scrolls, so the plot
+  // fills the room the card is given instead of reserving a ratio of its own.
+  chart: {
+    aspectRatio: { default: 'auto', [TABLET]: '2.4' },
+    flex: { default: 1, [TABLET]: null },
+    minHeight: 0,
   },
   fill: {
     flex: 1,

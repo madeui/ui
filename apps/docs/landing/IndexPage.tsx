@@ -221,7 +221,7 @@ export default function IndexPage() {
         <section {...stylex.props(styles.hero)}>
           <div aria-hidden {...stylex.props(styles.heroDots)} />
           <a href="/changelog" {...stylex.props(styles.pill)}>
-            <span {...stylex.props(styles.pillVersion)}>v1.0.0</span> First release
+            <span {...stylex.props(styles.pillVersion)}>v1.1.0</span> Five new components
             <ArrowRightIcon size={12} />
           </a>
           <h1 {...stylex.props(styles.h1)}>
