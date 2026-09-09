@@ -8,6 +8,8 @@ import { colors } from '@/lib/tokens.stylex';
 
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
@@ -45,6 +47,7 @@ export default function ChartDemo() {
           cursor={{ fill: colors.accent }}
           content={<ChartTooltipContent />}
         />
+        <ChartLegend itemSorter={null} content={<ChartLegendContent />} />
         {/* Rounded only at the data end, so the bar stays anchored to the baseline. */}
         <Bar dataKey="revenue" fill={chartConfig.revenue.color} radius={[4, 4, 0, 0]} />
       </BarChart>

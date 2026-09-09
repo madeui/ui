@@ -47,6 +47,7 @@ const chartConfig = {
     <CartesianGrid vertical={false} stroke={colors.border} strokeDasharray="4 4" />
     <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
     <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
     <Bar dataKey="revenue" fill={chartConfig.revenue.color} radius={[4, 4, 0, 0]} />
   </BarChart>
 </ChartContainer>;
