@@ -40,6 +40,9 @@ export const colors = stylex.defineVars({
 });
 
 export const radius = stylex.defineVars({
+  // Small chrome that would read as a pill at the next step up: the resize
+  // handle's grip, and anything else narrower than 2x this radius.
+  xs: '0.25rem',
   sm: '0.375rem',
   md: '0.5rem',
   lg: '0.625rem',

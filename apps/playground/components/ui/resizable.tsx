@@ -124,8 +124,12 @@ const styles = stylex.create({
       '[aria-orientation="horizontal"]': 'row-resize',
     },
     display: 'flex',
+    // The cross axis is stretched, not sized: `100%` resolves against the
+    // group's `height`, which is `auto` whenever the group is sized by flex
+    // or a minimum, and the line then collapses to the grip.
+    alignSelf: 'stretch',
     height: {
-      default: '100%',
+      default: 'auto',
       '[aria-orientation="horizontal"]': stroke.border,
     },
     justifyContent: 'center',
@@ -144,24 +148,25 @@ const styles = stylex.create({
     userSelect: 'none',
     width: {
       default: stroke.border,
-      '[aria-orientation="horizontal"]': '100%',
+      '[aria-orientation="horizontal"]': 'auto',
     },
   },
-  // 16x24 around a 12px icon: the pill's 1px border needs room, and a smaller
-  // box would let the grip paint over its own edge.
+  // 12x16 around a 12px icon: the grip's dots occupy a few pixels in the
+  // middle of that icon box, so the tag reads as a small handle rather than
+  // the capsule a wider box and a larger radius would make of it.
   grip: {
     alignItems: 'center',
     backgroundColor: colors.border,
     borderColor: colors.border,
-    borderRadius: radius.sm,
+    borderRadius: radius.xs,
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: colors.foreground,
     display: 'flex',
     flexShrink: 0,
-    height: space.s6,
+    height: space.s4,
     justifyContent: 'center',
     transform: 'rotate(var(--grip-rotation, 0deg))',
-    width: space.s4,
+    width: space.s3,
   },
 });
