@@ -52,3 +52,18 @@ merge to `main`, no versioning, only finished work merges) or **CLI**
 (`packages/cli/`, needs a changeset via `pnpm changeset`, published by the
 release workflow). Then follow that track's steps and end the task with its
 PR checklist.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `madeui/ui`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`,
+`ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
