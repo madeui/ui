@@ -7,6 +7,7 @@ import { Command } from 'commander';
 import kleur from 'kleur';
 
 import { add } from './add.mjs';
+import { diff } from './diff.mjs';
 import { init } from './init.mjs';
 import { fetchItem } from './registry.mjs';
 import { loadConfig } from './project.mjs';
@@ -43,6 +44,15 @@ program
   .option('--diff', 'show what would change without writing anything')
   .option('--no-install', 'print dependency installs instead of running them')
   .action((names, opts) => add(process.cwd(), names, normalize(opts)));
+
+program
+  .command('diff')
+  .description('compare installed components with the registry')
+  .argument('[components...]', 'component names to show patches for (default: summary of every installed item)')
+  .option('--registry <url|dir>', 'registry to use')
+  .option('--json', 'print a machine-readable report (includes patches)')
+  .option('--exit-code', 'exit with 1 when any installed item differs from the registry')
+  .action((names, opts) => diff(process.cwd(), names, opts));
 
 program
   .command('list')

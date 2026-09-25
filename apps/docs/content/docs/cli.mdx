@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: "madeui init, add, and list."
+description: "madeui init, add, diff, and list."
 sidebar:
   order: 4
 ---
@@ -39,7 +39,8 @@ Sets up the current app:
   `lib/themes.ts`) and utilities (`lib/stylex-utils.ts`).
 - Appends a component-conventions section to `AGENTS.md` so coding agents
   follow the house rules (tokens over literals, variants over escapes,
-  `[data-*]` condition keys for Base UI state), and makes sure `CLAUDE.md`
+  `[data-*]` condition keys for Base UI state, reading `diff` before
+  overwriting), and makes sure `CLAUDE.md`
   imports it (`@AGENTS.md`) so Claude Code reads it as well.
 - Writes `madeui.json` with your paths and registry.
 
@@ -63,12 +64,72 @@ installing missing npm packages.
 | Option | Description |
 | --- | --- |
 | `--diff` | Show what would change without writing anything. |
-| `--overwrite` | Replace files that have local changes without asking. |
+| `--overwrite` | Replace files of the named components that have local changes, without asking. |
 | `--registry <url\|dir>` | Registry to use. |
 | `--no-install` | Print dependency installs instead of running them. |
 
 Because you own the files, `add` never silently overwrites local edits — it
-asks (or use `--diff` first).
+asks (or use `--diff` first). `--overwrite` covers only the components you
+name: `add button --overwrite` leaves a rethemed `lib/tokens.stylex.ts`
+alone. Name `theme` as well to replace it.
+
+## diff
+
+```bash
+npx @madeui/cli diff
+npx @madeui/cli diff button dialog
+```
+
+Compares the components installed in your project with the registry's
+current version. Without arguments it lists every installed item; with
+names it also prints the patch for each file, from your copy to the
+registry's.
+
+Each file is one of:
+
+| Status | Meaning |
+| --- | --- |
+| `same` | Matches the registry. |
+| `differs` | Differs from the registry. |
+| `missing` | Part of an installed item, but not on disk. |
+
+An item counts as installed when any of its files is at its path. A named
+item that isn't installed is reported as `not-installed`.
+
+`diff` has no record of what you installed, so `differs` can mean your edit,
+a registry update, or both — read the patch before replacing the file. Each
+item that differs comes with the command that brings it back to the
+registry's version (`add <name> --overwrite`, or a plain `add` when files
+are only missing).
+
+| Option | Description |
+| --- | --- |
+| `--json` | Print a machine-readable report, patches included. |
+| `--exit-code` | Exit with `1` when any installed item differs (for CI and agents). |
+| `--registry <url\|dir>` | Registry to use. |
+
+The `--json` report:
+
+```json
+{
+  "registry": "https://madeui.com/r",
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "status": "differs",
+      "files": [
+        {
+          "path": "components/ui/button.tsx",
+          "status": "differs",
+          "patch": "--- components/ui/button.tsx\n+++ components/ui/button.tsx\n@@ …"
+        }
+      ],
+      "fix": "npx @madeui/cli add button --overwrite"
+    }
+  ]
+}
+```
 
 ## list
 
