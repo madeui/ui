@@ -17,9 +17,7 @@ Single-context: one glossary and one ADR folder for the whole monorepo.
 /
 ├── CONTEXT.md
 ├── docs/adr/
-│   ├── 0001-external-dependencies-per-component.md
-│   ├── 0002-tanstack-charts-pinned-alpha.md
-│   └── 0003-chart-builds-on-recharts.md
+│   └── 0001-<decision>.md
 ├── packages/
 └── apps/
 ```
@@ -34,4 +32,4 @@ If the concept you need isn't in the glossary yet, that's a signal — either yo
 
 If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
 
-> _Contradicts ADR-0003 (chart builds on Recharts) — but worth reopening because…_
+> _Contradicts ADR-0001 (<decision>) — but worth reopening because…_
