@@ -1,17 +1,18 @@
-import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, beforeEach, describe, test } from 'node:test';
 
-import { collectDiff } from '../src/diff.mjs';
-import { DEFAULT_CONFIG, loadConfig } from '../src/project.mjs';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+
+import { collectDiff } from '../src/diff.ts';
+import { DEFAULT_CONFIG, loadConfig } from '../src/project.ts';
+import type { Config, RegistryItem } from '../src/types.ts';
 
 const BUTTON = "export function Button() {}\n";
 const TOKENS = 'export const tokens = {};\n';
 const THEMES = 'export const darkTheme = {};\n';
 
-const ITEMS = [
+const ITEMS: RegistryItem[] = [
   {
     name: 'theme',
     type: 'registry:lib',
@@ -33,16 +34,16 @@ const ITEMS = [
   },
 ];
 
-let cwd;
-let registry;
+let cwd: string;
+let registry: string;
 
-function write(rel, content) {
+function write(rel: string, content: string) {
   const file = path.join(cwd, rel);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, content);
 }
 
-function run(names = [], config = { ...DEFAULT_CONFIG, registry }) {
+function run(names: string[] = [], config: Config = { ...DEFAULT_CONFIG, registry }) {
   return collectDiff(cwd, { registry, names, config });
 }
 
@@ -57,7 +58,7 @@ beforeEach(() => {
     name: 'madeui',
     items: ITEMS.map(({ files, ...item }) => ({
       ...item,
-      files: files.map(({ content, ...file }) => file),
+      files: files?.map(({ content: _, ...file }) => file),
     })),
   };
   fs.writeFileSync(path.join(registry, 'registry.json'), JSON.stringify(index));
@@ -74,84 +75,92 @@ describe('collectDiff', () => {
   test('lists only installed items when no names are given', async () => {
     write('components/ui/button.tsx', BUTTON);
     const { items } = await run();
-    assert.deepEqual(items.map((i) => i.name), ['button']);
+    expect(items.map((i) => i.name)).toEqual(['button']);
   });
 
   test('a file matching the registry is same, with no fix', async () => {
     write('components/ui/button.tsx', BUTTON);
     const [button] = (await run()).items;
-    assert.equal(button.status, 'same');
-    assert.deepEqual(button.files, [{ path: 'components/ui/button.tsx', status: 'same' }]);
-    assert.equal(button.fix, undefined);
+    expect(button).toEqual({
+      name: 'button',
+      type: 'registry:ui',
+      status: 'same',
+      files: [{ path: 'components/ui/button.tsx', status: 'same' }],
+    });
   });
 
   test('a changed file differs, carries a patch toward the registry, and an overwrite fix', async () => {
     write('components/ui/button.tsx', 'export function Button() { return null; }\n');
     const [button] = (await run()).items;
-    assert.equal(button.status, 'differs');
-    assert.equal(button.files[0].status, 'differs');
-    assert.match(button.files[0].patch, /^--- components\/ui\/button\.tsx/);
-    assert.match(button.files[0].patch, /^-export function Button\(\) \{ return null; \}$/m);
-    assert.match(button.files[0].patch, /^\+export function Button\(\) \{\}$/m);
-    assert.match(button.fix, /add button --overwrite$/);
+    expect(button?.status).toBe('differs');
+    const patch = button?.files[0]?.patch;
+    expect(button?.files[0]?.status).toBe('differs');
+    expect(patch).toMatch(/^--- components\/ui\/button\.tsx/);
+    expect(patch).toMatch(/^-export function Button\(\) \{ return null; \}$/m);
+    expect(patch).toMatch(/^\+export function Button\(\) \{\}$/m);
+    expect(button?.fix).toMatch(/add button --overwrite$/);
   });
 
   test('an item with one file present counts as installed; the absent file is missing', async () => {
     write('lib/tokens.stylex.ts', TOKENS);
     const [theme] = (await run()).items;
-    assert.equal(theme.name, 'theme');
-    assert.equal(theme.status, 'differs');
-    assert.deepEqual(theme.files, [
-      { path: 'lib/tokens.stylex.ts', status: 'same' },
-      { path: 'lib/themes.ts', status: 'missing' },
-    ]);
-    // Only missing files: a plain add restores them without touching the rest.
-    assert.match(theme.fix, /add theme$/);
+    expect(theme).toEqual({
+      name: 'theme',
+      type: 'registry:lib',
+      status: 'differs',
+      files: [
+        { path: 'lib/tokens.stylex.ts', status: 'same' },
+        { path: 'lib/themes.ts', status: 'missing' },
+      ],
+      // Only missing files: a plain add restores them without touching the rest.
+      fix: expect.stringMatching(/add theme$/),
+    });
   });
 
   test('named items skip their registry dependencies', async () => {
     write('components/ui/button.tsx', BUTTON);
     write('lib/tokens.stylex.ts', 'retheme\n');
     const { items } = await run(['button']);
-    assert.deepEqual(items.map((i) => i.name), ['button']);
+    expect(items.map((i) => i.name)).toEqual(['button']);
   });
 
   test('a named item that is not installed reports not-installed', async () => {
     const [dialog] = (await run(['@madeui/dialog'])).items;
-    assert.deepEqual(dialog, { name: 'dialog', type: 'registry:ui', status: 'not-installed', files: [] });
+    expect(dialog).toEqual({ name: 'dialog', type: 'registry:ui', status: 'not-installed', files: [] });
   });
 
   test('a name missing from the registry is an error', async () => {
-    await assert.rejects(run(['nope']), /registry item not found: nope/);
+    await expect(run(['nope'])).rejects.toThrow(/registry item not found: nope/);
   });
 
   test('targets follow the configured paths', async () => {
-    const config = { ...DEFAULT_CONFIG, paths: { ui: 'src/ui', lib: 'src/lib' } };
+    const config = { ...DEFAULT_CONFIG, registry, paths: { ui: 'src/ui', lib: 'src/lib' } };
     write('src/ui/button.tsx', BUTTON);
     const [button] = (await run([], config)).items;
-    assert.deepEqual(button.files, [{ path: 'src/ui/button.tsx', status: 'same' }]);
+    expect(button?.files).toEqual([{ path: 'src/ui/button.tsx', status: 'same' }]);
   });
 
   test('a partial paths config keeps the default for the rest', async () => {
-    const config = { registry, paths: { ui: 'src/ui' } };
-    fs.writeFileSync(path.join(cwd, 'madeui.json'), JSON.stringify(config));
+    fs.writeFileSync(path.join(cwd, 'madeui.json'), JSON.stringify({ registry, paths: { ui: 'src/ui' } }));
     write('lib/tokens.stylex.ts', TOKENS);
-    const [theme] = (await run([], loadConfig(cwd))).items;
-    assert.equal(theme.files[0].status, 'same');
+    const config = loadConfig(cwd);
+    expect(config?.paths).toEqual({ ui: 'src/ui', lib: 'lib' });
+    const [theme] = (await run([], config ?? undefined)).items;
+    expect(theme?.files[0]?.status).toBe('same');
   });
 
   test('CRLF line endings alone do not make a file differ', async () => {
     write('components/ui/button.tsx', BUTTON.replace(/\n/g, '\r\n'));
     const [button] = (await run()).items;
-    assert.equal(button.status, 'same');
+    expect(button?.status).toBe('same');
   });
 
   test('the fix installs from the registry the diff was computed against', async () => {
     write('components/ui/button.tsx', 'edited\n');
-    const config = { ...DEFAULT_CONFIG, registry: 'https://madeui.com/r' };
-    const [button] = (await run([], config)).items;
-    assert.match(button.fix, new RegExp(`add button --overwrite --registry ${registry}$`));
-    const [same] = (await collectDiff(cwd, { registry, config: { ...config, registry } })).items;
-    assert.doesNotMatch(same.fix, /--registry/);
+    const hosted = { ...DEFAULT_CONFIG, registry: 'https://madeui.com/r' };
+    const [button] = (await run([], hosted)).items;
+    expect(button?.fix).toMatch(new RegExp(`add button --overwrite --registry ${registry}$`));
+    const [configured] = (await run()).items;
+    expect(configured?.fix).not.toMatch(/--registry/);
   });
 });

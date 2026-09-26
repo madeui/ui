@@ -28,7 +28,7 @@ npx @madeui/cli init   # wires the StyleX build (Next.js or Vite), copies tokens
 npx @madeui/cli add button dialog select
 ```
 
-Requires React 19 and Node 20+, on Next.js 15+ (App Router) or Vite with
+Requires React 19 and Node 22.12+, on Next.js 15+ (App Router) or Vite with
 `@vitejs/plugin-react`.
 
 ## Docs

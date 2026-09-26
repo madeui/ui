@@ -4,8 +4,8 @@ import path from 'node:path';
 import kleur from 'kleur';
 import prompts from 'prompts';
 
-import { printPatch, unifiedPatch } from './diff.mjs';
-import { bareName, resolveItems } from './registry.mjs';
+import { printPatch, unifiedPatch } from './diff.ts';
+import { bareName, resolveItems } from './registry.ts';
 import {
   requireConfig,
   readInstalled,
@@ -13,9 +13,10 @@ import {
   createSpinner,
   missingDependencies,
   installDependencies,
-} from './project.mjs';
+} from './project.ts';
+import type { Flags, RegistryItem } from './types.ts';
 
-async function confirmOverwrite(target) {
+async function confirmOverwrite(target: string): Promise<boolean> {
   if (!process.stdout.isTTY) return false;
   const { overwrite } = await prompts({
     type: 'confirm',
@@ -26,12 +27,12 @@ async function confirmOverwrite(target) {
   return overwrite === true;
 }
 
-export async function add(cwd, names, flags) {
+export async function add(cwd: string, names: string[], flags: Flags): Promise<void> {
   const config = requireConfig(cwd);
   const registry = flags.registry ?? config.registry;
 
   const spinner = createSpinner({ text: `resolving ${names.join(', ')}` }).start();
-  let items;
+  let items: RegistryItem[];
   try {
     items = await resolveItems(registry, names);
     spinner.succeed(`resolved ${items.length} item(s)`);
@@ -45,8 +46,8 @@ export async function add(cwd, names, flags) {
   // tokens file. Name the dependency to replace it too.
   const named = new Set(names.map(bareName));
   const written = [];
-  const kept = [];
-  const deps = new Set();
+  const kept: { target: string; dependency: string | null }[] = [];
+  const deps = new Set<string>();
 
   for (const item of items) {
     for (const dep of item.dependencies ?? []) deps.add(dep);

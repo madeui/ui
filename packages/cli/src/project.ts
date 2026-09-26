@@ -4,11 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 import { execa } from 'execa';
 import kleur from 'kleur';
-import ora from 'ora';
+import ora, { type Options as OraOptions } from 'ora';
+
+import type { Config, PackageJson, RegistryFileRef } from './types.ts';
 
 export const CONFIG_FILE = 'madeui.json';
 
-export const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG: Config = {
   registry: 'https://madeui.com/r',
   paths: {
     ui: 'components/ui',
@@ -16,15 +18,15 @@ export const DEFAULT_CONFIG = {
   },
 };
 
-export function loadConfig(cwd) {
+export function loadConfig(cwd: string): Config | null {
   const file = path.join(cwd, CONFIG_FILE);
   if (!fs.existsSync(file)) return null;
-  const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const config = JSON.parse(fs.readFileSync(file, 'utf8')) as Partial<Config>;
   // A partial `paths` (only `ui`, say) keeps the defaults for the rest.
   return { ...DEFAULT_CONFIG, ...config, paths: { ...DEFAULT_CONFIG.paths, ...config.paths } };
 }
 
-export function requireConfig(cwd) {
+export function requireConfig(cwd: string): Config {
   const config = loadConfig(cwd);
   if (!config) {
     throw new Error(
@@ -34,7 +36,7 @@ export function requireConfig(cwd) {
   return config;
 }
 
-export function saveConfig(cwd, config) {
+export function saveConfig(cwd: string, config: Config): void {
   fs.writeFileSync(
     path.join(cwd, CONFIG_FILE),
     JSON.stringify(config, null, 2) + '\n'
@@ -42,7 +44,7 @@ export function saveConfig(cwd, config) {
 }
 
 /** Maps an item file's `target` through the configured paths. */
-export function resolveTarget(target, config) {
+export function resolveTarget(target: string, config: Config): string {
   if (target.startsWith('components/ui/')) {
     return path.join(config.paths.ui, target.slice('components/ui/'.length));
   }
@@ -56,7 +58,11 @@ export function resolveTarget(target, config) {
  * Where a registry file lands in the project and what is there now. The
  * target is reported with forward slashes on every platform.
  */
-export function readInstalled(cwd, file, config) {
+export function readInstalled(
+  cwd: string,
+  file: RegistryFileRef,
+  config: Config
+): { target: string; dest: string; current: string | null } {
   const target = resolveTarget(file.target ?? file.path, config).split(path.sep).join('/');
   const dest = path.join(cwd, target);
   const current = fs.existsSync(dest) ? fs.readFileSync(dest, 'utf8') : null;
@@ -64,18 +70,20 @@ export function readInstalled(cwd, file, config) {
 }
 
 /** Line endings aside (git may check files out with CRLF), is it the registry's content? */
-export function matchesRegistry(current, content) {
+export function matchesRegistry(current: string | null, content: string): boolean {
   return current !== null && current.replace(/\r\n/g, '\n') === content.replace(/\r\n/g, '\n');
 }
 
-export function detectPackageManager(cwd) {
+export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun';
+
+export function detectPackageManager(cwd: string): PackageManager {
   if (fs.existsSync(path.join(cwd, 'pnpm-lock.yaml'))) return 'pnpm';
   if (fs.existsSync(path.join(cwd, 'yarn.lock'))) return 'yarn';
   if (fs.existsSync(path.join(cwd, 'bun.lockb')) || fs.existsSync(path.join(cwd, 'bun.lock'))) return 'bun';
   return 'npm';
 }
 
-const CLI_VERSION = JSON.parse(
+export const CLI_VERSION: string = JSON.parse(
   fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../package.json'), 'utf8')
 ).version;
 
@@ -85,26 +93,30 @@ const CLI_VERSION = JSON.parse(
  * is a prerelease (a `beta` snapshot), so the next command does not silently
  * resolve to `latest`.
  */
-export function cliCommand(cwd, subcommand) {
+export function cliCommand(cwd: string, subcommand: string): string {
   const runner = { npm: 'npx', pnpm: 'pnpm dlx', yarn: 'yarn dlx', bun: 'bunx' }[detectPackageManager(cwd)];
   const spec = CLI_VERSION.includes('-') ? `@madeui/cli@${CLI_VERSION}` : '@madeui/cli';
   return `${runner} ${spec} ${subcommand}`;
 }
 
-export function readPackageJson(cwd) {
+export function readPackageJson(cwd: string): PackageJson | null {
   const file = path.join(cwd, 'package.json');
   if (!fs.existsSync(file)) return null;
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  return JSON.parse(fs.readFileSync(file, 'utf8')) as PackageJson;
 }
 
-export function missingDependencies(cwd, deps) {
+export function missingDependencies(cwd: string, deps: string[]): string[] {
   const pkg = readPackageJson(cwd);
   if (!pkg) return deps;
   const have = { ...pkg.dependencies, ...pkg.devDependencies };
   return deps.filter((d) => !have[d]);
 }
 
-export async function installDependencies(cwd, deps, { dev = false, dryRun = false } = {}) {
+export async function installDependencies(
+  cwd: string,
+  deps: string[],
+  { dev = false, dryRun = false }: { dev?: boolean; dryRun?: boolean } = {}
+): Promise<void> {
   if (deps.length === 0) return;
   const pm = detectPackageManager(cwd);
   const args = [
@@ -115,7 +127,11 @@ export async function installDependencies(cwd, deps, { dev = false, dryRun = fal
   await runPackageManager(cwd, pm, args, { dryRun, label: `installing ${deps.join(', ')}` });
 }
 
-export async function uninstallDependencies(cwd, deps, { dryRun = false } = {}) {
+export async function uninstallDependencies(
+  cwd: string,
+  deps: string[],
+  { dryRun = false }: { dryRun?: boolean } = {}
+): Promise<void> {
   if (deps.length === 0) return;
   const pm = detectPackageManager(cwd);
   const args = [pm === 'npm' ? 'uninstall' : 'remove', ...deps];
@@ -132,13 +148,19 @@ export async function uninstallDependencies(cwd, deps, { dryRun = false } = {}) 
 // agent-driven terminals) turns that into an endless loop that blocks the
 // event loop, so the package manager's exit is never observed and the CLI
 // hangs forever. Render plain lines there instead.
-export function createSpinner(options) {
-  const stream = options.stream ?? process.stderr;
+export function createSpinner(options: OraOptions) {
+  // A custom stream may not be a TTY stream at all; then both are undefined.
+  const stream = (options.stream ?? process.stderr) as { isTTY?: boolean; columns?: number };
   const isEnabled = stream.isTTY && (stream.columns ?? 80) > 0 ? undefined : false;
   return ora({ ...options, isEnabled });
 }
 
-async function runPackageManager(cwd, pm, args, { dryRun, label }) {
+async function runPackageManager(
+  cwd: string,
+  pm: PackageManager,
+  args: string[],
+  { dryRun, label }: { dryRun: boolean; label: string }
+): Promise<void> {
   const command = `${pm} ${args.join(' ')}`;
   if (dryRun) {
     console.log(kleur.dim(`  (skipped) ${command}`));
@@ -150,8 +172,9 @@ async function runPackageManager(cwd, pm, args, { dryRun, label }) {
   try {
     await execa(pm, args, { cwd, stdio: 'pipe', env: { ...process.env, CI: '1' } });
     spinner.succeed(`${label.replace(/^\w+/, (v) => ({ installing: 'installed', removing: 'removed' })[v] ?? v)}`);
-  } catch (err) {
+  } catch (error) {
     spinner.fail(`${label} failed: ${command}`);
+    const err = error as { stdout?: string; stderr?: string; exitCode?: number };
     const output = [err.stdout, err.stderr].filter(Boolean).join('\n').trim();
     if (output) console.error(kleur.dim(output));
     throw new Error(`${command} exited with ${err.exitCode ?? 'an error'}`);

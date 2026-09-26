@@ -1,12 +1,13 @@
-import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, beforeEach, test } from 'node:test';
 
-import { add } from '../src/add.mjs';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
-const ITEMS = [
+import { add } from '../src/add.ts';
+import type { RegistryItem } from '../src/types.ts';
+
+const ITEMS: RegistryItem[] = [
   {
     name: 'theme',
     type: 'registry:lib',
@@ -20,9 +21,9 @@ const ITEMS = [
   },
 ];
 
-let cwd;
-const read = (rel) => fs.readFileSync(path.join(cwd, rel), 'utf8');
-const write = (rel, content) => {
+let cwd: string;
+const read = (rel: string) => fs.readFileSync(path.join(cwd, rel), 'utf8');
+const write = (rel: string, content: string) => {
   fs.mkdirSync(path.dirname(path.join(cwd, rel)), { recursive: true });
   fs.writeFileSync(path.join(cwd, rel), content);
 };
@@ -42,20 +43,21 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   fs.rmSync(path.dirname(cwd), { recursive: true, force: true });
 });
 
-test('--overwrite replaces the named item but keeps changed dependency files', async (t) => {
-  const log = t.mock.method(console, 'log', () => {});
+test('--overwrite replaces the named item but keeps changed dependency files', async () => {
+  const log = vi.spyOn(console, 'log').mockImplementation(() => {});
   await add(cwd, ['button'], { overwrite: true, noInstall: true });
-  assert.equal(read('components/ui/button.tsx'), 'button\n');
-  assert.equal(read('lib/tokens.stylex.ts'), 'rethemed\n');
-  const output = log.mock.calls.map((c) => c.arguments.join(' ')).join('\n');
-  assert.match(output, /lib\/tokens\.stylex\.ts kept — theme is a dependency; name it too/);
+  expect(read('components/ui/button.tsx')).toBe('button\n');
+  expect(read('lib/tokens.stylex.ts')).toBe('rethemed\n');
+  const output = log.mock.calls.map((args) => args.join(' ')).join('\n');
+  expect(output).toMatch(/lib\/tokens\.stylex\.ts kept — theme is a dependency; name it too/);
 });
 
-test('--overwrite replaces a dependency when it is named too', async (t) => {
-  t.mock.method(console, 'log', () => {});
+test('--overwrite replaces a dependency when it is named too', async () => {
+  vi.spyOn(console, 'log').mockImplementation(() => {});
   await add(cwd, ['button', 'theme'], { overwrite: true, noInstall: true });
-  assert.equal(read('lib/tokens.stylex.ts'), 'tokens\n');
+  expect(read('lib/tokens.stylex.ts')).toBe('tokens\n');
 });

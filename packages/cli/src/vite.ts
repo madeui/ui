@@ -29,11 +29,11 @@ const RESOLVE_ALIAS_SNIPPET = `resolve: {
     alias: { '@': fileURLToPath(new URL('src', import.meta.url)) },
   },`;
 
-export function patchViteConfig(cwd, changed) {
+export function patchViteConfig(cwd: string, changed: string[]): string[] {
   const file = ['vite.config.ts', 'vite.config.js', 'vite.config.mts', 'vite.config.mjs']
     .map((f) => path.join(cwd, f))
     .find((f) => fs.existsSync(f));
-  const instructions = [];
+  const instructions: string[] = [];
 
   if (!file) {
     instructions.push(
@@ -69,7 +69,7 @@ export function patchViteConfig(cwd, changed) {
   }
 
   if (touched) {
-    const imports = [];
+    const imports: string[] = [];
     if (!source.includes('@stylexjs/unplugin')) {
       imports.push("import { unplugin as stylexPlugin } from '@stylexjs/unplugin'");
     }
@@ -87,12 +87,12 @@ export function patchViteConfig(cwd, changed) {
   return instructions;
 }
 
-export function patchTsconfigPaths(cwd, changed) {
+export function patchTsconfigPaths(cwd: string, changed: string[]): string[] {
   // Vite templates split config: compilerOptions live in tsconfig.app.json.
   const file = ['tsconfig.app.json', 'tsconfig.json']
     .map((f) => path.join(cwd, f))
     .find((f) => fs.existsSync(f));
-  const instructions = [];
+  const instructions: string[] = [];
   if (!file) return instructions;
 
   const name = path.basename(file);

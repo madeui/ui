@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import kleur from 'kleur';
 
-import { add } from './add.mjs';
+import { add } from './add.ts';
 import {
   CONFIG_FILE,
   DEFAULT_CONFIG,
@@ -14,9 +14,10 @@ import {
   cliCommand,
   missingDependencies,
   installDependencies,
-} from './project.mjs';
-import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.mjs';
-import { patchViteConfig, patchTsconfigPaths } from './vite.mjs';
+} from './project.ts';
+import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.ts';
+import { patchViteConfig, patchTsconfigPaths } from './vite.ts';
+import type { Config, Flags } from './types.ts';
 
 // The alias root is process.cwd(), not __dirname: Turbopack evaluates
 // postcss.config.mjs (which imports this file) inside its own bundle, where
@@ -92,7 +93,7 @@ const GLOBALS_CSS = `@layer base;
 ${RESET_CSS}`;
 
 /** True when the stylesheet already carries our reset or a universal border-box rule. */
-function hasReset(css) {
+function hasReset(css: string): boolean {
   return (
     css.includes(RESET_MARKER) ||
     /(^|[}\s,])\*\s*(,[^{]*)?\{[^}]*box-sizing\s*:\s*border-box/m.test(css)
@@ -155,7 +156,7 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 <!-- END:${AGENTS_MARKER} -->
 `;
 
-function ensureAgentsMd(cwd, changed) {
+function ensureAgentsMd(cwd: string, changed: string[]): void {
   const file = path.join(cwd, 'AGENTS.md');
   if (!fs.existsSync(file)) {
     writeIfAbsent(cwd, 'AGENTS.md', AGENTS_MD, changed);
@@ -176,7 +177,7 @@ function ensureAgentsMd(cwd, changed) {
  * CLAUDE.md that is just `@AGENTS.md`; do the same when it is missing, and
  * add the import line when an existing file does not reference AGENTS.md.
  */
-function ensureClaudeMd(cwd, changed) {
+function ensureClaudeMd(cwd: string, changed: string[]): void {
   const file = path.join(cwd, 'CLAUDE.md');
   if (!fs.existsSync(file)) {
     writeIfAbsent(cwd, 'CLAUDE.md', '@AGENTS.md\n', changed);
@@ -192,7 +193,9 @@ function ensureClaudeMd(cwd, changed) {
   console.log(kleur.green('  ~ CLAUDE.md: added @AGENTS.md'));
 }
 
-function detectFramework(cwd) {
+type FrameworkName = 'next' | 'vite';
+
+function detectFramework(cwd: string): FrameworkName | null {
   const pkg = readPackageJson(cwd);
   const deps = { ...pkg?.dependencies, ...pkg?.devDependencies };
   if (deps.next) return 'next';
@@ -200,7 +203,7 @@ function detectFramework(cwd) {
   return null;
 }
 
-function writeIfAbsent(cwd, file, content, changed) {
+function writeIfAbsent(cwd: string, file: string, content: string, changed: string[]): boolean {
   const dest = path.join(cwd, file);
   if (fs.existsSync(dest)) {
     console.log(kleur.dim(`  = ${file} exists — left untouched`));
@@ -218,7 +221,7 @@ function writeIfAbsent(cwd, file, content, changed) {
  * layered reset + @stylex marker. Returns the file path for madeui.json —
  * detection happens once here, every later run reads the config instead.
  */
-function ensureGlobalsCss(cwd, candidates, fallback, changed) {
+function ensureGlobalsCss(cwd: string, candidates: string[], fallback: string, changed: string[]): string {
   const existing = candidates.find((f) => fs.existsSync(path.join(cwd, f)));
   if (!existing) {
     writeIfAbsent(cwd, fallback, GLOBALS_CSS, changed);
@@ -259,7 +262,7 @@ function ensureGlobalsCss(cwd, candidates, fallback, changed) {
  * itself, so there is no marker to place — only the reset is needed, and a
  * layered reset always loses to the unlayered component styles.
  */
-function ensureViteCss(cwd, candidates, fallback, changed) {
+function ensureViteCss(cwd: string, candidates: string[], fallback: string, changed: string[]): string {
   const existing = candidates.find((f) => fs.existsSync(path.join(cwd, f)));
   if (!existing) {
     writeIfAbsent(cwd, fallback, RESET_CSS, changed);
@@ -277,7 +280,17 @@ function ensureViteCss(cwd, candidates, fallback, changed) {
   return existing;
 }
 
-const FRAMEWORKS = {
+interface Framework {
+  label: string;
+  paths: Config['paths'];
+  cssCandidates: string[];
+  cssFallback: string;
+  devDependencies: string[];
+  /** Wires the build; returns manual steps for what it could not write. */
+  setup(cwd: string, changed: string[]): string[];
+}
+
+const FRAMEWORKS: Record<FrameworkName, Framework> = {
   next: {
     label: 'Next.js',
     paths: { ui: 'components/ui', lib: 'lib' },
@@ -320,19 +333,19 @@ const FRAMEWORKS = {
   },
 };
 
-export async function init(cwd, flags) {
+export async function init(cwd: string, flags: Flags): Promise<void> {
   const pkg = readPackageJson(cwd);
   if (!pkg) {
     throw new Error('no package.json here — run this inside your app.');
   }
   const name = detectFramework(cwd);
-  const framework = FRAMEWORKS[name];
+  const framework = name ? FRAMEWORKS[name] : undefined;
   if (!framework) {
     throw new Error('could not detect a supported framework (Next.js or Vite).');
   }
 
-  const changed = [];
-  const instructions = [];
+  const changed: string[] = [];
+  const instructions: string[] = [];
 
   const tailwind = tailwindPackages(cwd);
   if (tailwind.length > 0) {
