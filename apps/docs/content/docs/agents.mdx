@@ -41,6 +41,15 @@ that read
 `AGENTS.md` — Claude Code, Cursor, Codex, and friends — pick the rules up
 automatically.
 
+## Checking for updates
+
+`npx @madeui/cli diff --json` reports every installed file as `same`,
+`differs` (with a unified patch toward the registry), or `missing`, plus the
+command that restores each item. `--exit-code` makes a difference fail the
+run. The AGENTS.md section tells agents to read the patch before
+overwriting: a file that differs may carry the project's own edits. See
+[CLI → diff](/docs/cli#diff).
+
 ## Extending components: the rules agents follow
 
 1. **Add a variant, don't fork.** New look = new entry in the component's

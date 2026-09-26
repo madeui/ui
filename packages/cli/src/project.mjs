@@ -19,7 +19,19 @@ export const DEFAULT_CONFIG = {
 export function loadConfig(cwd) {
   const file = path.join(cwd, CONFIG_FILE);
   if (!fs.existsSync(file)) return null;
-  return { ...DEFAULT_CONFIG, ...JSON.parse(fs.readFileSync(file, 'utf8')) };
+  const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+  // A partial `paths` (only `ui`, say) keeps the defaults for the rest.
+  return { ...DEFAULT_CONFIG, ...config, paths: { ...DEFAULT_CONFIG.paths, ...config.paths } };
+}
+
+export function requireConfig(cwd) {
+  const config = loadConfig(cwd);
+  if (!config) {
+    throw new Error(
+      `no madeui.json found — run \`${cliCommand(cwd, 'init')}\` first (or create one with a \`registry\` field).`
+    );
+  }
+  return config;
 }
 
 export function saveConfig(cwd, config) {
@@ -38,6 +50,22 @@ export function resolveTarget(target, config) {
     return path.join(config.paths.lib, target.slice('lib/'.length));
   }
   return target;
+}
+
+/**
+ * Where a registry file lands in the project and what is there now. The
+ * target is reported with forward slashes on every platform.
+ */
+export function readInstalled(cwd, file, config) {
+  const target = resolveTarget(file.target ?? file.path, config).split(path.sep).join('/');
+  const dest = path.join(cwd, target);
+  const current = fs.existsSync(dest) ? fs.readFileSync(dest, 'utf8') : null;
+  return { target, dest, current };
+}
+
+/** Line endings aside (git may check files out with CRLF), is it the registry's content? */
+export function matchesRegistry(current, content) {
+  return current !== null && current.replace(/\r\n/g, '\n') === content.replace(/\r\n/g, '\n');
 }
 
 export function detectPackageManager(cwd) {

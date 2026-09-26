@@ -11,9 +11,13 @@ export function isLocalRegistry(registry) {
   return !/^https?:\/\//.test(registry);
 }
 
+// Accept namespaced ids (@ns/button) — the namespace is only routing sugar.
+export function bareName(name) {
+  return name.startsWith('@') ? name.split('/').slice(1).join('/') : name;
+}
+
 export async function fetchItem(registry, name) {
-  // Accept namespaced ids (@ns/button) — the namespace is only routing sugar.
-  const bare = name.startsWith('@') ? name.split('/').slice(1).join('/') : name;
+  const bare = bareName(name);
   if (isLocalRegistry(registry)) {
     const file = path.join(registry, `${bare}.json`);
     if (!fs.existsSync(file)) {
@@ -32,7 +36,7 @@ export async function fetchItem(registry, name) {
 /** Resolves an item plus its registryDependencies, depth-first, deduped. */
 export async function resolveItems(registry, names, seen = new Map()) {
   for (const name of names) {
-    const bare = name.startsWith('@') ? name.split('/').slice(1).join('/') : name;
+    const bare = bareName(name);
     if (seen.has(bare)) continue;
     const item = await fetchItem(registry, bare);
     seen.set(bare, item);

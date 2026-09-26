@@ -75,7 +75,7 @@ export default config;
 // Browser reset with Tailwind Preflight's coverage (see reset.css): an app
 // moving off Tailwind keeps the baseline it rendered under, and components
 // get the border-box sizing they rely on. Lives in @layer base so it loses
-// to every StyleX rule. Research: docs/research/stylex-css-reset.md.
+// to every StyleX rule.
 const RESET_MARKER = '/* madeui reset */';
 const RESET_CSS = fs.readFileSync(
   path.join(path.dirname(fileURLToPath(import.meta.url)), 'reset.css'),
@@ -141,6 +141,16 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 1. Add the variant name to the component's type union.
 2. Add a named style object in its \`stylex.create\` variants map using tokens.
 3. Never fork a component for a one-off — pass \`style\` for layout-level tweaks.
+
+### Updating components
+
+- \`npx @madeui/cli diff --json\` compares every installed file with the
+  registry: \`same\`, \`differs\` (with a patch toward the registry), or
+  \`missing\`. It cannot tell a local edit from a registry update — a
+  \`differs\` file may hold this project's own changes.
+- Before running an item's \`fix\` command (\`add <name> --overwrite\`),
+  read the patch: lines it removes that this project wrote are lost. When
+  both sides changed, apply the registry's hunks by hand instead.
 
 <!-- END:${AGENTS_MARKER} -->
 `;
