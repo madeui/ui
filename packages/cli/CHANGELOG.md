@@ -1,5 +1,11 @@
 # @madeui/cli
 
+## 1.2.1
+
+### Patch Changes
+
+- [#22](https://github.com/madeui/ui/pull/22) [`ad0b4f6`](https://github.com/madeui/ui/commit/ad0b4f66b6df3c2f55e788933347cd60d2761bba) Thanks [@emretfn](https://github.com/emretfn)! - The CLI is now written in TypeScript and published as a bundle built from that source. Behavior is unchanged. `engines` now states the real minimum, Node 22.12, which the CLI's dependencies already required.
+
 ## 1.2.0
 
 ### Minor Changes

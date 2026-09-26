@@ -1,6 +1,6 @@
 {
   "name": "@madeui/cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "CLI for the madeui registry: init (StyleX build setup), add (install components), and diff (compare with the registry).",
   "keywords": [
     "ui",
