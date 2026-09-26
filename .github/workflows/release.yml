@@ -18,6 +18,13 @@ name: Release
 # The branch must carry a changeset for @madeui/cli, otherwise there is
 # nothing to version and nothing is published.
 #
+# The Version Packages PR is opened and pushed with a GitHub App token
+# (the madeui release app: contents + pull requests write, installed on this
+# repo), not GITHUB_TOKEN. Events made with GITHUB_TOKEN don't start other
+# workflows, so CI would never run on the PR and the required checks would
+# keep it from merging. Setup: repo variable RELEASE_APP_CLIENT_ID and
+# secret RELEASE_APP_PRIVATE_KEY.
+#
 # npm auth comes from OIDC (trusted publishing), configured for @madeui/cli
 # on npmjs.com against this workflow file — no NPM_TOKEN lives in this repo.
 # pnpm 11 talks to the registry natively (`info` and `publish`, OIDC
@@ -51,10 +58,21 @@ jobs:
     if: github.repository == 'madeui/ui' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Mint the release app token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           # Changesets needs history to find the base branch and prior tags.
           fetch-depth: 0
+          # Pushes to the release branch go out as the app, so CI runs on
+          # every update of the PR, not only when it is opened.
+          token: ${{ steps.app-token.outputs.token }}
       # pnpm version comes from `packageManager` in the root package.json.
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -72,7 +90,7 @@ jobs:
           commit-message: 'chore(release): version packages'
           pr-title: 'chore(release): version packages'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
   snapshot:
     name: Publish a snapshot of @madeui/cli
