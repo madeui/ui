@@ -89,8 +89,10 @@ jobs:
           publish-script: pnpm release
           commit-message: 'chore(release): version packages'
           pr-title: 'chore(release): version packages'
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # The action reads its token from this input only (a GITHUB_TOKEN
+          # env var that differs is an error) and hands it to the version
+          # and publish scripts as GITHUB_TOKEN itself.
+          github-token: ${{ steps.app-token.outputs.token }}
 
   snapshot:
     name: Publish a snapshot of @madeui/cli
