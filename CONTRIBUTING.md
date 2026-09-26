@@ -6,7 +6,7 @@ the end are what you will come back to.
 
 ## Setup
 
-- Node 20 or newer and [pnpm](https://pnpm.io).
+- Node 22.18 or newer and [pnpm](https://pnpm.io).
 - `pnpm install` at the root.
 - `pnpm docs:dev` runs the docs site with live component previews.
 - `pnpm playground:dev` runs the Next.js smoke-test app.
@@ -63,7 +63,26 @@ preview, merge.
 ## Changing the CLI
 
 1. Branch: `feat/cli-<what>` or `fix/cli-<what>`.
-2. Make the change under `packages/cli/src/`.
+2. Make the change under `packages/cli/src/` (TypeScript). Node 22.18+
+   runs the source as is, so try it without a build:
+
+   ```bash
+   node packages/cli/src/index.ts list --registry packages/registry/public/r
+   ```
+
+   `init`, `add` and `diff` work on an app: run them from a test app's
+   directory with `node <repo>/packages/cli/src/index.ts …` and
+   `--registry <repo>/packages/registry/public/r`.
+
+   Keep to syntax Node can strip (no `enum`, no parameter properties);
+   `tsc` enforces it. Before the PR:
+
+   ```bash
+   pnpm --filter @madeui/cli typecheck
+   pnpm --filter @madeui/cli test
+   ```
+
+   npm gets the tsdown bundle in `dist/`, built on publish (`prepack`).
 3. Add a changeset:
 
    ```bash

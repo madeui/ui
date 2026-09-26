@@ -4,7 +4,8 @@ import path from 'node:path';
 import kleur from 'kleur';
 import prompts from 'prompts';
 
-import { readPackageJson, uninstallDependencies } from './project.mjs';
+import { readPackageJson, uninstallDependencies } from './project.ts';
+import type { Flags } from './types.ts';
 
 /**
  * Tailwind removal for `init`. madeui components are styled with StyleX;
@@ -35,7 +36,7 @@ const TAILWIND_IMPORT = /^(tailwindcss|tw-animate-css)(\/|$)/;
 const CSS_DIRS = ['app', 'src', 'styles', 'pages'];
 const IGNORED_DIRS = new Set(['node_modules', '.next', 'dist', 'build', '.git']);
 
-export function tailwindPackages(cwd) {
+export function tailwindPackages(cwd: string): string[] {
   const pkg = readPackageJson(cwd);
   const deps = { ...pkg?.dependencies, ...pkg?.devDependencies };
   return Object.keys(deps).filter((d) => TAILWIND_PACKAGE.test(d));
@@ -46,7 +47,7 @@ export function tailwindPackages(cwd) {
  * prompt (default yes), then — with no TTY to ask — keep it and say how to
  * re-run non-interactively.
  */
-export async function shouldRemoveTailwind(flags, packages) {
+export async function shouldRemoveTailwind(flags: Flags, packages: string[]): Promise<boolean> {
   if (flags.removeTailwind === true) return true;
   if (flags.removeTailwind === false) return false;
 
@@ -77,9 +78,14 @@ export async function shouldRemoveTailwind(flags, packages) {
  * Removes Tailwind from the project. Returns manual steps for anything we
  * did not touch.
  */
-export async function removeTailwind(cwd, packages, changed, { dryRun = false } = {}) {
+export async function removeTailwind(
+  cwd: string,
+  packages: string[],
+  changed: string[],
+  { dryRun = false }: { dryRun?: boolean } = {}
+): Promise<string[]> {
   console.log(kleur.bold('removing Tailwind:'));
-  const instructions = [];
+  const instructions: string[] = [];
 
   instructions.push(...removePostcssPlugin(cwd, changed));
   instructions.push(...removeVitePlugin(cwd, changed));
@@ -99,8 +105,8 @@ export async function removeTailwind(cwd, packages, changed, { dryRun = false } 
 
 const POSTCSS_CONFIGS = ['postcss.config.mjs', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.ts'];
 
-function removePostcssPlugin(cwd, changed) {
-  const instructions = [];
+function removePostcssPlugin(cwd: string, changed: string[]): string[] {
+  const instructions: string[] = [];
   for (const name of POSTCSS_CONFIGS) {
     const file = path.join(cwd, name);
     if (!fs.existsSync(file)) continue;
@@ -140,8 +146,8 @@ function removePostcssPlugin(cwd, changed) {
 // ---------------------------------------------------------------------------
 // vite.config.* (@tailwindcss/vite)
 
-function removeVitePlugin(cwd, changed) {
-  const instructions = [];
+function removeVitePlugin(cwd: string, changed: string[]): string[] {
+  const instructions: string[] = [];
   const file = ['vite.config.ts', 'vite.config.js', 'vite.config.mts', 'vite.config.mjs']
     .map((f) => path.join(cwd, f))
     .find((f) => fs.existsSync(f));
@@ -173,7 +179,7 @@ function removeVitePlugin(cwd, changed) {
 // ---------------------------------------------------------------------------
 // tailwind.config.* (v3)
 
-function removeConfigFiles(cwd, changed) {
+function removeConfigFiles(cwd: string, changed: string[]): void {
   for (const name of ['tailwind.config.js', 'tailwind.config.ts', 'tailwind.config.mjs', 'tailwind.config.cjs']) {
     const file = path.join(cwd, name);
     if (!fs.existsSync(file)) continue;
@@ -186,10 +192,10 @@ function removeConfigFiles(cwd, changed) {
 // ---------------------------------------------------------------------------
 // CSS
 
-function* walkCss(cwd) {
+function* walkCss(cwd: string): Generator<string> {
   const stack = CSS_DIRS.map((d) => path.join(cwd, d)).filter((d) => fs.existsSync(d));
-  while (stack.length > 0) {
-    const dir = stack.pop();
+  let dir: string | undefined;
+  while ((dir = stack.pop()) !== undefined) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (entry.isDirectory()) {
         if (!IGNORED_DIRS.has(entry.name)) stack.push(path.join(dir, entry.name));
@@ -200,8 +206,8 @@ function* walkCss(cwd) {
   }
 }
 
-function stripCssFiles(cwd, changed) {
-  const instructions = [];
+function stripCssFiles(cwd: string, changed: string[]): string[] {
+  const instructions: string[] = [];
   for (const file of walkCss(cwd)) {
     const css = fs.readFileSync(file, 'utf8');
     const { css: stripped, removed } = stripTailwindCss(css);
@@ -223,8 +229,8 @@ function stripCssFiles(cwd, changed) {
  * `;` within a string, cannot derail the scan. Everything else is left
  * byte-for-byte untouched.
  */
-export function stripTailwindCss(css) {
-  const removed = [];
+export function stripTailwindCss(css: string): { css: string; removed: string[] } {
+  const removed: string[] = [];
   let out = '';
   let i = 0;
 
@@ -245,13 +251,13 @@ export function stripTailwindCss(css) {
       continue;
     }
     if (ch === '@') {
-      const m = /^@([\w-]+)/.exec(css.slice(i));
-      if (m && isTailwindAtRule(css, i, m[1])) {
+      const name = /^@([\w-]+)/.exec(css.slice(i))?.[1];
+      if (name && isTailwindAtRule(css, i, name)) {
         const stop = skipAtRule(css, i);
         // Also swallow the trailing newline so no blank line is left behind.
         const eol = /^[ \t]*\r?\n/.exec(css.slice(stop));
         i = eol ? stop + eol[0].length : stop;
-        const label = m[1] === 'import' ? '@import "tailwindcss"' : `@${m[1]}`;
+        const label = name === 'import' ? '@import "tailwindcss"' : `@${name}`;
         if (!removed.includes(label)) removed.push(label);
         continue;
       }
@@ -266,18 +272,18 @@ export function stripTailwindCss(css) {
   };
 }
 
-function isTailwindAtRule(css, at, name) {
+function isTailwindAtRule(css: string, at: number, name: string): boolean {
   if (STATEMENT_AT_RULES.has(name) || BLOCK_AT_RULES.has(name) || EITHER_AT_RULES.has(name)) {
     return true;
   }
   if (name !== 'import') return false;
   const rest = css.slice(at + '@import'.length).trimStart();
-  const target = /^(?:url\()?\s*['"]([^'"]+)['"]/.exec(rest);
-  return target ? TAILWIND_IMPORT.test(target[1]) : false;
+  const target = /^(?:url\()?\s*['"]([^'"]+)['"]/.exec(rest)?.[1];
+  return target ? TAILWIND_IMPORT.test(target) : false;
 }
 
 /** Returns the index just past the at-rule starting at `at` (after `;` or the closing `}`). */
-function skipAtRule(css, at) {
+function skipAtRule(css: string, at: number): number {
   let i = at;
   let depth = 0;
   while (i < css.length) {
@@ -302,7 +308,7 @@ function skipAtRule(css, at) {
   return css.length;
 }
 
-function skipString(css, at) {
+function skipString(css: string, at: number): number {
   const quote = css[at];
   let i = at + 1;
   while (i < css.length && css[i] !== quote) {

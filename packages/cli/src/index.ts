@@ -1,30 +1,22 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { Command } from 'commander';
 import kleur from 'kleur';
 
-import { add } from './add.mjs';
-import { diff } from './diff.mjs';
-import { init } from './init.mjs';
-import { fetchItem } from './registry.mjs';
-import { loadConfig } from './project.mjs';
+import { add } from './add.ts';
+import { diff } from './diff.ts';
+import { init } from './init.ts';
+import { fetchItem } from './registry.ts';
+import { CLI_VERSION, loadConfig } from './project.ts';
+import type { CommandOptions, Flags } from './types.ts';
 
-const pkg = JSON.parse(
-  fs.readFileSync(
-    path.join(path.dirname(fileURLToPath(import.meta.url)), '../package.json'),
-    'utf8'
-  )
-);
 
 const program = new Command();
 
 program
   .name('madeui')
   .description('components you own, built on Base UI + StyleX')
-  .version(pkg.version);
+  .version(CLI_VERSION);
 
 program
   .command('init')
@@ -71,7 +63,7 @@ program
 
 // Commander's --no-install arrives as `install: false`; flip it into the
 // affirmative flag the commands use.
-function normalize(opts) {
+function normalize(opts: CommandOptions): Flags {
   return {
     ...opts,
     noInstall: opts.install === false,

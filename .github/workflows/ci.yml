@@ -55,7 +55,7 @@ jobs:
       - run: pnpm --filter @madeui/docs build
 
   cli:
-    name: CLI tests
+    name: CLI typecheck, tests, build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -65,7 +65,16 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @madeui/cli typecheck
       - run: pnpm --filter @madeui/cli test
+      # The published bin is the bundle: build it and run it, so a missing
+      # asset (reset.css) or a broken import fails here, not on npm.
+      - run: pnpm --filter @madeui/cli build
+      # On the engines floor, not just the latest 22.x.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.12.0
+      - run: node packages/cli/dist/index.mjs --version
 
   changeset:
     name: CLI changes carry a changeset
