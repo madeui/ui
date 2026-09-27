@@ -36,10 +36,7 @@ export default function CommandDialogHotkey() {
         </KbdGroup>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command
-          items={commands}
-          itemToStringLabel={(item: CommandEntry) => item.label}
-        >
+        <Command items={commands}>
           <CommandInput placeholder="Type a command or search…" />
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandList>

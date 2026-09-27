@@ -15,7 +15,7 @@ export default function SliderControlled() {
     <div {...stylex.props(styles.row)}>
       <Slider
         value={value}
-        onValueChange={(next) => setValue(next)}
+        onValueChange={(next) => setValue(Array.isArray(next) ? next : [next])}
         style={styles.slider}
       />
       <span {...stylex.props(styles.value)}>{value[0]}</span>
