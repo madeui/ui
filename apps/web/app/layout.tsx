@@ -1,11 +1,11 @@
 import './globals.css';
 
 import * as stylex from '@stylexjs/stylex';
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-import { Analytics } from '@/components/site/analytics';
 import { themeScript } from '@/components/site/theme-script';
 import { colorScheme, page } from '@/lib/themes';
 import { site } from '@/site/artifacts/site';
@@ -37,10 +37,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        {/* Vercel Analytics: page views, and the feedback event (feedback.tsx). */}
-        {process.env.NODE_ENV === 'production' ? <Analytics /> : null}
       </head>
-      <body {...stylex.props(page)}>{children}</body>
+      <body {...stylex.props(page)}>
+        {children}
+        {/* Vercel Analytics: page views, and the feedback event (feedback-answers.tsx). */}
+        <Analytics />
+      </body>
     </html>
   );
 }
