@@ -1,0 +1,83 @@
+import * as stylex from '@stylexjs/stylex';
+import { highlight } from 'fumadocs-core/highlight';
+
+import { CodeBlock } from '@/components/site/code-block';
+import { docs } from '@/components/site/site.stylex';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { space, stroke } from '@/lib/constants.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
+import { resolveExample } from '@/site/examples';
+import { Example } from '@/site/examples.generated';
+import { codeThemes } from '@/site/shiki';
+
+/**
+ * `<Component path="…" />` in the docs content: the Example live (Preview)
+ * and its source (Code). The source comes from the Example source resolver
+ * and is highlighted at build; the live Example loads through the generated
+ * Example map, so the page pulls in only the Examples it renders. It renders
+ * inline, not in an iframe, so portaled popups overlay the whole page.
+ */
+export async function ComponentPreview({ path }: { path: string }) {
+  const example = resolveExample(path);
+  if (!example) {
+    return (
+      <p {...stylex.props(styles.missing)}>
+        No example found at <code>{path}</code>. Add it under <code>examples/</code> in your project.
+      </p>
+    );
+  }
+
+  const code = await highlight(example.source, {
+    lang: example.lang,
+    ...codeThemes,
+    components: { pre: (props) => <CodeBlock {...props} flush /> },
+  });
+
+  return (
+    <Tabs defaultValue="preview" data-example={path} style={styles.root}>
+      <TabsList variant="line">
+        <TabsTrigger value="preview">Preview</TabsTrigger>
+        <TabsTrigger value="code">Code</TabsTrigger>
+      </TabsList>
+      {/* Both panels stay mounted while hidden: the Example keeps its state
+          across tab switches, and the source is part of the page's HTML. */}
+      <TabsContent value="preview" keepMounted style={[styles.panel, styles.preview]}>
+        <Example path={path} />
+      </TabsContent>
+      <TabsContent value="code" keepMounted style={styles.panel}>
+        {code}
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+const styles = stylex.create({
+  root: {
+    marginBlock: space.s6,
+  },
+  panel: {
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
+    minWidth: 0,
+  },
+  preview: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    minHeight: docs.previewMinHeight,
+    paddingBlock: space.s10,
+    paddingInline: space.s6,
+  },
+  missing: {
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderStyle: 'solid',
+    borderWidth: stroke.border,
+    color: colors.mutedForeground,
+    marginBlock: space.s6,
+    paddingBlock: space.s2,
+    paddingInline: space.s3,
+  },
+});

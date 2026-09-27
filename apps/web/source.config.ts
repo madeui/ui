@@ -1,5 +1,8 @@
+import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import { defineCollections, defineConfig, defineDocs, frontmatterSchema } from 'fumadocs-mdx/config';
 import { z } from 'zod';
+
+import { codeThemes, transformerLanguage } from './site/shiki.ts';
 
 // Content stays in apps/docs/content until the cutover moves it; paths are
 // relative to this app (next dev/build and fumadocs-mdx run from apps/web).
@@ -32,4 +35,16 @@ export const changelog = defineCollections({
   }),
 });
 
-export default defineConfig();
+export default defineConfig({
+  mdxOptions: {
+    rehypeCodeOptions: {
+      ...codeThemes,
+      // The label comes from data-language; no language icon.
+      icon: false,
+      transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerLanguage],
+    },
+    // The content has no `npm` fences or `tab` metas: keep the output plain.
+    remarkNpmOptions: false,
+    remarkCodeTabOptions: false,
+  },
+});

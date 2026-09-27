@@ -3,22 +3,27 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/copy-registry.mjs",
-    "dev": "next dev",
-    "prebuild": "node scripts/copy-registry.mjs && pnpm check:inventory",
+    "predev": "node scripts/copy-registry.mjs && pnpm example-map",
+    "dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/example-map.mts --watch next dev",
+    "prebuild": "node scripts/copy-registry.mjs && pnpm example-map && pnpm check:inventory",
     "build": "next build",
     "start": "next start",
     "check:inventory": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-inventory.mts",
-    "typecheck": "fumadocs-mdx && tsc --noEmit",
+    "example-map": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/example-map.mts",
+    "typecheck": "fumadocs-mdx && pnpm example-map && next typegen && tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
     "@stylexjs/stylex": "^0.19.1",
+    "@tanstack/react-form": "^1.33.5",
     "fumadocs-core": "16.15.14",
     "fumadocs-mdx": "15.4.5",
+    "lucide-react": "^1.39.0",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-hook-form": "^7.86.0",
+    "shiki": "4.4.3",
     "zod": "^4.6.5"
   },
   "devDependencies": {

@@ -230,3 +230,13 @@
     display: none !important;
   }
 }
+
+/* Highlighted code (site/shiki.ts): Shiki puts both theme colors of a token
+   in CSS variables and no color of its own; the page's color-scheme picks
+   the side. Tokens are generated markup, so this is the one global rule for
+   them, in @layer base like the reset. */
+@layer base {
+  [style*='--shiki-light'] {
+    color: light-dark(var(--shiki-light), var(--shiki-dark));
+  }
+}
