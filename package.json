@@ -8,6 +8,8 @@
     "docs:build": "pnpm --filter @madeui/docs build",
     "playground:dev": "pnpm --filter playground dev",
     "playground:build": "pnpm --filter playground build",
+    "web:dev": "pnpm --filter @madeui/web dev",
+    "web:build": "pnpm --filter @madeui/web build",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"
