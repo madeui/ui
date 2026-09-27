@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
@@ -280,7 +280,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ring } from '@/lib/stylex-utils';
-import { darkTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
 import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -353,12 +352,18 @@ const revenueConfig = {
 export default function Home() {
   const [dark, setDark] = useState(false);
 
-  // Theme goes on <html>, not a wrapper: dialogs/popovers portal to <body>,
-  // and a subtree theme would not reach them.
-  useEffect(() => {
-    const { className } = stylex.props(dark && darkTheme);
-    document.documentElement.className = className ?? '';
-  }, [dark]);
+  // The mode is an attribute on <html>, not a wrapper: dialogs/popovers portal
+  // to <body>. colorScheme (applied in layout.tsx) maps it to color-scheme,
+  // which picks a side of every light-dark() color token.
+  // With no data-theme the page follows the OS, so resolve the mode on click.
+  const toggleDark = () => {
+    const html = document.documentElement;
+    const isDark = html.dataset.theme
+      ? html.dataset.theme === 'dark'
+      : matchMedia('(prefers-color-scheme: dark)').matches;
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    setDark(!isDark);
+  };
 
   return (
     <ToastProvider>
@@ -366,7 +371,7 @@ export default function Home() {
         <div {...stylex.props(styles.headerRow)}>
           <h1 {...stylex.props(styles.heading)}>madeui playground</h1>
           <div {...stylex.props(styles.headerActions)}>
-            <Button variant="secondary" onClick={() => setDark(!dark)}>
+            <Button variant="secondary" onClick={toggleDark}>
               {dark ? 'Light mode' : 'Dark mode'}
             </Button>
           </div>

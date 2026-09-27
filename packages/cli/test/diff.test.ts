@@ -10,7 +10,7 @@ import type { Config, RegistryItem } from '../src/types.ts';
 
 const BUTTON = "export function Button() {}\n";
 const TOKENS = 'export const tokens = {};\n';
-const THEMES = 'export const darkTheme = {};\n';
+const THEMES = 'export const colorScheme = {};\n';
 
 const ITEMS: RegistryItem[] = [
   {

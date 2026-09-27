@@ -18,8 +18,8 @@ atomic CSS).
   writes them into `AGENTS.md` so coding agents follow them too
 - **Consistent API** — `variant`, `size`, and a `style` prop merged last on
   every component
-- **Dark mode as a theme object** — one `stylex.createTheme`, no
-  per-component dark styling
+- **Dark mode in the tokens** — `light-dark()` color pairs switched by
+  `color-scheme`, no per-component dark styling
 
 ## Quick start
 

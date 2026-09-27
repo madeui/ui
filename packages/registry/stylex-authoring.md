@@ -356,6 +356,42 @@ const styles = stylex.create({
 
 ---
 
+## Light and dark mode
+
+Color variables hold both modes as `light-dark(light, dark)` pairs. The
+browser picks a side from the element's CSS `color-scheme`, which is set once
+on `<html>`:
+
+```tsx
+// tokens.stylex.ts
+export const colors = stylex.defineVars({
+  background: 'light-dark(oklch(1 0 0), oklch(0.145 0 0))',
+  foreground: 'light-dark(oklch(0.145 0 0), oklch(0.985 0 0))',
+});
+
+// themes.ts
+const styles = stylex.create({
+  colorScheme: {
+    colorScheme: {
+      default: 'light dark', // follow the OS
+      '[data-theme="light"]': 'light',
+      '[data-theme="dark"]': 'dark',
+    },
+  },
+});
+export const colorScheme = styles.colorScheme;
+
+// app/layout.tsx
+<html {...stylex.props(colorScheme)}>
+```
+
+A manual toggle writes `data-theme` on `<html>`; no class names change.
+`light-dark()` only accepts colors, so only color variables use it. Set
+`color-scheme` through a style rule, never an inline `style`: bundlers that
+lower `light-dark()` for older browsers only see stylesheet rules.
+
+---
+
 ## Creating themes
 
 Override variable values for DOM sub-trees using `stylex.createTheme()`:
@@ -364,23 +400,21 @@ Override variable values for DOM sub-trees using `stylex.createTheme()`:
 import * as stylex from '@stylexjs/stylex';
 import { colors } from './tokens.stylex';
 
-export const darkTheme = stylex.createTheme(colors, {
-  primary: 'lightblue',
-  text: 'white',
-  background: '#1a1a1a',
+export const brandTheme = stylex.createTheme(colors, {
+  primary: 'light-dark(oklch(0.55 0.2 260), oklch(0.7 0.16 260))',
+  ring: 'light-dark(oklch(0.55 0.2 260), oklch(0.7 0.16 260))',
 });
 
-// Apply theme to a container
-function App({ isDark, children }) {
-  return (
-    <div {...stylex.props(isDark && darkTheme)}>
-      {children} {/* All descendants use theme values */}
-    </div>
-  );
-}
+// Apply the theme to <html>: popups portal to <body> and would escape a
+// theme on a wrapper element.
+<html {...stylex.props(colorScheme, brandTheme)}>
 ```
 
 Unlike `defineVars`, themes can be created anywhere and passed across files/components.
+
+Two themes of the same variable group on one element do not merge:
+`stylex.props(themeA, themeB)` applies only `themeB` (the last applied theme
+wins for the whole group). Put the values in one theme, or nest elements.
 
 ---
 

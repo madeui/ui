@@ -12,7 +12,7 @@ import Tab from 'blume/components/content/Tab.astro';
 import Tabs from 'blume/components/content/Tabs.astro';
 import { highlightCode } from 'blume/markdown';
 
-import { darkTheme } from '@/lib/themes';
+import { colorScheme } from '@/lib/themes';
 
 interface Props {
   path: string;
@@ -29,48 +29,41 @@ const codeHtml = entry
     })
   : undefined;
 
-// The StyleX dark-theme classes, resolved server-side so the inline script
-// below can apply them BEFORE first paint (a useEffect would flash light).
-const darkClasses = stylex.props(darkTheme).className ?? '';
+// The colorScheme classes, resolved server-side so the inline script below can
+// put them on <html> before the previews paint.
+const schemeClasses = stylex.props(colorScheme).className ?? '';
 ---
 
 {
   entry ? (
     <Tabs hash={false} sync={false}>
       <Tab class="not-prose p-0!" title="Preview">
-        {/* Mirrors Blume's data-theme onto the StyleX dark theme synchronously
-            (inline scripts block parsing, so previews below never paint in the
-            wrong theme) and keeps following toggles via a MutationObserver.
-            Runs once per page — later instances see the guard. */}
-        <script is:inline define:vars={{ darkClasses }}>
+        {/* The color tokens are light-dark() pairs; the side comes from
+            color-scheme on <html>. Blume's own CSS maps html[data-theme] to
+            color-scheme, but the build lowers light-dark() for older
+            browsers, and that fallback only follows StyleX's colorScheme
+            rule. Blume renders <html>, so this script adds the colorScheme
+            classes to it. Inline scripts block parsing, so no preview below
+            paints before they are set.
+            Client-side navigation replaces <html>'s attributes with the new
+            page's, which has neither the classes nor data-theme until
+            Blume's after-swap script runs. That one style recalc in light
+            mode would let the components' 150ms color transitions animate
+            the correction into a visible flash, so both are stamped onto the
+            incoming document BEFORE the swap. Runs once per page; later
+            instances see the guard. */}
+        <script is:inline define:vars={{ schemeClasses }}>
           (() => {
             if (window.__uiLibThemeSync) return;
             window.__uiLibThemeSync = true;
             const html = document.documentElement;
-            const classes = darkClasses.split(' ').filter(Boolean);
-            const apply = () => {
-              const dark = html.dataset.theme === 'dark';
-              for (const c of classes) html.classList.toggle(c, dark);
-            };
-            apply();
-            new MutationObserver(apply).observe(html, {
-              attributes: true,
-              attributeFilter: ['data-theme'],
-            });
-            // Client-side navigation replaces <html>'s attributes with the new
-            // page's, which has no StyleX classes. Re-applying after the swap
-            // is too late: one style recalc happens with light tokens, and the
-            // components' 150ms background transitions animate the correction
-            // into a visible flash. Instead, stamp the theme onto the incoming
-            // document BEFORE the swap so no recalc ever sees light values.
+            const classes = schemeClasses.split(' ').filter(Boolean);
+            html.classList.add(...classes);
             document.addEventListener('astro:before-swap', (e) => {
-              if (html.dataset.theme !== 'dark') return;
               const next = e.newDocument.documentElement;
-              next.dataset.theme = 'dark';
-              for (const c of classes) next.classList.add(c);
+              next.classList.add(...classes);
+              if (html.dataset.theme) next.dataset.theme = html.dataset.theme;
             });
-            // Fallback for anything that still slips through.
-            document.addEventListener('astro:after-swap', apply);
           })();
         </script>
         {/* Inline styles: Blume compiles this override outside the normal

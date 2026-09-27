@@ -48,7 +48,8 @@ fine; never frame shadcn as the benchmark in public text).
   Tabs, Autocomplete, Meter, Number Field, Toolbar, Checkbox Group, ...).
   No chart, calendar, or date-picker component yet.
 - Every component exposes `variant`, `size`, and a `style` prop merged last.
-- Dark mode is one `stylex.createTheme`; themes are static objects.
+- Dark mode lives in the tokens (`light-dark()` pairs, `color-scheme` on
+  `<html>`); brand themes are static `stylex.createTheme` objects.
 - Landing and docs share theme state via the `blume-theme` localStorage key.
 - Styling doctrine is binding: tokens over literals, variants over escape
   hatches, no raw colors or magic numbers in components or examples.

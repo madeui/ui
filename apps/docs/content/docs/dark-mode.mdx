@@ -1,79 +1,69 @@
 ---
 title: Dark mode
-description: "Apply the dark theme with StyleX createTheme — no flash, portals included."
+description: "Color tokens as light-dark() pairs switched by color-scheme: follows the OS with no JS, and a manual toggle without a flash."
 sidebar:
   order: 3
 ---
 
-Dark mode is a **StyleX theme**: `lib/themes.ts` exports `darkTheme`, a
-`stylex.createTheme(colors, { … })` that overrides every color token. Apply
-it and all components follow — there is no per-component dark styling.
-
-## Where to apply it
-
-Always on `<html>` (or `<body>`), **never a wrapper div**: dialogs, popovers,
-menus, and toasts portal to `<body>`, so a subtree theme would not reach them.
+Dark mode lives in the tokens. Every color in `lib/tokens.stylex.ts` is a
+`light-dark(light, dark)` pair, and the browser picks a side from the CSS
+`color-scheme` of the page. There is no dark theme to apply and no
+per-component dark styling: set the scheme on `<html>` and every component
+follows. Scrollbars and native form controls follow it too.
 
 ```tsx
-import * as stylex from '@stylexjs/stylex';
-
-import { darkTheme } from '@/lib/themes';
-
-const { className } = stylex.props(dark && darkTheme);
-document.documentElement.className = className ?? '';
+// lib/tokens.stylex.ts
+export const colors = stylex.defineVars({
+  background: 'light-dark(oklch(1 0 0), oklch(0.145 0 0))',
+  foreground: 'light-dark(oklch(0.145 0 0), oklch(0.985 0 0))',
+  // ...
+});
 ```
 
-## Toggle with React state
+## Follow the system
+
+`lib/themes.ts` exports `colorScheme`, a style for `<html>`. By default it
+sets `color-scheme: light dark`, so the page follows the OS setting from the
+first paint, with no JavaScript:
 
 ```tsx
-'use client';
-
-import * as React from 'react';
+// app/layout.tsx
 import * as stylex from '@stylexjs/stylex';
 
-import { Button } from '@/components/ui/button';
-import { darkTheme } from '@/lib/themes';
+import { colorScheme } from '@/lib/themes';
 
-export function ThemeToggle() {
-  const [dark, setDark] = React.useState(false);
-
-  React.useEffect(() => {
-    const { className } = stylex.props(dark && darkTheme);
-    document.documentElement.className = className ?? '';
-  }, [dark]);
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Button variant="secondary" onClick={() => setDark(!dark)}>
-      {dark ? 'Light mode' : 'Dark mode'}
-    </Button>
+    <html lang="en" {...stylex.props(colorScheme)}>
+      <body>{children}</body>
+    </html>
   );
 }
 ```
 
-## Avoiding the flash of light mode
+Put it on `<html>`, not a wrapper: dialogs, popovers, menus, and toasts
+portal to `<body>` and inherit the scheme from there.
 
-An effect runs after first paint — a stored dark preference would flash light
-first. Stamp the theme class **before paint** with an inline script in
-`<head>`. The theme's class name comes from StyleX, so render it into the
-script from a shared constant:
+## Add a manual toggle
+
+`colorScheme` also reads a `data-theme` attribute on the same element:
+`data-theme="dark"` or `data-theme="light"` forces a mode, and no attribute
+means "follow the system". A toggle only writes that attribute, so no class
+names change.
+
+Restore a saved choice before the first paint with an inline script in
+`<head>`. Add `suppressHydrationWarning` to `<html>`, because the script sets
+an attribute the server did not render:
 
 ```tsx
-// app/layout.tsx (Next.js)
-import * as stylex from '@stylexjs/stylex';
+// app/layout.tsx
+const restoreTheme = `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
 
-import { darkTheme } from '@/lib/themes';
-
-const darkClassName = stylex.props(darkTheme).className ?? '';
-
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning {...stylex.props(colorScheme)}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `if (localStorage.theme === 'dark' || (!('theme' in localStorage) && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.className = ${JSON.stringify(darkClassName)};`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: restoreTheme }} />
       </head>
       <body>{children}</body>
     </html>
@@ -81,25 +71,131 @@ export default function RootLayout({ children }) {
 }
 ```
 
-Store the preference when toggling (`localStorage.theme = 'dark' | 'light'`)
-and the script restores it on every load, including hard refreshes.
-
-## System preference only
-
-If you don't need a manual toggle, skip the storage and follow the OS:
+The toggle writes the attribute and the saved choice from its click handler.
+It reads the current mode with `useSyncExternalStore`, so it needs no effect
+and renders a placeholder on the server:
 
 ```tsx
-const prefersDark = matchMedia('(prefers-color-scheme: dark)');
-const apply = () => {
-  const { className } = stylex.props(prefersDark.matches && darkTheme);
-  document.documentElement.className = className ?? '';
-};
-apply();
-prefersDark.addEventListener('change', apply);
+'use client';
+
+import { useSyncExternalStore } from 'react';
+import * as stylex from '@stylexjs/stylex';
+import { Moon, Sun } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { icon } from '@/lib/stylex-utils';
+
+type Mode = 'light' | 'dark' | 'system';
+
+function getMode(): Mode {
+  const theme = document.documentElement.dataset.theme;
+  return theme === 'light' || theme === 'dark' ? theme : 'system';
+}
+
+function subscribe(onChange: () => void) {
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  // Another tab changed the saved mode: apply it here too.
+  const onStorage = (e: StorageEvent) => {
+    if (e.key !== 'theme') return;
+    if (e.newValue === 'light' || e.newValue === 'dark') document.documentElement.dataset.theme = e.newValue;
+    else delete document.documentElement.dataset.theme;
+    onChange();
+  };
+  window.addEventListener('themechange', onChange);
+  window.addEventListener('storage', onStorage);
+  media.addEventListener('change', onChange);
+  return () => {
+    window.removeEventListener('themechange', onChange);
+    window.removeEventListener('storage', onStorage);
+    media.removeEventListener('change', onChange);
+  };
+}
+
+function isDark() {
+  const mode = getMode();
+  return mode === 'dark' || (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+}
+
+function setMode(mode: Mode) {
+  const html = document.documentElement;
+  try {
+    if (mode === 'system') localStorage.removeItem('theme');
+    else localStorage.setItem('theme', mode);
+  } catch {}
+  if (mode === 'system') delete html.dataset.theme;
+  else html.dataset.theme = mode;
+  window.dispatchEvent(new Event('themechange'));
+}
+
+export function ThemeToggle() {
+  // null on the server and during hydration, the real value right after.
+  const dark = useSyncExternalStore(subscribe, isDark, () => null);
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      aria-label="Toggle theme"
+      onClick={() => setMode(dark ? 'light' : 'dark')}
+    >
+      {dark === null ? null : dark ? (
+        <Sun {...stylex.props(icon.md)} />
+      ) : (
+        <Moon {...stylex.props(icon.md)} />
+      )}
+    </Button>
+  );
+}
 ```
+
+The button flips between light and dark. For a three-way menu, add an item
+that calls `setMode('system')` to clear the saved choice and follow the OS
+again.
+
+In a Vite app or another single-page setup, put the same script in
+`index.html` and the `colorScheme` classes on `<html>` from your root
+component.
+
+### With next-themes
+
+`next-themes` works when it only writes the attribute:
+`<ThemeProvider attribute="data-theme" enableColorScheme={false}>`. Its own
+`color-scheme` handling sets an inline style, which the next section explains
+to avoid.
+
+### With a cookie
+
+If your app already renders dynamically (an authenticated dashboard), you can
+store the choice in a cookie and render `<html data-theme={…}>` on the
+server, with no script. Reading cookies in the root layout makes every route
+dynamic, so don't do this for a static site.
+
+## Keep `color-scheme` in CSS
+
+Set `color-scheme` only through `colorScheme` (a stylesheet rule), never
+through an inline `style`. For browsers older than 2024, bundlers lower
+`light-dark()` into a fallback: Next.js does this with its default browser
+targets, and Vite does it through the StyleX plugin's CSS step. That
+fallback reacts only to `color-scheme` set by stylesheet rules, so an inline
+`style.colorScheme` is ignored and the page stays light.
+
+A section that is always dark takes `colorScheme` and `data-theme="dark"`
+on its own element (the attribute only applies where `colorScheme` is). The
+fallback resolves every color on `<html>`, so such a section only works when
+`light-dark()` stays native. In
+Next.js 16.2 or later, keep it native with:
+
+```ts
+// next.config.ts
+const nextConfig = {
+  experimental: { lightningCssFeatures: { exclude: ['light-dark'] } },
+};
+```
+
+or target browsers that support `light-dark()` in your browserslist.
 
 ## More themes
 
-`darkTheme` is just a theme — create as many as you like
-(`stylex.createTheme(colors, { … })` in `lib/themes.ts`) and apply the same
-way. See [Customization](/docs/customization) for the token contract.
+Brand themes are `stylex.createTheme` calls in `lib/themes.ts`. Their values
+can be `light-dark()` pairs too, so one theme covers both modes. See
+[Customization](/docs/customization#themes).
