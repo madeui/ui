@@ -187,13 +187,16 @@ const styles = stylex.create({
     padding: space.s1,
     width: '100%',
   },
+  // Pin the top edge instead of centering, so the input stays put while
+  // filtering shrinks the list. `bottom: auto` resolves Dialog's vertical
+  // auto margins to 0; horizontal centering is untouched.
   dialogContent: {
     borderRadius: radius.xl,
+    bottom: 'auto',
     gap: 0,
     overflow: 'hidden',
     padding: 0,
     top: '33%',
-    transform: 'translate(-50%, 0)',
   },
   srOnly: {
     clip: 'rect(0 0 0 0)',
