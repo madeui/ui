@@ -4,7 +4,7 @@ import { highlight } from 'fumadocs-core/highlight';
 import { CodeBlock } from '@/components/site/code-block';
 import { docs } from '@/components/site/site.stylex';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { space, stroke } from '@/lib/constants.stylex';
+import { fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 import { resolveExample } from '@/site/examples';
 import { Example } from '@/site/examples.generated';
@@ -35,9 +35,13 @@ export async function ComponentPreview({ path }: { path: string }) {
 
   return (
     <Tabs defaultValue="preview" data-example={path} style={styles.root}>
-      <TabsList variant="line">
-        <TabsTrigger value="preview">Preview</TabsTrigger>
-        <TabsTrigger value="code">Code</TabsTrigger>
+      <TabsList variant="line" style={styles.list}>
+        <TabsTrigger value="preview" style={styles.trigger}>
+          Preview
+        </TabsTrigger>
+        <TabsTrigger value="code" style={styles.trigger}>
+          Code
+        </TabsTrigger>
       </TabsList>
       {/* Both panels stay mounted while hidden: the Example keeps its state
           across tab switches, and the source is part of the page's HTML. */}
@@ -52,14 +56,27 @@ export async function ComponentPreview({ path }: { path: string }) {
 }
 
 const styles = stylex.create({
+  // Preview/Code line tabs in one bordered box: the tab row on top, the
+  // panel below it.
   root: {
-    marginBlock: space.s6,
-  },
-  panel: {
     borderColor: colors.border,
     borderRadius: radius.lg,
     borderStyle: 'solid',
     borderWidth: stroke.border,
+    gap: 0,
+    marginBlock: space.s6,
+    overflow: 'hidden',
+  },
+  list: {
+    gap: space.s4,
+    paddingInline: space.s3,
+    width: '100%',
+  },
+  trigger: {
+    fontSize: fontSize.xs,
+    paddingInline: space.s1,
+  },
+  panel: {
     minWidth: 0,
   },
   preview: {
