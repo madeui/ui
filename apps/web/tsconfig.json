@@ -31,7 +31,8 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "../../packages/registry/src/**/*.ts",
-    "../../packages/registry/src/**/*.tsx"
+    "../../packages/registry/src/**/*.tsx",
+    "../../packages/registry/examples/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

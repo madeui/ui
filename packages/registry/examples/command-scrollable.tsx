@@ -18,7 +18,7 @@ const fruits = [
 
 export default function CommandScrollable() {
   return (
-    <Command items={fruits} itemToStringLabel={(item) => item.label}>
+    <Command items={fruits}>
       <CommandInput placeholder="Search fruit…" />
       <CommandEmpty>No results found.</CommandEmpty>
       <CommandList>

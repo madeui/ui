@@ -9,3 +9,6 @@ next-env.d.ts
 
 # copied from packages/registry/public/r (before dev and build)
 /public/r/
+
+# the Example map, written by scripts/example-map.mts (before dev and build)
+/site/examples.generated.tsx

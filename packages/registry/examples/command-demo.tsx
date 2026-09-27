@@ -28,7 +28,6 @@ export default function CommandDemo() {
   return (
     <Command
       items={commands}
-      itemToStringLabel={(item: CommandEntry) => item.label}
       style={[styles.root, ring({ shadow: shadow.md })]}
     >
       <CommandInput placeholder="Type a command or search…" />
