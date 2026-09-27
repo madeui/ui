@@ -26,14 +26,12 @@
   "devDependencies": {
     "@stylexjs/babel-plugin": "^0.19.1",
     "@stylexjs/postcss-plugin": "^0.19.1",
-    "@tanstack/react-form": "^1.33.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.62.1",
     "pngjs": "^7.0.0",
-    "react-hook-form": "^7.86.0",
     "typescript": "^5"
   },
   "packageManager": "pnpm@11.25.0"

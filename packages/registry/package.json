@@ -16,8 +16,10 @@
     "recharts": "^3.10.1"
   },
   "devDependencies": {
+    "@tanstack/react-form": "^1.33.5",
     "@types/react": "^19.0.0",
     "embla-carousel-autoplay": "^8.6.0",
+    "react-hook-form": "^7.86.0",
     "typescript": "^5.6.0"
   }
 }
