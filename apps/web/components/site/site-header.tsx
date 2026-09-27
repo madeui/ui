@@ -1,19 +1,21 @@
 import * as stylex from '@stylexjs/stylex';
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 
 import { HeaderTabs } from '@/components/site/header-tabs';
 import { Lockup } from '@/components/site/lockup';
 import { MobileNav } from '@/components/site/mobile-nav';
-import { effects, layer, layout } from '@/components/site/site.stylex';
+import { SearchTrigger } from '@/components/site/search-trigger';
+import { effects, font, layer, layout } from '@/components/site/site.stylex';
 import { ThemeToggle } from '@/components/site/theme-toggle';
-import { breakpoint, space, stroke } from '@/lib/constants.stylex';
+import { breakpoint, container, space, stroke } from '@/lib/constants.stylex';
+import { icon } from '@/lib/stylex-utils';
 import { colors, radius } from '@/lib/tokens.stylex';
 import type { SidebarGroup } from '@/site/nav';
 
 /**
  * The sticky, translucent site header: the drawer toggle (below lg), the
- * lockup, the section tabs (from md), and the theme toggle. The search
- * trigger joins the end group.
+ * lockup, the section tabs (from md), then search and the theme toggle.
  */
 export function SiteHeader({ nav }: { nav?: { label: string; groups: SidebarGroup[] } }) {
   return (
@@ -32,6 +34,10 @@ export function SiteHeader({ nav }: { nav?: { label: string; groups: SidebarGrou
           <HeaderTabs />
         </div>
         <div {...stylex.props(styles.end)}>
+          <SearchTrigger style={styles.search} hintStyle={styles.searchHint}>
+            <Search {...stylex.props(icon.md)} />
+            <span {...stylex.props(styles.searchLabel)}>Search</span>
+          </SearchTrigger>
           <ThemeToggle />
         </div>
       </header>
@@ -86,5 +92,21 @@ const styles = stylex.create({
     display: 'flex',
     gap: space.s2,
     marginInlineStart: 'auto',
+  },
+  // The search button: a pill with its label and shortcut from lg, an icon below.
+  search: {
+    borderRadius: radius.full,
+    color: { default: colors.mutedForeground, ':hover': colors.foreground },
+    minWidth: { default: null, [breakpoint.lg]: container.xs },
+    paddingInline: space.s3,
+  },
+  searchLabel: {
+    display: { default: 'none', [breakpoint.lg]: 'inline' },
+    flexGrow: 1,
+    textAlign: 'start',
+  },
+  searchHint: {
+    display: { default: 'none', [breakpoint.lg]: 'inline-flex' },
+    fontFamily: font.mono,
   },
 });

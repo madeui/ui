@@ -58,6 +58,19 @@ export const effects = stylex.defineConsts({
   headerBlur: 'blur(8px)',
 });
 
+/** The search dialog: the results column beside the preview pane. */
+export const searchLayout = stylex.defineConsts({
+  width: '62.5rem',
+  height: '30rem',
+  /** Never taller than the viewport leaves room for. */
+  maxHeight: '90dvh',
+  results: '22rem',
+  /** Below sm the dialog hangs from the top instead of centering. */
+  top: '8vh',
+  /** A highlight's background: the text color at this strength. */
+  mark: '25%',
+});
+
 /** Sticky chrome sits below the registry's popups (z.popup = 50). */
 export const layer = stylex.defineConsts({
   sticky: '40',

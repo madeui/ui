@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 import { ChevronDown } from 'lucide-react';
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { duration, fontSize, fontWeight, lineHeight, space, stroke } from '@/lib/constants.stylex';
 import { icon } from '@/lib/stylex-utils';
 import { colors, radius } from '@/lib/tokens.stylex';
@@ -90,21 +89,33 @@ export function Toc({ items }: { items: TocItem[] }) {
   );
 }
 
-/** Below xl: the same ToC, collapsed above the article. */
+/**
+ * Below xl: the same ToC, collapsed above the article. A plain disclosure
+ * (button + region) rather than the registry Collapsible: it needs no
+ * animation, and the docs pages' JS budget is tight.
+ */
 export function MobileToc({ items }: { items: TocItem[] }) {
   const active = useActiveHeading(items.map((item) => item.id));
+  const [open, setOpen] = useState(false);
+  const panel = useId();
   return (
-    <Collapsible {...stylex.props(styles.box)}>
-      <CollapsibleTrigger {...stylex.props(styles.trigger)}>
+    <div {...stylex.props(styles.box)}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panel}
+        onClick={() => setOpen((value) => !value)}
+        {...stylex.props(styles.trigger)}
+      >
         On this page
         <ChevronDown {...stylex.props(icon.md, styles.chevron)} />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div {...stylex.props(styles.panel)}>
+      </button>
+      {open ? (
+        <div id={panel} {...stylex.props(styles.panel)}>
           <TocList items={items} active={active} />
         </div>
-      </CollapsibleContent>
-    </Collapsible>
+      ) : null}
+    </div>
   );
 }
 
@@ -158,7 +169,7 @@ const styles = stylex.create({
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     paddingBlock: space.s3,
     width: '100%',
-    '--toc-chevron-rotation': { default: null, '[data-panel-open]': '180deg' },
+    '--toc-chevron-rotation': { default: null, '[aria-expanded="true"]': '180deg' },
   },
   chevron: {
     color: colors.mutedForeground,

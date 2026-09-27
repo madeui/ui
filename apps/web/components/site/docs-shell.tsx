@@ -2,11 +2,14 @@ import type { ReactNode } from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { Feedback } from '@/components/site/feedback';
+import { PageActions } from '@/components/site/page-actions';
 import { MobileToc, Toc, type TocItem } from '@/components/site/toc';
 import { Pager } from '@/components/site/pager';
 import { PageTitle } from '@/components/site/prose';
 import { SidebarNav } from '@/components/site/sidebar-nav';
 import { SiteHeader } from '@/components/site/site-header';
+import { WebMcp } from '@/components/site/web-mcp';
 import { layout } from '@/components/site/site.stylex';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from '@/components/ui/breadcrumb';
 import { breakpoint, fontSize, lineHeight, space } from '@/lib/constants.stylex';
@@ -28,6 +31,7 @@ export function DocsShell({ label, groups, children }: { label: string; groups: 
         </aside>
         {children}
       </div>
+      <WebMcp />
     </>
   );
 }
@@ -70,13 +74,13 @@ export function DocsPage({
             <PageTitle title={title} description={description} />
             {children}
           </article>
-          {/* The feedback row goes here. */}
+          <Feedback />
           <Pager prev={prev} next={next} />
         </div>
       </main>
       <aside aria-label="On this page" {...stylex.props(styles.rail)}>
         {toc.length === 0 ? null : <Toc items={toc} />}
-        {/* Page actions go here, under the ToC. */}
+        <PageActions />
       </aside>
     </>
   );

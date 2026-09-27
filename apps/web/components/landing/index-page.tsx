@@ -8,6 +8,7 @@ import { display, landing, tracking } from '@/components/landing/landing.stylex'
 import { Rule } from '@/components/landing/rule';
 import Scenes from '@/components/landing/scenes/scenes';
 import { SearchTrigger } from '@/components/landing/search-trigger';
+import { SearchShortcuts } from '@/components/site/search-trigger';
 import { layout } from '@/components/site/site.stylex';
 import { Lockup } from '@/components/site/lockup';
 import { ThemeToggle } from '@/components/site/theme-toggle';
@@ -56,6 +57,7 @@ export function IndexPage() {
           </div>
           <div {...stylex.props(styles.headerEnd)}>
             <SearchTrigger />
+            <SearchShortcuts />
             <a
               href="https://github.com/madeui/ui"
               aria-label="madeui on GitHub"
