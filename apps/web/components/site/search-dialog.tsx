@@ -17,10 +17,9 @@ import { highlight, loadSearch, matchSnippet, type LoadedSearch, type SearchHit 
 
 // The search dialog, loaded on the first open (search-trigger.tsx). Results
 // come from site/search.ts; highlights render as <mark> elements. ⌘J / Ctrl+J
-// toggles the preview pane; the choice is remembered under the key readers'
-// browsers already hold it in.
+// toggles the preview pane; the choice is remembered in localStorage.
 
-const PREVIEW_KEY = 'blume-search-preview';
+const PREVIEW_KEY = 'search-preview';
 const PREVIEW_RADIUS = 600;
 
 function readPreview(): boolean {
