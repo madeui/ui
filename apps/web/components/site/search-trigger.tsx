@@ -25,14 +25,12 @@ const shortcut = () => (/mac|iphone|ipad|ipod/iu.test(navigator.platform) ? '⌘
 const serverShortcut = () => '⌘K';
 
 /**
- * The header's search button, and ⌘K / Ctrl+K (toggles) and / (opens,
- * outside fields). The header renders the button's icon and label and owns
- * its styles; the shortcut hint says Ctrl K off Apple devices.
+ * The search dialog behind ⌘K / Ctrl+K (toggles) and / (opens, outside
+ * fields): mounted on the first open, then kept for its state.
  */
-export function SearchTrigger({ children, style, hintStyle }: { children: ReactNode; style: StyleXStyles; hintStyle: StyleXStyles }) {
+function useSearchDialog() {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const hint = useSyncExternalStore(noSubscription, shortcut, serverShortcut);
   // The index fetch starts with the dialog's code, not after it.
   const show = (next: (open: boolean) => boolean) => {
     void loadSearchIndex().catch(() => {});
@@ -56,19 +54,29 @@ export function SearchTrigger({ children, style, hintStyle }: { children: ReactN
     // eslint-disable-next-line react-hooks/exhaustive-deps -- show only uses state setters
   }, []);
 
+  return { show, dialog: mounted ? <SearchDialog open={open} onOpenChange={setOpen} /> : null };
+}
+
+/**
+ * The header's search button, with the search shortcuts. The header renders
+ * the button's icon and label and owns its styles; the shortcut hint says
+ * Ctrl K off Apple devices.
+ */
+export function SearchTrigger({ children, style, hintStyle }: { children: ReactNode; style: StyleXStyles; hintStyle: StyleXStyles }) {
+  const { show, dialog } = useSearchDialog();
+  const hint = useSyncExternalStore(noSubscription, shortcut, serverShortcut);
   return (
     <>
-      <Button
-        variant="outline"
-        aria-label="Search"
-        aria-haspopup="dialog"
-        onClick={() => show(() => true)}
-        style={style}
-      >
+      <Button variant="outline" aria-label="Search" aria-haspopup="dialog" onClick={() => show(() => true)} style={style}>
         {children}
         <Kbd style={hintStyle}>{hint}</Kbd>
       </Button>
-      {mounted ? <SearchDialog open={open} onOpenChange={setOpen} /> : null}
+      {dialog}
     </>
   );
+}
+
+/** The search shortcuts alone, for a page without the site header (the landing's own button sends ⌘K). */
+export function SearchShortcuts() {
+  return useSearchDialog().dialog;
 }
