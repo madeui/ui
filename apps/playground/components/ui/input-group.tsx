@@ -8,7 +8,7 @@ import { Button, type ButtonProps } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -112,7 +112,6 @@ const styles = stylex.create({
       default: 'row',
       ':has([data-align^="block"])': 'column',
     },
-    fontFamily: font.sans,
     minWidth: 0,
     outlineColor: { default: 'transparent', ':focus-within': colors.ring },
     outlineOffset: `calc(-1 * ${stroke.border})`,

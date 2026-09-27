@@ -47,12 +47,15 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
 [stylex-authoring.md](./stylex-authoring.md) (API mechanics). Summary:
 
 - Tokens only — no magic numbers or raw colors anywhere in components:
-  - themable vars from `@/lib/tokens.stylex` (colors, radius, font, shadow);
+  - themable vars from `@/lib/tokens.stylex` (colors, radius, shadow);
   - non-themed scales from `@/lib/constants.stylex` (`space`, `fontSize`,
     `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `iconSize`,
     `container`, `breakpoint`).
   If a value is missing, extend the scale deliberately — never invent a
   one-off inside a component.
+- No `fontFamily` in components: they inherit the page's font (set on
+  `<html>`; popups portal to `<body>` and inherit it). The one exception is
+  Kbd's `fontFamily: 'inherit'`, which undoes the reset's monospace `<kbd>`.
 - Base UI state (checked, open, highlighted, transitionStatus) is styled with
   attribute-selector condition keys (StyleX ≥0.18) — Base UI mirrors every
   state as a data attribute:
@@ -114,7 +117,7 @@ survive installation byte-identical:
   the hero is `<component>-demo.tsx` and shows the single most representative
   real-world use, not every variant at once.
 - **Examples use StyleX, never inline `style={{...}}`.** Layout via
-  `stylex.create`; text/colors via tokens (`colors.*`, `font.*`). Examples are
+  `stylex.create`; colors via tokens (`colors.*`). Examples are
   teaching material — they must model the practice we want users to copy.
 - **Docs page section order:**
   1. Hero `<Component />`

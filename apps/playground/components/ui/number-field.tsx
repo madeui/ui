@@ -8,7 +8,7 @@ import { Minus, Plus } from 'lucide-react';
 
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -110,7 +110,6 @@ export function NumberFieldIncrement({
 
 const styles = stylex.create({
   root: {
-    fontFamily: font.sans,
   },
   group: {
     alignItems: 'stretch',
@@ -133,7 +132,6 @@ const styles = stylex.create({
     backgroundColor: 'transparent',
     borderStyle: 'none',
     color: colors.foreground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontVariantNumeric: 'tabular-nums',
     outline: 'none',

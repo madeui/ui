@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 interface DivProps
   extends Omit<React.ComponentPropsWithoutRef<'div'>, 'className' | 'style'> {
@@ -74,7 +74,6 @@ const styles = stylex.create({
     color: colors.cardForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: `var(--card-spacing, ${space.s5})`,
     paddingBlock: `var(--card-spacing, ${space.s5})`,
   },

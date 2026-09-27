@@ -6,7 +6,7 @@ import { Meter as BaseMeter } from '@base-ui/react/meter';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, duration, easing } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -82,7 +82,6 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    fontFamily: font.sans,
     gap: space.s3,
     width: '100%',
   },

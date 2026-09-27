@@ -6,7 +6,7 @@ import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, z, duration, easing, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 // Instant tooltips by default (Base UI's own default is 600ms).
 export function TooltipProvider({
@@ -85,7 +85,6 @@ const styles = stylex.create({
     backgroundColor: colors.foreground,
     borderRadius: radius.sm,
     color: colors.background,
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     lineHeight: lineHeight.snug,
     maxWidth: container.sm,

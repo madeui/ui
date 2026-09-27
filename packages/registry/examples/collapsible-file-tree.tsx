@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/collapsible';
 import { space, fontSize, duration, stroke } from '@/lib/constants.stylex';
 import { icon } from '@/lib/stylex-utils';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 function Folder({
   name,
@@ -30,7 +30,7 @@ function Folder({
       >
         <ChevronRight {...stylex.props(icon.sm, styles.chevron)} />
         <FolderIcon {...stylex.props(icon.sm)} />
-        <span>{name}</span>
+        <code>{name}</code>
       </CollapsibleTrigger>
       <CollapsibleContent>{children}</CollapsibleContent>
     </Collapsible>
@@ -42,7 +42,7 @@ function File({ name, depth = 1 }: { name: string; depth?: number }) {
     <div {...stylex.props(styles.row, styles.file, indents.depth(depth))}>
       <span {...stylex.props(styles.fileSpacer)} />
       <FileIcon {...stylex.props(icon.sm)} />
-      <span>{name}</span>
+      <code>{name}</code>
     </div>
   );
 }
@@ -69,7 +69,6 @@ const styles = stylex.create({
   tree: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.mono,
     fontSize: fontSize.sm,
   },
   row: {
@@ -83,7 +82,6 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: 'pointer',
     display: 'flex',
-    fontFamily: font.mono,
     fontSize: fontSize.sm,
     gap: space.s1,
     outline: {

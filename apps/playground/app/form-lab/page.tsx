@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { space, fontSize, fontWeight, container } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 function RhfForm() {
   const {
@@ -112,7 +112,6 @@ const styles = stylex.create({
   page: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s10,
     marginInline: 'auto',
     maxWidth: container.xl,

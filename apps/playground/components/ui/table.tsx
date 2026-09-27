@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
   /** StyleX styles merged last — always win over the component's own. */
@@ -87,7 +87,6 @@ const styles = stylex.create({
   table: {
     borderCollapse: 'collapse',
     captionSide: 'bottom',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.control,
     width: '100%',

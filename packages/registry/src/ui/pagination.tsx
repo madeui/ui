@@ -6,7 +6,6 @@ import { ChevronLeft, ChevronRight, Ellipsis } from 'lucide-react';
 import { Button, type ButtonSize } from '@/components/ui/button';
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, breakpoint } from '@/lib/constants.stylex';
-import { font } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
   /** StyleX styles merged last — always win over the component's own. */
@@ -121,7 +120,6 @@ export function PaginationEllipsis({
 const styles = stylex.create({
   nav: {
     display: 'flex',
-    fontFamily: font.sans,
     justifyContent: 'center',
     marginInline: 'auto',
     width: '100%',

@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Separator } from '@/components/ui/separator';
 import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 export default function SeparatorDemo() {
   return (
@@ -27,7 +27,6 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s4,
   },

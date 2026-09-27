@@ -6,7 +6,7 @@ import { Button as BaseButton } from '@base-ui/react/button';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type ButtonVariant =
   | 'primary'
@@ -57,7 +57,6 @@ const styles = stylex.create({
     borderStyle: 'none',
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     gap: space.s2,

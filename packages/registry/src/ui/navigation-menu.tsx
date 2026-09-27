@@ -8,7 +8,7 @@ import { ChevronDown } from 'lucide-react';
 
 import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -151,7 +151,6 @@ const styles = stylex.create({
   root: {
     alignItems: 'center',
     display: 'flex',
-    fontFamily: font.sans,
     justifyContent: 'center',
     maxWidth: 'max-content',
     position: 'relative',
@@ -188,7 +187,6 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: 'pointer',
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     gap: space.s1,

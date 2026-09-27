@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export interface TextareaProps
   extends Omit<
@@ -31,7 +31,6 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: colors.foreground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.normal,
     minHeight: space.s16,

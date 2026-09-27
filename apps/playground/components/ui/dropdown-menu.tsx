@@ -8,7 +8,7 @@ import { Check, ChevronRight } from 'lucide-react';
 
 import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   style?: stylex.StyleXStyles;
@@ -251,7 +251,6 @@ const styles = stylex.create({
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
-    fontFamily: font.sans,
     maxHeight: 'var(--available-height)',
     minWidth: container.xs,
     opacity: {

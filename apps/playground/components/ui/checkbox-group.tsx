@@ -6,7 +6,6 @@ import { CheckboxGroup as BaseCheckboxGroup } from '@base-ui/react/checkbox-grou
 import * as stylex from '@stylexjs/stylex';
 
 import { space } from '@/lib/constants.stylex';
-import { font } from '@/lib/tokens.stylex';
 
 export interface CheckboxGroupProps
   extends Omit<
@@ -32,7 +31,6 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s2,
   },
 });

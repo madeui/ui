@@ -15,7 +15,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { space, fontSize, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export default function ContextMenuDemo() {
   return (
@@ -67,7 +67,6 @@ const styles = stylex.create({
     borderWidth: stroke.border,
     color: colors.foreground,
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     height: container.xs,
     justifyContent: 'center',

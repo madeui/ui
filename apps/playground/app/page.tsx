@@ -282,7 +282,7 @@ import {
 import { ring } from '@/lib/stylex-utils';
 import { darkTheme } from '@/lib/themes';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 const commandItems = [
   { value: 'calendar', label: 'Calendar' },
@@ -1119,7 +1119,6 @@ const styles = stylex.create({
     color: colors.foreground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s8,
     minHeight: '100vh',
     padding: space.s12,

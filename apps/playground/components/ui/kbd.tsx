@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -33,7 +33,7 @@ const styles = stylex.create({
     borderRadius: radius.sm,
     color: colors.mutedForeground,
     display: 'inline-flex',
-    fontFamily: font.sans,
+    fontFamily: 'inherit',
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     gap: space.s1,
@@ -48,7 +48,7 @@ const styles = stylex.create({
   group: {
     alignItems: 'center',
     display: 'inline-flex',
-    fontFamily: font.sans,
+    fontFamily: 'inherit',
     gap: space.s1,
   },
 });

@@ -7,7 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, z, duration, easing, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 export const HoverCard = BasePreviewCard.Root;
 export const HoverCardTrigger = BasePreviewCard.Trigger;
@@ -77,7 +77,6 @@ const styles = stylex.create({
     backgroundColor: colors.popover,
     borderRadius: radius.lg,
     color: colors.popoverForeground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.normal,
     opacity: {

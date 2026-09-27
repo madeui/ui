@@ -115,10 +115,13 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 
 ### Rules
 
-- Tokens over literals: colors/radius/fonts/shadows come from
+- Tokens over literals: colors/radius/shadows come from
   \`tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
   scales from \`constants.stylex.ts\` (\`defineConsts\`). Never hardcode
   colors, spacing, font sizes, z-indices, or durations in component styles.
+- No \`fontFamily\` in component styles: components inherit the page's font
+  (set on \`<html>\`, so portaled popups get it too). Kbd's \`'inherit'\` is
+  the one exception: it undoes the reset's monospace \`<kbd>\`.
 - Responsive styles are mobile-first: the phone layout is \`default\`, wider
   layouts use \`breakpoint\` keys from \`constants.stylex.ts\`
   (\`[breakpoint.sm]\` 640px, \`md\` 768, \`lg\` 1024, \`xl\` 1280, \`xxl\` 1536).

@@ -38,6 +38,9 @@ html:root:not([data-theme]), html:root[data-theme] {
   --blume-font-body-src: ${geist};
   --blume-font-display-src: ${geist};
 }
+/* Geist on <html>: registry components carry no font of their own, and the
+   scenes' popups portal to <body>, outside the landing root. */
+html { font-family: ${geist}; }
 /* Minimal ground: components assume border-box; everything else is StyleX
    in landing/. */
 *, *::before, *::after { box-sizing: border-box; }

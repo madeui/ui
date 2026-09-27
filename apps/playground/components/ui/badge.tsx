@@ -7,7 +7,7 @@ import { useRender } from '@base-ui/react/use-render';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type BadgeVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
 
@@ -38,7 +38,6 @@ const styles = stylex.create({
     alignItems: 'center',
     borderRadius: radius.full,
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     gap: space.s1,

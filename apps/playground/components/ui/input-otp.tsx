@@ -8,7 +8,7 @@ import { Minus } from 'lucide-react';
 
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -63,7 +63,6 @@ const styles = stylex.create({
   root: {
     alignItems: 'center',
     display: 'flex',
-    fontFamily: font.sans,
     gap: space.s2,
   },
   group: {

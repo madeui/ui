@@ -20,7 +20,7 @@ import {
   iconSize,
   container as containerWidth,
 } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 /* ---------------------------------- Config --------------------------------- */
 
@@ -341,7 +341,6 @@ const styles = stylex.create({
     color: colors.foreground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     justifyContent: 'center',
     minWidth: 0,
@@ -356,7 +355,6 @@ const styles = stylex.create({
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     gap: space.s15,
     lineHeight: lineHeight.snug,
@@ -397,7 +395,6 @@ const styles = stylex.create({
     color: colors.mutedForeground,
     display: 'flex',
     flexWrap: 'wrap',
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     gap: space.s4,

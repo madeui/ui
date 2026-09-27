@@ -6,7 +6,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Slider } from '@/components/ui/slider';
 import { container, fontSize, space } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 export default function SliderControlled() {
   const [value, setValue] = React.useState([40]);
@@ -35,7 +35,6 @@ const styles = stylex.create({
   },
   value: {
     color: colors.mutedForeground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontVariantNumeric: 'tabular-nums',
     width: space.s8,

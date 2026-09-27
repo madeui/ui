@@ -16,7 +16,7 @@ import {
   stroke,
   breakpoint,
 } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 import Footer from './Footer';
 import { ArrowRightIcon, CheckIcon, CopyIcon, GitHubIcon, MoonIcon, SearchIcon, SunIcon } from './icons';
@@ -24,11 +24,10 @@ import { Lockup } from './Lockup';
 import { Rule } from './Rule';
 import Scenes from './scenes/Scenes';
 
-// Geist is the brand face on marketing surfaces; the components inherit it
-// through the `font.sans` token so every control in the scenes matches.
-const geist = stylex.createTheme(font, {
-  sans: "'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-});
+// Geist, the brand face, is set on <html> by the shell (pages/index.astro);
+// registry components carry no font of their own and inherit it. Only the
+// CLI install chip opts out, into this monospace stack.
+const monoStack = "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace";
 
 function ThemeMenu() {
   const [open, setOpen] = React.useState(false);
@@ -185,7 +184,7 @@ const principles = [
 
 export default function IndexPage() {
   return (
-    <div {...stylex.props(geist, styles.page)}>
+    <div {...stylex.props(styles.page)}>
       <div {...stylex.props(styles.wrap)}>
         <header {...stylex.props(styles.header)}>
           <div {...stylex.props(styles.headerStart)}>
@@ -283,7 +282,6 @@ const styles = stylex.create({
   page: {
     backgroundColor: colors.background,
     color: colors.foreground,
-    fontFamily: font.sans,
     lineHeight: lineHeight.normal,
     minHeight: '100dvh',
   },
@@ -363,7 +361,6 @@ const styles = stylex.create({
     },
     cursor: 'pointer',
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s2,
     height: space.s9,
@@ -431,7 +428,6 @@ const styles = stylex.create({
     borderStyle: 'none',
     color: colors.foreground,
     cursor: 'pointer',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     paddingBlock: space.s15,
@@ -492,7 +488,6 @@ const styles = stylex.create({
     color: colors.foreground,
   },
   h1: {
-    fontFamily: font.sans,
     // Display scale — a marketing size with no place on the control type scale.
     fontSize: 'clamp(2.375rem, 5.4vw, 3.75rem)',
     fontWeight: fontWeight.bold,
@@ -578,7 +573,7 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: 'pointer',
     display: 'inline-flex',
-    fontFamily: font.mono,
+    fontFamily: monoStack,
     fontSize: fontSize.xs,
     gap: space.s2,
     paddingBlock: space.s2,
@@ -595,7 +590,7 @@ const styles = stylex.create({
     color: colors.foreground,
   },
   cmdText: {
-    fontFamily: font.mono,
+    fontFamily: monoStack,
   },
   // Both icons share one cell so the swap is a crossfade in place, not a
   // width change that would shift the command text.
@@ -673,7 +668,6 @@ const styles = stylex.create({
     gap: space.s2,
   },
   principleTitle: {
-    fontFamily: font.sans,
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
     letterSpacing: '-0.01em',

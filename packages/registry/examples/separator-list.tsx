@@ -4,7 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Separator } from '@/components/ui/separator';
 import { space, fontSize, fontWeight, container } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 const notifications = [
   { title: 'Your invoice has been paid', time: '2h ago' },
@@ -32,7 +32,6 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s3,
     width: container.sm,
   },

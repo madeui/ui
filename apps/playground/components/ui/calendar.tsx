@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type CalendarSize = 'sm' | 'md';
 
@@ -321,7 +321,6 @@ const styles = stylex.create({
   root: {
     color: colors.foreground,
     display: 'inline-block',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.control,
     // Never wider than whatever the calendar is dropped into (a popover, a
@@ -500,7 +499,6 @@ const styles = stylex.create({
     },
     cursor: 'pointer',
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontWeight: 'normal',
     justifyContent: 'center',
     lineHeight: lineHeight.none,

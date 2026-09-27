@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -182,7 +182,6 @@ const styles = stylex.create({
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     height: '100%',
     overflow: 'hidden',
     padding: space.s1,
@@ -226,7 +225,6 @@ const styles = stylex.create({
     backgroundColor: 'transparent',
     borderStyle: 'none',
     color: colors.foreground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     height: '100%',
     outline: 'none',
