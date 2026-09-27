@@ -30,6 +30,8 @@
     "**/*.mts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
+    ".next-vrt/types/**/*.ts",
+    ".next-vrt/dev/types/**/*.ts",
     "../../packages/registry/src/**/*.ts",
     "../../packages/registry/src/**/*.tsx",
     "../../packages/registry/examples/**/*.tsx"
