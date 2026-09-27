@@ -23,6 +23,7 @@ export function contentPages(): ContentPage[] {
       title: page.data.title,
       description: page.data.description,
       date: page.data.date,
+      category: page.data.changelog?.category,
     }),
   );
   return [...docs, ...changelog];
