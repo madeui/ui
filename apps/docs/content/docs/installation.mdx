@@ -33,8 +33,9 @@ npx @madeui/cli add button dialog select
 
 `init` detects your framework (Next.js or Vite), wires the StyleX build,
 installs `@stylexjs/stylex` + `@base-ui/react`, copies the design tokens to
-`lib/`, and appends a component-conventions section to `AGENTS.md` so coding
-agents follow the house rules. `add` copies components (and anything they
+`lib/`, applies the [page styles](#page-styles) in your root layout, and
+appends a component-conventions section to `AGENTS.md` so coding agents
+follow the house rules. `add` copies components (and anything they
 depend on) into `components/ui/`.
 
 If the app was scaffolded with Tailwind, `init` offers to remove it — madeui
@@ -180,6 +181,57 @@ block `init` writes (the Vite template has no `box-sizing: border-box` rule,
 so inputs and buttons would grow by their borders). The StyleX output is
 unlayered on Vite, so the `@layer base` reset always loses to component
 styles.
+
+## Page styles
+
+`lib/themes.ts` exports two styles for the page itself: `colorScheme` for
+`<html>`, which switches every color token between light and dark (see
+[Dark mode](/docs/dark-mode)), and `page` for `<body>`, which sets the
+background and text color from the `background` and `foreground` tokens.
+`init` applies both; to do it by hand on Next.js:
+
+```tsx
+// app/layout.tsx
+import * as stylex from '@stylexjs/stylex';
+
+import { colorScheme, page } from '@/lib/themes';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" {...stylex.props(colorScheme)}>
+      <body {...stylex.props(page)}>{children}</body>
+    </html>
+  );
+}
+```
+
+When `<html>` already has a `className` (next/font variables, say), append
+the StyleX class to it instead of spreading, since an element takes one
+`className`:
+
+```tsx
+<html lang="en" className={`${geist.variable} ${stylex.props(colorScheme).className}`}>
+```
+
+`page` goes on `<body>`: while `<html>` has no background of its own, the
+body background fills the whole window, and a StyleX class on `<body>` wins
+over `body { background: … }` rules in `@layer base`, below every StyleX
+rule. Starter stylesheets often set `background` or `color` on `:root`,
+`html`, or `body` outside any layer (create-vite's `index.css` does); delete
+those rules so the tokens decide the page colors.
+
+On Vite, `<html>` and `<body>` live in `index.html`, outside React, so add
+the classes once from the entry:
+
+```tsx
+// src/main.tsx
+import * as stylex from '@stylexjs/stylex';
+
+import { colorScheme, page } from './lib/themes';
+
+document.documentElement.classList.add(...(stylex.props(colorScheme).className?.split(' ') ?? []));
+document.body.classList.add(...(stylex.props(page).className?.split(' ') ?? []));
+```
 
 ## Path aliases
 

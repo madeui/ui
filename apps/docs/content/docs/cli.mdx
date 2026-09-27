@@ -37,6 +37,13 @@ Sets up the current app:
   [manual setup](/docs/installation#nextjs-manual) for details.
 - Copies the design tokens (`lib/tokens.stylex.ts`, `lib/constants.stylex.ts`,
   `lib/themes.ts`) and utilities (`lib/stylex-utils.ts`).
+- Applies the page styles from `lib/themes.ts`: `colorScheme` on `<html>`
+  (light and dark mode) and `page` on `<body>` (background and text color).
+  On Next.js it edits the root layout (`app/layout.tsx`), appending to an
+  existing string or template-literal `className`; on Vite it adds the
+  classes from the entry (`src/main.tsx`). A layout it can't read is left
+  alone and the snippet is printed instead. See
+  [page styles](/docs/installation#page-styles).
 - Appends a component-conventions section to `AGENTS.md` so coding agents
   follow the house rules (tokens over literals, variants over escapes,
   `[data-*]` condition keys for Base UI state, reading `diff` before

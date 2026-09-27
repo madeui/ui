@@ -74,8 +74,10 @@ Every color token is a `light-dark(light, dark)` pair, so dark mode needs no
 theme: `colorScheme` from `lib/themes.ts` sets CSS `color-scheme` on `<html>`
 and the browser picks a side of each token. It follows the OS by default, and
 `data-theme="dark"` or `"light"` on `<html>` forces a mode. When you change a
-color, edit both sides of its pair. See [Dark mode](/docs/dark-mode) for the
-toggle and the no-flash setup.
+color, edit both sides of its pair. The page background and text color
+follow too: `page` from `lib/themes.ts` on `<body>` reads the `background` and
+`foreground` tokens. See [Dark mode](/docs/dark-mode) for the toggle and the
+no-flash setup.
 
 ## Themes
 
