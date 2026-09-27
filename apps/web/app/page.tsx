@@ -1,13 +1,18 @@
 import type { Metadata } from 'next';
 
 import { IndexPage } from '@/components/landing/index-page';
+import { PageHead } from '@/components/site/page-head';
+import { landingJsonLd, landingMetadata } from '@/site/head';
 
-export const metadata: Metadata = {
-  title: { absolute: 'madeui — UI you own, down to the token' },
-  description:
-    'Base UI + StyleX components you own. Copied into your project as editable source, styled with compile-time tokens. Agent-friendly by design.',
-};
+export const metadata: Metadata = landingMetadata();
 
+// The landing's head has always been its own: no feed, Markdown or
+// describedby links, only the card and the JSON-LD.
 export default function Home() {
-  return <IndexPage />;
+  return (
+    <>
+      <PageHead jsonLd={landingJsonLd()} discovery={false} />
+      <IndexPage />
+    </>
+  );
 }

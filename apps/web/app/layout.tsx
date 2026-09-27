@@ -8,10 +8,13 @@ import type { ReactNode } from 'react';
 
 import { themeScript } from '@/components/site/theme-script';
 import { colorScheme, page } from '@/lib/themes';
+import { site } from '@/site/artifacts/site';
 
+// Defaults every page overrides through site/head.ts; the icon is shared.
 export const metadata: Metadata = {
-  title: 'madeui',
-  description: 'Base UI + StyleX components you own. Agent-friendly by design.',
+  title: site.name,
+  description: site.description,
+  icons: { icon: { url: '/icon.svg', type: 'image/svg+xml' } },
 };
 
 // Geist on <html>, so every component (and every portaled popup) inherits
@@ -28,6 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
+      dir="ltr"
       suppressHydrationWarning
       className={`${sans.className} ${mono.variable} ${stylex.props(colorScheme).className}`}
     >

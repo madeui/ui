@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { DocsPage } from '@/components/site/docs-shell';
+import { PageHead } from '@/components/site/page-head';
 import { proseComponents } from '@/components/site/prose';
 import type { TocItem } from '@/components/site/toc';
 import { contentPages } from '@/site/content';
+import { type HeadPage, pageJsonLd, pageMetadata } from '@/site/head';
 import { pager } from '@/site/nav';
 import { changelogSource } from '@/site/source';
 
@@ -19,8 +21,16 @@ export async function generateMetadata(props: PageProps<'/changelog/[slug]'>): P
   const { slug } = await props.params;
   const page = changelogSource.getPage([slug]);
   if (!page) notFound();
-  return { title: page.data.title, description: page.data.description };
+  return pageMetadata(headPage(page));
 }
+
+const headPage = (page: NonNullable<ReturnType<typeof changelogSource.getPage>>): HeadPage => ({
+  route: page.url,
+  title: page.data.title,
+  description: page.data.description,
+  date: page.data.date,
+  markdown: true,
+});
 
 /** The ToC lists sections and subsections (h2, h3). */
 const TOC_DEPTHS = new Set([2, 3]);
@@ -36,6 +46,7 @@ export default async function ChangelogEntryPage(props: PageProps<'/changelog/[s
     .map((item) => ({ id: item.url.replace(/^#/u, ''), title: item.title, depth: item.depth }));
   return (
     <DocsPage title={page.data.title} toc={toc} {...pager(contentPages(), page.url)}>
+      <PageHead jsonLd={pageJsonLd(headPage(page))} />
       <Body components={proseComponents} />
     </DocsPage>
   );
