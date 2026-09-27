@@ -22,6 +22,7 @@ module.exports = {
           '@/components/ui/*': [path.join(registry, 'src/ui/*')],
           '@/lib/*': [path.join(registry, 'src/lib/*')],
           '@/components/site/*': [path.join(root, 'components/site/*')],
+          '@/components/landing/*': [path.join(root, 'components/landing/*')],
           '@examples/*': [path.join(registry, 'examples/*')],
         },
         unstable_moduleResolution: { type: 'commonJS' },

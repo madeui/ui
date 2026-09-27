@@ -16,6 +16,8 @@ export interface ContentPage {
   badge?: string;
   /** Changelog entries: publish date. */
   date?: Date;
+  /** Changelog entries: frontmatter `changelog.category` ("Release"). */
+  category?: string;
 }
 
 /**
