@@ -1,8 +1,10 @@
-import type { ComponentProps } from 'react';
+import { isValidElement, type ComponentProps, type ReactNode } from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
 import { CopyButton } from '@/components/site/copy-button';
+import { syntax } from '@/components/site/site-tokens.stylex';
+import { font, prose } from '@/components/site/site.stylex';
 import { fontSize, lineHeight, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -42,11 +44,15 @@ type CodeBlockProps = Omit<ComponentProps<'pre'>, 'className' | 'style'> & {
  */
 export function CodeBlock({ children, 'data-language': language, flush = false }: CodeBlockProps) {
   const label = language === undefined ? undefined : (languageLabels[language] ?? language);
+  // Shiki renders <pre><code>…lines…</code></pre>; the block renders its own
+  // <code> around the lines, so the prose map's `code` (inline code) never
+  // styles a code block.
+  const lines: ReactNode = isValidElement<{ children?: ReactNode }>(children) ? children.props.children : children;
   return (
     <figure {...stylex.props(styles.root, flush && styles.flush)}>
       {label === undefined ? null : <figcaption {...stylex.props(styles.label)}>{label}</figcaption>}
       <pre data-language={language} {...stylex.props(styles.pre)}>
-        {children}
+        <code {...stylex.props(styles.code)}>{lines}</code>
       </pre>
       <CopyButton style={[styles.copy, label === undefined && styles.copyWithoutLabel]} />
     </figure>
@@ -78,11 +84,19 @@ const styles = stylex.create({
     paddingBlock: space.s2,
     paddingInline: space.s4,
   },
+  // The type sits on <pre> so the line box follows the code size; <code>
+  // repeats the face because the reset gives <code> its own.
   pre: {
-    fontSize: fontSize.sm,
+    color: syntax.foreground,
+    fontFamily: font.mono,
+    fontSize: prose.code,
     lineHeight: lineHeight.normal,
     overflowX: 'auto',
-    padding: space.s4,
+    paddingBlock: space.s4,
+    paddingInline: space.s5,
+  },
+  code: {
+    fontFamily: font.mono,
   },
   copy: {
     insetInlineEnd: space.s1,

@@ -99,6 +99,9 @@ importers:
       remark-parse:
         specifier: ^11.0.0
         version: 11.0.0(supports-color@7.2.0)
+      remark-smartypants:
+        specifier: ^3.0.3
+        version: 3.0.3
       shiki:
         specifier: 4.4.3
         version: 4.4.3

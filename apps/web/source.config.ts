@@ -1,5 +1,6 @@
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import { defineCollections, defineConfig, defineDocs, frontmatterSchema } from 'fumadocs-mdx/config';
+import remarkSmartypants from 'remark-smartypants';
 import { z } from 'zod';
 
 import { codeThemes, transformerLanguage } from './site/shiki.ts';
@@ -37,6 +38,9 @@ export const changelog = defineCollections({
 
 export default defineConfig({
   mdxOptions: {
+    // Typographic quotes, dashes and ellipses in prose, as the pages have
+    // always rendered them. The Markdown mirrors keep the source characters.
+    remarkPlugins: [remarkSmartypants],
     rehypeCodeOptions: {
       ...codeThemes,
       // The label comes from data-language; no language icon.
