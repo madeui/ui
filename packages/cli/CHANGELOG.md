@@ -1,5 +1,19 @@
 # @madeui/cli
 
+## 1.3.0
+
+### Minor Changes
+
+- [#30](https://github.com/madeui/ui/pull/30) [`3ed89fa`](https://github.com/madeui/ui/commit/3ed89fa60c8e37cff63dec8df3da5e9048fd6c2d) Thanks [@emretfn](https://github.com/emretfn)! - `init` now applies the page styles from `lib/themes.ts` in your app's root: `colorScheme` on `<html>` (light and dark mode) and the new `page` style on `<body>` (background and text color from the `background` and `foreground` tokens). On Next.js it edits `app/layout.tsx`, appending to an existing string or template-literal `className`; on Vite it adds the classes from `src/main.tsx`. A layout it can't read safely is left alone and the exact snippet is printed instead, and a style the file already imports is not applied twice. If `lib/themes.ts` predates `page`, `init` says how to update it instead of editing the layout. The AGENTS.md block it writes mentions `page` too.
+
+### Patch Changes
+
+- [#25](https://github.com/madeui/ui/pull/25) [`270c979`](https://github.com/madeui/ui/commit/270c979cc97ad497875641c216d31bacecbc82ae) Thanks [@emretfn](https://github.com/emretfn)! - The AGENTS.md block that `init` writes now covers responsive styles: mobile-first, with `breakpoint` keys from `constants.stylex.ts` (`sm` 640px, `md` 768, `lg` 1024, `xl` 1280, `xxl` 1536) instead of literal media queries. Existing AGENTS.md files are left as they are.
+
+- [#27](https://github.com/madeui/ui/pull/27) [`a813cfb`](https://github.com/madeui/ui/commit/a813cfb29f3101f409e146f82e7867276d895fc6) Thanks [@emretfn](https://github.com/emretfn)! - The AGENTS.md block that `init` writes now says components carry no `fontFamily`: they inherit the page's font, set on `<html>`. It no longer lists fonts among the tokens in `tokens.stylex.ts`, which has no font token anymore. Existing AGENTS.md files are left as they are.
+
+- [#29](https://github.com/madeui/ui/pull/29) [`b8c473d`](https://github.com/madeui/ui/commit/b8c473d8485db93988be8dd000010fd2850331de) Thanks [@emretfn](https://github.com/emretfn)! - The AGENTS.md block that `init` writes now describes dark mode as `light-dark()` color tokens switched by `colorScheme` on `<html>` (with `data-theme="light"|"dark"` to force a mode), instead of a `darkTheme` to apply. It also notes that two brand themes on one element do not merge. Existing AGENTS.md files are left as they are.
+
 ## 1.2.1
 
 ### Patch Changes
