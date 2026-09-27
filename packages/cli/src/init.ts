@@ -119,6 +119,11 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
   \`tokens.stylex.ts\` (themable, \`defineVars\`); spacing/type/z/duration
   scales from \`constants.stylex.ts\` (\`defineConsts\`). Never hardcode
   colors, spacing, font sizes, z-indices, or durations in component styles.
+- Responsive styles are mobile-first: the phone layout is \`default\`, wider
+  layouts use \`breakpoint\` keys from \`constants.stylex.ts\`
+  (\`[breakpoint.sm]\` 640px, \`md\` 768, \`lg\` 1024, \`xl\` 1280, \`xxl\` 1536).
+  Keys may overlap; the widest match wins. No literal width queries, no
+  \`max-width\`, and a \`null\` condition is not a reset (name the value).
 - Every component accepts \`variant\`, \`size\` (where meaningful), and a
   \`style?: StyleXStyles\` prop merged last via \`stylex.props(...)\` — caller
   styles always win. Extend by adding variants, not inline escapes.

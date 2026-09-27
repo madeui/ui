@@ -14,6 +14,7 @@ import {
   duration,
   easing,
   stroke,
+  breakpoint,
 } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
@@ -276,8 +277,6 @@ const appear = stylex.keyframes({
 });
 
 const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
 const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
 
 const styles = stylex.create({
@@ -293,10 +292,10 @@ const styles = stylex.create({
   wrap: {
     borderInlineColor: colors.border,
     borderInlineStyle: 'dashed',
-    borderInlineWidth: { default: stroke.border, [MOBILE]: 0 },
+    borderInlineWidth: { default: 0, [breakpoint.sm]: stroke.border },
     marginInline: 'auto',
     maxWidth: '80rem',
-    paddingInline: { default: space.s6, [MOBILE]: space.s4 },
+    paddingInline: { default: space.s4, [breakpoint.sm]: space.s6 },
   },
   header: {
     alignItems: 'center',
@@ -332,7 +331,7 @@ const styles = stylex.create({
   // Docs carries the header on phones; Components and Changelog are one tap
   // away from it and both sit in the footer.
   navSecondary: {
-    display: { default: null, [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'inline' },
   },
   navLink: {
     borderRadius: radius.md,
@@ -371,22 +370,20 @@ const styles = stylex.create({
     marginRight: space.s1,
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     outlineOffset: stroke.focus,
-    paddingInline: { default: space.s3, [MOBILE]: 0 },
+    paddingInline: { default: 0, [breakpoint.sm]: space.s3 },
     justifyContent: 'center',
-    // A null condition emits no rule in StyleX 0.19, so the tablet reset is
-    // an explicit 0.
-    minWidth: { default: '14rem', [TABLET]: 0 },
-    width: { default: null, [MOBILE]: space.s9 },
+    minWidth: { default: 0, [breakpoint.lg]: '14rem' },
+    width: { default: space.s9, [breakpoint.sm]: 'auto' },
     transitionDuration: duration.fast,
     transitionProperty: 'color, border-color',
   },
   searchLabel: {
-    display: { default: null, [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'inline' },
     flex: 1,
     textAlign: 'left',
   },
   searchKbd: {
-    display: { default: 'inline-flex', [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'inline-flex' },
     gap: space.s05,
   },
   iconBtn: {
@@ -450,8 +447,8 @@ const styles = stylex.create({
     isolation: 'isolate',
     opacity: 0,
     paddingBlock: {
-      default: `${space.s12} ${space.s10}`,
-      [MOBILE]: `${space.s8} ${space.s8}`,
+      default: `${space.s8} ${space.s8}`,
+      [breakpoint.sm]: `${space.s12} ${space.s10}`,
     },
     position: 'relative',
     textAlign: 'center',
@@ -663,10 +660,10 @@ const styles = stylex.create({
   },
   principles: {
     display: 'grid',
-    gap: { default: space.s10, [MOBILE]: space.s7 },
+    gap: { default: space.s7, [breakpoint.sm]: space.s10 },
     gridTemplateColumns: {
-      default: 'repeat(3, minmax(0, 1fr))',
-      [MOBILE]: 'minmax(0, 1fr)',
+      default: 'minmax(0, 1fr)',
+      [breakpoint.sm]: 'repeat(3, minmax(0, 1fr))',
     },
     paddingTop: space.s10,
   },

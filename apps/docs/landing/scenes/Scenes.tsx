@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { space, duration, easing } from '@/lib/constants.stylex';
+import { space, duration, easing, breakpoint } from '@/lib/constants.stylex';
 
 import Cards from './Cards';
 import Dashboard from './Dashboard';
@@ -60,7 +60,6 @@ const enter = stylex.keyframes({
   to: { opacity: 1 },
 });
 
-const TABLET = '@media (max-width: 61.25rem)' as const;
 const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
 
 const styles = stylex.create({
@@ -69,7 +68,7 @@ const styles = stylex.create({
   // and the stage takes their height.
   stage: {
     gap: space.s5,
-    height: { default: '46rem', [TABLET]: 'auto' },
+    height: { default: 'auto', [breakpoint.lg]: '46rem' },
   },
   // Five tabs outgrow a phone; the list scrolls sideways instead of clipping.
   tabList: {
@@ -83,7 +82,7 @@ const styles = stylex.create({
     flexDirection: 'column',
     minHeight: 0,
     minWidth: 0,
-    overflow: { default: 'hidden', [TABLET]: 'visible' },
+    overflow: { default: 'visible', [breakpoint.lg]: 'hidden' },
   },
   // Opacity only: a translate would fight the fixed stage.
   fade: {

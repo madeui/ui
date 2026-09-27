@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Ellipsis } from 'lucide-react';
 
 import { Button, type ButtonSize } from '@/components/ui/button';
 import { icon } from '@/lib/stylex-utils';
-import { space, fontSize } from '@/lib/constants.stylex';
+import { space, fontSize, breakpoint } from '@/lib/constants.stylex';
 import { font } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -143,7 +143,7 @@ const styles = stylex.create({
   linkText: {
     display: {
       default: 'none',
-      '@media (min-width: 640px)': 'block',
+      [breakpoint.sm]: 'block',
     },
   },
   ellipsis: {

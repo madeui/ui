@@ -98,6 +98,19 @@ export const stroke = stylex.defineConsts({
   halo: '3px',
 });
 
+// Viewport breakpoints, mobile-first: style the narrowest layout as
+// `default` and add keys upward. Several keys on one property are fine; the
+// widest matching one wins. Keep the values in px: StyleX (0.19.1+) orders
+// overlapping `defineConsts` media keys by width for px only, and rem keys
+// can let a narrower breakpoint override a wider one.
+export const breakpoint = stylex.defineConsts({
+  sm: '@media (min-width: 640px)',
+  md: '@media (min-width: 768px)',
+  lg: '@media (min-width: 1024px)',
+  xl: '@media (min-width: 1280px)',
+  xxl: '@media (min-width: 1536px)',
+});
+
 // Container widths for popups, panels, and example layouts.
 export const container = stylex.defineConsts({
   xs: '10rem',

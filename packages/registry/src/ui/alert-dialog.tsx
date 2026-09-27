@@ -7,7 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { ring } from '@/lib/stylex-utils';
-import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container, breakpoint } from '@/lib/constants.stylex';
 import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
@@ -190,14 +190,14 @@ const styles = stylex.create({
   header: {
     alignItems: {
       default: 'center',
-      '@media (min-width: 640px)': 'flex-start',
+      [breakpoint.sm]: 'flex-start',
     },
     display: 'flex',
     flexDirection: 'column',
     gap: space.s15,
     textAlign: {
       default: 'center',
-      '@media (min-width: 640px)': 'left',
+      [breakpoint.sm]: 'left',
     },
   },
   media: {
@@ -220,12 +220,12 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: {
       default: 'column-reverse',
-      '@media (min-width: 640px)': 'row',
+      [breakpoint.sm]: 'row',
     },
     gap: space.s2,
     justifyContent: {
       default: 'stretch',
-      '@media (min-width: 640px)': 'flex-end',
+      [breakpoint.sm]: 'flex-end',
     },
     marginBottom: `calc(-1 * ${space.s4})`,
     marginInline: `calc(-1 * ${space.s4})`,
@@ -249,7 +249,7 @@ const sizes = stylex.create({
   md: {
     width: {
       default: container.md,
-      '@media (min-width: 640px)': container.lg,
+      [breakpoint.sm]: container.lg,
     },
   },
   sm: {

@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { container, fontSize, fontWeight, space } from '@/lib/constants.stylex';
+import { breakpoint, container, fontSize, fontWeight, space } from '@/lib/constants.stylex';
 
 export default function CarouselOrientation() {
   return (
@@ -32,7 +32,7 @@ const styles = stylex.create({
   // Room for the previous/next buttons, which sit above and below the track
   // from 640px up. Narrower than that they overlay the track and need none.
   carousel: {
-    marginBlock: { default: 0, '@media (min-width: 640px)': space.s12 },
+    marginBlock: { default: 0, [breakpoint.sm]: space.s12 },
     maxWidth: container.md,
     width: '100%',
   },

@@ -33,8 +33,8 @@
       { "name": "easing-drawer", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "iOS-like drawer curve (not used on the landing)." }
     ],
     "breakpoints": [
-      { "name": "mobile", "value": "40rem" },
-      { "name": "tablet", "value": "61.25rem" }
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
     ]
   },
   "components": [
