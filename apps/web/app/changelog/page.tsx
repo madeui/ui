@@ -2,19 +2,18 @@ import * as stylex from '@stylexjs/stylex';
 import type { Metadata } from 'next';
 
 import { ChangelogUpdate } from '@/components/site/changelog-update';
+import { PageHead } from '@/components/site/page-head';
 import { PageTitle, proseComponents } from '@/components/site/prose';
 import { layout } from '@/components/site/site.stylex';
 import { SiteHeader } from '@/components/site/site-header';
 import { breakpoint, space } from '@/lib/constants.stylex';
 import { changelogEntries } from '@/site/changelog';
 import { contentPages } from '@/site/content';
+import { changelogIndex, pageJsonLd, pageMetadata } from '@/site/head';
 import { sidebar } from '@/site/nav';
 import { changelogSource } from '@/site/source';
 
-export const metadata: Metadata = {
-  title: 'Changelog',
-  description: 'Product updates, new features, and fixes from every release.',
-};
+export const metadata: Metadata = pageMetadata(changelogIndex);
 
 /**
  * The changelog index: every entry newest first, each with its full body.
@@ -30,7 +29,8 @@ export default function ChangelogIndex() {
       <SiteHeader nav={{ label: 'Changelog', groups: sidebar(pages, '/changelog') }} />
       <main id="content" {...stylex.props(styles.main)}>
         <article {...stylex.props(styles.column)}>
-          <PageTitle title="Changelog" />
+          <PageHead jsonLd={pageJsonLd(changelogIndex)} />
+          <PageTitle title={changelogIndex.title} />
           {entries.length === 0 ? (
             <p>No changelog entries yet.</p>
           ) : (

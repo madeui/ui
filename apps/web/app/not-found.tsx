@@ -6,13 +6,11 @@ import { layout, prose } from '@/components/site/site.stylex';
 import { SiteHeader } from '@/components/site/site-header';
 import { fontSize, fontWeight, lineHeight, space } from '@/lib/constants.stylex';
 import { colors } from '@/lib/tokens.stylex';
+import { notFoundMetadata } from '@/site/head';
 
-// Every unknown URL (and notFound() in a page) renders this with status 404;
-// Next.js adds <meta name="robots" content="noindex"> to 404 responses.
-export const metadata: Metadata = {
-  title: 'Page not found',
-  robots: { index: false },
-};
+// Every unknown URL (and notFound() in a page) renders this with status 404,
+// never indexed, with a text-only summary card.
+export const metadata: Metadata = notFoundMetadata;
 
 export default function NotFound() {
   return (

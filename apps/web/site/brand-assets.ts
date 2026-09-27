@@ -12,6 +12,9 @@ const PUBLIC_DIR = path.resolve(process.cwd(), '../docs/public');
 export const svgFiles = (folder: string): string[] =>
   fs.readdirSync(path.join(PUBLIC_DIR, folder)).filter((file) => file.endsWith('.svg'));
 
+/** One SVG's source (`brand/lockup.svg`), for the OG cards. */
+export const svgSource = (file: string): string => fs.readFileSync(path.join(PUBLIC_DIR, file), 'utf8');
+
 /** One SVG, verbatim, as a static file response. */
 export function svgResponse(file: string): Response {
   const body = fs.readFileSync(path.join(PUBLIC_DIR, file));
