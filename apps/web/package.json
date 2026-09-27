@@ -19,6 +19,9 @@
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5",
     "zod": "^4.6.5"
   },
   "devDependencies": {
