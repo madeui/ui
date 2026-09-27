@@ -68,37 +68,7 @@ keep RHF as the source of truth, tell the field about it with `invalid`, and
 render RHF's message through `FieldError` (external errors render as-is).
 Use a plain `<form>` — RHF owns submission.
 
-```tsx
-'use client';
-
-import { useForm } from 'react-hook-form';
-
-import { Button } from '@/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-
-export function ProfileForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ email: string }>();
-
-  return (
-    <form onSubmit={handleSubmit((values) => console.log(values))}>
-      <Field invalid={!!errors.email}>
-        <FieldLabel>Email</FieldLabel>
-        <Input
-          type="email"
-          {...register('email', { required: 'Email is required.' })}
-        />
-        <FieldError errors={[errors.email]} />
-      </Field>
-      <Button type="submit">Submit</Button>
-    </form>
-  );
-}
-```
+<Component path="form-react-hook-form" />
 
 - `invalid` puts the field into its invalid state (`aria-invalid`, red label)
   under RHF's control.
@@ -117,57 +87,7 @@ The same pattern works with [TanStack Form](https://tanstack.com/form) — its
 `form.Field` render prop supplies state and handlers, our `Field` renders it
 accessibly:
 
-```tsx
-'use client';
-
-import { useForm } from '@tanstack/react-form';
-
-import { Button } from '@/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-
-export function ProfileForm() {
-  const form = useForm({
-    defaultValues: { email: '' },
-    onSubmit: ({ value }) => console.log(value),
-  });
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        form.handleSubmit();
-      }}
-    >
-      <form.Field
-        name="email"
-        validators={{
-          onChange: ({ value }) =>
-            value.includes('@') ? undefined : 'Enter a valid email.',
-        }}
-      >
-        {(field) => (
-          <Field invalid={field.state.meta.errors.length > 0}>
-            <FieldLabel>Email</FieldLabel>
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(event) => field.handleChange(event.target.value)}
-            />
-            <FieldError
-              errors={field.state.meta.errors.map((message) => ({
-                message: String(message),
-              }))}
-            />
-          </Field>
-        )}
-      </form.Field>
-      <Button type="submit">Submit</Button>
-    </form>
-  );
-}
-```
+<Component path="form-tanstack-form" />
 
 ## API reference
 

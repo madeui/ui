@@ -109,9 +109,6 @@ importers:
       '@stylexjs/postcss-plugin':
         specifier: ^0.19.1
         version: 0.19.1(supports-color@7.2.0)
-      '@tanstack/react-form':
-        specifier: ^1.33.5
-        version: 1.33.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/node':
         specifier: ^20
         version: 20.19.43
@@ -130,9 +127,6 @@ importers:
       pngjs:
         specifier: ^7.0.0
         version: 7.0.0
-      react-hook-form:
-        specifier: ^7.86.0
-        version: 7.86.0(react@19.2.8)
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -256,12 +250,18 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(redux@5.0.1)
     devDependencies:
+      '@tanstack/react-form':
+        specifier: ^1.33.5
+        version: 1.33.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.18
       embla-carousel-autoplay:
         specifier: ^8.6.0
         version: 8.6.0(embla-carousel@8.6.0)
+      react-hook-form:
+        specifier: ^7.86.0
+        version: 7.86.0(react@19.2.8)
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
