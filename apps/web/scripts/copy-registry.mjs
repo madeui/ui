@@ -5,8 +5,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const from = path.resolve('../../packages/registry/public/r');
-const to = path.resolve('public/r');
+const app = path.resolve(import.meta.dirname, '..');
+const from = path.resolve(app, '../../packages/registry/public/r');
+const to = path.join(app, 'public/r');
 
 if (!fs.existsSync(from)) {
   console.error(`copy-registry: ${from} not found; run \`pnpm build:registry\` first.`);

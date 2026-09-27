@@ -9,8 +9,8 @@
 // one path per line, as the migration's parity harness derives them from a
 // built site. A missing file is a failure, never a skip.
 //
-// Runs from apps/web (the package scripts do). Content is loaded through
-// fumadocs-mdx's Node loader, the same collections the Next build uses.
+// Content is loaded through fumadocs-mdx's Node loader: the same collections
+// the Next build uses.
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -19,7 +19,10 @@ import { postInstall } from 'fumadocs-mdx/next';
 import { register } from 'fumadocs-mdx/node';
 
 const { values } = parseArgs({ options: { ref: { type: 'string' } } });
+const ref = values.ref === undefined ? undefined : path.resolve(values.ref);
 
+// fumadocs-mdx and the content paths resolve from the app root.
+process.chdir(path.resolve(import.meta.dirname, '..'));
 await postInstall({});
 register();
 const { contentPages } = await import('../site/content.ts');
@@ -59,8 +62,7 @@ compare(
   files,
 );
 
-if (values.ref !== undefined) {
-  const ref = path.resolve(values.ref);
+if (ref !== undefined) {
   const read = (name: string) => {
     const file = path.join(ref, name);
     if (!fs.existsSync(file)) {
