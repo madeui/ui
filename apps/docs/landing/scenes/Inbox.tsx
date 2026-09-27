@@ -19,7 +19,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { space, fontSize, fontWeight, lineHeight, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, duration, stroke, container, breakpoint } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 import {
@@ -38,19 +38,20 @@ import { Part } from './Part';
 // The panel group lays itself out from its `orientation` prop, not from CSS,
 // so the phone layout has to be a value rather than a media query: side by
 // side would leave the mail list about 120px wide. Same pattern as the date
-// picker's month count.
-const NARROW_QUERY = '(max-width: 40rem)';
+// picker's month count. Matches `breakpoint.sm`, where the CSS switches the
+// panes to a row.
+const WIDE_QUERY = '(min-width: 640px)';
 
-function subscribeToNarrow(onChange: () => void) {
-  const query = window.matchMedia(NARROW_QUERY);
+function subscribeToWide(onChange: () => void) {
+  const query = window.matchMedia(WIDE_QUERY);
   query.addEventListener('change', onChange);
   return () => query.removeEventListener('change', onChange);
 }
 
 function useIsNarrow() {
   return React.useSyncExternalStore(
-    subscribeToNarrow,
-    () => window.matchMedia(NARROW_QUERY).matches,
+    subscribeToWide,
+    () => !window.matchMedia(WIDE_QUERY).matches,
     () => false
   );
 }
@@ -433,8 +434,6 @@ export default function Inbox() {
   );
 }
 
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
 const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
 
 const styles = stylex.create({
@@ -447,7 +446,7 @@ const styles = stylex.create({
     borderWidth: stroke.border,
     display: 'flex',
     flex: 1,
-    flexDirection: { default: 'row', [MOBILE]: 'column' },
+    flexDirection: { default: 'column', [breakpoint.sm]: 'row' },
     minHeight: 0,
     overflow: 'hidden',
   },
@@ -456,7 +455,7 @@ const styles = stylex.create({
     borderRightColor: colors.border,
     borderRightStyle: 'solid',
     borderRightWidth: stroke.border,
-    display: { default: 'block', [TABLET]: 'none' },
+    display: { default: 'none', [breakpoint.lg]: 'block' },
     flexShrink: 0,
     width: container.xs,
   },
@@ -496,7 +495,7 @@ const styles = stylex.create({
     // `min-height`, not `height`: the group is a flex item with a zero basis,
     // which wins over a height, and a minimum is also what pushes the
     // auto-height ancestors open below the stage's fixed height.
-    minHeight: { default: 0, [TABLET]: container.xxl },
+    minHeight: { default: container.xxl, [breakpoint.lg]: 0 },
     minWidth: 0,
   },
   // Stacked panes on a phone: the list keeps a definite height so the
@@ -512,11 +511,11 @@ const styles = stylex.create({
   list: {
     borderBottomColor: colors.border,
     borderBottomStyle: 'solid',
-    borderBottomWidth: { default: 0, [MOBILE]: stroke.border },
+    borderBottomWidth: { default: stroke.border, [breakpoint.sm]: 0 },
     borderRadius: 0,
     display: 'flex',
     flexDirection: 'column',
-    height: { default: '100%', [MOBILE]: container.lg },
+    height: { default: container.lg, [breakpoint.sm]: '100%' },
     minHeight: 0,
     width: '100%',
   },
@@ -547,7 +546,7 @@ const styles = stylex.create({
   },
   scroll: {
     // Tablets and phones stack the panes; the list shows in full there.
-    height: { default: '100%', [TABLET]: 'auto' },
+    height: { default: 'auto', [breakpoint.lg]: '100%' },
     minHeight: 0,
     overflow: 'hidden',
   },

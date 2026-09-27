@@ -47,8 +47,8 @@ Companion documents:
    Spacing comes only from the `space` scale. Color comes only from semantic
    tokens (`colors.foreground`, `colors.mutedForeground`, `colors.accent`, ...)
    — never raw palette values scattered in components. Radius, typography,
-   z-index, shadow, duration, easing curves, stroke widths, container widths
-   come only from their scales. Do not mix `padding: space.s4` in one file and
+   z-index, shadow, duration, easing curves, stroke widths, container widths,
+   viewport breakpoints come only from their scales. Do not mix `padding: space.s4` in one file and
    `paddingInline: '1rem'` in another.
 
 4. **Styles are named objects, not inline inventions.**
@@ -90,6 +90,11 @@ Companion documents:
 - Shared patterns (state adapters, focus ring recipe) live in
   `lib/stylex-utils.ts` / the token layer — not copy-pasted.
 - Real CSS property names (`paddingInline`, `backgroundColor`, `alignItems`).
+- Responsive styles are mobile-first: the narrowest layout is `default`, and
+  wider layouts are added with `breakpoint` keys from `lib/constants.stylex.ts`
+  (`[breakpoint.sm]`, `[breakpoint.lg]`, …). Several keys on one property are
+  fine; the widest matching one wins. No literal width queries, no
+  `max-width`. Breakpoint values stay in px (see stylex-authoring.md).
 - Pseudo-states (`:hover`, `:focus-visible`, `:disabled`) AND Base UI state
   live inside the style objects as conditional values. Base UI mirrors every
   state as a data attribute — target it directly (StyleX ≥0.18 accepts
@@ -106,7 +111,8 @@ Companion documents:
 
 ## Review checklist (run before finishing any styling task)
 
-- Any raw number, hex, rgb, or px string in a component file?
+- Any raw number, hex, rgb, or px string in a component file? Any literal
+  `@media (min-width: …)` / `max-width` key instead of `breakpoint`?
 - Same visual concept expressed two ways?
 - Duplicate `stylex.create` blocks that should reuse a shared style?
 - Tailwind-like thinking (one-off arbitrary spacing)?

@@ -214,25 +214,48 @@ const styles = stylex.create({
 
 ## Media queries and @-rules
 
-Nest media queries within property values:
+Nest media queries within property values. Viewport widths come from the
+`breakpoint` scale in `lib/constants.stylex.ts`, never a literal query:
 
 ```tsx
+import { breakpoint, space } from '@/lib/constants.stylex';
+
 const styles = stylex.create({
   container: {
     flexDirection: {
       default: 'column',
-      '@media (min-width: 768px)': 'row',
+      [breakpoint.md]: 'row',
     },
     padding: {
-      default: 8,
-      '@media (min-width: 768px)': 16,
-      '@media (min-width: 1024px)': 24,
+      default: space.s2,
+      [breakpoint.md]: space.s4,
+      [breakpoint.lg]: space.s6,
     },
   },
 });
 ```
 
-**For app-wide breakpoints, use `stylex.defineConsts()` to define shareable media query constants.**
+| Key | Query |
+| --- | --- |
+| `sm` | `@media (min-width: 640px)` |
+| `md` | `@media (min-width: 768px)` |
+| `lg` | `@media (min-width: 1024px)` |
+| `xl` | `@media (min-width: 1280px)` |
+| `xxl` | `@media (min-width: 1536px)` |
+
+**Mobile-first.** `default` is the narrowest layout; each key adds the next
+wider one. Keys may overlap on one property: StyleX orders them by width, so
+the widest matching key wins. Rewrite a `max-width` idea as its min-width
+inverse (the phone value becomes `default`).
+
+**`null` is not a reset.** A `null` condition emits no rule, so
+`{ default: 'none', [breakpoint.sm]: null }` stays `none` at every width.
+Name the value the wider layout needs (`'block'`, `'auto'`, `0`).
+
+**Keep breakpoint values in px.** StyleX 0.19.1+ sorts overlapping
+`defineConsts` media keys by width only when they are px; with rem/em a
+narrower key can override a wider one. Plain `@media` string keys do not
+have this limit, but components use the scale.
 
 Other supported @-rules include `@supports` and `@container` queries.
 
@@ -270,10 +293,10 @@ Use `stylex.defineConsts()` for shareable media queries and static values like a
 // constants.stylex.ts
 import * as stylex from '@stylexjs/stylex';
 
-export const breakpoints = stylex.defineConsts({
-  small: '@media (max-width: 600px)',
-  medium: '@media (min-width: 601px) and (max-width: 1024px)',
-  large: '@media (min-width: 1025px)',
+export const breakpoint = stylex.defineConsts({
+  sm: '@media (min-width: 640px)',
+  md: '@media (min-width: 768px)',
+  // …
 });
 
 export const zIndices = stylex.defineConsts({
@@ -572,8 +595,8 @@ Media queries and pseudo-classes must be nested inside property values, not at t
 // invalid: media query at top level
 const styles = stylex.create({
   container: {
-    '@media (min-width: 768px)': {
-      padding: 16,
+    [breakpoint.md]: {
+      padding: space.s4,
     },
   },
 });
@@ -591,8 +614,8 @@ const styles = stylex.create({
 const styles = stylex.create({
   container: {
     padding: {
-      default: 8,
-      '@media (min-width: 768px)': 16,
+      default: space.s2,
+      [breakpoint.md]: space.s4,
     },
   },
   button: {

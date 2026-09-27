@@ -38,7 +38,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { space, fontSize, fontWeight } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, breakpoint } from '@/lib/constants.stylex';
 import { colors } from '@/lib/tokens.stylex';
 
 import { Part } from './Part';
@@ -338,25 +338,22 @@ export default function Cards() {
   );
 }
 
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
-
 // Desktop bento placement: `row-start / col-start / row-end / col-end`.
-// Below tablet width every cell falls back to flow order.
-const cell = (area: string) => ({ default: area, [TABLET]: 'auto' });
+// Below desktop width every cell falls back to flow order.
+const cell = (area: string) => ({ default: 'auto', [breakpoint.lg]: area });
 
 const styles = stylex.create({
   grid: {
     display: 'grid',
     flex: 1,
     gap: space.s4,
-    gridAutoRows: { default: 'minmax(0, 1fr)', [TABLET]: 'auto' },
+    gridAutoRows: { default: 'auto', [breakpoint.lg]: 'minmax(0, 1fr)' },
     gridTemplateColumns: {
-      default: 'repeat(4, minmax(0, 1fr))',
-      [TABLET]: 'repeat(2, minmax(0, 1fr))',
-      [MOBILE]: 'minmax(0, 1fr)',
+      default: 'minmax(0, 1fr)',
+      [breakpoint.sm]: 'repeat(2, minmax(0, 1fr))',
+      [breakpoint.lg]: 'repeat(4, minmax(0, 1fr))',
     },
-    gridTemplateRows: { default: 'repeat(3, minmax(0, 1fr))', [TABLET]: 'none' },
+    gridTemplateRows: { default: 'none', [breakpoint.lg]: 'repeat(3, minmax(0, 1fr))' },
     minHeight: 0,
   },
   verify: { gridArea: cell('1 / 1 / 2 / 2') },

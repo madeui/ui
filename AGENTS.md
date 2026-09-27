@@ -23,7 +23,7 @@ a core requirement, not an afterthought.
   both before writing any styles.
 - Tokens live in `lib/tokens.stylex.ts` (`defineVars`, themable) and
   `lib/constants.stylex.ts` (`defineConsts`, non-themed scales: space,
-  typography, z, duration, easing, stroke, container); themes via
+  typography, z, duration, easing, stroke, container, breakpoint); themes via
   `stylex.createTheme`. Never hardcode colors/spacing/type/z/duration in
   component styles.
 - Registry JSON is generated from source (`scripts/build-registry.mjs`),

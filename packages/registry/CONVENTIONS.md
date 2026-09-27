@@ -50,7 +50,7 @@ Binding rules: [STYLEX.md](./STYLEX.md) (doctrine) and
   - themable vars from `@/lib/tokens.stylex` (colors, radius, font, shadow);
   - non-themed scales from `@/lib/constants.stylex` (`space`, `fontSize`,
     `lineHeight`, `fontWeight`, `z`, `duration`, `stroke`, `iconSize`,
-    `container`).
+    `container`, `breakpoint`).
   If a value is missing, extend the scale deliberately — never invent a
   one-off inside a component.
 - Base UI state (checked, open, highlighted, transitionStatus) is styled with

@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 
-import { space, fontSize, fontWeight, lineHeight, duration } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, duration, breakpoint } from '@/lib/constants.stylex';
 import { colors } from '@/lib/tokens.stylex';
 
 import { Lockup, Mark } from './Lockup';
@@ -86,8 +86,6 @@ export default function Footer() {
 }
 
 const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
 
 const styles = stylex.create({
   footer: {
@@ -100,10 +98,10 @@ const styles = stylex.create({
   },
   top: {
     display: 'grid',
-    gap: { default: space.s12, [TABLET]: space.s10 },
+    gap: { default: space.s10, [breakpoint.lg]: space.s12 },
     gridTemplateColumns: {
-      default: 'minmax(0, 1.4fr) minmax(0, 2fr)',
-      [TABLET]: 'minmax(0, 1fr)',
+      default: 'minmax(0, 1fr)',
+      [breakpoint.lg]: 'minmax(0, 1.4fr) minmax(0, 2fr)',
     },
   },
   brand: {
@@ -136,8 +134,8 @@ const styles = stylex.create({
     display: 'grid',
     gap: space.s8,
     gridTemplateColumns: {
-      default: 'repeat(3, minmax(0, 1fr))',
-      [MOBILE]: 'repeat(2, minmax(0, 1fr))',
+      default: 'repeat(2, minmax(0, 1fr))',
+      [breakpoint.sm]: 'repeat(3, minmax(0, 1fr))',
     },
   },
   column: {
@@ -182,7 +180,7 @@ const styles = stylex.create({
   mark: {
     bottom: space.s10,
     color: colors.border,
-    display: { default: 'inline-flex', [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'inline-flex' },
     insetInlineEnd: 0,
     position: 'absolute',
   },

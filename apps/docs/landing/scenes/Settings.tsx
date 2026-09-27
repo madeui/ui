@@ -50,7 +50,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { space, fontSize, fontWeight, lineHeight, container, stroke } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, container, stroke, breakpoint } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 import { Part } from './Part';
@@ -271,9 +271,6 @@ export default function Settings() {
   );
 }
 
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
-
 const styles = stylex.create({
   // An app screen, framed like the dashboard and inbox.
   screen: {
@@ -287,7 +284,7 @@ const styles = stylex.create({
     flexDirection: 'column',
     gap: space.s5,
     overflow: 'hidden',
-    padding: { default: space.s5, [MOBILE]: space.s4 },
+    padding: { default: space.s4, [breakpoint.sm]: space.s5 },
   },
   heading: {
     display: 'flex',
@@ -309,21 +306,21 @@ const styles = stylex.create({
   tabs: {
     alignItems: 'flex-start',
     flex: 1,
-    flexDirection: { default: 'row', [TABLET]: 'column' },
+    flexDirection: { default: 'column', [breakpoint.lg]: 'row' },
     gap: space.s6,
   },
   tabList: {
     backgroundColor: 'transparent',
     flexShrink: 0,
     padding: 0,
-    width: { default: container.xs, [TABLET]: '100%' },
+    width: { default: '100%', [breakpoint.lg]: container.xs },
     // Vertical on desktop, horizontal chips on tablet and below.
-    flexDirection: { default: 'column', [TABLET]: 'row' },
+    flexDirection: { default: 'row', [breakpoint.lg]: 'column' },
     flexWrap: 'wrap',
   },
   tab: {
     justifyContent: 'flex-start',
-    width: { default: '100%', [TABLET]: 'auto' },
+    width: { default: 'auto', [breakpoint.lg]: '100%' },
   },
   section: {
     display: 'flex',

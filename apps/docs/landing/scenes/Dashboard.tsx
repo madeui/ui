@@ -54,7 +54,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { space, fontSize, fontWeight, lineHeight, duration, stroke, container } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, duration, stroke, container, breakpoint } from '@/lib/constants.stylex';
 import { colors, font, radius } from '@/lib/tokens.stylex';
 
 import {
@@ -376,9 +376,6 @@ export default function Dashboard() {
   );
 }
 
-const TABLET = '@media (max-width: 61.25rem)' as const;
-const MOBILE = '@media (max-width: 40rem)' as const;
-
 const styles = stylex.create({
   // An app window: the one screen that needs its own edge on the page.
   screen: {
@@ -397,7 +394,7 @@ const styles = stylex.create({
     borderRightColor: colors.border,
     borderRightStyle: 'solid',
     borderRightWidth: stroke.border,
-    display: { default: 'flex', [TABLET]: 'none' },
+    display: { default: 'none', [breakpoint.lg]: 'flex' },
     flexDirection: 'column',
     flexShrink: 0,
     gap: space.s4,
@@ -468,7 +465,7 @@ const styles = stylex.create({
     flexDirection: 'column',
     gap: space.s4,
     minWidth: 0,
-    padding: { default: space.s5, [MOBILE]: space.s4 },
+    padding: { default: space.s4, [breakpoint.sm]: space.s5 },
   },
   topbar: {
     alignItems: 'center',
@@ -486,8 +483,8 @@ const styles = stylex.create({
   stats: {
     display: 'grid',
     gridTemplateColumns: {
-      default: 'repeat(4, minmax(0, 1fr))',
-      [MOBILE]: 'repeat(2, minmax(0, 1fr))',
+      default: 'repeat(2, minmax(0, 1fr))',
+      [breakpoint.sm]: 'repeat(4, minmax(0, 1fr))',
     },
     rowGap: space.s4,
   },
@@ -497,7 +494,7 @@ const styles = stylex.create({
   },
   statRule: {
     alignSelf: 'stretch',
-    display: { default: null, [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'block' },
     height: 'auto',
     marginRight: space.s5,
   },
@@ -523,8 +520,8 @@ const styles = stylex.create({
     display: 'grid',
     gap: space.s4,
     gridTemplateColumns: {
-      default: 'minmax(0, 1.7fr) minmax(0, 1fr)',
-      [TABLET]: 'minmax(0, 1fr)',
+      default: 'minmax(0, 1fr)',
+      [breakpoint.lg]: 'minmax(0, 1.7fr) minmax(0, 1fr)',
     },
   },
   column: {
@@ -541,8 +538,8 @@ const styles = stylex.create({
   // The screen has a fixed height and clips rather than scrolls, so the plot
   // fills the room the card is given instead of reserving a ratio of its own.
   chart: {
-    aspectRatio: { default: 'auto', [TABLET]: '2.4' },
-    flex: { default: 1, [TABLET]: null },
+    aspectRatio: { default: '2.4', [breakpoint.lg]: 'auto' },
+    flex: 1,
     minHeight: 0,
   },
   fill: {
@@ -568,7 +565,7 @@ const styles = stylex.create({
   // Phones keep Customer and Amount; id, Status, and the row menu return at
   // tablet width, so the table never scrolls sideways.
   wide: {
-    display: { default: null, [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'table-cell' },
   },
   tabular: {
     fontVariantNumeric: 'tabular-nums',

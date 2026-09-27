@@ -9,7 +9,7 @@ import useEmblaCarousel, {
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { Button, type ButtonProps } from '@/components/ui/button';
-import { space, duration, stroke } from '@/lib/constants.stylex';
+import { space, duration, stroke, breakpoint } from '@/lib/constants.stylex';
 import { icon } from '@/lib/stylex-utils';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -376,7 +376,7 @@ const previousPositions = stylex.create({
   horizontal: {
     left: {
       default: space.s2,
-      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+      [breakpoint.sm]: `calc(-1 * ${space.s12})`,
     },
     top: '50%',
     translate: '0 -50%',
@@ -385,7 +385,7 @@ const previousPositions = stylex.create({
     left: '50%',
     top: {
       default: space.s2,
-      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+      [breakpoint.sm]: `calc(-1 * ${space.s12})`,
     },
     translate: '-50% 0',
   },
@@ -395,7 +395,7 @@ const nextPositions = stylex.create({
   horizontal: {
     right: {
       default: space.s2,
-      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+      [breakpoint.sm]: `calc(-1 * ${space.s12})`,
     },
     top: '50%',
     translate: '0 -50%',
@@ -403,7 +403,7 @@ const nextPositions = stylex.create({
   vertical: {
     bottom: {
       default: space.s2,
-      '@media (min-width: 640px)': `calc(-1 * ${space.s12})`,
+      [breakpoint.sm]: `calc(-1 * ${space.s12})`,
     },
     left: '50%',
     translate: '-50% 0',

@@ -47,7 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { space, fontSize, fontWeight, lineHeight, stroke } from '@/lib/constants.stylex';
+import { space, fontSize, fontWeight, lineHeight, stroke, breakpoint } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
 import { MoreIcon, PlusIcon, SearchIcon } from '../icons';
@@ -234,8 +234,6 @@ export default function Team() {
   );
 }
 
-const MOBILE = '@media (max-width: 40rem)' as const;
-
 const styles = stylex.create({
   // An app screen, framed like the dashboard and inbox.
   screen: {
@@ -249,7 +247,7 @@ const styles = stylex.create({
     flexDirection: 'column',
     gap: space.s5,
     overflow: 'hidden',
-    padding: { default: space.s5, [MOBILE]: space.s4 },
+    padding: { default: space.s4, [breakpoint.sm]: space.s5 },
   },
   topbar: {
     alignItems: 'flex-end',
@@ -287,7 +285,7 @@ const styles = stylex.create({
     gap: space.s2,
   },
   search: {
-    width: { default: null, [MOBILE]: '100%' },
+    width: { default: '100%', [breakpoint.sm]: 'auto' },
   },
   form: {
     display: 'flex',
@@ -335,7 +333,7 @@ const styles = stylex.create({
   // Phones keep Member and Role; Status, Last active, and the row menu return
   // at tablet width, so the table never scrolls sideways.
   wide: {
-    display: { default: null, [MOBILE]: 'none' },
+    display: { default: 'none', [breakpoint.sm]: 'table-cell' },
   },
   invites: {
     display: 'flex',
