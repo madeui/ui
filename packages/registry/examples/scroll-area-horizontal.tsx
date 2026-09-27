@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 const artworks = [
   { title: 'Ocean Horizon', artist: 'Reyes' },
@@ -43,7 +43,6 @@ const styles = stylex.create({
   card: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s2,
     width: container.card,
   },

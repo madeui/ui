@@ -6,7 +6,7 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, fontWeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export interface InputProps
   extends Omit<
@@ -32,7 +32,6 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: colors.foreground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     height: space.s9,
     opacity: { default: 1, ':disabled': 0.5 },
@@ -51,7 +50,6 @@ const styles = stylex.create({
       backgroundColor: 'transparent',
       borderStyle: 'none',
       color: colors.foreground,
-      fontFamily: font.sans,
       fontSize: fontSize.sm,
       fontWeight: fontWeight.medium,
       height: '100%',

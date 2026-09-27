@@ -18,10 +18,13 @@ Every component keeps the same shape:
 - `variant` and `size` props where meaningful, typed as string unions.
 - A `style?: StyleXStyles` prop, merged **last** via `stylex.props(...)` —
   caller overrides always win. No `className`, ever.
-- All values come from tokens: colors/radius/fonts/shadows from
+- All values come from tokens: colors/radius/shadows from
   `lib/tokens.stylex.ts` (themable), spacing/type/z/duration/easing/breakpoint
   scales from `lib/constants.stylex.ts`. No magic numbers or raw colors in
   styles.
+- No `fontFamily` in component styles: components inherit the page's font
+  (set on `<html>`, so portaled popups get it too). Kbd's `'inherit'` is the
+  one exception: it undoes the reset's monospace `<kbd>`.
 - Icons are `lucide-react`, sized with the `icon` styles from
   `lib/stylex-utils.ts` (`{...stylex.props(icon.md)}`) — no hand-drawn SVG,
   no `size` prop.

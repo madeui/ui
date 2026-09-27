@@ -6,7 +6,7 @@ import { Toolbar as BaseToolbar } from '@base-ui/react/toolbar';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -69,7 +69,6 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: stroke.border,
     display: 'flex',
-    fontFamily: font.sans,
     gap: space.s1,
     padding: space.s1,
     width: 'fit-content',

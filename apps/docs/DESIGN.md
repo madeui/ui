@@ -129,7 +129,7 @@ destructive actions.
 - Pure monochrome (oklch grays only); zero hue accent anywhere in chrome or components.
 - A five-tab product stage as the hero's proof, not a grid of feature cards — four scenes draw their own bordered window, the fifth floats free as a card grid.
 - Full-radius (pill) shape for every interactive chip: buttons, badges, the version pill, the search field, the command chip.
-- Geist across the whole landing (a page-level theme on the `font.sans` token); the H1 alone adds −0.04em display tracking.
+- Geist across the whole landing (set once on `<html>` by the landing shell; registry components and their portaled popups inherit it); the H1 alone adds −0.04em display tracking.
 - Flat surfaces with a single low, tight shadow — no colored glow, no blur-heavy elevation.
 - The page column is bounded by dashed layout rails; the scene stage stays inside that same column rather than breaking out of it.
 
@@ -156,8 +156,8 @@ Every color in the system is an achromatic oklch gray (chroma 0) except the sing
 
 ## Typography
 
-**Display Font:** Geist (with `ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` fallback), loaded from Google Fonts and applied to the entire landing via a page-level `stylex.createTheme(font, …)` override of the `font.sans` token, so every registry component inside the scenes inherits it — the registry's default `font.sans` stays system-native outside the landing (docs previews, consumer apps).
-**Body Font:** Geist as well, through the same token override; sizes come from the `fontSize` scale (xs–xl) and the H1 is the only element above it.
+**Display Font:** Geist (with `ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` fallback), loaded from Google Fonts and set as `font-family` on `<html>` by the landing shell (`pages/index.astro`). Registry components carry no font of their own, so every component inside the scenes, portaled popups included, inherits it; outside the landing they inherit whatever the host page sets (docs previews, consumer apps).
+**Body Font:** Geist as well, from the same `<html>` rule; sizes come from the `fontSize` scale (xs–xl) and the H1 is the only element above it.
 **Label/Mono Font:** `ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace`, used only for the CLI install chip.
 
 **Character:** one family at two registers: the H1 at large size and tight tracking gives the page its engineered voice; the same face at body and label sizes inside the scenes keeps the product screens reading as ordinary software rather than a second, marketing typeface.
@@ -222,7 +222,7 @@ Two radius families do all the work, and the choice between them is deliberate: 
 - **Internal Padding:** `space.s5` (20px) block padding by default, retunable per-instance via a `--card-spacing` custom property; the `size="sm"` variant tightens this for denser layouts and is what the Cards scene's whole 4×3 grid runs on.
 
 ### Chips (command / install)
-- **Style:** pill radius, `colors.muted` background, `font.mono`, a `$` prompt glyph and a crossfading copy/check icon pair that share one absolutely-positioned cell so the icon swap never shifts the command text width.
+- **Style:** pill radius, `colors.muted` background, a system monospace stack, a `$` prompt glyph and a crossfading copy/check icon pair that share one absolutely-positioned cell so the icon swap never shifts the command text width.
 - **State:** border tints to `colors.mutedForeground` on hover; scales to 0.97 on `:active`; the checkmark holds for 1.6s after a successful copy before reverting.
 
 ### Navigation
@@ -241,7 +241,7 @@ Every notable region in every scene is wrapped in `<Part name="…">`, a plain l
 - **Do** keep every color in the system at chroma 0 except `colors.destructive`; the monochrome identity is the whole visual argument (see the No-Hue Rule).
 - **Do** use full radius (`radius.full`) for single-action marketing chips (buttons, pills, chips) and scale-step radius (`md`/`lg`/`xl`) for containers and in-product controls.
 - **Do** reach for `shadow.sm`/`shadow.md` only on surfaces that already have a border; never use a shadow alone to imply a raised edge.
-- **Do** keep Geist as the one family on the landing, applied through the `font.sans` token override rather than per-element font stacks.
+- **Do** keep Geist as the one family on the landing, set once on `<html>` rather than per-element font stacks.
 - **Do** drive all spacing from the `space` scale (`s05`…`s16`) and all durations from the `duration` scale (`fast` 150ms / `normal` 200ms / `slow` 350ms) — never a raw px/ms value in a component or example.
 - **Do** wrap real, notable product-screen regions in `Part` with an accurate `name` prop, so the scene-to-component mapping stays correct as scenes evolve.
 

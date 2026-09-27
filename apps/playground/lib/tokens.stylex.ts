@@ -7,6 +7,9 @@ import * as stylex from '@stylexjs/stylex';
 // Colors use oklch (perceptually uniform; easy to shift lightness/chroma).
 // Avoid legacy comma syntax like `rgba(0, 0, 0, 0.5)` — the shadcn CLI's
 // transformer mangles comma number lists; `oklch(0% 0 0deg / 50%)` is safe.
+//
+// There is no font token: components inherit the page's font. Set
+// `font-family` on <html> (popups portal to <body> and inherit it too).
 
 export const colors = stylex.defineVars({
   background: 'oklch(1 0 0)',
@@ -48,11 +51,6 @@ export const radius = stylex.defineVars({
   lg: '0.625rem',
   xl: '0.75rem',
   full: '9999px',
-});
-
-export const font = stylex.defineVars({
-  sans: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-  mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
 });
 
 // Shadows stay hex-alpha: the CLI parses shadow shorthands separately and

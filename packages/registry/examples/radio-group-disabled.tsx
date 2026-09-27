@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { space, fontSize } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 export default function RadioGroupDisabled() {
   return (
@@ -22,7 +22,6 @@ const styles = stylex.create({
     alignItems: 'center',
     color: colors.foreground,
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s2,
   },

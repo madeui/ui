@@ -6,7 +6,7 @@ import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, fontWeight, lineHeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type ToggleVariant = 'default' | 'outline';
 export type ToggleSize = 'sm' | 'md' | 'lg';
@@ -57,7 +57,6 @@ const styles = stylex.create({
     },
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     gap: space.s1,

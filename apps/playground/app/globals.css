@@ -10,4 +10,19 @@
     margin: 0;
     padding: 0;
   }
+
+  /* Components carry no font of their own; they inherit the page's.
+     Popups portal to <body>, so the family goes on <html>. */
+  html {
+    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* Form controls don't inherit the family by default (init's reset does the
+     same with `font: inherit`). */
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
 }

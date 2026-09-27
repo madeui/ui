@@ -6,7 +6,7 @@ import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   style?: stylex.StyleXStyles;
@@ -93,7 +93,6 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s2,
   },
   rootVertical: {
@@ -130,7 +129,6 @@ const styles = stylex.create({
     color: { default: colors.mutedForeground, '[data-active]': colors.foreground },
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     height: space.s7,

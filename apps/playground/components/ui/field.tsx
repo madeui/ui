@@ -8,7 +8,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Separator } from '@/components/ui/separator';
 import { space, fontSize, lineHeight, fontWeight } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -197,7 +197,6 @@ const styles = stylex.create({
     borderStyle: 'none',
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s4,
     margin: 0,
     minWidth: 0,
@@ -211,13 +210,11 @@ const styles = stylex.create({
   group: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s5,
     width: '100%',
   },
   field: {
     display: 'flex',
-    fontFamily: font.sans,
     gap: space.s2,
     width: '100%',
   },
@@ -231,7 +228,6 @@ const styles = stylex.create({
   labelBase: {
     alignItems: 'center',
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     gap: space.s2,

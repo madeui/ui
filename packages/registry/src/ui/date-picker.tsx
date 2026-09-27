@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/popover';
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, container } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 export type { DateRange } from 'react-day-picker';
 
@@ -363,7 +363,6 @@ const styles = stylex.create({
     color: colors.mutedForeground,
   },
   value: {
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     overflow: 'hidden',
     textOverflow: 'ellipsis',

@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 /** The manager behind the imperative `toast` API — pass to `useToast` consumers if needed. */
 export const toastManager = BaseToast.createToastManager();
@@ -136,7 +136,6 @@ const styles = stylex.create({
     boxSizing: 'border-box',
     color: colors.popoverForeground,
     display: 'flex',
-    fontFamily: font.sans,
     // Behind-card content fades in when the stack expands (read by .content).
     '--toast-content-visible': { default: null, '[data-expanded]': '1' },
     // All toasts share the frontmost height while collapsed so the stack
@@ -219,7 +218,6 @@ const styles = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     flexShrink: 0,
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     height: space.s6,

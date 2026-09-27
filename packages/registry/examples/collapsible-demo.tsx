@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export default function CollapsibleDemo() {
   return (
@@ -20,10 +20,16 @@ export default function CollapsibleDemo() {
           Toggle
         </CollapsibleTrigger>
       </div>
-      <div {...stylex.props(styles.repo)}>@radix-ui/primitives</div>
+      <div {...stylex.props(styles.repo)}>
+        <code>@radix-ui/primitives</code>
+      </div>
       <CollapsibleContent style={styles.panel}>
-        <div {...stylex.props(styles.repo)}>@base-ui/react</div>
-        <div {...stylex.props(styles.repo)}>@stylexjs/stylex</div>
+        <div {...stylex.props(styles.repo)}>
+          <code>@base-ui/react</code>
+        </div>
+        <div {...stylex.props(styles.repo)}>
+          <code>@stylexjs/stylex</code>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
@@ -33,9 +39,8 @@ const styles = stylex.create({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s2,
-    width: container.sm,
+    width: container.md,
   },
   header: {
     alignItems: 'center',
@@ -56,7 +61,6 @@ const styles = stylex.create({
     borderRadius: radius.md,
     borderStyle: 'solid',
     borderWidth: stroke.border,
-    fontFamily: font.mono,
     fontSize: fontSize.sm,
     paddingBlock: space.s2,
     paddingInline: space.s3,

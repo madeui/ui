@@ -24,7 +24,7 @@ import {
   type DropdownMenuContentProps,
 } from '@/components/ui/dropdown-menu';
 import { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export interface MenubarProps
   extends Omit<
@@ -94,7 +94,6 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: stroke.border,
     display: 'flex',
-    fontFamily: font.sans,
     gap: space.s05,
     height: space.s8,
     paddingInline: space.s05,
@@ -111,7 +110,6 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: 'default',
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
     outline: 'none',

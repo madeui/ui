@@ -6,7 +6,7 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { container, fontSize, fontWeight, space, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export default function ResizableVertical() {
   return (
@@ -44,7 +44,6 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
     height: '100%',

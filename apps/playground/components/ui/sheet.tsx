@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, lineHeight, fontWeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, shadow, radius } from '@/lib/tokens.stylex';
+import { colors, shadow, radius } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
   /** StyleX styles merged last — always win over the component's own. */
@@ -128,7 +128,6 @@ const styles = stylex.create({
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s4,
     lineHeight: lineHeight.normal,

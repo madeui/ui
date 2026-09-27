@@ -15,8 +15,8 @@ happens at four levels, from broadest to most targeted:
 
 ## Tokens
 
-`lib/tokens.stylex.ts` is the single source of truth for colors, radii, fonts,
-and shadows. Every component reads from it — change a value and the whole
+`lib/tokens.stylex.ts` is the single source of truth for colors, radii, and
+shadows. Every component reads from it — change a value and the whole
 system follows:
 
 ```tsx
@@ -43,6 +43,29 @@ A few value-format rules keep files installable through the shadcn CLI (its
 transformer rewrites some CSS-like strings): never use comma syntax like
 `rgba(0, 0, 0, 0.5)`; write black-with-alpha as `oklch(0% 0 0deg / 50%)`
 (adjacent equal zeros get collapsed); keep shadow colors hex-alpha.
+
+## Fonts
+
+Components set no `font-family` of their own: they inherit the page's font,
+so the face your app already uses reaches every control. Set it on `<html>`,
+not on a wrapper, because dialogs, popovers, menus, and toasts portal to
+`<body>` and inherit from there. The reset `init` writes gives `<html>` the
+system sans stack, which is what components render in until you pick a font.
+
+```tsx
+// app/layout.tsx
+import { Geist } from 'next/font/google';
+
+const geist = Geist({ subsets: ['latin'] });
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={geist.className}>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
 
 ## Themes and dark mode
 
@@ -197,7 +220,8 @@ outline: {
 
 | You want to... | Do this |
 | --- | --- |
-| Change the brand color / radius / font everywhere | Edit `lib/tokens.stylex.ts` |
+| Change the brand color / radius everywhere | Edit `lib/tokens.stylex.ts` |
+| Change the font everywhere | Set `font-family` on `<html>` |
 | Add dark mode or a second brand look | `stylex.createTheme` in `lib/themes.ts`, apply to `<html>` |
 | Tweak one instance | `style` prop |
 | Reusable new look for a component | Add a variant in its source file |

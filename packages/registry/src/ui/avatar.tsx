@@ -7,7 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type AvatarSize = 'sm' | 'md' | 'lg';
 
@@ -116,7 +116,6 @@ const styles = stylex.create({
     display: 'inline-flex',
     // Fixed-size chrome: never let a flex row squeeze the avatar.
     flexShrink: 0,
-    fontFamily: font.sans,
     justifyContent: 'center',
     // No overflow:hidden here — it would clip AvatarBadge at the corner;
     // the image and fallback round themselves instead.
@@ -177,7 +176,6 @@ const styles = stylex.create({
     borderRadius: radius.full,
     color: colors.mutedForeground,
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
     justifyContent: 'center',

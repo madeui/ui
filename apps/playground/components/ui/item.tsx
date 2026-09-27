@@ -8,7 +8,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { Separator } from '@/components/ui/separator';
 import { space, fontSize, lineHeight, fontWeight, duration, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -112,7 +112,6 @@ const styles = stylex.create({
     borderWidth: stroke.border,
     display: 'flex',
     flexWrap: 'wrap',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     lineHeight: lineHeight.snug,
     outline: {

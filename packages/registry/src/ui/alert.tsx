@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { space, fontSize, lineHeight, fontWeight, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 export type AlertVariant = 'default' | 'destructive';
 
@@ -64,7 +64,6 @@ const styles = stylex.create({
     color: colors.cardForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s1,
     padding: space.s4,
     position: 'relative',

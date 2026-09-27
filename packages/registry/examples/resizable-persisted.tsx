@@ -11,7 +11,7 @@ import {
   useDefaultLayout,
 } from '@/components/ui/resizable';
 import { container, fontSize, fontWeight, space, stroke } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 // The saved layout lives in localStorage, which only exists in the browser.
 // Mount the group after hydration so the server markup and the first client
@@ -68,7 +68,6 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     color: colors.foreground,
     display: 'flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
     height: '100%',

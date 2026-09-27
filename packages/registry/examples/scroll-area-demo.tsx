@@ -5,7 +5,7 @@ import * as stylex from '@stylexjs/stylex';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { space, fontSize, fontWeight, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 const tags = Array.from({ length: 50 }, (_, i) => `v1.2.0-beta.${50 - i}`);
 
@@ -37,7 +37,6 @@ const styles = stylex.create({
   inner: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     gap: space.s2,
     padding: space.s4,
   },

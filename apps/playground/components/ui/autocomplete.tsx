@@ -7,7 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   /** StyleX styles merged last — always win over the component's own. */
@@ -168,7 +168,6 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: colors.foreground,
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     height: space.s9,
     opacity: { default: 1, ':disabled': 0.5 },
@@ -210,7 +209,6 @@ const styles = stylex.create({
     color: colors.popoverForeground,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: font.sans,
     maxHeight: `min(${container.sm}, var(--available-height))`,
     opacity: {
       default: 1,

@@ -8,7 +8,7 @@ import { Check, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 
 import { icon, ring } from '@/lib/stylex-utils';
 import { space, fontSize, fontWeight, lineHeight, z, duration, easing, stroke, container } from '@/lib/constants.stylex';
-import { colors, font, radius, shadow } from '@/lib/tokens.stylex';
+import { colors, radius, shadow } from '@/lib/tokens.stylex';
 
 interface StyleProp {
   style?: stylex.StyleXStyles;
@@ -186,7 +186,6 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: { default: 'pointer', ':disabled': 'not-allowed' },
     display: 'inline-flex',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s2,
     height: space.s9,
@@ -212,7 +211,6 @@ const styles = stylex.create({
     backgroundColor: colors.popover,
     borderRadius: radius.md,
     color: colors.popoverForeground,
-    fontFamily: font.sans,
     lineHeight: lineHeight.control,
     maxHeight: 'var(--available-height)',
     opacity: { default: 1, '[data-ending-style]': 0 },

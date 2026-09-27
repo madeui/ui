@@ -15,7 +15,7 @@
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Hero H1: Geist 700 at -0.04em, the only display-size moment." },
-      "body": { "displayName": "Body", "purpose": "Default page and in-scene UI copy, Geist through the font.sans token override." },
+      "body": { "displayName": "Body", "purpose": "Default page and in-scene UI copy, Geist, inherited from <html>." },
       "label": { "displayName": "Label", "purpose": "Badges, pills, footer legal line, nav." },
       "mono": { "displayName": "Mono", "purpose": "CLI install chip only." }
     },
@@ -110,7 +110,7 @@
       "Pure monochrome (oklch grays only); zero hue accent anywhere in chrome or components.",
       "A five-tab product stage as the hero's proof, not a grid of feature cards — four scenes draw their own bordered window, the fifth floats free as a card grid.",
       "Full-radius (pill) shape for every interactive chip: buttons, badges, the version pill, the search field, the command chip.",
-      "Geist across the whole landing via a page-level theme on the font.sans token; the H1 alone adds -0.04em display tracking.",
+      "Geist across the whole landing, set once on <html>; the H1 alone adds -0.04em display tracking.",
       "Flat surfaces with a single low, tight shadow — no colored glow, no blur-heavy elevation.",
       "The page column is bounded by dashed layout rails; the scene stage stays inside that same column rather than breaking out of it."
     ],
@@ -124,7 +124,7 @@
       "Do keep every color in the system at chroma 0 except colors.destructive; the monochrome identity is the whole visual argument (see the No-Hue Rule).",
       "Do use full radius (radius.full) for single-action marketing chips (buttons, pills, chips) and scale-step radius (md/lg/xl) for containers and in-product controls.",
       "Do reach for shadow.sm/shadow.md only on surfaces that already have a border; never use a shadow alone to imply a raised edge.",
-      "Do keep Geist as the one family on the landing, applied through the font.sans token override rather than per-element font stacks.",
+      "Do keep Geist as the one family on the landing, set once on <html> rather than per-element font stacks.",
       "Do drive all spacing from the space scale (s05...s16) and all durations from the duration scale (fast 150ms / normal 200ms / slow 350ms) — never a raw px/ms value in a component or example.",
       "Do wrap real, notable product-screen regions in Part with an accurate name prop, so the scene-to-component mapping stays correct as scenes evolve."
     ],

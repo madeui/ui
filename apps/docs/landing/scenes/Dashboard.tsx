@@ -55,7 +55,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { space, fontSize, fontWeight, lineHeight, duration, stroke, container, breakpoint } from '@/lib/constants.stylex';
-import { colors, font, radius } from '@/lib/tokens.stylex';
+import { colors, radius } from '@/lib/tokens.stylex';
 
 import {
   ChevronDownIcon,
@@ -409,7 +409,6 @@ const styles = stylex.create({
     color: colors.foreground,
     cursor: 'pointer',
     display: 'flex',
-    fontFamily: font.sans,
     gap: space.s25,
     outline: { default: 'none', ':focus-visible': `${stroke.focus} solid ${colors.ring}` },
     padding: space.s15,

@@ -5,7 +5,7 @@ import { ChevronRight, Ellipsis } from 'lucide-react';
 
 import { icon } from '@/lib/stylex-utils';
 import { space, fontSize, duration } from '@/lib/constants.stylex';
-import { colors, font } from '@/lib/tokens.stylex';
+import { colors } from '@/lib/tokens.stylex';
 
 interface StyleXStyleProps {
   /** StyleX styles merged last — always win over the component's own. */
@@ -104,7 +104,6 @@ const styles = stylex.create({
     color: colors.mutedForeground,
     display: 'flex',
     flexWrap: 'wrap',
-    fontFamily: font.sans,
     fontSize: fontSize.sm,
     gap: space.s15,
     listStyle: 'none',
