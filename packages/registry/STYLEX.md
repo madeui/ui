@@ -48,8 +48,8 @@ Companion documents:
    tokens (`colors.foreground`, `colors.mutedForeground`, `colors.accent`, ...)
    — never raw palette values scattered in components. Radius, typography,
    z-index, shadow, duration, easing curves, stroke widths, container widths,
-   viewport breakpoints come only from their scales. Do not mix `padding: space.s4` in one file and
-   `paddingInline: '1rem'` in another.
+   viewport breakpoints come only from their scales. Do not mix
+   `padding: space.s4` in one file and `paddingInline: '1rem'` in another.
 
 4. **Styles are named objects, not inline inventions.**
    Use `stylex.create`. Reuse existing style objects (`root`, `content`,
@@ -93,8 +93,10 @@ Companion documents:
 - Responsive styles are mobile-first: the narrowest layout is `default`, and
   wider layouts are added with `breakpoint` keys from `lib/constants.stylex.ts`
   (`[breakpoint.sm]`, `[breakpoint.lg]`, …). Several keys on one property are
-  fine; the widest matching one wins. No literal width queries, no
-  `max-width`. Breakpoint values stay in px (see stylex-authoring.md).
+  fine; the widest matching one wins. No literal width queries as style keys,
+  no `max-width`. Breakpoint values stay in px (see stylex-authoring.md). A
+  runtime `matchMedia` string (layout a prop decides, not CSS) repeats the
+  breakpoint's px value and says which key it mirrors.
 - Pseudo-states (`:hover`, `:focus-visible`, `:disabled`) AND Base UI state
   live inside the style objects as conditional values. Base UI mirrors every
   state as a data attribute — target it directly (StyleX ≥0.18 accepts
