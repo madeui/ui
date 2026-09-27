@@ -75,8 +75,10 @@ Companion documents:
   nearest scale step.
 - Do not add `spaceMd2`, `gray700Alt`, `radiusAlmostMd`. Extend the scale
   deliberately or use the existing step.
-- Dark mode / theme changes happen through vars (`stylex.createTheme`) — never
-  by forking component styles.
+- Dark mode lives in the color tokens (`light-dark(light, dark)` pairs,
+  switched by `color-scheme` on `<html>`); brand themes are
+  `stylex.createTheme` over the same vars. Never fork component styles for a
+  mode or a theme.
 
 ## StyleX usage policy
 

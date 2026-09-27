@@ -9,7 +9,7 @@ Components are copied into your project — you own the source. Customization
 happens at four levels, from broadest to most targeted:
 
 1. **Tokens** — retheme the whole app by editing one file.
-2. **Themes** — swap token values for a subtree or the whole page (dark mode).
+2. **Themes** — swap token values for a subtree or the whole page.
 3. **The `style` prop** — override any component instance from the outside.
 4. **The source itself** — change a component's anatomy or add variants.
 
@@ -22,8 +22,9 @@ system follows:
 ```tsx
 // lib/tokens.stylex.ts
 export const colors = stylex.defineVars({
-  primary: 'oklch(0.55 0.2 260)',   // ← your brand color here
-  primaryForeground: 'oklch(0.985 0 0)',
+  // ← your brand color here: light side, dark side
+  primary: 'light-dark(oklch(0.55 0.2 260), oklch(0.7 0.16 260))',
+  primaryForeground: 'light-dark(oklch(0.985 0 0), oklch(0.205 0 0))',
   // ...
 });
 
@@ -67,57 +68,43 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-## Themes and dark mode
+## Dark mode
 
-A theme overrides token values for a DOM subtree. `lib/themes.ts` ships a
-`darkTheme` built with `stylex.createTheme`:
+Every color token is a `light-dark(light, dark)` pair, so dark mode needs no
+theme: `colorScheme` from `lib/themes.ts` sets CSS `color-scheme` on `<html>`
+and the browser picks a side of each token. It follows the OS by default, and
+`data-theme="dark"` or `"light"` on `<html>` forces a mode. When you change a
+color, edit both sides of its pair. See [Dark mode](/docs/dark-mode) for the
+toggle and the no-flash setup.
 
-```tsx
-// lib/themes.ts
-export const darkTheme = stylex.createTheme(colors, {
-  background: 'oklch(0.145 0 0)',
-  foreground: 'oklch(0.985 0 0)',
-  // ...
-});
-```
+## Themes
 
-Apply it to `<html>` — not a wrapper `<div>` — because dialogs, popovers,
-menus, and toasts portal to `<body>` and would escape a subtree theme:
-
-```tsx
-'use client';
-
-useEffect(() => {
-  const { className } = stylex.props(dark && darkTheme);
-  document.documentElement.className = className ?? '';
-}, [dark]);
-```
-
-Brand themes work the same way: create as many as you need with
-`stylex.createTheme(colors, { ... })` and apply per page, per tenant, or per
-section. Themes can be nested — the closest one wins. See
-[Dark mode](/docs/dark-mode) for the no-flash setup.
-
-### Partial themes compose
-
-A theme doesn't have to override every token. A partial theme that swaps only
-the brand tokens composes with a full one — later themes win per token, so an
-accent layers cleanly on top of dark mode:
+A theme overrides token values for a DOM subtree. Brand themes are
+`stylex.createTheme` calls in `lib/themes.ts`, and their values can be
+`light-dark()` pairs so one theme covers both modes:
 
 ```tsx
 // lib/themes.ts
 export const brandTheme = stylex.createTheme(colors, {
-  primary: 'oklch(0.55 0.2 260)',
-  primaryForeground: 'oklch(0.985 0 0)',
-  ring: 'oklch(0.55 0.2 260)',
+  primary: 'light-dark(oklch(0.55 0.2 260), oklch(0.7 0.16 260))',
+  primaryForeground: 'light-dark(oklch(0.985 0 0), oklch(0.205 0 0))',
+  ring: 'light-dark(oklch(0.55 0.2 260), oklch(0.7 0.16 260))',
 });
 ```
 
+A theme doesn't have to override every token; the ones it leaves out keep
+their values from `tokens.stylex.ts`. Apply it to `<html>`, not a wrapper
+`<div>`, because dialogs, popovers, menus, and toasts portal to `<body>` and
+would escape a subtree theme:
+
 ```tsx
-// Dark mode with your brand color:
-const { className } = stylex.props(darkTheme, brandTheme);
-document.documentElement.className = className ?? '';
+<html {...stylex.props(colorScheme, brandTheme)}>
 ```
+
+Apply one theme per element. Two themes over the same tokens do not merge:
+`stylex.props(themeA, themeB)` applies only `themeB`. A theme on a nested
+element overrides the one above it, but only for content rendered inside that
+element, so portaled popups still get the `<html>` theme.
 
 madeui's own palette is neutral by default — `primary` is near-black ink — so
 the accent is yours to pick rather than one you have to override.
@@ -222,7 +209,8 @@ outline: {
 | --- | --- |
 | Change the brand color / radius everywhere | Edit `lib/tokens.stylex.ts` |
 | Change the font everywhere | Set `font-family` on `<html>` |
-| Add dark mode or a second brand look | `stylex.createTheme` in `lib/themes.ts`, apply to `<html>` |
+| Turn on dark mode | `colorScheme` from `lib/themes.ts` on `<html>` |
+| Add a second brand look | `stylex.createTheme` in `lib/themes.ts`, apply to `<html>` |
 | Tweak one instance | `style` prop |
 | Reusable new look for a component | Add a variant in its source file |
 | Change a component's structure or behavior | Edit `components/ui/<name>.tsx` — you own it |

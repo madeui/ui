@@ -152,7 +152,7 @@ Every color in the system is an achromatic oklch gray (chroma 0) except the sing
 ### Named Rules
 **The No-Hue Rule.** Every token except `destructive` has chroma 0. Do not introduce a violet, blue, or brand hue accent anywhere in chrome, marketing surfaces, or component defaults — this was a deliberate reversal from an earlier violet-accent identity (see `47813a0`).
 
-**The Dark-Class Bridge Rule.** Dark mode is a compiled StyleX theme (`darkTheme` from `stylex.createTheme`), applied to `<html>` — never a subtree wrapper — because dialogs and popovers portal to `<body>` and would escape a scoped theme.
+**The Color-Scheme Rule.** Dark mode lives in the color tokens: each is a `light-dark(light, dark)` pair, and `colorScheme` from `themes.ts` sets `color-scheme` on `<html>` (following `data-theme`). It goes on `<html>`, never a subtree wrapper, because dialogs and popovers portal to `<body>` and inherit the scheme from there. There is no dark theme class.
 
 ## Typography
 

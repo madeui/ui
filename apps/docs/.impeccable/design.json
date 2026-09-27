@@ -116,7 +116,7 @@
     ],
     "rules": [
       { "name": "The No-Hue Rule", "body": "Every token except `destructive` has chroma 0. Do not introduce a violet, blue, or brand hue accent anywhere in chrome, marketing surfaces, or component defaults — this was a deliberate reversal from an earlier violet-accent identity.", "section": "colors" },
-      { "name": "The Dark-Class Bridge Rule", "body": "Dark mode is a compiled StyleX theme applied to <html> — never a subtree wrapper — because dialogs and popovers portal to <body> and would escape a scoped theme.", "section": "colors" },
+      { "name": "The Color-Scheme Rule", "body": "Dark mode lives in the color tokens (light-dark() pairs); colorScheme sets color-scheme on <html> — never a subtree wrapper — because dialogs and popovers portal to <body> and inherit the scheme from there.", "section": "colors" },
       { "name": "The Single-Display-Moment Rule", "body": "Display size and the -0.04em tracking exist only on the H1. No other element on the page uses display-weight type; nav, buttons, and captions all read at body or label scale.", "section": "typography" },
       { "name": "The Border-First Rule", "body": "Reach for a hairline border before a shadow. Shadow is a secondary, low-opacity signal layered on top of a bordered surface, never a replacement for the border.", "section": "elevation" }
     ],

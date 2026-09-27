@@ -187,7 +187,7 @@ const items = [
   await libItem(
     'theme',
     'Design tokens',
-    'StyleX design tokens: themable vars (tokens.stylex.ts), non-themed scales (constants.stylex.ts), and the dark theme (themes.ts). Edit lib/tokens.stylex.ts to retheme your app.',
+    'StyleX design tokens: themable vars with light-dark() colors (tokens.stylex.ts), non-themed scales (constants.stylex.ts), and the colorScheme style for <html> (themes.ts). Edit lib/tokens.stylex.ts to retheme your app.',
     ['tokens.stylex.ts', 'constants.stylex.ts', 'themes.ts']
   ),
   await libItem(

@@ -140,8 +140,13 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
 - Icons are \`lucide-react\`, sized with the \`icon\` styles from
   \`stylex-utils.ts\` (\`{...stylex.props(icon.md)}\`) — never hand-drawn SVG,
   never the \`size\` prop.
-- Theming: apply themes (e.g. \`darkTheme\` from \`themes.ts\`) to \`<html>\`,
-  not a wrapper — dialogs/popovers portal to \`<body>\`.
+- Dark mode lives in the tokens: every color is a \`light-dark(light, dark)\`
+  pair. \`colorScheme\` from \`themes.ts\` goes on \`<html>\` (follows the OS;
+  \`data-theme="light"|"dark"\` on \`<html>\` forces a mode). Never add a dark
+  theme or per-component dark styles; never set \`color-scheme\` inline.
+- Brand themes (\`stylex.createTheme\`) go on \`<html>\`, not a wrapper —
+  dialogs/popovers portal to \`<body>\`. One theme per element: two themes
+  of the same token group do not merge.
 - Global CSS: keep resets inside \`@layer base\` (declared before \`@stylex\`);
   unlayered CSS overrides all StyleX rules.
 
