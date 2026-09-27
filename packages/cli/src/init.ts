@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import kleur from 'kleur';
 
 import { add } from './add.ts';
+import { applyPageStyles } from './page-styles.ts';
 import {
   CONFIG_FILE,
   DEFAULT_CONFIG,
@@ -17,7 +18,7 @@ import {
 } from './project.ts';
 import { removeTailwind, shouldRemoveTailwind, tailwindPackages } from './tailwind.ts';
 import { patchViteConfig, patchTsconfigPaths } from './vite.ts';
-import type { Config, Flags } from './types.ts';
+import type { Config, Flags, FrameworkName } from './types.ts';
 
 // The alias root is process.cwd(), not __dirname: Turbopack evaluates
 // postcss.config.mjs (which imports this file) inside its own bundle, where
@@ -144,6 +145,9 @@ Base UI primitives and are styled with StyleX (compile-time CSS).
   pair. \`colorScheme\` from \`themes.ts\` goes on \`<html>\` (follows the OS;
   \`data-theme="light"|"dark"\` on \`<html>\` forces a mode). Never add a dark
   theme or per-component dark styles; never set \`color-scheme\` inline.
+- Page background and text color come from \`page\` in \`themes.ts\`, on
+  \`<body>\` (init applied both styles in the root layout or entry). Change
+  them through the \`background\`/\`foreground\` tokens, not global CSS.
 - Brand themes (\`stylex.createTheme\`) go on \`<html>\`, not a wrapper —
   dialogs/popovers portal to \`<body>\`. One theme per element: two themes
   of the same token group do not merge.
@@ -205,8 +209,6 @@ function ensureClaudeMd(cwd: string, changed: string[]): void {
   changed.push('CLAUDE.md');
   console.log(kleur.green('  ~ CLAUDE.md: added @AGENTS.md'));
 }
-
-type FrameworkName = 'next' | 'vite';
 
 function detectFramework(cwd: string): FrameworkName | null {
   const pkg = readPackageJson(cwd);
@@ -352,10 +354,10 @@ export async function init(cwd: string, flags: Flags): Promise<void> {
     throw new Error('no package.json here — run this inside your app.');
   }
   const name = detectFramework(cwd);
-  const framework = name ? FRAMEWORKS[name] : undefined;
-  if (!framework) {
+  if (!name) {
     throw new Error('could not detect a supported framework (Next.js or Vite).');
   }
+  const framework = FRAMEWORKS[name];
 
   const changed: string[] = [];
   const instructions: string[] = [];
@@ -402,6 +404,9 @@ export async function init(cwd: string, flags: Flags): Promise<void> {
 
   console.log(kleur.bold('installing tokens + utils:'));
   await add(cwd, ['theme', 'utils'], flags);
+
+  console.log(kleur.bold('page styles:'));
+  instructions.push(...applyPageStyles(cwd, name, config.paths.lib, changed));
 
   if (instructions.length > 0) {
     console.log(kleur.yellow('\nManual steps:'));

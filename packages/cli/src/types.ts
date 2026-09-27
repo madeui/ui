@@ -67,3 +67,6 @@ export interface DiffFlags {
   json?: boolean;
   exitCode?: boolean;
 }
+
+/** Frameworks `init` can set up. */
+export type FrameworkName = 'next' | 'vite';

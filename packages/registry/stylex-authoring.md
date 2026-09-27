@@ -378,11 +378,14 @@ const styles = stylex.create({
       '[data-theme="dark"]': 'dark',
     },
   },
+  page: { backgroundColor: colors.background, color: colors.foreground },
 });
 export const colorScheme = styles.colorScheme;
+export const page = styles.page;
 
 // app/layout.tsx
 <html {...stylex.props(colorScheme)}>
+  <body {...stylex.props(page)}>
 ```
 
 A manual toggle writes `data-theme` on `<html>`; no class names change.

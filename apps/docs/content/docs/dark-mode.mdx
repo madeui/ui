@@ -30,19 +30,22 @@ first paint, with no JavaScript:
 // app/layout.tsx
 import * as stylex from '@stylexjs/stylex';
 
-import { colorScheme } from '@/lib/themes';
+import { colorScheme, page } from '@/lib/themes';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" {...stylex.props(colorScheme)}>
-      <body>{children}</body>
+      <body {...stylex.props(page)}>{children}</body>
     </html>
   );
 }
 ```
 
 Put it on `<html>`, not a wrapper: dialogs, popovers, menus, and toasts
-portal to `<body>` and inherit the scheme from there.
+portal to `<body>` and inherit the scheme from there. `page` gives `<body>`
+the background and text color from the tokens, so the page switches with the
+components. `madeui init` applies both; see
+[page styles](/docs/installation#page-styles).
 
 ## Add a manual toggle
 
@@ -65,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: restoreTheme }} />
       </head>
-      <body>{children}</body>
+      <body {...stylex.props(page)}>{children}</body>
     </html>
   );
 }
@@ -153,8 +156,9 @@ that calls `setMode('system')` to clear the saved choice and follow the OS
 again.
 
 In a Vite app or another single-page setup, put the same script in
-`index.html` and the `colorScheme` classes on `<html>` from your root
-component.
+`index.html`. The `colorScheme` and `page` classes go on `<html>` and
+`<body>` from the entry module, which `init` sets up (see
+[page styles](/docs/installation#page-styles)).
 
 ### With next-themes
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import * as stylex from "@stylexjs/stylex";
 
-import { colorScheme } from "@/lib/themes";
+import { colorScheme, page } from "@/lib/themes";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${scheme.className}`}
     >
-      <body>{children}</body>
+      <body {...stylex.props(page)}>{children}</body>
     </html>
   );
 }
