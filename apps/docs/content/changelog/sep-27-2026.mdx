@@ -1,0 +1,63 @@
+---
+title: Dark mode in the tokens, page styles from init
+type: changelog
+date: 2026-09-27
+changelog:
+  category: Release
+---
+
+Dark mode now lives in the color tokens, components take their font from
+the page, and `init` sets up the page itself. Two of these changes remove
+exports that existing projects may import, so this entry starts with the
+upgrade steps.
+
+### Upgrading an existing project
+
+Your `lib/` files are yours, so nothing changes until you update them.
+Run `npx @madeui/cli diff theme` to see what the registry's tokens look
+like now, then:
+
+- **Replace `darkTheme`.** It is gone: every color token is a
+  `light-dark(light, dark)` pair instead. Put `colorScheme` from
+  `lib/themes.ts` on `<html>`, and make a theme toggle write
+  `data-theme="light"` or `"dark"` on `<html>` instead of swapping a class.
+  See [Dark mode](/docs/dark-mode).
+- **Move your font to `<html>`.** The `font` token is gone and components
+  set no `font-family`: they inherit the page's font. If you changed
+  `font.sans`, set that family on `<html>` instead. See
+  [Fonts](/docs/customization#fonts).
+- **Add `page` to `<body>`.** It gives the page its background and text
+  color from the tokens, so the page switches with the components. See
+  [Page styles](/docs/installation#page-styles).
+
+`add theme --overwrite` replaces all three token files, so review the
+`diff` patches first if you edited your colors.
+
+### What's new
+
+- **Dark mode through `color-scheme`** — the page follows the OS setting
+  with no JavaScript, and a toggle only writes one attribute, so it works
+  with `next-themes` and any other theme library. Scrollbars and native form
+  controls turn dark too. The docs cover a toggle that doesn't flash on load
+- **Brand themes compose with dark mode** — a `stylex.createTheme` theme can
+  use `light-dark()` pairs, so one theme covers both modes
+- **Page styles from `init`** — `madeui init` (CLI 1.3.0) puts `colorScheme`
+  on `<html>` and `page` on `<body>` in your root layout (Next.js) or entry
+  (Vite). If it can't safely edit the file, it prints the snippet instead
+- **Components inherit the page font** — whatever font your app already
+  uses, `next/font` included, reaches every component and every portaled
+  popup
+- **`madeui diff`** — compares your installed components with the registry
+  and marks each file `same`, `differs`, or `missing`, with a patch for the
+  ones that differ. `--json` gives agents the patches and a fix command, and
+  `--exit-code` fails CI when anything differs. See [CLI](/docs/cli#diff)
+- **Safer `add --overwrite`** — it replaces only the components you name, so
+  a rethemed `tokens.stylex.ts` is no longer overwritten as a dependency
+- **A breakpoint scale** — `breakpoint` in `constants.stylex.ts` (`sm` 640px
+  through `xxl` 1536px) for mobile-first responsive styles, in place of
+  literal media queries. Overlapping keys need `@stylexjs/*` 0.19.1 or later
+  to come out in width order
+
+Also in this release: Command Dialog is centered on the page again and
+scales in like the other dialogs, and its input stays put while the list
+filters.
