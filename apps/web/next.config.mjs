@@ -44,14 +44,9 @@ const config = {
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
         ],
       },
-      {
-        source: '/:path(.+\\.mdx?)',
-        headers: [{ key: 'Content-Type', value: 'text/markdown; charset=utf-8' }],
-      },
-      {
-        source: '/:path(.+\\.txt)',
-        headers: [{ key: 'Content-Type', value: 'text/plain; charset=utf-8' }],
-      },
+      // Markdown mirrors and the .txt artifacts need no rule here: their route
+      // handlers set their own Content-Type, and a path rule would also label
+      // the HTML 404 page under those extensions.
     ];
   },
 };
