@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/date-picker';
 
 export default function DatePickerRange() {
-  const [range, setRange] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 6),
+  const [range, setRange] = React.useState<DateRange | undefined>(() => {
+    const from = new Date(new Date().getFullYear(), 0, 12);
+    return { from, to: addDays(from, 6) };
   });
 
   return (
