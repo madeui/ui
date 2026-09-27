@@ -15,6 +15,8 @@ export const layout = stylex.defineConsts({
   sidebar: '17.5rem',
   content: '42rem',
   toc: '17.5rem',
+  /** The content column of a page without sidebar and ToC (the changelog index). */
+  bare: '54rem',
   /** Height of the header lockup (mark + wordmark scale together). */
   logo: '1.75rem',
 });
@@ -34,6 +36,11 @@ export const prose = stylex.defineConsts({
   leading: '1.7',
   /** Headings tighten their tracking as they grow. */
   tracking: '-0.02em',
+});
+
+/** The changelog index: each entry's header column beside its body (from md). */
+export const changelog = stylex.defineConsts({
+  aside: '10rem',
 });
 
 /**

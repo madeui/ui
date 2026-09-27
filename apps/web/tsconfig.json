@@ -19,6 +19,7 @@
       "@/components/ui/*": ["../../packages/registry/src/ui/*"],
       "@/lib/*": ["../../packages/registry/src/lib/*"],
       "@/components/site/*": ["./components/site/*"],
+      "@/components/landing/*": ["./components/landing/*"],
       "@/site/*": ["./site/*"],
       "@examples/*": ["../../packages/registry/examples/*"]
     }
