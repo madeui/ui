@@ -53,6 +53,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @madeui/docs build
+      # apps/web's unit tests (route list, Example resolver, text-artifact
+      # generators): pure functions, no build needed.
+      - run: pnpm --filter @madeui/web test
 
   web:
     name: Web typecheck + build

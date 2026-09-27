@@ -16,6 +16,18 @@ const config = {
     // The registry source and the docs content live outside this app.
     root: path.resolve(root, '../..'),
   },
+  async rewrites() {
+    return {
+      // Before the filesystem, in order: a direct request for the internal
+      // mirror path goes nowhere (404), then `/<route>.md` and `.mdx` reach the
+      // Markdown mirror handler (app/markdown-mirror). Rewrites run in one
+      // pass, so the first rule never sees what the second one produces.
+      beforeFiles: [
+        { source: '/markdown-mirror/:path*', destination: '/_not-found' },
+        { source: '/:route(.+)\\.:format(md|mdx)', destination: '/markdown-mirror/:format/:route' },
+      ],
+    };
+  },
   async headers() {
     return [
       // Agents and registry tools fetch cross-origin: every response allows it.
