@@ -135,7 +135,7 @@ survive installation byte-identical:
   styled part must appear — either with its own table or in the closing
   `### Styling` line ("`X`, `Y` accept `style` ..."). Unstyled re-exports are
   labeled "Base UI parts re-exported unstyled".
-- Docs pages are generated/edited under `apps/docs/content/components/`;
+- Docs pages are generated/edited under `apps/docs/content/docs/components/`;
   frontmatter `description` values containing `:` must be quoted (YAML).
 
 ## Registry
