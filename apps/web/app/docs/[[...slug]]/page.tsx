@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { DocsPage } from '@/components/site/docs-shell';
 import { proseComponents } from '@/components/site/prose';
 import type { TocItem } from '@/components/site/toc';
+import { site } from '@/site/artifacts/site';
 import { contentPages } from '@/site/content';
 import { eyebrow, pager } from '@/site/nav';
 import { docsSource } from '@/site/source';
@@ -19,7 +20,7 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
   const { slug } = await props.params;
   const page = docsSource.getPage(slug);
   if (!page) notFound();
-  return { title: page.data.title, description: page.data.description };
+  return { title: `${page.data.title} - ${site.name}`, description: page.data.description };
 }
 
 /** The ToC lists sections and subsections (h2, h3). */
