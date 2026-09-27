@@ -10,6 +10,7 @@
     "playground:build": "pnpm --filter playground build",
     "web:dev": "pnpm --filter @madeui/web dev",
     "web:build": "pnpm --filter @madeui/web build",
+    "web:vrt": "pnpm --filter @madeui/web vrt",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"

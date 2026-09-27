@@ -39,6 +39,10 @@ _Avoid_: AI files, SEO files
 A URL whose bytes and meaning are a contract: every sitemap URL, every Agent artifact, and the Registry at `/r/*.json`. Changing one is a deliberate decision; everything else the site serves may change freely.
 _Avoid_: public URL, permalink
 
+**Showcase**:
+The dev-only page at `/showcase` that renders every component in the Registry with all its Examples, one section per component; the local visual regression run screenshots it section by section. Production builds never contain it.
+_Avoid_: playground, kitchen sink, gallery
+
 ## Example dialogue
 
 > **Dev:** "`diff` says button differs — did you ship an update?"

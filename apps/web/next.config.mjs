@@ -5,9 +5,20 @@ import { createMDX } from 'fumadocs-mdx/next';
 // ESM: createMDX() needs it. babel.config.js stays CommonJS, as init writes it.
 const root = process.cwd();
 
+// The Showcase (app/showcase/page.showcase.tsx) is a page only in dev and in
+// SHOWCASE=1 builds: its page extension is registered nowhere else, so the
+// production build never compiles it and /showcase is a 404 there. A
+// SHOWCASE=1 build goes to its own dist dir (the local VRT's), leaving the
+// production build in .next untouched; `SHOWCASE=1 next start` serves it.
+const showcaseBuild = process.env.SHOWCASE === '1';
+const showcase = showcaseBuild || process.env.NODE_ENV !== 'production';
+
 /** @type {import('next').NextConfig} */
 const config = {
   trailingSlash: false,
+  // fumadocs-mdx's default page extensions, plus the Showcase's when it is on.
+  pageExtensions: ['mdx', 'md', 'jsx', 'js', 'tsx', 'ts', ...(showcase ? ['showcase.tsx'] : [])],
+  ...(showcaseBuild && { distDir: '.next-vrt' }),
   // The type-check step inside `next build` runs out of memory over the
   // registry + MDX graph; `pnpm --filter @madeui/web typecheck` runs tsc on
   // its own instead.
