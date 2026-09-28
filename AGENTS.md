@@ -9,8 +9,8 @@ repo. `CLAUDE.md` only imports this file.
 (components are copied into the user's project as editable source), built on
 **Base UI** (headless primitives) + **StyleX** (compile-time styling).
 Distributed via our own CLI (`madeui init` handles the StyleX build setup)
-and a shadcn-compatible registry. Docs site: **Blume**. Agent-friendliness is
-a core requirement, not an afterthought.
+and a shadcn-compatible registry. Docs site: **Next.js** (`apps/web`).
+Agent-friendliness is a core requirement, not an afterthought.
 
 ## Ground rules
 
@@ -40,8 +40,7 @@ a core requirement, not an afterthought.
 ```
 packages/registry/   # component sources, tokens, examples/
 packages/cli/        # madeui init + add + list
-apps/docs/           # Blume docs site + hosted registry endpoints
-apps/playground/     # Next.js smoke-test app (manual sync from registry)
+apps/web/            # Next.js docs site + hosted registry endpoints
 ```
 
 ## Development flow

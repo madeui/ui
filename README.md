@@ -41,8 +41,7 @@ Guides, live examples for every component feature, and the API reference:
 ```
 packages/registry/   # component sources, tokens, examples
 packages/cli/        # madeui init / add / list
-apps/docs/           # documentation site (also serves the registry)
-apps/playground/     # Next.js smoke-test app
+apps/web/            # documentation site (also serves the registry)
 ```
 
 ## Contributing
