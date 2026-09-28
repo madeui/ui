@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
+import { landing, media } from '@/components/landing/landing.stylex';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { space, duration, easing, breakpoint } from '@/lib/constants.stylex';
 
@@ -60,15 +61,13 @@ const enter = stylex.keyframes({
   to: { opacity: 1 },
 });
 
-const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
-
 const styles = stylex.create({
   // A fixed stage on desktop: every screen is composed to fit it, so
   // switching never moves the page. Below tablet width the screens stack
   // and the stage takes their height.
   stage: {
     gap: space.s5,
-    height: { default: 'auto', [breakpoint.lg]: '46rem' },
+    height: { default: 'auto', [breakpoint.lg]: landing.stage },
   },
   // Five tabs outgrow a phone; the list scrolls sideways instead of clipping.
   tabList: {
@@ -86,7 +85,7 @@ const styles = stylex.create({
   },
   // Opacity only: a translate would fight the fixed stage.
   fade: {
-    animationDuration: { default: duration.normal, [REDUCED]: '0s' },
+    animationDuration: { default: duration.normal, [media.reducedMotion]: '0s' },
     animationName: enter,
     animationTimingFunction: easing.out,
     display: 'flex',

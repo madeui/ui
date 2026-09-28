@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { navGroups, publishedInventory, routeList, type ContentPage } from '../site/routes.ts';
+import { compareUrlList, navGroups, publishedInventory, publishedUrls, routeList, type ContentPage } from '../site/routes.ts';
 
 // A small content tree in the shape of apps/docs/content: loose guides with a
 // sidebar order, a components folder without one, and dated changelog entries.
@@ -102,5 +102,67 @@ describe('routeList', () => {
       '/docs/components/button',
       '/docs/components/button-group',
     ]);
+  });
+});
+
+describe('publishedUrls', () => {
+  const pages = fixture.filter((page) => ['/docs', '/changelog/v1-0-0'].includes(page.route));
+
+  test('the route inventory plus the registry JSON and the brand SVGs, sorted, once each', () => {
+    const urls = publishedUrls(pages, { registry: ['button.json', 'registry.json'], brand: ['glyph.svg'] });
+    expect(urls).toEqual(
+      [
+        ...Object.values(publishedInventory(pages)).flat(),
+        '/r/button.json',
+        '/r/registry.json',
+        '/icon.svg',
+        '/brand/glyph.svg',
+      ].toSorted(),
+    );
+  });
+});
+
+describe('compareUrlList', () => {
+  const before = fixture.filter((page) => ['/docs', '/changelog/v1-0-0'].includes(page.route));
+  const assets = { registry: ['button.json'], brand: ['glyph.svg'] };
+  const committed = publishedUrls(before, assets);
+
+  test('the same URLs pass', () => {
+    expect(compareUrlList(committed, committed, before)).toEqual({ missing: [], added: [], changelog: [] });
+  });
+
+  test('a new changelog entry passes without a list update: its URLs are derived from the entry', () => {
+    const after = [...before, fixture.find((page) => page.route === '/changelog/v1-1-0')!];
+    expect(compareUrlList(publishedUrls(after, assets), committed, after)).toEqual({
+      missing: [],
+      added: [],
+      changelog: ['/changelog/v1-1-0', '/changelog/v1-1-0.md', '/changelog/v1-1-0.mdx', '/og/changelog/v1-1-0.png'],
+    });
+  });
+
+  test('any other new URL is reported as added', () => {
+    const after = [...before, fixture.find((page) => page.route === '/docs/components/alert')!];
+    const result = compareUrlList(publishedUrls(after, { ...assets, registry: ['alert.json', 'button.json'] }), committed, after);
+    expect(result.added).toEqual([
+      '/docs/components/alert',
+      '/docs/components/alert.md',
+      '/docs/components/alert.mdx',
+      '/og/docs/components/alert.png',
+      '/r/alert.json',
+    ]);
+    expect(result.missing).toEqual([]);
+  });
+
+  test('a URL that disappears is reported as missing, a removed changelog entry included', () => {
+    const after = before.filter((page) => page.route !== '/changelog/v1-0-0');
+    const result = compareUrlList(publishedUrls(after, { registry: [], brand: ['glyph.svg'] }), committed, after);
+    expect(result.missing).toEqual([
+      '/changelog/v1-0-0',
+      '/changelog/v1-0-0.md',
+      '/changelog/v1-0-0.mdx',
+      '/og/changelog/v1-0-0.png',
+      '/r/button.json',
+    ]);
+    expect(result.added).toEqual([]);
   });
 });

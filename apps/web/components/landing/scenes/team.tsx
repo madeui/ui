@@ -51,6 +51,8 @@ import { space, fontSize, fontWeight, lineHeight, stroke, breakpoint } from '@/l
 import { colors, radius } from '@/lib/tokens.stylex';
 
 import { MoreIcon, PlusIcon, SearchIcon } from '@/components/landing/icons';
+import { tracking } from '@/components/landing/landing.stylex';
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { Part } from './part';
 
 const roles = [
@@ -144,7 +146,7 @@ export default function Team() {
                 <TableHead style={styles.wide}>Status</TableHead>
                 <TableHead style={styles.wide}>Last active</TableHead>
                 <TableHead style={[styles.actionsHead, styles.wide]}>
-                  <span {...stylex.props(styles.srOnly)}>Actions</span>
+                  <span {...stylex.props(visuallyHidden.always)}>Actions</span>
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -264,7 +266,7 @@ const styles = stylex.create({
   title: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
     margin: 0,
   },
@@ -339,14 +341,5 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: space.s3,
-  },
-  srOnly: {
-    borderWidth: 0,
-    clipPath: 'inset(50%)',
-    height: '1px',
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: '1px',
   },
 });

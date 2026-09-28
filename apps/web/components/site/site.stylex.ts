@@ -69,6 +69,8 @@ export const searchLayout = stylex.defineConsts({
   top: '8vh',
   /** A highlight's background: the text color at this strength. */
   mark: '25%',
+  /** A section pill's result count, dimmed against its label. */
+  countOpacity: '0.6',
 });
 
 /** Sticky chrome sits below the registry's popups (z.popup = 50). */

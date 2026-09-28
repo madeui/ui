@@ -158,3 +158,55 @@ export function publishedInventory(pages: ContentPage[]): Inventory {
     og: html.map(ogImagePath),
   };
 }
+
+/** Files behind the Published URLs that are not pages: the registry JSON and the brand SVGs besides /icon.svg. */
+export interface PublishedFiles {
+  /** File names in the registry output (`button.json`), served at `/r/<name>`. */
+  registry: string[];
+  /** SVG file names in the brand folder (`glyph.svg`), served at `/brand/<name>`. */
+  brand: string[];
+}
+
+/** Every Published URL the site serves, sorted: the inventory, /r/*.json, /icon.svg and /brand/*.svg. */
+export function publishedUrls(pages: ContentPage[], files: PublishedFiles): string[] {
+  return [
+    ...Object.values(publishedInventory(pages)).flat(),
+    ...files.registry.map((file) => `/r/${file}`),
+    '/icon.svg',
+    ...files.brand.map((file) => `/brand/${file}`),
+  ].toSorted();
+}
+
+/** The Published URLs of the changelog entries: each one's page, two mirrors and OG image. */
+const changelogEntryUrls = (pages: ContentPage[]) =>
+  new Set(
+    pages
+      .filter((page) => page.file.startsWith('changelog/'))
+      .flatMap((page) => [page.route, markdownPath(page.route, 'md'), markdownPath(page.route, 'mdx'), ogImagePath(page.route)]),
+  );
+
+export interface UrlListComparison {
+  /** Committed URLs the site no longer serves. */
+  missing: string[];
+  /** Served URLs the committed list lacks, changelog entries aside. */
+  added: string[];
+  /** Served URLs of changelog entries the committed list lacks: accepted as they are. */
+  changelog: string[];
+}
+
+/**
+ * The served Published URLs against the committed list. A missing URL is a
+ * broken link; an added one must be committed on purpose, except a changelog
+ * entry's, which follow from its .mdx (announcing stays one file).
+ */
+export function compareUrlList(actual: string[], expected: string[], pages: ContentPage[]): UrlListComparison {
+  const committed = new Set(expected);
+  const served = new Set(actual);
+  const entries = changelogEntryUrls(pages);
+  const extra = [...served].filter((url) => !committed.has(url)).toSorted();
+  return {
+    missing: [...committed].filter((url) => !served.has(url)).toSorted(),
+    added: extra.filter((url) => !entries.has(url)),
+    changelog: extra.filter((url) => entries.has(url)),
+  };
+}

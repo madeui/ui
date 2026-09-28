@@ -67,6 +67,8 @@ import {
   SettingsIcon,
   UsersIcon,
 } from '@/components/landing/icons';
+import { tracking } from '@/components/landing/landing.stylex';
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { Part } from './part';
 
 // The last bar is the Revenue stat above it, and the step up from the one
@@ -255,7 +257,7 @@ export default function Dashboard() {
                     <TableHead style={styles.wide}>Status</TableHead>
                     <TableHead style={styles.right}>Amount</TableHead>
                     <TableHead style={[styles.actionsHead, styles.wide]}>
-                      <span {...stylex.props(styles.srOnly)}>Actions</span>
+                      <span {...stylex.props(visuallyHidden.always)}>Actions</span>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -511,7 +513,7 @@ const styles = stylex.create({
     fontSize: fontSize.xl,
     fontVariantNumeric: 'tabular-nums',
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
   },
   grid: {
@@ -572,14 +574,5 @@ const styles = stylex.create({
   mono: {
     color: colors.mutedForeground,
     fontVariantNumeric: 'tabular-nums',
-  },
-  srOnly: {
-    borderWidth: 0,
-    clipPath: 'inset(50%)',
-    height: '1px',
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: '1px',
   },
 });

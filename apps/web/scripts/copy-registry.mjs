@@ -1,7 +1,8 @@
 // Copies the generated registry JSON (packages/registry/public/r, built by
 // `pnpm build:registry`) into public/r, where the site serves it as /r/*.json.
 // Byte for byte: the madeui CLI and other registry tools fetch these files.
-// Runs before `next dev` and `next build`; public/r is gitignored.
+// Runs before `next dev` and `next build` (the build regenerates the JSON
+// first); public/r is gitignored.
 import fs from 'node:fs';
 import path from 'node:path';
 

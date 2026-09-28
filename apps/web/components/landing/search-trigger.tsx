@@ -1,43 +1,29 @@
 'use client';
 
-import * as React from 'react';
-
 import * as stylex from '@stylexjs/stylex';
 
-import { landing } from '@/components/landing/landing.stylex';
+import { landing, media } from '@/components/landing/landing.stylex';
 import { SearchIcon } from '@/components/landing/icons';
+import { openSearch } from '@/components/site/search-state';
+import { useApplePlatform } from '@/components/site/use-apple-platform';
 import { Kbd } from '@/components/ui/kbd';
 import { breakpoint, duration, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-
-const isApple = () => /mac|iphone|ipad|ipod/iu.test(navigator.platform);
-
 /**
  * The landing header's search field. Search opens on ⌘K / Ctrl K anywhere
- * on the site; this is the pointer path, and it sends the same shortcut.
+ * on the site; this is the pointer path. The dialog itself is hosted by
+ * SearchShortcuts (site/search-trigger.tsx), which the landing renders too.
  */
 export function SearchTrigger() {
-  const [modifier, setModifier] = React.useState('⌘');
-
-  React.useEffect(() => {
-    if (!isApple()) setModifier('Ctrl');
-  }, []);
-
-  const open = () => {
-    const apple = isApple();
-    document.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'k', metaKey: apple, ctrlKey: !apple, bubbles: true }),
-    );
-  };
+  const apple = useApplePlatform();
 
   return (
-    <button type="button" onClick={open} aria-label="Search docs" {...stylex.props(styles.search)}>
+    <button type="button" onClick={openSearch} aria-label="Search docs" {...stylex.props(styles.search)}>
       <SearchIcon size={16} />
       <span {...stylex.props(styles.label)}>Search docs…</span>
       <span {...stylex.props(styles.kbd)}>
-        <Kbd>{modifier}</Kbd>
+        <Kbd>{apple ? '⌘' : 'Ctrl'}</Kbd>
         <Kbd>K</Kbd>
       </span>
     </button>
@@ -50,14 +36,14 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+      [media.hover]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     cursor: 'pointer',
     display: 'inline-flex',

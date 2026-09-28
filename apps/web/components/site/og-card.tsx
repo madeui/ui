@@ -32,6 +32,9 @@ function titleSize(title: string): number {
   return 60;
 }
 
+/** An SVG source as an <img> src: next/og takes images as data URIs. */
+const svgDataUri = (svg: string) => `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+
 const clip = (text: string, max: number) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
 
 /** The glyph's geometry (brand/glyph.svg), drawn large: placed squares muted, the snapping piece in ink. */
@@ -42,7 +45,7 @@ function glyphMotif(size: number) {
 <rect x="34" y="34" width="24" height="24" rx="7" fill="${c.muted}" stroke="${c.border}" stroke-width="0.25"/>
 <rect x="38" y="2" width="24" height="24" rx="7" fill="none" stroke="${c.foreground}" stroke-width="1.5" stroke-dasharray="3 2.5" stroke-linecap="round" transform="rotate(8 50 14)"/>
 </svg>`;
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+  return svgDataUri(svg);
 }
 
 /** The landing's dot grid, fading out from behind the glyph. */
@@ -55,11 +58,11 @@ function dotGrid() {
 </defs>
 <rect width="100%" height="100%" fill="url(#d)" mask="url(#m)"/>
 </svg>`;
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+  return svgDataUri(svg);
 }
 
 /** The lockup file with its currentColor set to ink. */
-const inked = (svg: string) => `data:image/svg+xml;base64,${Buffer.from(svg.replaceAll('currentColor', c.foreground)).toString('base64')}`;
+const inked = (svg: string) => svgDataUri(svg.replaceAll('currentColor', c.foreground));
 
 export function OgCardImage({ card, lockup }: { card: OgCard; lockup: string }) {
   const size = titleSize(card.title);

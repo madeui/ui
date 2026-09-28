@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 import Link from 'next/link';
 
-import { brand, landing, tracking } from '@/components/landing/landing.stylex';
+import { brand, landing, media, tracking } from '@/components/landing/landing.stylex';
 import { Rule } from '@/components/landing/rule';
 import { Lockup, Mark } from '@/components/site/lockup';
 import { breakpoint, duration, fontSize, fontWeight, lineHeight, space } from '@/lib/constants.stylex';
@@ -85,8 +85,6 @@ export function Footer() {
   );
 }
 
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-
 const styles = stylex.create({
   footer: {
     display: 'flex',
@@ -123,7 +121,7 @@ const styles = stylex.create({
   tagline: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-    letterSpacing: tracking.tagline,
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
     margin: 0,
   },
@@ -163,7 +161,7 @@ const styles = stylex.create({
   link: {
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     fontSize: fontSize.sm,
     textDecoration: 'none',

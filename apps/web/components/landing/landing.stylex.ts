@@ -17,6 +17,17 @@ export const landing = stylex.defineConsts({
   brandMeasure: '36ch',
   /** The search trigger grows into a field from lg. */
   searchWidth: '14rem',
+  /** The scenes' fixed stage from lg: every screen is composed to fit it. */
+  stage: '46rem',
+});
+
+/**
+ * The landing's media queries besides the breakpoints: hover effects only
+ * where a fine pointer can hover, and motion switched off on request.
+ */
+export const media = stylex.defineConsts({
+  hover: '@media (hover: hover) and (pointer: fine)',
+  reducedMotion: '@media (prefers-reduced-motion: reduce)',
 });
 
 /** The hero headline: a display size with no place on the control type scale. */
@@ -28,10 +39,10 @@ export const display = stylex.defineConsts({
   dotGap: '0.04em',
 });
 
-/** Tracking of the landing's smaller headings. */
+/** Tracking of the landing's smaller headings: tight from lg type up, snug at base size. */
 export const tracking = stylex.defineConsts({
-  tagline: '-0.02em',
-  title: '-0.01em',
+  tight: '-0.02em',
+  snug: '-0.01em',
 });
 
 /** Brand marks, by height. */
