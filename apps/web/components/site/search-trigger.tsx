@@ -18,6 +18,9 @@ const SearchDialog = dynamic(() => import('@/components/site/search-dialog').the
   ssr: false,
 });
 
+// The 404's recovery, lazy like the dialog. It lives here on purpose: the root not-found is in every page's tree, and a client module of its own added ~13 KB to every /docs page.
+export const NotFoundRecovery = dynamic(() => import('@/components/site/not-found-recovery').then((m) => m.NotFoundRecovery));
+
 const isField = (target: EventTarget | null) =>
   target instanceof HTMLElement && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
 
