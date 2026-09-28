@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { CopyCommand } from '@/components/landing/copy-command';
 import { Footer } from '@/components/landing/footer';
 import { ArrowRightIcon, GitHubIcon } from '@/components/landing/icons';
-import { display, landing, tracking } from '@/components/landing/landing.stylex';
+import { display, landing, media, tracking } from '@/components/landing/landing.stylex';
 import { Rule } from '@/components/landing/rule';
 import Scenes from '@/components/landing/scenes/scenes';
 import { SearchTrigger } from '@/components/landing/search-trigger';
@@ -127,9 +127,6 @@ const appear = stylex.keyframes({
   to: { opacity: 1 },
 });
 
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
-
 const styles = stylex.create({
   page: {
     backgroundColor: colors.background,
@@ -190,7 +187,7 @@ const styles = stylex.create({
     borderRadius: radius.md,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     fontSize: fontSize.sm,
     paddingBlock: space.s15,
@@ -202,11 +199,11 @@ const styles = stylex.create({
   },
   iconLink: {
     alignItems: 'center',
-    backgroundColor: { default: 'transparent', [HOVER]: { default: null, ':hover': colors.muted } },
+    backgroundColor: { default: 'transparent', [media.hover]: { default: null, ':hover': colors.muted } },
     borderRadius: radius.md,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     display: 'inline-flex',
     height: space.s9,
@@ -219,7 +216,7 @@ const styles = stylex.create({
   },
 
   hero: {
-    animationDuration: { default: duration.slow, [REDUCED]: '0s' },
+    animationDuration: { default: duration.slow, [media.reducedMotion]: '0s' },
     animationFillMode: 'forwards',
     animationName: appear,
     animationTimingFunction: easing.out,
@@ -248,14 +245,14 @@ const styles = stylex.create({
     alignItems: 'center',
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+      [media.hover]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     display: 'inline-flex',
     fontSize: fontSize.xs,
@@ -321,7 +318,7 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: {
       default: 'transform, opacity, border-color',
-      [REDUCED]: 'opacity, border-color',
+      [media.reducedMotion]: 'opacity, border-color',
     },
     transitionTimingFunction: easing.out,
   },
@@ -329,13 +326,13 @@ const styles = stylex.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     color: colors.primaryForeground,
-    opacity: { default: 1, [HOVER]: { default: null, ':hover': 0.88 } },
+    opacity: { default: 1, [media.hover]: { default: null, ':hover': 0.88 } },
   },
   btnGhost: {
     backgroundColor: 'transparent',
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+      [media.hover]: { default: null, ':hover': colors.mutedForeground },
     },
     color: colors.foreground,
   },
@@ -375,7 +372,7 @@ const styles = stylex.create({
   principleTitle: {
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
-    letterSpacing: tracking.title,
+    letterSpacing: tracking.snug,
     lineHeight: lineHeight.tight,
     margin: 0,
   },

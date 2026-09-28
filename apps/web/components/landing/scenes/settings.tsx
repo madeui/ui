@@ -53,6 +53,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { space, fontSize, fontWeight, lineHeight, container, stroke, breakpoint } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
+import { tracking } from '@/components/landing/landing.stylex';
 import { Part } from './part';
 
 // Fixed, not `new Date()`: the scene is server-rendered and then hydrated,
@@ -294,7 +295,7 @@ const styles = stylex.create({
   title: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
     margin: 0,
   },

@@ -5,12 +5,10 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 
 import { CheckIcon, CopyIcon } from '@/components/landing/icons';
+import { media } from '@/components/landing/landing.stylex';
 import { font } from '@/components/site/site.stylex';
 import { duration, easing, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
-
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-const REDUCED = '@media (prefers-reduced-motion: reduce)' as const;
 
 /** How long the check mark stays after a copy. */
 const COPIED_MS = 1600;
@@ -60,7 +58,7 @@ const styles = stylex.create({
     backgroundColor: colors.muted,
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+      [media.hover]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
     borderStyle: 'solid',
@@ -77,7 +75,7 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: {
       default: 'transform, border-color',
-      [REDUCED]: 'border-color',
+      [media.reducedMotion]: 'border-color',
     },
     transitionTimingFunction: easing.out,
   },
@@ -106,7 +104,7 @@ const styles = stylex.create({
     transitionDuration: duration.fast,
     transitionProperty: {
       default: 'transform, opacity',
-      [REDUCED]: 'opacity',
+      [media.reducedMotion]: 'opacity',
     },
     transitionTimingFunction: easing.out,
   },

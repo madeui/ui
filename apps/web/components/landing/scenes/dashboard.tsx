@@ -67,6 +67,7 @@ import {
   SettingsIcon,
   UsersIcon,
 } from '@/components/landing/icons';
+import { tracking } from '@/components/landing/landing.stylex';
 import { Part } from './part';
 
 // The last bar is the Revenue stat above it, and the step up from the one
@@ -511,7 +512,7 @@ const styles = stylex.create({
     fontSize: fontSize.xl,
     fontVariantNumeric: 'tabular-nums',
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
   },
   grid: {

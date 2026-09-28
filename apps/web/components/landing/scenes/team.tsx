@@ -51,6 +51,7 @@ import { space, fontSize, fontWeight, lineHeight, stroke, breakpoint } from '@/l
 import { colors, radius } from '@/lib/tokens.stylex';
 
 import { MoreIcon, PlusIcon, SearchIcon } from '@/components/landing/icons';
+import { tracking } from '@/components/landing/landing.stylex';
 import { Part } from './part';
 
 const roles = [
@@ -264,7 +265,7 @@ const styles = stylex.create({
   title: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
     margin: 0,
   },

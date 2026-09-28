@@ -4,13 +4,11 @@ import * as React from 'react';
 
 import * as stylex from '@stylexjs/stylex';
 
-import { landing } from '@/components/landing/landing.stylex';
+import { landing, media } from '@/components/landing/landing.stylex';
 import { SearchIcon } from '@/components/landing/icons';
 import { Kbd } from '@/components/ui/kbd';
 import { breakpoint, duration, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
-
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
 
 const isApple = () => /mac|iphone|ipad|ipod/iu.test(navigator.platform);
 
@@ -50,14 +48,14 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     borderColor: {
       default: colors.border,
-      [HOVER]: { default: null, ':hover': colors.mutedForeground },
+      [media.hover]: { default: null, ':hover': colors.mutedForeground },
     },
     borderRadius: radius.full,
     borderStyle: 'solid',
     borderWidth: stroke.border,
     color: {
       default: colors.mutedForeground,
-      [HOVER]: { default: null, ':hover': colors.foreground },
+      [media.hover]: { default: null, ':hover': colors.foreground },
     },
     cursor: 'pointer',
     display: 'inline-flex',

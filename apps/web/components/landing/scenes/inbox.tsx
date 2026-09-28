@@ -33,6 +33,7 @@ import {
   StarIcon,
   TrashIcon,
 } from '@/components/landing/icons';
+import { media, tracking } from '@/components/landing/landing.stylex';
 import { Part } from './part';
 
 // The panel group lays itself out from its `orientation` prop, not from CSS,
@@ -434,8 +435,6 @@ export default function Inbox() {
   );
 }
 
-const HOVER = '@media (hover: hover) and (pointer: fine)' as const;
-
 const styles = stylex.create({
   // A mail client window: bordered like the dashboard, unlike the pages.
   screen: {
@@ -539,7 +538,7 @@ const styles = stylex.create({
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
     gap: space.s2,
-    letterSpacing: '-0.01em',
+    letterSpacing: tracking.snug,
     lineHeight: lineHeight.tight,
     margin: 0,
   },
@@ -563,7 +562,7 @@ const styles = stylex.create({
     alignItems: 'flex-start',
     backgroundColor: {
       default: 'transparent',
-      [HOVER]: { default: null, ':hover': colors.muted },
+      [media.hover]: { default: null, ':hover': colors.muted },
     },
     borderRadius: radius.md,
     borderStyle: 'none',
@@ -661,7 +660,7 @@ const styles = stylex.create({
   subject: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-    letterSpacing: '-0.02em',
+    letterSpacing: tracking.tight,
     lineHeight: lineHeight.tight,
     margin: 0,
     textWrap: 'balance',
