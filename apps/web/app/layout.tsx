@@ -40,8 +40,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body {...stylex.props(page)}>
         {children}
-        {/* Vercel Analytics: page views, and the feedback event (feedback-answers.tsx). */}
-        <Analytics />
+        {/* Vercel Analytics: page views, and the feedback event (feedback-answers.tsx). Production builds only. */}
+        {process.env.NODE_ENV === 'production' ? <Analytics /> : null}
       </body>
     </html>
   );
