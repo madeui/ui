@@ -60,3 +60,13 @@ export function resolveExample(examplePath: string, dir: string = EXAMPLES_DIR):
   if (!entry) return undefined;
   return { path: examplePath, file: entry.file, lang: entry.lang, source: fs.readFileSync(entry.file, 'utf8') };
 }
+
+/**
+ * Whether an Example's block hydrates when it nears the viewport instead of
+ * at load: the Examples that render the Chart component. Hydrating a chart
+ * (recharts) holds a phone's main thread for long, and a chart page shows
+ * many; every other Example is light and hydrates at load.
+ */
+export function hydratesWhenVisible(source: string): boolean {
+  return /from\s+['"]@\/components\/ui\/chart['"]/u.test(source);
+}

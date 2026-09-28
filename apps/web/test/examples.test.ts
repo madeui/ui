@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, test } from 'vitest';
 
-import { listExamples, resolveExample } from '../site/examples.ts';
+import { hydratesWhenVisible, listExamples, resolveExample } from '../site/examples.ts';
 
 const dir = path.join(import.meta.dirname, 'fixtures/examples');
 const raw = (file: string) => fs.readFileSync(path.join(dir, file), 'utf8');
@@ -36,5 +36,18 @@ describe('resolveExample', () => {
 describe('listExamples', () => {
   test('lists every example path, sorted', () => {
     expect(listExamples(dir)).toEqual(['button-demo', 'charts/bar-demo']);
+  });
+});
+
+describe('hydratesWhenVisible', () => {
+  test('an Example that renders the Chart component hydrates when it nears the viewport', () => {
+    const chart = `import { Bar } from 'recharts';\n\nimport {\n  ChartContainer,\n  type ChartConfig,\n} from '@/components/ui/chart';\n`;
+    expect(hydratesWhenVisible(chart)).toBe(true);
+    expect(hydratesWhenVisible(`import { ChartContainer } from "@/components/ui/chart";`)).toBe(true);
+  });
+
+  test('every other Example hydrates at load', () => {
+    expect(hydratesWhenVisible(raw('button-demo.tsx'))).toBe(false);
+    expect(hydratesWhenVisible(`import { Card } from '@/components/ui/card';\n// sales chart below`)).toBe(false);
   });
 });

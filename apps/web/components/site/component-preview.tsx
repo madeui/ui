@@ -2,11 +2,12 @@ import * as stylex from '@stylexjs/stylex';
 import { highlight } from 'fumadocs-core/highlight';
 
 import { CodeBlock } from '@/components/site/code-block';
+import { HydrateWhenVisible } from '@/components/site/hydrate-when-visible';
 import { docs } from '@/components/site/site.stylex';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
-import { resolveExample } from '@/site/examples';
+import { hydratesWhenVisible, resolveExample } from '@/site/examples';
 import { Example } from '@/site/examples.generated';
 import { codeThemes } from '@/site/shiki';
 
@@ -33,7 +34,7 @@ export async function ComponentPreview({ path }: { path: string }) {
     components: { pre: (props) => <CodeBlock {...props} flush /> },
   });
 
-  return (
+  const block = (
     <Tabs defaultValue="preview" data-example={path} style={styles.root}>
       <TabsList variant="line" style={styles.list}>
         <TabsTrigger value="preview" style={styles.trigger}>
@@ -53,6 +54,10 @@ export async function ComponentPreview({ path }: { path: string }) {
       </TabsContent>
     </Tabs>
   );
+  // A heavy Example's whole block hydrates when it nears the viewport; its
+  // server HTML shows until then. The boundary sits above the Tabs so their
+  // own updates at load can't reach it.
+  return hydratesWhenVisible(example.source) ? <HydrateWhenVisible>{block}</HydrateWhenVisible> : block;
 }
 
 const styles = stylex.create({
