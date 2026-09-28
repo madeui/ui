@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 28" width="113" height="32">
   <!-- Header lockup: glyph + outlined 'madeui' (Geist 700 paths —
-       device-independent). Inlined by Blume so colors follow the theme.
+       device-independent). Drawn in currentColor so it follows the theme
+       when inlined.
        The glyph is fitted by its true bounding box, so it fills the
        full 28-unit cell height rather than sitting inside padding. -->
   <g transform="scale(0.47417) translate(-6, 1.05)">
