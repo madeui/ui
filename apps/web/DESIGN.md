@@ -156,7 +156,7 @@ Every color in the system is an achromatic oklch gray (chroma 0) except the sing
 
 ## Typography
 
-**Display Font:** Geist (with `ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` fallback), loaded from Google Fonts and set as `font-family` on `<html>` by the landing shell (`pages/index.astro`). Registry components carry no font of their own, so every component inside the scenes, portaled popups included, inherits it; outside the landing they inherit whatever the host page sets (docs previews, consumer apps).
+**Display Font:** Geist (with `ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` fallback), loaded with `next/font` and set as `font-family` on `<html>` by the root layout (`app/layout.tsx`). Registry components carry no font of their own, so every component inside the scenes, portaled popups included, inherits it; outside the landing they inherit whatever the host page sets (docs previews, consumer apps).
 **Body Font:** Geist as well, from the same `<html>` rule; sizes come from the `fontSize` scale (xs–xl) and the H1 is the only element above it.
 **Label/Mono Font:** `ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace`, used only for the CLI install chip.
 

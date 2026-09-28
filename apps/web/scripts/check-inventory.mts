@@ -60,7 +60,7 @@ function compare(label: string, actual: string[], expected: string[]) {
 
 // Every .mdx under the content root is one page, reached at its path
 // without the extension (a folder's index.mdx at the folder).
-const contentRoot = path.resolve('../docs/content');
+const contentRoot = path.resolve('content');
 const files = fs
   .readdirSync(contentRoot, { recursive: true, encoding: 'utf8' })
   .filter((file) => file.endsWith('.mdx'))

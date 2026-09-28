@@ -36,7 +36,7 @@ fine; never frame shadcn as the benchmark in public text).
 
 - Terminal: `npx @madeui/cli init` wires the StyleX build and copies tokens;
   `add` copies components; `npx shadcn@latest add @madeui/<name>` also works.
-- Docs site (Blume, madeui.com): per-component pages with live previews,
+- Docs site (Next.js, madeui.com): per-component pages with live previews,
   one focused example per feature, Base UI API links, changelog, search (⌘K),
   llms.txt for agents.
 - Codebase: `components/ui/*.tsx` plus `lib/tokens.stylex.ts`,
@@ -50,7 +50,7 @@ fine; never frame shadcn as the benchmark in public text).
 - Every component exposes `variant`, `size`, and a `style` prop merged last.
 - Dark mode lives in the tokens (`light-dark()` pairs, `color-scheme` on
   `<html>`); brand themes are static `stylex.createTheme` objects.
-- Landing and docs share theme state via the `blume-theme` localStorage key.
+- Landing and docs share theme state via the `theme` localStorage key.
 - Styling doctrine is binding: tokens over literals, variants over escape
   hatches, no raw colors or magic numbers in components or examples.
 - Version 1.0.0 is the first release (2026).
@@ -62,7 +62,7 @@ fine; never frame shadcn as the benchmark in public text).
   other hue accent.
 - Logo: a 2x2 arrangement of rounded squares, three solid and one dashed,
   tilted slot snapping into place; wordmark is Geist 700, outlined
-  (`apps/docs/public/brand/*.svg`, `apps/docs/landing/brand.ts`).
+  (`apps/web/assets/brand/*.svg`, `apps/web/components/site/lockup.tsx`).
 - Typeface on marketing surfaces: Geist.
 - Repo and all public text in English. Never phrase shadcn as a benchmark in
   public-facing text.
@@ -73,7 +73,7 @@ fine; never frame shadcn as the benchmark in public text).
 
 - The components themselves and 215 runnable examples in
   `packages/registry/examples/` are the proof; the landing shows them live.
-- Changelog v1.0.0 (`apps/docs/content/changelog/v1-0-0.mdx`).
+- Changelog v1.0.0 (`apps/web/content/changelog/v1-0-0.mdx`).
 - Absent, do not fabricate: users, customers, testimonials, download counts,
   benchmarks, pricing.
 

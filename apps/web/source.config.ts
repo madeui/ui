@@ -5,10 +5,10 @@ import { z } from 'zod';
 
 import { codeThemes, transformerLanguage } from './site/shiki.ts';
 
-// Content stays in apps/docs/content until the cutover moves it; paths are
+// Content lives in content/ (docs pages, changelog entries); paths are
 // relative to this app (next dev/build and fumadocs-mdx run from apps/web).
 export const docs = defineDocs({
-  dir: '../docs/content/docs',
+  dir: 'content/docs',
   docs: {
     schema: frontmatterSchema.extend({
       sidebar: z
@@ -23,7 +23,7 @@ export const docs = defineDocs({
 
 export const changelog = defineCollections({
   type: 'doc',
-  dir: '../docs/content/changelog',
+  dir: 'content/changelog',
   schema: frontmatterSchema.extend({
     type: z.literal('changelog'),
     date: z.coerce.date(),

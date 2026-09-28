@@ -1,6 +1,6 @@
 import { svgFiles, svgResponse } from '@/site/brand-assets';
 
-// /brand/{glyph,lockup,wordmark}.svg, served from apps/docs/public/brand
+// /brand/{glyph,lockup,wordmark}.svg, served from assets/brand
 // (site/brand-assets.ts). Any other name is a 404.
 
 export const dynamic = 'force-static';

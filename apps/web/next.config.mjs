@@ -41,7 +41,7 @@ const config = {
   // its own instead.
   typescript: { ignoreBuildErrors: true },
   turbopack: {
-    // The registry source and the docs content live outside this app.
+    // The registry source lives outside this app.
     root: path.resolve(root, '../..'),
   },
   async rewrites() {

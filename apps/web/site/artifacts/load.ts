@@ -11,8 +11,8 @@ import type { ResolveExample } from './markdown.ts';
 // content page's raw .mdx and look up Example sources on disk. The route
 // handlers call these; the generators themselves only see strings.
 
-/** apps/docs/content, from the app root (Next runs from apps/web). */
-const CONTENT_DIR = path.resolve(process.cwd(), '../docs/content');
+/** content/, from the app root (Next runs from apps/web). */
+const CONTENT_DIR = path.resolve(process.cwd(), 'content');
 
 /** A content page's source file, verbatim. */
 export const readSource = (page: ContentPage): string => fs.readFileSync(path.join(CONTENT_DIR, page.file), 'utf8');

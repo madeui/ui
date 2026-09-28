@@ -1,7 +1,7 @@
 import type { PageSource } from '../../site/artifacts/llms.ts';
 import type { ResolveExample } from '../../site/artifacts/markdown.ts';
 
-// A small site in the shape of apps/docs/content: a guide with a sidebar
+// A small site in the shape of apps/web/content: a guide with a sidebar
 // order, a component page with an Example and a Callout, and two changelog
 // entries (listed oldest first, so ordering has to come from the generators).
 

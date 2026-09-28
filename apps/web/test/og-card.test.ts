@@ -11,7 +11,7 @@ import { ogPalette } from '../components/site/og-palette.ts';
 // the glyph at scale on the right, both in ink, geometry untouched.
 
 const brand = (file: string) =>
-  fs.readFileSync(path.resolve(import.meta.dirname, '../../docs/public/brand', file), 'utf8');
+  fs.readFileSync(path.resolve(import.meta.dirname, '../assets/brand', file), 'utf8');
 
 /** Every <img> source in the card, SVG data URIs decoded. */
 function imageSources(node: ReactNode): string[] {

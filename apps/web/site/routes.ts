@@ -2,7 +2,7 @@
 // source for the sidebar, prev/next, llms.txt, the sitemap, OG images and
 // search. Pure: content in, routes out (site/content.ts feeds the real pages).
 
-/** One content page (an .mdx file under apps/docs/content). */
+/** One content page (an .mdx file under apps/web/content). */
 export interface ContentPage {
   /** Clean URL path: `/docs/components/button`. */
   route: string;
