@@ -52,10 +52,10 @@ jobs:
       # Unit tests (route list, Example resolver, text-artifact generators):
       # pure functions, no build needed, so they fail fast.
       - run: pnpm --filter @madeui/web test
-      - run: pnpm build:registry
-      # prebuild asserts the route inventory first. next build skips its own
-      # type-check (it runs out of memory over the registry + MDX graph);
-      # tsc runs on its own below.
+      # prebuild generates the registry JSON (pnpm build:registry) and asserts
+      # the route inventory first. next build skips its own type-check (it
+      # runs out of memory over the registry + MDX graph); tsc runs on its own
+      # below.
       - run: pnpm --filter @madeui/web build
       # /docs JS ceiling: a static Example import puts every Example on every
       # docs page, and this fails.

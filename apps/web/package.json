@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "node scripts/copy-registry.mjs && pnpm example-map",
     "dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/example-map.mts --watch next dev",
-    "prebuild": "node scripts/copy-registry.mjs && pnpm example-map && pnpm check:inventory",
+    "prebuild": "pnpm --workspace-root build:registry && node scripts/copy-registry.mjs && pnpm example-map && pnpm check:inventory",
     "build": "next build",
     "start": "next start",
     "check:inventory": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-inventory.mts",
