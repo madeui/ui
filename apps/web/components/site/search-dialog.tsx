@@ -305,7 +305,7 @@ const styles = stylex.create({
     borderRadius: radius.full,
   },
   count: {
-    opacity: 0.6,
+    opacity: searchLayout.countOpacity,
   },
   list: {
     flexGrow: 1,
