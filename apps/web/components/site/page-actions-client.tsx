@@ -4,6 +4,7 @@ import { useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import { useCopied } from '@/components/site/use-copied';
 import { site } from '@/site/artifacts/site';
 
 // The interactive parts of the page actions. page-actions.tsx renders the
@@ -29,8 +30,7 @@ export function ScrollToTop({ sx, children }: { sx: Props; children: ReactNode }
 /** Copies the page's Markdown mirror; the label says "Copied!" for a moment, only when the copy worked. */
 export function CopyMarkdown({ sx, children }: { sx: Props; children: ReactNode }) {
   const md = useMarkdownPath();
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [copied, flash] = useCopied();
   const copy = async () => {
     try {
       const response = await fetch(md);
@@ -40,9 +40,7 @@ export function CopyMarkdown({ sx, children }: { sx: Props; children: ReactNode 
       console.error('Copy as Markdown failed', error);
       return;
     }
-    setCopied(true);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setCopied(false), 1500);
+    flash();
   };
   return (
     <button type="button" onClick={copy} {...sx}>

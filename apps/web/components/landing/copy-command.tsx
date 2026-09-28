@@ -1,18 +1,14 @@
 'use client';
 
-import * as React from 'react';
-
 import * as stylex from '@stylexjs/stylex';
 
 import { CheckIcon, CopyIcon } from '@/components/landing/icons';
 import { media } from '@/components/landing/landing.stylex';
 import { font } from '@/components/site/site.stylex';
+import { useCopied } from '@/components/site/use-copied';
 import { visuallyHidden } from '@/components/site/visually-hidden';
 import { duration, easing, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
-
-/** How long the check mark stays after a copy. */
-const COPIED_MS = 1600;
 
 /**
  * One copyable command. The copy button is the whole chip: nothing else on
@@ -20,10 +16,7 @@ const COPIED_MS = 1600;
  * version of the same action.
  */
 export function CopyCommand({ command }: { command: string }) {
-  const [copied, setCopied] = React.useState(false);
-  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const [copied, flash] = useCopied();
 
   const copy = async () => {
     try {
@@ -31,9 +24,7 @@ export function CopyCommand({ command }: { command: string }) {
     } catch {
       return; // no clipboard (insecure context): leave the chip untouched
     }
-    setCopied(true);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+    flash();
   };
 
   return (

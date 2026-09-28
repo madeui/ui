@@ -5,11 +5,9 @@ import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Check, Copy } from 'lucide-react';
 
+import { useCopied } from '@/components/site/use-copied';
 import { Button } from '@/components/ui/button';
 import { icon } from '@/lib/stylex-utils';
-
-/** How long the check icon stays after a copy. */
-const COPIED_MS = 2000;
 
 /**
  * Copies the code of the `<pre>` in its code block. It reads the rendered
@@ -17,17 +15,13 @@ const COPIED_MS = 2000;
  * second time into the page payload; the text is the source, byte for byte.
  */
 export function CopyButton({ style }: { style?: stylex.StyleXStyles }) {
-  const [copied, setCopied] = React.useState(false);
-  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const [copied, flash] = useCopied();
 
   async function copy(event: React.MouseEvent<HTMLButtonElement>) {
     const code = event.currentTarget.parentElement?.querySelector('pre')?.textContent;
     if (code == null) return;
     await navigator.clipboard.writeText(code);
-    setCopied(true);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+    flash();
   }
 
   return (
