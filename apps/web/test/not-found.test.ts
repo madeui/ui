@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { closestRoutes } from '../site/not-found.ts';
+import { closestRoutes, suggestions } from '../site/not-found.ts';
 
 // A slice of the real route list: the guides, a few components with short,
 // similar names, and the changelog.
@@ -16,6 +16,8 @@ const routes = [
   { route: '/docs/components/button-group', title: 'Button Group' },
   { route: '/docs/components/meter', title: 'Meter' },
   { route: '/docs/components/menubar', title: 'Menubar' },
+  { route: '/docs/components/table', title: 'Table' },
+  { route: '/docs/components/tabs', title: 'Tabs' },
   { route: '/changelog', title: 'Changelog' },
   { route: '/changelog/v1-0-0', title: 'v1.0.0' },
 ];
@@ -46,5 +48,25 @@ describe('closestRoutes', () => {
   test('a page address with a file extension or in capitals finds the page', () => {
     expect(found('/docs/installation.html')).toEqual(['/docs/installation']);
     expect(found('/docs/components/Button.md')[0]).toBe('/docs/components/button');
+  });
+});
+
+describe('suggestions', () => {
+  const routesOf = (refs: { route: string }[]) => refs.map((ref) => ref.route);
+
+  test('the best match is the "Did you mean"; it is not listed again among the others', () => {
+    const { best, others } = suggestions('/docs/componets/buton', routes);
+    expect(best?.route).toBe('/docs/components/button');
+    expect(routesOf(others)).toEqual([]);
+  });
+
+  test('other close matches follow the best one', () => {
+    const { best, others } = suggestions('/docs/components/tabl', routes);
+    expect(best?.route).toBe('/docs/components/table');
+    expect(routesOf(others)).toEqual(['/docs/components/tabs']);
+  });
+
+  test('nothing close: no best match and no others', () => {
+    expect(suggestions('/qzxv-wmpt', routes)).toEqual({ best: undefined, others: [] });
   });
 });

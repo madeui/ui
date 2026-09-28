@@ -15,7 +15,7 @@ import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { container, duration, fontSize, fontWeight, lineHeight, space, stroke } from '@/lib/constants.stylex';
 import { icon } from '@/lib/stylex-utils';
 import { colors, radius, shadow } from '@/lib/tokens.stylex';
-import { closestRoutes, type RouteRef } from '@/site/not-found';
+import { suggestions, type RouteRef } from '@/site/not-found';
 
 // The 404 is prerendered once for every missing address, so only the browser
 // knows which one was asked for. The server snapshot is null: the static HTML
@@ -35,13 +35,13 @@ const unknownPath = () => null;
 
 /**
  * The 404's recovery: the missing address reported like a compiler error,
- * then the closest pages ("Did you mean"), or, when nothing is close, the
- * search field and the popular pages. Home and the docs close it.
+ * then the closest page ("Did you mean") and any other close ones, or, when
+ * nothing is close, the search field and the popular pages. Home and the
+ * docs close it.
  */
 export function NotFoundRecovery({ routes, popular }: { routes: RouteRef[]; popular: RouteRef[] }) {
   const path = useSyncExternalStore(subscribe, requestedPath, unknownPath);
-  const matches = path === null ? [] : closestRoutes(path, routes);
-  const best = matches[0];
+  const { best, others } = path === null ? { best: undefined, others: [] } : suggestions(path, routes);
 
   return (
     <>
@@ -71,13 +71,13 @@ export function NotFoundRecovery({ routes, popular }: { routes: RouteRef[]; popu
         </pre>
       </figure>
 
-      {matches.length > 0 ? (
+      {others.length > 0 ? (
         <section aria-labelledby="closest" {...stylex.props(styles.section)}>
           <h2 id="closest" {...stylex.props(styles.h2)}>
-            Closest matches
+            Other close matches
           </h2>
           <ul {...stylex.props(styles.list)}>
-            {matches.map((ref) => (
+            {others.map((ref) => (
               <li key={ref.route}>
                 <Item variant="outline" render={<Link href={ref.route} />} style={styles.item}>
                   <ItemContent>
@@ -92,7 +92,7 @@ export function NotFoundRecovery({ routes, popular }: { routes: RouteRef[]; popu
             ))}
           </ul>
         </section>
-      ) : path === null ? null : (
+      ) : path === null || best ? null : (
         <section aria-labelledby="popular" {...stylex.props(styles.section)}>
           <SearchField />
           <h2 id="popular" {...stylex.props(styles.h2, styles.popularTitle)}>

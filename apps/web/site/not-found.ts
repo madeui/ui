@@ -47,3 +47,9 @@ export function closestRoutes(path: string, routes: RouteRef[], count = 3): Rout
     .slice(0, count)
     .map((entry) => entry.ref);
 }
+
+/** What the 404 offers: the best match as "Did you mean", then the other close matches (never the best one again). */
+export function suggestions(path: string, routes: RouteRef[]): { best: RouteRef | undefined; others: RouteRef[] } {
+  const [best, ...others] = closestRoutes(path, routes);
+  return { best, others };
+}

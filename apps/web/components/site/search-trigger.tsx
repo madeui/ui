@@ -18,13 +18,7 @@ const SearchDialog = dynamic(() => import('@/components/site/search-dialog').the
   ssr: false,
 });
 
-/**
- * The 404's recovery (not-found-recovery.tsx), loaded the same way: its own
- * chunk, fetched only where a 404 renders it. It is exported from here, a
- * module every page already loads, because the root not-found is part of
- * every page's tree: a client module of its own would put a copy of the
- * header's components on every page.
- */
+// The 404's recovery, lazy like the dialog. It lives here on purpose: the root not-found is in every page's tree, and a client module of its own added ~13 KB to every /docs page.
 export const NotFoundRecovery = dynamic(() => import('@/components/site/not-found-recovery').then((m) => m.NotFoundRecovery));
 
 const isField = (target: EventTarget | null) =>
