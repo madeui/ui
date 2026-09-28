@@ -1,7 +1,6 @@
 node_modules/
 dist/
 .next/
-.blume/
 .turbo/
 *.log
 .DS_Store
@@ -15,7 +14,6 @@ dist/
 # Internal working docs — local only
 ROADMAP.md
 CLAUDE.local.md
-.blume-verify/
 
 # design-sync (claude.ai/design) — local only, never committed:
 # .design-sync/ holds a personal claude.ai/design projectId + sync artifacts.

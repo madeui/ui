@@ -8,14 +8,12 @@ the end are what you will come back to.
 
 - Node 22.18 or newer and [pnpm](https://pnpm.io).
 - `pnpm install` at the root.
-- `pnpm docs:dev` runs the docs site with live component previews.
-- `pnpm playground:dev` runs the Next.js smoke-test app.
+- `pnpm web:dev` runs the docs site with live component previews.
 
 ```
 packages/registry/   component sources, tokens, examples, registry build script
 packages/cli/        @madeui/cli — init / add / list
-apps/docs/           docs site; also serves the registry at /r/*.json
-apps/playground/     Next.js smoke-test app (manual copy of registry sources)
+apps/web/            docs site (Next.js); also serves the registry at /r/*.json
 ```
 
 ## How things ship
@@ -25,7 +23,7 @@ start.
 
 | Track | What it covers | How it reaches users | Versioned? |
 | --- | --- | --- | --- |
-| Registry + docs | `packages/registry/`, `apps/docs/` | Every merge to `main` deploys the docs site, and the registry JSON with it. Live within minutes. | No. `main` is what users get. |
+| Registry + docs | `packages/registry/`, `apps/web/` | Every merge to `main` deploys the docs site, and the registry JSON with it. Live within minutes. | No. `main` is what users get. |
 | CLI | `packages/cli/` | Published to npm by the release workflow, only when a changeset says so. | Yes, `@madeui/cli@x.y.z`. |
 
 Consequence for the registry track: **only finished work merges to `main`.**
@@ -41,23 +39,22 @@ There is no release gate after merge. Keep unfinished components on a branch.
 3. Source lives in `packages/registry/src/ui/<name>.tsx`. Shared helpers in
    `packages/registry/src/lib/`.
 4. Examples: one file per feature or variant in `packages/registry/examples/`.
-   Docs page in `apps/docs/content/docs/components/<name>.mdx`, one H2 per
+   Docs page in `apps/web/content/docs/components/<name>.mdx`, one H2 per
    example. Composition tree for multi-part components, API table only for
    props we add, Base UI links for the rest.
 5. Regenerate the registry JSON: `pnpm build:registry`. Commit the output
    under `packages/registry/public/r/`; CI fails if it drifts from source.
-6. Sync the playground so it smoke-tests the same code:
-   `cp packages/registry/src/ui/*.tsx apps/playground/components/ui/`
-   (same for any changed `src/lib/` file), then
-   `pnpm playground:build`.
-7. Open a PR. CI runs the registry diff check, playground typecheck + build,
-   and the docs build. The Vercel preview link on the PR shows the docs page
-   and the `/r/<name>.json` endpoint before anything is live.
+6. Build the site: `pnpm web:build`. It compiles the registry sources
+   under the StyleX setup `init` writes, so it smoke-tests the component
+   too (CI also type-checks them).
+7. Open a PR. CI runs the registry diff check and the site's tests,
+   typecheck, build and JS budget. The Vercel preview link on the PR shows
+   the docs page and the `/r/<name>.json` endpoint before anything is live.
 8. Merge. It is live.
 
 ## Docs-only changes
 
-Same as above without steps 3 to 6. Edit under `apps/docs/`, check the
+Same as above without steps 3 and 5. Edit under `apps/web/`, check the
 preview, merge.
 
 ## Changing the CLI
@@ -103,7 +100,7 @@ merge; the CLI side ships with the next CLI release.
 ## Docs changelog
 
 The changelog on the docs site is written by hand, not generated. Entries
-live in `apps/docs/content/changelog/<version>.mdx` with this frontmatter:
+live in `apps/web/content/changelog/<version>.mdx` with this frontmatter:
 
 ```md
 ---
@@ -167,8 +164,8 @@ Releases page.
 
 ### PR checklist
 
-- [ ] Registry track: JSON regenerated, playground synced and building,
-      docs page with one example per feature, preview checked.
+- [ ] Registry track: JSON regenerated, apps/web building, docs page with
+      one example per feature, preview checked.
 - [ ] CLI track: changeset added with a user-facing note.
 - [ ] No hardcoded colors, spacing, type, z-index, or durations in styles.
 - [ ] Nothing unfinished is included. It goes live on merge.
