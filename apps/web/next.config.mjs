@@ -2,6 +2,8 @@ import path from 'node:path';
 
 import { createMDX } from 'fumadocs-mdx/next';
 
+import { ACCEPTS_MARKDOWN } from './site/negotiation.mjs';
+
 // ESM: createMDX() needs it. babel.config.js stays CommonJS, as init writes it.
 const root = process.cwd();
 
@@ -14,12 +16,10 @@ const showcaseBuild = process.env.SHOWCASE === '1';
 const showcase = showcaseBuild || process.env.NODE_ENV !== 'production';
 
 // Markdown content negotiation: a page URL requested with an `Accept` header
-// that lists `text/markdown` (or `text/x-markdown`) gets the page's Markdown
-// mirror at the same address. The value is matched against the whole header:
-// `(.*,)?` absorbs earlier list entries, and the media type must end at `;`,
-// `,` or the end of the header. q-values are not compared; browsers never
-// send `text/markdown`, so page requests from browsers are unaffected.
-const acceptsMarkdown = [{ type: 'header', key: 'accept', value: '(.*,)?\\s*text/(x-)?markdown(\\s*[;,].*)?' }];
+// that lists `text/markdown` (or `text/x-markdown`, without q=0) gets the
+// page's Markdown mirror at the same address. The pattern and its rules:
+// site/negotiation.mjs.
+const acceptsMarkdown = [{ type: 'header', key: 'accept', value: ACCEPTS_MARKDOWN }];
 // The page URLs that have a mirror, without the landing (its mirror is
 // `/index.md`): `/docs`, every docs page and every changelog entry. The
 // changelog index has no mirror and always serves HTML. No dots, so file
