@@ -2,7 +2,7 @@
 // prerendered HTML loads (script tags, preloads and the chunks its RSC data
 // names, which include the Examples it renders). Run after `next build`.
 //
-//   node scripts/check-js-budget.mts /docs=152 /docs/components/button
+//   node scripts/check-js-budget.mts /docs=153 /docs/components/button
 //
 // `route=KB` fails when the page's JS exceeds KB (KiB of brotli, quality 11);
 // a bare route is only reported. The /docs ceiling catches a static Example
