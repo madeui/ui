@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { landing, media } from '@/components/landing/landing.stylex';
 import { SearchIcon } from '@/components/landing/icons';
+import { openSearch } from '@/components/site/search-state';
 import { useApplePlatform } from '@/components/site/use-apple-platform';
 import { Kbd } from '@/components/ui/kbd';
 import { breakpoint, duration, fontSize, space, stroke } from '@/lib/constants.stylex';
@@ -11,19 +12,14 @@ import { colors, radius } from '@/lib/tokens.stylex';
 
 /**
  * The landing header's search field. Search opens on ⌘K / Ctrl K anywhere
- * on the site; this is the pointer path, and it sends the same shortcut.
+ * on the site; this is the pointer path. The dialog itself is hosted by
+ * SearchShortcuts (site/search-trigger.tsx), which the landing renders too.
  */
 export function SearchTrigger() {
   const apple = useApplePlatform();
 
-  const open = () => {
-    document.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'k', metaKey: apple, ctrlKey: !apple, bubbles: true }),
-    );
-  };
-
   return (
-    <button type="button" onClick={open} aria-label="Search docs" {...stylex.props(styles.search)}>
+    <button type="button" onClick={openSearch} aria-label="Search docs" {...stylex.props(styles.search)}>
       <SearchIcon size={16} />
       <span {...stylex.props(styles.label)}>Search docs…</span>
       <span {...stylex.props(styles.kbd)}>
