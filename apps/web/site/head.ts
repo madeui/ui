@@ -155,11 +155,13 @@ export function landingJsonLd() {
   } as const;
 }
 
-/** The 404 page: never indexed; a text-only summary card. */
+/**
+ * The 404 page: a text-only summary card. Next.js adds the noindex robots tag
+ * to every 404 response itself; declaring it here would print it twice.
+ */
 export const notFoundMetadata: Metadata = {
   title: { absolute: 'Page not found' },
   description: site.description,
-  robots: { index: false },
   openGraph: { type: 'website', siteName: site.name, title: 'Page not found', description: site.description },
   twitter: { card: 'summary', title: 'Page not found', description: site.description },
 };

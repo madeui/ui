@@ -109,11 +109,10 @@ describe('landing head', () => {
   });
 });
 
-test('404: noindex, a summary card, no canonical and no image', () => {
+test('404: a summary card, no canonical, no image and no robots of its own (Next.js adds noindex)', () => {
   expect(notFoundMetadata).toEqual({
     title: { absolute: 'Page not found' },
     description: SITE_DESCRIPTION,
-    robots: { index: false },
     openGraph: { type: 'website', siteName: 'madeui', title: 'Page not found', description: SITE_DESCRIPTION },
     twitter: { card: 'summary', title: 'Page not found', description: SITE_DESCRIPTION },
   });
