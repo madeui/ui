@@ -6,21 +6,19 @@
 // Layout: the lockup and the page's address on top; the title (and a line of
 // description) on the left; the foot carries the command that installs the
 // page's component (or the entry's date). On the right, the brand glyph at
-// scale: three placed squares in the muted tone and the dashed piece that
-// snaps into its slot in ink, over the landing's dot grid.
+// scale, drawn from its file (brand/glyph.svg) in ink like the lockup, over
+// the landing's dot grid.
 
 import type { OgCard } from '@/site/og';
+import { OG_FONT } from '@/site/og-fonts';
 
 import { ogPalette as c } from './og-palette';
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
-/** Card fonts: family names the style objects below refer to. */
-export const OG_FONT = { sans: 'Geist', mono: 'Geist Mono' } as const;
-
 const EDGE = 72;
 const TEXT_WIDTH = 660;
-const MOTIF = 340;
+const MOTIF = 280;
 /** Display tracking, in em: the docs title's (prose.tracking); tighter closes up figures ("v1.1.0"). */
 const TRACKING = -0.02;
 
@@ -37,17 +35,6 @@ const svgDataUri = (svg: string) => `data:image/svg+xml;base64,${Buffer.from(svg
 
 const clip = (text: string, max: number) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
 
-/** The glyph's geometry (brand/glyph.svg), drawn large: placed squares muted, the snapping piece in ink. */
-function glyphMotif(size: number) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 -1.05 59.05 59.05" width="${size}" height="${size}">
-<rect x="6" y="6" width="24" height="24" rx="7" fill="${c.muted}" stroke="${c.border}" stroke-width="0.25"/>
-<rect x="6" y="34" width="24" height="24" rx="7" fill="${c.muted}" stroke="${c.border}" stroke-width="0.25"/>
-<rect x="34" y="34" width="24" height="24" rx="7" fill="${c.muted}" stroke="${c.border}" stroke-width="0.25"/>
-<rect x="38" y="2" width="24" height="24" rx="7" fill="none" stroke="${c.foreground}" stroke-width="1.5" stroke-dasharray="3 2.5" stroke-linecap="round" transform="rotate(8 50 14)"/>
-</svg>`;
-  return svgDataUri(svg);
-}
-
 /** The landing's dot grid, fading out from behind the glyph. */
 function dotGrid() {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_SIZE.width}" height="${OG_SIZE.height}">
@@ -61,10 +48,11 @@ function dotGrid() {
   return svgDataUri(svg);
 }
 
-/** The lockup file with its currentColor set to ink. */
+/** A brand SVG file with its currentColor set to ink. */
 const inked = (svg: string) => svgDataUri(svg.replaceAll('currentColor', c.foreground));
 
-export function OgCardImage({ card, lockup }: { card: OgCard; lockup: string }) {
+/** The brand files, as source: the header lockup and the glyph. */
+export function OgCardImage({ card, lockup, glyph }: { card: OgCard; lockup: string; glyph: string }) {
   const size = titleSize(card.title);
   const title = clip(card.title, 80);
   return (
@@ -80,7 +68,7 @@ export function OgCardImage({ card, lockup }: { card: OgCard; lockup: string }) 
       }}
     >
       <img src={dotGrid()} width={OG_SIZE.width} height={OG_SIZE.height} style={{ position: 'absolute', top: 0, left: 0 }} alt="" />
-      <img src={glyphMotif(MOTIF)} width={MOTIF} height={MOTIF} style={{ position: 'absolute', right: EDGE - 8, top: (OG_SIZE.height - MOTIF) / 2 }} alt="" />
+      <img src={inked(glyph)} width={MOTIF} height={MOTIF} style={{ position: 'absolute', right: EDGE, top: (OG_SIZE.height - MOTIF) / 2 }} alt="" />
       <div
         style={{
           display: 'flex',
