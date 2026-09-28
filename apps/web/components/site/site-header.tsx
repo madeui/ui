@@ -8,6 +8,7 @@ import { MobileNav } from '@/components/site/mobile-nav';
 import { SearchTrigger } from '@/components/site/search-trigger';
 import { effects, font, layer, layout } from '@/components/site/site.stylex';
 import { ThemeToggle } from '@/components/site/theme-toggle';
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { breakpoint, container, space, stroke } from '@/lib/constants.stylex';
 import { icon } from '@/lib/stylex-utils';
 import { colors, radius } from '@/lib/tokens.stylex';
@@ -20,7 +21,7 @@ import type { SidebarGroup } from '@/site/nav';
 export function SiteHeader({ nav }: { nav?: { label: string; groups: SidebarGroup[] } }) {
   return (
     <>
-      <a href="#content" {...stylex.props(styles.skip)}>
+      <a href="#content" {...stylex.props(styles.skip, visuallyHidden.untilFocus)}>
         Skip to content
       </a>
       <header {...stylex.props(styles.header)}>
@@ -57,8 +58,6 @@ const styles = stylex.create({
     paddingInline: space.s3,
     position: 'fixed',
     top: space.s3,
-    // Visually hidden until it takes keyboard focus.
-    clipPath: { default: 'inset(50%)', ':focus-visible': 'none' },
     zIndex: layer.sticky,
   },
   header: {

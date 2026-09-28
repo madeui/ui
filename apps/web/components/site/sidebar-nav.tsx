@@ -6,6 +6,7 @@ import * as stylex from '@stylexjs/stylex';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { duration, fontSize, fontWeight, lineHeight, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 import type { SidebarGroup } from '@/site/nav';
@@ -41,7 +42,7 @@ export function SidebarNav({
                   {link.badge === undefined ? null : (
                     <>
                       <span aria-hidden {...stylex.props(styles.dot)} />
-                      <span {...stylex.props(styles.srOnly)}>{link.badge}</span>
+                      <span {...stylex.props(visuallyHidden.always)}>{link.badge}</span>
                     </>
                   )}
                 </SidebarLink>
@@ -152,13 +153,5 @@ const styles = stylex.create({
     flexShrink: 0,
     height: space.s15,
     width: space.s15,
-  },
-  srOnly: {
-    clip: 'rect(0 0 0 0)',
-    height: space.px,
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: space.px,
   },
 });

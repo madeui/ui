@@ -7,6 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 import { CheckIcon, CopyIcon } from '@/components/landing/icons';
 import { media } from '@/components/landing/landing.stylex';
 import { font } from '@/components/site/site.stylex';
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { duration, easing, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
 
@@ -45,7 +46,7 @@ export function CopyCommand({ command }: { command: string }) {
         <CopyIcon size={16} {...stylex.props(styles.icon, copied && styles.iconOut)} />
         <CheckIcon size={16} {...stylex.props(styles.icon, styles.check, copied && styles.iconIn)} />
       </span>
-      <span role="status" aria-live="polite" {...stylex.props(styles.srOnly)}>
+      <span role="status" aria-live="polite" {...stylex.props(visuallyHidden.always)}>
         {copied ? 'Copied' : ''}
       </span>
     </button>
@@ -120,14 +121,5 @@ const styles = stylex.create({
   iconIn: {
     opacity: 1,
     transform: 'scale(1)',
-  },
-  srOnly: {
-    borderWidth: 0,
-    clipPath: 'inset(50%)',
-    height: space.px,
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: space.px,
   },
 });

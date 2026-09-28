@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 
 import { HeaderTabs } from '@/components/site/header-tabs';
 import { SidebarNav } from '@/components/site/sidebar-nav';
+import { visuallyHidden } from '@/components/site/visually-hidden';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { space } from '@/lib/constants.stylex';
@@ -25,7 +26,7 @@ export function MobileDrawer({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left">
-        <SheetTitle style={styles.srOnly}>Navigation</SheetTitle>
+        <SheetTitle style={visuallyHidden.always}>Navigation</SheetTitle>
         <ScrollArea style={styles.scroll}>
           <div {...stylex.props(styles.inner)}>
             <HeaderTabs stacked onNavigate={close} />
@@ -45,13 +46,5 @@ const styles = stylex.create({
   inner: {
     paddingBlock: space.s12,
     paddingInline: space.s4,
-  },
-  srOnly: {
-    clip: 'rect(0 0 0 0)',
-    height: space.px,
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: space.px,
   },
 });
