@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { downlevel, markdownMirror } from '../site/artifacts/markdown.ts';
+import { downlevel, markdownMirror, markdownTokens } from '../site/artifacts/markdown.ts';
 import { buttonDemo, resolve, sources } from './fixtures/content.ts';
 
 const buttonSource = sources.find((entry) => entry.page.route === '/docs/components/button')!.source;
@@ -49,5 +49,19 @@ describe('downlevel', () => {
   test('a Component inside a Callout is inlined too', () => {
     const out = downlevel('<Callout title="Try it">\n  <Component path="button-demo" />\n</Callout>\n', resolve);
     expect(out).toBe(`> **Try it**\n>\n${['```tsx', ...buttonDemo.trimEnd().split('\n'), '```'].map((line) => `> ${line}`).join('\n')}\n`);
+  });
+});
+
+describe('markdownTokens (the x-markdown-tokens estimate)', () => {
+  test('is about four characters per token, rounded up', () => {
+    expect(markdownTokens('')).toBe(0);
+    expect(markdownTokens('abc')).toBe(1);
+    expect(markdownTokens('abcd')).toBe(1);
+    expect(markdownTokens('abcde')).toBe(2);
+    expect(markdownTokens('x'.repeat(4000))).toBe(1000);
+  });
+
+  test('counts characters, not UTF-8 bytes', () => {
+    expect(markdownTokens('— …')).toBe(1);
   });
 });

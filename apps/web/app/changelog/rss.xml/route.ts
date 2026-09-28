@@ -6,5 +6,5 @@ export const dynamic = 'force-static';
 
 export function GET() {
   const entries = contentPages().filter((page) => page.file.startsWith('changelog/'));
-  return textResponse(rssFeed(entries), 'application/xml');
+  return textResponse(rssFeed(entries), 'application/rss+xml');
 }

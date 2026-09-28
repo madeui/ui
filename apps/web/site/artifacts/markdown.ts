@@ -188,3 +188,11 @@ export function downlevel(source: string, resolve: ResolveExample): string {
 export function markdownMirror(format: 'md' | 'mdx', source: string, resolve: ResolveExample): string {
   return format === 'mdx' ? source : downlevel(source, resolve);
 }
+
+/**
+ * Estimated token count of a Markdown response, sent as `x-markdown-tokens`
+ * so an agent can budget its context before reading the body. No tokenizer
+ * is specified for the header, so this is the common estimate of about four
+ * characters per token.
+ */
+export const markdownTokens = (text: string): number => Math.ceil(text.length / 4);

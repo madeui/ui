@@ -28,6 +28,6 @@ export const exampleSource: ResolveExample = (examplePath) => {
   return example && { lang: example.lang, source: example.source };
 };
 
-/** A text response with an explicit Content-Type. */
-export const textResponse = (body: string, contentType: string) =>
-  new Response(body, { headers: { 'Content-Type': contentType } });
+/** A text response with an explicit Content-Type, plus any extra headers. */
+export const textResponse = (body: string, contentType: string, headers: Record<string, string> = {}) =>
+  new Response(body, { headers: { 'Content-Type': contentType, ...headers } });
