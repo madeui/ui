@@ -1,11 +1,12 @@
 import { llmsIndex } from '@/site/artifacts/llms';
 import { exampleSource, readSource, textResponse } from '@/site/artifacts/load';
-import { markdownMirror } from '@/site/artifacts/markdown';
+import { markdownMirror, markdownTokens } from '@/site/artifacts/markdown';
 import { contentPages } from '@/site/content';
 
 // The Markdown mirrors. `/<route>.md` and `/<route>.mdx` reach this handler
 // through a rewrite in next.config.mjs (`/docs/cli.md` →
-// `/markdown-mirror/md/docs/cli`); a direct request to this path is a 404.
+// `/markdown-mirror/md/docs/cli`), and so does a page URL requested with
+// `Accept: text/markdown`; a direct request to this path is a 404.
 // The landing has no source file: its mirror, `/index.md`, is llms.txt.
 
 export const dynamic = 'force-static';
@@ -34,5 +35,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ for
     if (page && (format === 'md' || format === 'mdx')) body = markdownMirror(format, readSource(page), exampleSource);
   }
   if (body === undefined) return new Response('Not Found', { status: 404 });
-  return textResponse(body, 'text/markdown; charset=utf-8');
+  // Prerendered, so the token estimate is computed once per file at build time.
+  return textResponse(body, 'text/markdown; charset=utf-8', { 'x-markdown-tokens': String(markdownTokens(body)) });
 }

@@ -22,12 +22,14 @@ describe('agent-readability.json', () => {
     expect(text.endsWith('}\n')).toBe(true);
     const json = JSON.parse(text);
     expect(Object.keys(json)).toEqual(['artifacts', 'description', 'name', 'site', 'contentUsage']);
-    expect(text).toContain('\n  "artifacts": {\n    "markdown": {\n      "pattern": "https://madeui.com/{route}.md"\n    },');
+    expect(text).toContain(
+      '\n  "artifacts": {\n    "markdown": {\n      "contentNegotiation": "text/markdown",\n      "pattern": "https://madeui.com/{route}.md"\n    },',
+    );
   });
 
-  test('points agents at every text artifact', () => {
+  test('points agents at every text artifact and advertises Accept: text/markdown', () => {
     expect(JSON.parse(text).artifacts).toEqual({
-      markdown: { pattern: 'https://madeui.com/{route}.md' },
+      markdown: { contentNegotiation: 'text/markdown', pattern: 'https://madeui.com/{route}.md' },
       llmsFullTxt: 'https://madeui.com/llms-full.txt',
       llmsTxt: 'https://madeui.com/llms.txt',
       sitemap: 'https://madeui.com/sitemap.xml',

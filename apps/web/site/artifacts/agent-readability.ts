@@ -8,7 +8,9 @@ import { absoluteUrl, changelogFeed, site } from './site.ts';
 export function agentReadability(): string {
   const document = {
     artifacts: {
-      markdown: { pattern: `${site.url}/{route}.md` },
+      // A page URL requested with `Accept: text/markdown` serves the same
+      // mirror (the negotiation rewrites in next.config.mjs).
+      markdown: { contentNegotiation: 'text/markdown', pattern: `${site.url}/{route}.md` },
       llmsFullTxt: absoluteUrl('/llms-full.txt'),
       llmsTxt: absoluteUrl('/llms.txt'),
       sitemap: absoluteUrl('/sitemap.xml'),

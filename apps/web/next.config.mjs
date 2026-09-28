@@ -13,6 +13,23 @@ const root = process.cwd();
 const showcaseBuild = process.env.SHOWCASE === '1';
 const showcase = showcaseBuild || process.env.NODE_ENV !== 'production';
 
+// Markdown content negotiation: a page URL requested with an `Accept` header
+// that lists `text/markdown` (or `text/x-markdown`) gets the page's Markdown
+// mirror at the same address. The value is matched against the whole header:
+// `(.*,)?` absorbs earlier list entries, and the media type must end at `;`,
+// `,` or the end of the header. q-values are not compared; browsers never
+// send `text/markdown`, so page requests from browsers are unaffected.
+const acceptsMarkdown = [{ type: 'header', key: 'accept', value: '(.*,)?\\s*text/(x-)?markdown(\\s*[;,].*)?' }];
+// The page URLs that have a mirror, without the landing (its mirror is
+// `/index.md`): `/docs`, every docs page and every changelog entry. The
+// changelog index has no mirror and always serves HTML. No dots, so file
+// URLs (`.md`, `.json`, `.xml`, …) are never negotiated.
+const mirroredPage = '/:route(docs|docs/[^.]+|changelog/[^/.]+)';
+// Both representations vary by `Accept`, so shared caches keep them apart.
+// `next start` (16.3) replaces a configured Vary on App Router pages with its
+// own (vercel/next.js#85999), so locally only the Markdown side carries it.
+const varyAccept = [{ key: 'Vary', value: 'Accept' }];
+
 /** @type {import('next').NextConfig} */
 const config = {
   trailingSlash: false,
@@ -31,11 +48,15 @@ const config = {
     return {
       // Before the filesystem, in order: a direct request for the internal
       // mirror path goes nowhere (404), then `/<route>.md` and `.mdx` reach the
-      // Markdown mirror handler (app/markdown-mirror). Rewrites run in one
-      // pass, so the first rule never sees what the second one produces.
+      // Markdown mirror handler (app/markdown-mirror), then a page URL that
+      // negotiates Markdown reaches the same handler as its `.md`. Rewrites
+      // run in one pass, so the first rule never sees what the later ones
+      // produce.
       beforeFiles: [
         { source: '/markdown-mirror/:path*', destination: '/_not-found' },
         { source: '/:route(.+)\\.:format(md|mdx)', destination: '/markdown-mirror/:format/:route' },
+        { source: '/', has: acceptsMarkdown, destination: '/markdown-mirror/md/index' },
+        { source: mirroredPage, has: acceptsMarkdown, destination: '/markdown-mirror/md/:route' },
       ],
     };
   },
@@ -53,6 +74,24 @@ const config = {
         headers: [
           { key: 'Content-Type', value: 'application/json; charset=utf-8' },
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+        ],
+      },
+      // The negotiated page URLs, HTML and Markdown alike.
+      { source: '/', headers: varyAccept },
+      { source: mirroredPage, headers: varyAccept },
+      // Agent discovery on the landing: the site manifest, the llms.txt index
+      // and the landing's Markdown mirror (RFC 8288 registered relations).
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Link',
+            value: [
+              '</agent-readability.json>; rel="describedby"; type="application/json"',
+              '</llms.txt>; rel="describedby"; type="text/plain"',
+              '</index.md>; rel="alternate"; type="text/markdown"',
+            ].join(', '),
+          },
         ],
       },
       // Markdown mirrors and the .txt artifacts need no rule here: their route
