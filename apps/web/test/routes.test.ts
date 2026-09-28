@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { compareUrlList, navGroups, publishedInventory, publishedUrls, routeList, type ContentPage } from '../site/routes.ts';
 
-// A small content tree in the shape of apps/docs/content: loose guides with a
+// A small content tree in the shape of apps/web/content: loose guides with a
 // sidebar order, a components folder without one, and dated changelog entries.
 const fixture: ContentPage[] = [
   { route: '/docs/components/button-group', file: 'docs/components/button-group.mdx', title: 'Button Group' },

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { landingJsonLd, landingMetadata, notFoundMetadata, pageJsonLd, pageMetadata } from '../site/head.ts';
 
-// Expected values are the head the site has always served (the Blume build's
+// Expected values are the head the site has always served (on
 // /docs/components/button, /changelog/v1-1-0 and /changelog), written out.
 
 const SITE_DESCRIPTION = 'Base UI + StyleX components you own. Agent-friendly by design.';

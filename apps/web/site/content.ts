@@ -2,7 +2,7 @@ import type { ContentPage } from './routes.ts';
 import { changelogSource, docsSource } from './source.ts';
 
 /**
- * Every content page (apps/docs/content/{docs,changelog}) reduced to what the
+ * Every content page (content/{docs,changelog}) reduced to what the
  * route list needs. `file` is relative to the content root.
  */
 export function contentPages(): ContentPage[] {
