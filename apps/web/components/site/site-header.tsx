@@ -1,8 +1,8 @@
 import * as stylex from '@stylexjs/stylex';
 import { Search } from 'lucide-react';
-import Link from 'next/link';
 
 import { HeaderTabs } from '@/components/site/header-tabs';
+import { IntentPrefetchLink } from '@/components/site/intent-prefetch-link';
 import { Lockup } from '@/components/site/lockup';
 import { MobileNav } from '@/components/site/mobile-nav';
 import { SearchTrigger } from '@/components/site/search-trigger';
@@ -28,9 +28,10 @@ export function SiteHeader({ nav }: { nav?: { label: string; groups: SidebarGrou
         <div {...stylex.props(styles.drawer)}>
           <MobileNav label={nav?.label ?? 'Docs'} groups={nav?.groups} />
         </div>
-        <Link href="/" aria-label="madeui home" {...stylex.props(styles.home)}>
+        {/* On intent only: prefetching the landing's JS on every docs page costs more than it saves. */}
+        <IntentPrefetchLink href="/" aria-label="madeui home" {...stylex.props(styles.home)}>
           <Lockup style={styles.lockup} />
-        </Link>
+        </IntentPrefetchLink>
         <div {...stylex.props(styles.tabs)}>
           <HeaderTabs />
         </div>
