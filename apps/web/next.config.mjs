@@ -52,8 +52,13 @@ const config = {
       // negotiates Markdown reaches the same handler as its `.md`. Rewrites
       // run in one pass, so the first rule never sees what the later ones
       // produce.
+      // The direct request goes to a path that matches nothing (a `_` name is
+      // a private folder in the app router, never a route), so it gets the
+      // 404 page with status 404 on `next start` and on Vercel alike. A
+      // rewrite to Next's `/_not-found` route answers 200 on Vercel, which
+      // serves that prerendered route like any other page.
       beforeFiles: [
-        { source: '/markdown-mirror/:path*', destination: '/_not-found' },
+        { source: '/markdown-mirror/:path*', destination: '/_markdown-mirror' },
         { source: '/:route(.+)\\.:format(md|mdx)', destination: '/markdown-mirror/:format/:route' },
         { source: '/', has: acceptsMarkdown, destination: '/markdown-mirror/md/index' },
         { source: mirroredPage, has: acceptsMarkdown, destination: '/markdown-mirror/md/:route' },
