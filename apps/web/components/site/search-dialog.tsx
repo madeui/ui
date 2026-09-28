@@ -7,6 +7,7 @@ import { FileText } from 'lucide-react';
 import Link from 'next/link';
 
 import { searchLayout } from '@/components/site/site.stylex';
+import { useApplePlatform } from '@/components/site/use-apple-platform';
 import { Button } from '@/components/ui/button';
 import { Command, CommandDialog, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Kbd } from '@/components/ui/kbd';
@@ -66,6 +67,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const [section, setSection] = useState<string | null>(null);
   const [preview, setPreview] = useState(readPreview);
   const [active, setActive] = useState<Row>();
+  const apple = useApplePlatform();
   const bar = useRef<HTMLDivElement>(null);
   const input = () => bar.current?.querySelector('input');
 
@@ -233,7 +235,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               open
             </span>
             <span {...stylex.props(styles.hint, styles.previewHint)}>
-              <Kbd>{/mac|iphone|ipad|ipod/iu.test(navigator.platform) ? '⌘J' : 'Ctrl J'}</Kbd>
+              <Kbd>{apple ? '⌘J' : 'Ctrl J'}</Kbd>
               preview
             </span>
           </div>

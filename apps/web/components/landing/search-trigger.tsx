@@ -1,30 +1,22 @@
 'use client';
 
-import * as React from 'react';
-
 import * as stylex from '@stylexjs/stylex';
 
 import { landing, media } from '@/components/landing/landing.stylex';
 import { SearchIcon } from '@/components/landing/icons';
+import { useApplePlatform } from '@/components/site/use-apple-platform';
 import { Kbd } from '@/components/ui/kbd';
 import { breakpoint, duration, fontSize, space, stroke } from '@/lib/constants.stylex';
 import { colors, radius } from '@/lib/tokens.stylex';
-
-const isApple = () => /mac|iphone|ipad|ipod/iu.test(navigator.platform);
 
 /**
  * The landing header's search field. Search opens on ⌘K / Ctrl K anywhere
  * on the site; this is the pointer path, and it sends the same shortcut.
  */
 export function SearchTrigger() {
-  const [modifier, setModifier] = React.useState('⌘');
-
-  React.useEffect(() => {
-    if (!isApple()) setModifier('Ctrl');
-  }, []);
+  const apple = useApplePlatform();
 
   const open = () => {
-    const apple = isApple();
     document.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'k', metaKey: apple, ctrlKey: !apple, bubbles: true }),
     );
@@ -35,7 +27,7 @@ export function SearchTrigger() {
       <SearchIcon size={16} />
       <span {...stylex.props(styles.label)}>Search docs…</span>
       <span {...stylex.props(styles.kbd)}>
-        <Kbd>{modifier}</Kbd>
+        <Kbd>{apple ? '⌘' : 'Ctrl'}</Kbd>
         <Kbd>K</Kbd>
       </span>
     </button>

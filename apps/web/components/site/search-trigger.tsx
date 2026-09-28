@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import type { StyleXStyles } from '@stylexjs/stylex';
 import dynamic from 'next/dynamic';
 
 import { Button } from '@/components/ui/button';
+import { useApplePlatform } from '@/components/site/use-apple-platform';
 import { Kbd } from '@/components/ui/kbd';
 import { loadSearchIndex } from '@/site/search-client';
 
@@ -19,10 +20,6 @@ const SearchDialog = dynamic(() => import('@/components/site/search-dialog').the
 
 const isField = (target: EventTarget | null) =>
   target instanceof HTMLElement && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
-
-const noSubscription = () => () => {};
-const shortcut = () => (/mac|iphone|ipad|ipod/iu.test(navigator.platform) ? '⌘K' : 'Ctrl K');
-const serverShortcut = () => '⌘K';
 
 /**
  * The search dialog behind ⌘K / Ctrl+K (toggles) and / (opens, outside
@@ -64,7 +61,7 @@ function useSearchDialog() {
  */
 export function SearchTrigger({ children, style, hintStyle }: { children: ReactNode; style: StyleXStyles; hintStyle: StyleXStyles }) {
   const { show, dialog } = useSearchDialog();
-  const hint = useSyncExternalStore(noSubscription, shortcut, serverShortcut);
+  const hint = useApplePlatform() ? '⌘K' : 'Ctrl K';
   return (
     <>
       <Button variant="outline" aria-label="Search" aria-haspopup="dialog" onClick={() => show(() => true)} style={style}>
